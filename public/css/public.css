@@ -1,0 +1,336 @@
+/* =======================================================
+   WargaKu — Layout Publik & Komponen Global
+   (Navbar, Footer, Tombol Umum, Sticky Layout)
+   ======================================================= */
+
+/* ─────────────────────────────────────────
+   NAVBAR PUBLIK
+   ───────────────────────────────────────── */
+.navbar-public {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  z-index: var(--z-sticky, 100);
+  transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1),
+              backdrop-filter 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Transparan pada Landing Page saat belum di-scroll */
+.navbar-public--transparent {
+  background-color: transparent;
+  box-shadow: none;
+}
+
+/* Saat di-scroll: muncul background solid gelap */
+.navbar-public--transparent.navbar-public--scrolled {
+  background-color: rgba(19, 31, 46, 0.95);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(8px);
+}
+
+/* Navbar solid untuk halaman dalam (bukan landing page) */
+.navbar-public--solid {
+  background-color: var(--color-navbar-bg, #131f2e);
+  box-shadow: var(--shadow-md);
+}
+
+/* Kompensasi padding navbar fixed untuk halaman non-home */
+body.page-inner #main-content {
+  padding-top: 64px;
+}
+
+/* Kontainer utama dengan flex agar footer otomatis sticky di bawah */
+#main-content {
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.navbar-public__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-6);
+  height: 64px;
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--container-pad);
+}
+
+/* Logo */
+.navbar-public__brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  text-decoration: none;
+}
+.navbar-public__logo {
+  width: 28px;
+  height: 28px;
+  border-radius: 100%;
+  object-fit: contain;
+}
+.navbar-public__brand-name {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-white);
+  letter-spacing: -0.02em;
+}
+
+/* Menu tengah */
+.navbar-public__nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+}
+.navbar-public__link {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: rgba(255, 255, 255, 0.85);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+  padding: var(--space-1) var(--space-2);
+}
+.navbar-public__link:hover,
+.navbar-public__link--active {
+  color: var(--color-white);
+}
+
+/* Tombol kanan */
+.navbar-public__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+/* ─────────────────────────────────────────
+   TOMBOL UMUM & VARIAN NAVBAR/HERO
+   ───────────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: 0.5rem 1.25rem;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  border-radius: var(--radius-base);
+  border: 1px solid transparent;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color var(--transition-fast),
+              color var(--transition-fast),
+              border-color var(--transition-fast),
+              box-shadow var(--transition-fast),
+              transform 150ms ease;
+  white-space: nowrap;
+}
+
+/* Tombol putih Navbar & Hero ("Masuk") */
+.btn--nav-login,
+.btn--hero-login {
+  background-color: #ffffff;
+  color: #1a202c;
+  border-color: #ffffff;
+  font-weight: var(--font-weight-semibold);
+  border-radius: 4px;
+}
+.btn--nav-login:hover,
+.btn--hero-login:hover {
+  background-color: #f1f5f9;
+  color: #0f172a;
+  border-color: #f1f5f9;
+}
+
+/* Tombol hijau Navbar & Hero ("Daftar penguna baru") */
+.btn--nav-register,
+.btn--hero-register {
+  background-color: #2f855a;
+  color: #ffffff;
+  border-color: #2f855a;
+  font-weight: var(--font-weight-semibold);
+  border-radius: 4px;
+}
+.btn--nav-register:hover,
+.btn--hero-register:hover {
+  background-color: #276749;
+  border-color: #276749;
+  color: #ffffff;
+}
+
+.btn--hero-login {
+  padding: 0.65rem 2.25rem;
+  font-size: var(--font-size-sm);
+}
+.btn--hero-register {
+  padding: 0.65rem 1.75rem;
+  font-size: var(--font-size-sm);
+}
+
+.btn--primary {
+  background-color: var(--color-primary-500);
+  color: var(--color-white);
+  border-color: var(--color-primary-500);
+}
+.btn--primary:hover {
+  background-color: var(--color-primary-400);
+  border-color: var(--color-primary-400);
+  color: var(--color-white);
+}
+
+.btn--outline {
+  background-color: transparent;
+  color: var(--color-white);
+  border-color: var(--color-white);
+}
+.btn--outline:hover {
+  background-color: var(--color-white);
+  color: var(--color-gray-900);
+}
+
+.btn--secondary {
+  background-color: var(--color-gray-100);
+  color: var(--color-gray-700);
+  border-color: var(--color-gray-300);
+}
+.btn--secondary:hover {
+  background-color: var(--color-gray-200);
+}
+
+.btn--sm {
+  padding: 0.4rem 0.95rem;
+  font-size: var(--font-size-xs);
+}
+.btn--lg {
+  padding: 0.75rem 1.75rem;
+  font-size: var(--font-size-base);
+}
+
+.btn--full {
+  width: 100%;
+}
+
+/* ─────────────────────────────────────────
+   FOOTER PUBLIK (STICKY AT BOTTOM)
+   ───────────────────────────────────────── */
+.footer-public {
+  margin-top: auto;
+  background-color: var(--color-footer-bg);
+  color: var(--color-footer-text);
+  padding-top: var(--space-12);
+}
+
+.footer-public__main {
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--container-pad);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-12);
+  padding-bottom: var(--space-10);
+}
+
+.footer-public__brand-name {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-white);
+  margin-bottom: var(--space-3);
+}
+.footer-public__brand-desc {
+  font-size: var(--font-size-sm);
+  color: var(--color-gray-400);
+  line-height: var(--line-height-relaxed);
+  max-width: 320px;
+}
+.footer-public__tag {
+  display: inline-block;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-gray-500);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-top: var(--space-4);
+}
+
+.footer-public__nav-group {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-8);
+}
+.footer-public__nav-title {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-gray-500);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: var(--space-4);
+}
+.footer-public__nav-links {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+.footer-public__nav-link {
+  font-size: var(--font-size-sm);
+  color: var(--color-gray-400);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+.footer-public__nav-link:hover {
+  color: var(--color-white);
+}
+
+.footer-public__bottom {
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+.footer-public__bottom-inner {
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--container-pad);
+  padding-block: var(--space-5);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+}
+.footer-public__copy {
+  font-size: var(--font-size-xs);
+  color: var(--color-gray-600);
+}
+.footer-public__auth-links {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--font-size-xs);
+  color: var(--color-gray-500);
+}
+.footer-public__auth-links a {
+  color: var(--color-gray-400);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+.footer-public__auth-links a:hover {
+  color: var(--color-white);
+}
+.footer-public__auth-links span {
+  color: var(--color-gray-600);
+}
+
+/* ─────────────────────────────────────────
+   RESPONSIVE GLOBAL LAYOUT
+   ───────────────────────────────────────── */
+@media (max-width: 900px) {
+  .footer-public__main {
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+  }
+}
+
+@media (max-width: 640px) {
+  .navbar-public__nav { display: none; }
+  .footer-public__nav-group { grid-template-columns: 1fr; }
+}

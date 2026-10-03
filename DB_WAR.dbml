@@ -1,0 +1,124 @@
+Table users {
+  id bigint [pk, increment, note: 'Laravel id() = BIGINT UNSIGNED']
+  username varchar(50) [unique, not null, note: 'warga: NIK pendaftar pertama; admin: adminrt']
+  password varchar(255) [not null]
+  no_telp varchar(20)
+  role enum('admin', 'warga') [not null, default: 'warga']
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table keluarga {
+  no_kk varchar(16) [pk]
+  status_ekonomi enum('mampu', 'kurang_mampu') [not null]
+  status_tinggal enum('tetap', 'kontrak', 'kos', 'menumpang') [not null, default: 'tetap']
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table warga {
+  id bigint [pk, increment]
+  user_id bigint [ref: > users.id, note: 'nullable, akun KK bersama']
+  no_kk varchar(16) [ref: > keluarga.no_kk, not null]
+  nik varchar(16) [unique, not null]
+  nama varchar(100) [not null]
+  tempat_lahir varchar(100)
+  tanggal_lahir date
+  jenis_kelamin enum('laki_laki', 'perempuan') [not null]
+  agama enum('islam', 'katolik', 'protestan', 'buddha', 'hindu', 'konghucu')
+  pendidikan_terakhir enum(
+    'tidak_belum_sekolah',
+    'belum_tamat_sd',
+    'sd_sederajat',
+    'smp_sederajat',
+    'sma_sederajat',
+    'd1_d2',
+    'd3',
+    'd4_s1',
+    's2',
+    's3'
+  )
+  pekerjaan varchar(100)
+  alamat text
+  status_hubungan enum(
+    'kepala_keluarga',
+    'suami',
+    'istri',
+    'anak',
+    'menantu',
+    'cucu',
+    'orang_tua',
+    'mertua',
+    'famili_lain',
+    'lainnya'
+  ) [not null]
+  status_warga enum('hidup', 'meninggal', 'pindah_rumah', 'pindah_kk') [not null, default: 'hidup', note: 'pindah_rumah = keluar RT, pindah_kk = pindah/pecah KK (disembunyikan dari daftar anggota KK lama). Hanya berubah lewat pengajuan disetujui atau koreksi Admin']
+  created_at timestamp
+  updated_at timestamp
+
+  indexes {
+    no_kk
+    status_warga
+  }
+}
+
+Table pengajuan_perubahan_data {
+  id bigint [pk, increment]
+  warga_id bigint [ref: > warga.id, note: 'nullable jika jenis_pengajuan = tambah_anggota']
+  no_kk varchar(16) [ref: > keluarga.no_kk, not null]
+  jenis_pengajuan enum('ubah_data', 'tambah_anggota') [not null]
+  data_lama json [note: 'null jika tambah_anggota']
+  data_baru json [not null, note: 'field yang diajukan; pindah KK = {"status_warga":"pindah_kk"}']
+  bukti_path varchar(255) [not null, note: 'disimpan di disk PRIVAT']
+  status enum('menunggu', 'disetujui', 'ditolak', 'dibatalkan') [not null, default: 'menunggu']
+  alasan text
+  admin_id bigint [ref: > users.id]
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table pengajuan_surat {
+  id bigint [pk, increment]
+  pemohon_id bigint [ref: > warga.id, not null, note: 'warga pemilik akun yang login dan mengajukan (otomatis dari sesi)']
+  warga_tujuan_id bigint [ref: > warga.id, note: 'dipilih via dropdown anggota KK']
+  nama_lengkap varchar(100)
+  tempat_tanggal_lahir varchar(255)
+  jenis_kelamin enum('laki_laki', 'perempuan')
+  agama enum('islam', 'katolik', 'protestan', 'buddha', 'hindu', 'konghucu')
+  alamat text
+  keperluan text [not null]
+  nomor_surat varchar(50) [unique, note: 'diisi saat disetujui']
+  status enum('menunggu', 'disetujui', 'ditolak', 'dibatalkan') [not null, default: 'menunggu']
+  alasan text
+  admin_id bigint [ref: > users.id]
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table iuran {
+  id bigint [pk, increment]
+  no_kk varchar(16) [ref: > keluarga.no_kk, not null]
+  nominal decimal(10,2) [not null, note: 'total iuran bulanan; default (Rp 50.000), bisa diubah Admin ']
+  catatan text [note: 'nullable, rincian iuran']
+  bulan tinyint [not null, note: '1-12']
+  tahun smallint [not null]
+  status enum('lunas', 'belum_lunas') [not null, default: 'belum_lunas']
+  tanggal_bayar datetime [note: 'nullable, diisi saat lunas']
+  created_at timestamp
+  updated_at timestamp
+
+  indexes {
+    (no_kk, bulan, tahun) [unique, note: 'mencegah duplikasi baris iuran']
+  }
+}
+
+Table pengumuman {
+  id bigint [pk, increment]
+  judul varchar(150) [not null]
+  isi text [not null]
+  gambar varchar(255) [null, note: 'path file; berfungsi sebagai thumbnail (opsional)']
+  status_publikasi enum('draft', 'publish') [not null, default: 'draft']
+  admin_id bigint [ref: > users.id, not null]
+  created_at timestamp
+  updated_at timestamp
+}

@@ -1,0 +1,560 @@
+/* =======================================================
+   WargaKu — admin-surat.css
+   Styles khusus Halaman Proses Pengajuan Surat Pengantar (Admin RT)
+   AdminLTE Classic / WargaKu Theme with Boxicons
+   ======================================================= */
+
+/* ── Top Statistics Cards (AdminLTE Colored Small Boxes) ── */
+.surat-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.surat-stat-box {
+    border-radius: 4px;
+    padding: 16px 20px;
+    position: relative;
+    overflow: hidden;
+    color: #ffffff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    min-height: 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.surat-stat-box--amber {
+    background: #ffc107;
+    color: #212529;
+}
+
+.surat-stat-box--green {
+    background: #28a745;
+    color: #ffffff;
+}
+
+.surat-stat-box--red {
+    background: #dc3545;
+    color: #ffffff;
+}
+
+.surat-stat-box__val {
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 1;
+    margin: 0 0 6px;
+}
+
+.surat-stat-box__label {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin: 0 0 3px;
+}
+
+.surat-stat-box__sub {
+    font-size: 11.5px;
+    opacity: 0.9;
+    margin: 0;
+}
+
+.surat-stat-box__icon {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 64px;
+    opacity: 0.22;
+    pointer-events: none;
+    line-height: 1;
+}
+
+/* ── Filter Toolbar ── */
+.surat-filter-bar {
+    background: #ffffff;
+    border: 1px solid #e9ecef;
+    border-radius: 4px;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 18px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+    flex-wrap: wrap;
+}
+
+.surat-filter-group-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.surat-filter-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: #495057;
+    white-space: nowrap;
+}
+
+.surat-filter-select {
+    padding: 6px 12px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 12.5px;
+    color: #212529;
+    height: 36px;
+    outline: none;
+    background: #ffffff;
+    cursor: pointer;
+    transition: border-color 0.15s;
+}
+
+.surat-filter-select:focus {
+    border-color: #80bdff;
+}
+
+.surat-filter-search-box {
+    position: relative;
+    flex: 1;
+    min-width: 240px;
+}
+
+.surat-filter-search-input {
+    width: 100%;
+    height: 36px;
+    padding: 6px 12px 6px 34px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 12.5px;
+    color: #212529;
+    outline: none;
+    box-sizing: border-box;
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.surat-filter-search-input:focus {
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.15);
+}
+
+.surat-filter-search-icon {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6c757d;
+    font-size: 16px;
+}
+
+.btn-filter-reset-surat {
+    background: #f8f9fa;
+    border: 1px solid #ced4da;
+    color: #495057;
+    padding: 6px 14px;
+    border-radius: 4px;
+    font-size: 12.5px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 36px;
+    white-space: nowrap;
+    transition: all 0.15s;
+}
+
+.btn-filter-reset-surat:hover {
+    background: #e9ecef;
+    color: #212529;
+}
+
+.btn-filter-reset-surat i {
+    font-size: 16px;
+}
+
+/* ── Table Card Container ── */
+.surat-card-container {
+    background: #ffffff;
+    border-radius: 4px;
+    border: 1px solid #e9ecef;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+}
+
+.surat-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 18px;
+    border-bottom: 1px solid #e9ecef;
+    background: #ffffff;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.surat-card-title-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.surat-card-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #212529;
+    margin: 0;
+}
+
+.badge-count-surat {
+    background: #e9ecef;
+    color: #495057;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 4px;
+}
+
+.sync-indicator-text {
+    font-size: 12px;
+    color: #495057;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.sync-dot-green {
+    color: #28a745;
+    font-size: 10px;
+}
+
+/* ── Table General ── */
+.surat-table-wrap {
+    overflow-x: auto;
+    width: 100%;
+    background: #ffffff;
+}
+
+.surat-table {
+    width: 100%;
+    min-width: 1220px;
+    table-layout: fixed;
+    border-collapse: collapse;
+    background: #ffffff;
+    font-size: 12.5px;
+}
+
+.surat-table thead {
+    background: #2b3137;
+    color: #ffffff;
+}
+
+.surat-table thead th {
+    padding: 12px 14px;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    text-align: left;
+    white-space: nowrap;
+    border: none;
+    vertical-align: middle;
+}
+
+.surat-table thead th.text-center {
+    text-align: center;
+}
+
+.surat-table tbody tr {
+    border-bottom: 1px solid #f1f3f5;
+    transition: background 0.15s;
+}
+
+.surat-table tbody tr:hover {
+    background: #f8f9fa;
+}
+
+.surat-table td {
+    padding: 12px 14px;
+    vertical-align: middle;
+    color: #212529;
+    text-align: left;
+}
+
+.surat-table td.text-center {
+    text-align: center;
+}
+
+/* Cell content styles */
+.pemohon-nama-link {
+    color: #007bff;
+    font-weight: 700;
+    font-size: 13px;
+    text-decoration: none;
+    cursor: pointer;
+    margin-bottom: 2px;
+    line-height: 1.3;
+    display: block;
+}
+
+.pemohon-nama-link:hover {
+    text-decoration: underline;
+    color: #0056b3;
+}
+
+.nomor-surat-copy {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    color: #007bff;
+    font-weight: 700;
+    font-size: 12px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: color 0.15s;
+}
+
+.nomor-surat-copy:hover {
+    text-decoration: underline;
+    color: #0056b3;
+}
+
+.nomor-surat-copy i {
+    font-size: 14px;
+}
+
+.badge-status-surat {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 4px;
+    white-space: nowrap;
+}
+
+.badge-status-surat--menunggu {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.badge-status-surat--disetujui {
+    background: #d4edda;
+    color: #155724;
+}
+
+.badge-status-surat--ditolak {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+/* Actions in Table */
+.surat-row-actions {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    justify-content: flex-start;
+    white-space: nowrap;
+}
+
+.btn-surat-preview-draft {
+    background: #007bff;
+    color: #ffffff;
+    border: none;
+    padding: 5px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    height: 28px;
+    transition: all 0.15s;
+    white-space: nowrap;
+}
+
+.btn-surat-preview-draft:hover {
+    background: #0069d9;
+}
+
+.btn-surat-preview-draft i {
+    font-size: 13px;
+}
+
+.btn-surat-setujui {
+    background: #28a745;
+    color: #ffffff;
+    border: none;
+    padding: 5px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    height: 28px;
+    transition: all 0.15s;
+    white-space: nowrap;
+}
+
+.btn-surat-setujui:hover {
+    background: #218838;
+}
+
+.btn-surat-setujui i {
+    font-size: 13px;
+}
+
+.btn-surat-tolak {
+    background: #dc3545;
+    color: #ffffff;
+    border: none;
+    padding: 5px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    height: 28px;
+    transition: all 0.15s;
+    white-space: nowrap;
+}
+
+.btn-surat-tolak:hover {
+    background: #c82333;
+}
+
+.btn-surat-tolak i {
+    font-size: 13px;
+}
+
+.btn-surat-cetak {
+    background: #007bff;
+    color: #ffffff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    height: 28px;
+    transition: all 0.15s;
+    white-space: nowrap;
+}
+
+.btn-surat-cetak:hover {
+    background: #0069d9;
+}
+
+.btn-surat-cetak i {
+    font-size: 14px;
+}
+
+.btn-surat-alasan {
+    background: #e9ecef;
+    color: #495057;
+    border: 1px solid #ced4da;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    height: 28px;
+    transition: all 0.15s;
+    white-space: nowrap;
+}
+
+.btn-surat-alasan:hover {
+    background: #dee2e6;
+    color: #212529;
+}
+
+.btn-surat-alasan i {
+    font-size: 14px;
+}
+
+/* ── Pagination Bar ── */
+.surat-pagination-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 18px;
+    border-top: 1px solid #f1f3f5;
+    background: #ffffff;
+    font-size: 12px;
+    color: #6c757d;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.surat-pagination {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+
+.surat-page-link {
+    padding: 4px 10px;
+    border: 1px solid #dee2e6;
+    background: #ffffff;
+    color: #007bff;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    height: 30px;
+    min-width: 30px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+    outline: none;
+    font-family: inherit;
+}
+
+.surat-page-link:hover:not(.disabled):not(.active) {
+    background: #e9ecef;
+    border-color: #dee2e6;
+    color: #0056b3;
+}
+
+.surat-page-link.active {
+    background: #007bff;
+    border-color: #007bff;
+    color: #ffffff;
+    font-weight: 700;
+    cursor: default;
+}
+
+.surat-page-link.disabled {
+    background: #f8f9fa;
+    border-color: #dee2e6;
+    color: #adb5bd;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.surat-page-ellipsis {
+    color: #6c757d;
+    padding: 0 4px;
+    font-size: 12px;
+}
+
+/* Responsive */
+@media (max-width: 960px) {
+    .surat-stats-grid {
+        grid-template-columns: 1fr;
+    }
+}

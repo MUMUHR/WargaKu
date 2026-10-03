@@ -1,4 +1,4 @@
-﻿/* =======================================================
+/* =======================================================
    WargaKu — Design Tokens
    Sumber: PNG desain ui-wargaku/ (2026-10-02)
    Semua nilai warna, spacing, radius didefinisikan di sini.
@@ -70,14 +70,14 @@
   --color-footer-text: #d1d5db;
 
   /* Sidebar */
-  --color-sidebar-bg:          #1c2b1e;
-  --color-sidebar-text:        #d4e8d8;
-  --color-sidebar-text-muted:  #8ab494;
-  --color-sidebar-active-bg:   #2d7a47;
+  --color-sidebar-bg:          #2B3137;
+  --color-sidebar-text:        #c2c7d0;
+  --color-sidebar-text-muted:  #8c959f;
+  --color-sidebar-active-bg:   #28a745;
   --color-sidebar-active-text: #ffffff;
-  --color-sidebar-hover-bg:    #253528;
-  --color-sidebar-border:      #2a3d2c;
-  --sidebar-width:             220px;
+  --color-sidebar-hover-bg:    #373e47;
+  --color-sidebar-border:      rgba(255, 255, 255, 0.08);
+  --sidebar-width:             250px;
 
   /* Tipografi */
   --font-family-base: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;

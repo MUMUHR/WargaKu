@@ -1,0 +1,317 @@
+/* =======================================================
+   WargaKu — admin-pengaturan.css
+   Halaman Profil & Keamanan Akun (Admin RT)
+   ======================================================= */
+
+.profil-page-wrapper {
+    max-width: 100%;
+}
+
+/* ── Header ── */
+.profil-header {
+    margin-bottom: 20px;
+}
+
+.profil-header__title-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 4px;
+}
+
+.profil-header__title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #212529;
+    margin: 0;
+    line-height: 1.2;
+}
+
+.badge-akun-verif {
+    background: #e8f8ed;
+    color: #198754;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 20px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    border: 1px solid #c3e6cb;
+}
+
+.badge-akun-verif i {
+    font-size: 13px;
+}
+
+.profil-header__sub {
+    font-size: 12px;
+    color: #6c757d;
+    margin: 0;
+}
+
+/* ── Grid 2 Kolom ── */
+.profil-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.15fr;
+    gap: 20px;
+    align-items: start;
+}
+
+/* ── Card Style ── */
+.profil-card {
+    background: #ffffff;
+    border: 1px solid #e9ecef;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    overflow: hidden;
+}
+
+.profil-card__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 18px;
+    border-bottom: 1px solid #f1f3f5;
+    background: #ffffff;
+}
+
+.profil-card__title {
+    font-size: 13.5px;
+    font-weight: 700;
+    color: #212529;
+    margin: 0;
+}
+
+.badge-tag {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 4px;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+}
+
+.badge-tag--blue {
+    background: #e7f1ff;
+    color: #0d6efd;
+}
+
+.badge-tag--gray {
+    background: #f1f3f5;
+    color: #495057;
+}
+
+.profil-card__body {
+    padding: 18px 20px 22px;
+}
+
+.profil-desc {
+    font-size: 12px;
+    color: #6c757d;
+    margin: 0 0 16px;
+    line-height: 1.45;
+}
+
+/* ── Form Controls ── */
+.profil-form-group {
+    margin-bottom: 14px;
+}
+
+.profil-form-group:last-child {
+    margin-bottom: 0;
+}
+
+.profil-label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 6px;
+}
+
+.profil-input-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.profil-input {
+    width: 100%;
+    height: 38px;
+    padding: 6px 36px 6px 12px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 13px;
+    color: #212529;
+    background: #ffffff;
+    outline: none;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    box-sizing: border-box;
+    font-family: inherit;
+}
+
+.profil-input:focus {
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.profil-input--locked {
+    background: #f8f9fa !important;
+    color: #495057 !important;
+    border-color: #dee2e6 !important;
+    cursor: not-allowed;
+    user-select: none;
+}
+
+.profil-input-icon {
+    position: absolute;
+    right: 12px;
+    color: #6c757d;
+    font-size: 16px;
+    pointer-events: none;
+}
+
+.profil-toggle-pwd {
+    position: absolute;
+    right: 10px;
+    background: none;
+    border: none;
+    color: #6c757d;
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    transition: color 0.15s;
+    outline: none;
+}
+
+.profil-toggle-pwd:hover {
+    color: #212529;
+}
+
+.profil-footnote {
+    font-size: 11.5px;
+    color: #6c757d;
+    margin: 16px 0 0;
+    line-height: 1.4;
+}
+
+/* ── Button Ubah Password ── */
+.btn-ubah-password {
+    background: #2B3137;
+    color: #ffffff;
+    border: none;
+    padding: 8px 18px;
+    border-radius: 4px;
+    font-size: 12.5px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: background 0.15s ease, transform 0.1s ease;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.btn-ubah-password:hover {
+    background: #1c2024;
+}
+
+.btn-ubah-password i {
+    font-size: 15px;
+}
+
+/* ── Banner Card Logout Bawah ── */
+.logout-banner-card {
+    background: #ffffff;
+    border: 1px solid #ffd4d8;
+    border-radius: 6px;
+    padding: 14px 20px;
+    margin-top: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    box-shadow: 0 1px 3px rgba(220, 53, 69, 0.04);
+}
+
+.logout-banner-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.logout-icon-box {
+    width: 38px;
+    height: 38px;
+    border-radius: 8px;
+    background: #fff1f2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #dc3545;
+    font-size: 20px;
+    flex-shrink: 0;
+}
+
+.logout-banner-title {
+    font-size: 13.5px;
+    font-weight: 700;
+    color: #dc3545;
+    margin: 0 0 2px;
+}
+
+.logout-banner-sub {
+    font-size: 12px;
+    color: #6c757d;
+    margin: 0;
+}
+
+.btn-logout-banner {
+    border: 1px solid #dc3545;
+    background: #ffffff;
+    color: #dc3545;
+    padding: 7px 16px;
+    border-radius: 4px;
+    font-size: 12.5px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.15s ease;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.btn-logout-banner:hover {
+    background: #dc3545;
+    color: #ffffff;
+}
+
+.btn-logout-banner i {
+    font-size: 14px;
+}
+
+/* ── Responsiveness ── */
+@media (max-width: 900px) {
+    .profil-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .logout-banner-card {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .logout-banner-right {
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+    }
+}

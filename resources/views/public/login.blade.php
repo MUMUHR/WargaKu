@@ -78,7 +78,7 @@
                         <input type="text"
                                name="username"
                                id="username"
-                               class="form-input"
+                                 class="form-input"
                                placeholder="Contoh: 3271048809920001 atau username"
                                autocomplete="username"
                                required

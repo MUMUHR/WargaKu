@@ -1,0 +1,583 @@
+/* =======================================================
+   WargaKu — admin-iuran.css
+   Styles khusus Halaman Kelola & Rekap Iuran Warga (Admin RT)
+   AdminLTE Classic / WargaKu Theme with Boxicons
+   ======================================================= */
+
+/* ── Top Header Elements ── */
+.badge-periode-aktif {
+    background: #d4edda;
+    color: #155724;
+    font-size: 11.5px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    vertical-align: middle;
+    margin-left: 8px;
+}
+
+.btn-atur-iuran {
+    background: #007bff;
+    color: #ffffff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    height: 38px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+    transition: all 0.15s ease;
+    white-space: nowrap;
+}
+
+.btn-atur-iuran:hover {
+    background: #0069d9;
+}
+
+.btn-atur-iuran i {
+    font-size: 16px;
+}
+
+/* ── Top Statistics Cards (AdminLTE Colored Small Boxes) ── */
+.iuran-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.iuran-stat-box {
+    border-radius: 4px;
+    padding: 16px 20px;
+    position: relative;
+    overflow: hidden;
+    color: #ffffff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    min-height: 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.iuran-stat-box--green {
+    background: #28a745;
+}
+
+.iuran-stat-box--blue {
+    background: #007bff;
+}
+
+.iuran-stat-box--red {
+    background: #dc3545;
+}
+
+.iuran-stat-box__val {
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1;
+    margin: 0 0 6px;
+}
+
+.iuran-stat-box__label {
+    font-size: 13.5px;
+    font-weight: 500;
+    margin: 0;
+    opacity: 0.95;
+}
+
+.iuran-stat-box__icon {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 64px;
+    opacity: 0.22;
+    pointer-events: none;
+    line-height: 1;
+}
+
+/* ── Card Container & Tab Navigation ── */
+.iuran-card-container {
+    background: #ffffff;
+    border-radius: 4px;
+    border: 1px solid #e9ecef;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+}
+
+.iuran-tabs-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 18px 0 18px;
+    background: #ffffff;
+    border-bottom: 1px solid #dee2e6;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.iuran-tabs-left {
+    display: flex;
+    align-items: flex-end;
+    gap: 6px;
+}
+
+.iuran-tab-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 16px;
+    border: 1px solid transparent;
+    border-bottom: none;
+    border-radius: 4px 4px 0 0;
+    background: transparent;
+    color: #495057;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    margin-bottom: -1px;
+    font-family: inherit;
+    text-decoration: none;
+}
+
+.iuran-tab-btn:hover {
+    color: #212529;
+    background: #f8f9fa;
+}
+
+.iuran-tab-btn--active {
+    color: #007bff !important;
+    background: #ffffff !important;
+    border: 1px solid #ced4da !important;
+    border-bottom: 1px solid #ffffff !important;
+}
+
+.badge-tab-red {
+    background: #dc3545;
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 4px;
+}
+
+.badge-tab-gray {
+    background: #e9ecef;
+    color: #495057;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 4px;
+}
+
+.iuran-tabs-right {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12.5px;
+    color: #495057;
+    padding-bottom: 6px;
+}
+
+.badge-besaran-iuran {
+    background: #d4edda;
+    color: #155724;
+    font-size: 11.5px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 4px;
+}
+
+/* ── Toolbar inside Card (Search & Tag) ── */
+.iuran-toolbar-row {
+    padding: 12px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    background: #ffffff;
+    flex-wrap: wrap;
+    border-bottom: 1px solid #f1f3f5;
+}
+
+.iuran-search-wrap {
+    position: relative;
+    flex: 1;
+    max-width: 600px;
+}
+
+.iuran-search-input {
+    width: 100%;
+    height: 38px;
+    padding: 6px 12px 6px 36px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 13px;
+    color: #212529;
+    outline: none;
+    box-sizing: border-box;
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.iuran-search-input:focus {
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.15);
+}
+
+.iuran-search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6c757d;
+    font-size: 17px;
+}
+
+.iuran-besaran-tag {
+    background: #e8f8ed;
+    border: 1px solid #c3e6cb;
+    color: #155724;
+    padding: 8px 14px;
+    border-radius: 4px;
+    font-size: 12.5px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+    height: 38px;
+    box-sizing: border-box;
+}
+
+.iuran-besaran-tag i {
+    font-size: 15px;
+}
+
+/* ── Table General ── */
+.iuran-table-wrap {
+    overflow-x: auto;
+    width: 100%;
+    background: #ffffff;
+}
+
+.iuran-table {
+    width: 100%;
+    min-width: 1220px;
+    table-layout: fixed;
+    border-collapse: collapse;
+    background: #ffffff;
+    font-size: 13px;
+}
+
+.iuran-table thead {
+    background: #2b3137;
+    color: #ffffff;
+}
+
+.iuran-table thead th {
+    padding: 12px 14px;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    text-align: left;
+    white-space: nowrap;
+    border: none;
+    vertical-align: middle;
+}
+
+.iuran-table thead th.text-center {
+    text-align: center;
+}
+
+.iuran-table tbody tr {
+    border-bottom: 1px solid #f1f3f5;
+    transition: background 0.15s;
+}
+
+.iuran-table tbody tr:hover {
+    background: #f8f9fa;
+}
+
+.iuran-table tbody td {
+    padding: 12px 14px;
+    vertical-align: middle;
+    color: #212529;
+    text-align: left;
+}
+
+.iuran-table tbody td.text-center {
+    text-align: center;
+}
+
+/* ── Table Cell Typography & Badges ── */
+.no-kk-text {
+    font-size: 13px;
+    font-weight: 700;
+    color: #212529;
+    line-height: 1.3;
+}
+
+.sub-ekonomi-text {
+    font-size: 11px;
+    color: #6c757d;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-top: 2px;
+}
+
+.nama-warga-text {
+    font-size: 13px;
+    font-weight: 700;
+    color: #212529;
+    line-height: 1.3;
+}
+
+.blok-sub-text {
+    font-size: 11.5px;
+    color: #6c757d;
+    margin-top: 2px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.badge-periode-pill {
+    background: #e9ecef;
+    color: #495057;
+    font-size: 11.5px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 4px;
+    display: inline-block;
+    white-space: nowrap;
+}
+
+.nominal-text {
+    font-size: 13px;
+    font-weight: 700;
+    color: #212529;
+}
+
+.badge-status-belum {
+    background: #c82333;
+    color: #ffffff;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    white-space: nowrap;
+}
+
+.badge-status-lunas {
+    background: #198754;
+    color: #ffffff;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    white-space: nowrap;
+}
+
+/* Action Buttons */
+.btn-tandai-lunas {
+    background: #198754;
+    color: #ffffff;
+    border: none;
+    padding: 6px 14px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 32px;
+    white-space: nowrap;
+    transition: all 0.15s ease;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+}
+
+.btn-tandai-lunas:hover {
+    background: #157347;
+}
+
+.btn-tandai-lunas i {
+    font-size: 15px;
+}
+
+.btn-cetak-kwitansi {
+    background: #007bff;
+    color: #ffffff;
+    border: none;
+    padding: 6px 14px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 32px;
+    white-space: nowrap;
+    transition: all 0.15s ease;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+}
+
+.btn-cetak-kwitansi:hover {
+    background: #0069d9;
+}
+
+.btn-cetak-kwitansi i {
+    font-size: 15px;
+}
+
+/* ── Pagination Bar ── */
+.iuran-pagination-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 18px;
+    border-top: 1px solid #f1f3f5;
+    background: #ffffff;
+    font-size: 12px;
+    color: #6c757d;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.iuran-pagination {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+
+.iuran-page-link {
+    padding: 4px 10px;
+    border: 1px solid #dee2e6;
+    background: #ffffff;
+    color: #007bff;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    height: 30px;
+    min-width: 30px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+    outline: none;
+    font-family: inherit;
+}
+
+.iuran-page-link:hover:not(.disabled):not(.active) {
+    background: #e9ecef;
+    border-color: #dee2e6;
+    color: #0056b3;
+}
+
+.iuran-page-link.active {
+    background: #007bff;
+    border-color: #007bff;
+    color: #ffffff;
+    font-weight: 700;
+    cursor: default;
+}
+
+.iuran-page-link.disabled {
+    background: #f8f9fa;
+    border-color: #dee2e6;
+    color: #adb5bd;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.iuran-page-ellipsis {
+    color: #6c757d;
+    padding: 0 4px;
+    font-size: 12px;
+}
+
+/* Modal Simple */
+.iuran-modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1050;
+    padding: 16px;
+}
+
+.iuran-modal-content {
+    background: #ffffff;
+    border-radius: 6px;
+    width: 100%;
+    max-width: 480px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+}
+
+.iuran-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 18px;
+    background: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.iuran-modal-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #212529;
+    margin: 0;
+}
+
+.iuran-modal-close {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: #6c757d;
+}
+
+.iuran-modal-body {
+    padding: 18px;
+}
+
+.iuran-modal-footer {
+    padding: 12px 18px;
+    background: #f8f9fa;
+    border-top: 1px solid #dee2e6;
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+/* Responsive */
+@media (max-width: 960px) {
+    .iuran-stats-grid {
+        grid-template-columns: 1fr;
+    }
+}

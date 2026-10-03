@@ -65,7 +65,16 @@ Route::prefix('warga')->name('warga.')->group(function () {
 */
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/', function () { return view('admin.beranda'); })->name('beranda');
+
+    // Kelola Pengumuman
     Route::get('/pengumuman', function () { return view('admin.pengumuman'); })->name('pengumuman');
+    Route::get('/pengumuman/tambah', function () { return view('admin.pengumuman-form'); })->name('pengumuman.create');
+    Route::post('/pengumuman/tambah', function () {
+        $status = request('status') ?? request('status_publikasi') ?? 'draft';
+        return redirect()->route('admin.pengumuman')
+            ->with('success', 'Pengumuman berhasil ' . ($status === 'publish' ? 'dipublikasikan' : 'disimpan sebagai draf') . '.');
+    })->name('pengumuman.store');
+
     Route::get('/data-warga', function () { return view('admin.data-warga'); })->name('data-warga');
     Route::get('/surat', function () { return view('admin.surat'); })->name('surat');
     Route::get('/iuran', function () { return view('admin.iuran'); })->name('iuran');

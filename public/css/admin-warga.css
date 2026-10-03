@@ -1,0 +1,1092 @@
+/* =======================================================
+   WargaKu — admin-warga.css
+   Styles khusus Halaman Kelola Data Warga & Verifikasi
+   AdminLTE Classic / WargaKu Theme with Boxicons
+   ======================================================= */
+
+/* ── Top Action Cetak Button ────────────────────────────── */
+.btn-cetak-induk {
+    background: #ffffff;
+    color: #495057;
+    border: 1px solid #ced4da;
+    padding: 8px 16px;
+    border-radius: 5px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    transition: all 0.15s ease;
+    white-space: nowrap;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    height: 38px;
+}
+
+.btn-cetak-induk i {
+    font-size: 17px;
+}
+
+.btn-cetak-induk:hover {
+    background: #f8f9fa;
+    border-color: #adb5bd;
+    color: #212529;
+}
+
+/* ── Top Stat Cards (AdminLTE Colored Small-Boxes) ─────── */
+.warga-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.warga-stat-box {
+    border-radius: 4px;
+    padding: 16px 20px;
+    position: relative;
+    overflow: hidden;
+    color: #ffffff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    min-height: 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.warga-stat-box--cyan {
+    background: #17a2b8;
+}
+
+.warga-stat-box--green {
+    background: #28a745;
+}
+
+.warga-stat-box--amber {
+    background: #ffc107;
+    color: #212529;
+}
+
+.warga-stat-box--blue {
+    background: #007bff;
+}
+
+.warga-stat-box__val {
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1;
+    margin: 0 0 4px;
+}
+
+.warga-stat-box__val small {
+    font-size: 14px;
+    font-weight: 500;
+    margin-left: 4px;
+}
+
+.warga-stat-box__label {
+    font-size: 13px;
+    font-weight: 600;
+    margin: 0 0 2px;
+    opacity: 0.95;
+}
+
+.warga-stat-box__sub {
+    font-size: 11.5px;
+    margin: 0;
+    opacity: 0.85;
+}
+
+.warga-stat-box__icon {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 64px;
+    opacity: 0.22;
+    pointer-events: none;
+    line-height: 1;
+}
+
+/* ── Main Tab Navigation ────────────────────────────────── */
+.warga-card-container {
+    background: #ffffff;
+    border-radius: 4px;
+    border: 1px solid #e9ecef;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+}
+
+.warga-tabs-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 18px 0 18px;
+    background: #ffffff;
+    border-bottom: 1px solid #dee2e6;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.warga-tabs-left {
+    display: flex;
+    align-items: flex-end;
+    gap: 6px;
+}
+
+.warga-tab-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 16px;
+    border: 1px solid transparent;
+    border-bottom: none;
+    border-radius: 4px 4px 0 0;
+    background: transparent;
+    color: #495057;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    font-family: inherit;
+    text-decoration: none;
+    margin-bottom: -1px;
+}
+
+.warga-tab-btn:hover {
+    color: #212529;
+    background: #f8f9fa;
+}
+
+.warga-tab-btn--active {
+    color: #007bff !important;
+    background: #ffffff !important;
+    border: 1px solid #ced4da !important;
+    border-bottom: 1px solid #ffffff !important;
+}
+
+.warga-tab-btn i {
+    font-size: 16px;
+}
+
+#tab-btn-verifikasi.warga-tab-btn--active i {
+    color: #f39c12;
+}
+
+.badge-tab-kk {
+    background: #007bff;
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 3px;
+}
+
+.badge-tab-verif {
+    background: #ffc107;
+    color: #212529;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 3px;
+}
+
+.wilayah-info-text {
+    font-size: 12px;
+    color: #495057;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 0;
+}
+
+.wilayah-dot {
+    color: #28a745;
+    font-size: 10px;
+}
+
+/* ── Filter Toolbar ─────────────────────────────────────── */
+.warga-filter-bar {
+    padding: 12px 18px;
+    background: #ffffff;
+    border-bottom: 1px solid #f1f3f5;
+    display: flex;
+    align-items: flex-end;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.warga-filter-col {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.warga-filter-col--search {
+    flex: 2;
+    min-width: 240px;
+}
+
+.warga-filter-col--select {
+    flex: 1;
+    min-width: 140px;
+}
+
+.warga-filter-col--actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding-bottom: 1px;
+}
+
+.warga-filter-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: #495057;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.warga-filter-input {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    font-size: 13px;
+    color: #212529;
+    box-sizing: border-box;
+    outline: none;
+    height: 38px;
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.warga-filter-input:focus {
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.15);
+}
+
+.btn-filter-submit {
+    background: #28a745;
+    color: #ffffff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: background 0.15s, transform 0.15s;
+    height: 38px;
+    white-space: nowrap;
+}
+
+.btn-filter-submit i {
+    font-size: 16px;
+}
+
+.btn-filter-submit:hover {
+    background: #218838;
+}
+
+.btn-filter-reset {
+    background: #f8f9fa;
+    color: #6c757d;
+    border: 1px solid #ced4da;
+    padding: 8px;
+    border-radius: 5px;
+    font-size: 18px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+    height: 38px;
+    width: 38px;
+    box-sizing: border-box;
+}
+
+.btn-filter-reset:hover {
+    background: #e9ecef;
+    color: #212529;
+}
+
+/* ── Table General ──────────────────────────────────────── */
+.warga-table-wrap {
+    overflow-x: auto;
+    width: 100%;
+    background: #ffffff;
+}
+
+.warga-table {
+    width: 100%;
+    min-width: 1220px;
+    table-layout: fixed;
+    border-collapse: collapse;
+    background: #ffffff;
+    font-size: 13px;
+}
+
+.warga-table thead {
+    background: #2b3137;
+    color: #ffffff;
+}
+
+.warga-table thead th {
+    padding: 12px 14px;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    text-align: left;
+    white-space: nowrap;
+    border: none;
+    vertical-align: middle;
+}
+
+.warga-table thead th.text-center {
+    text-align: center;
+}
+
+.warga-table thead th.text-right {
+    text-align: right;
+}
+
+.warga-table tbody tr {
+    border-bottom: 1px solid #f1f3f5;
+    transition: background 0.15s;
+}
+
+.warga-table tbody tr:hover {
+    background: #f8f9fa;
+}
+
+.warga-table td {
+    padding: 12px 14px;
+    vertical-align: middle;
+    color: #212529;
+    text-align: left;
+}
+
+.warga-table td.text-center {
+    text-align: center;
+}
+
+/* Table KK columns */
+.link-kk {
+    color: #007bff;
+    font-weight: 700;
+    font-size: 13px;
+    text-decoration: none;
+    font-family: inherit;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+}
+
+.link-kk:hover {
+    text-decoration: underline;
+    color: #0056b3;
+}
+
+.nama-kepala-text {
+    font-size: 13px;
+    font-weight: 700;
+    color: #212529;
+    margin: 0 0 2px;
+    line-height: 1.3;
+}
+
+.alamat-sub-text {
+    font-size: 11.5px;
+    color: #6c757d;
+    margin: 0;
+    line-height: 1.3;
+}
+
+.badge-anggota-count {
+    background: #17a2b8;
+    color: #ffffff;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 11.5px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    white-space: nowrap;
+}
+
+.badge-anggota-count i {
+    font-size: 13px;
+}
+
+.badge-status-tetap {
+    background: #28a745;
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 4px;
+    display: inline-block;
+    white-space: nowrap;
+}
+
+.badge-status-sewa {
+    background: #f39c12;
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 4px;
+    display: inline-block;
+    white-space: nowrap;
+}
+
+.badge-ekonomi-gray {
+    background: #e9ecef;
+    color: #6c757d;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 4px;
+    display: inline-block;
+    border: 1px solid #ced4da;
+    white-space: nowrap;
+}
+
+.badge-ekonomi-mampu {
+    background: #e8f8ed;
+    color: #28a745;
+    border: 1px solid #c3e6cb;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 4px;
+    display: inline-block;
+    white-space: nowrap;
+}
+
+.status-tags-wrap {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    flex-wrap: nowrap;
+}
+
+.kontak-wa-link {
+    color: #212529;
+    font-size: 12.5px;
+    font-weight: 500;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+    background: transparent;
+    border: none;
+    padding: 0;
+    transition: color 0.15s ease;
+}
+
+.kontak-wa-link:hover {
+    color: #1e7e34;
+    text-decoration: underline;
+}
+
+.kontak-wa-link i {
+    color: #28a745;
+    font-size: 16px;
+}
+
+/* ── Table Action Buttons ───────────────────────────────── */
+.warga-row-actions {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    justify-content: flex-start;
+    white-space: nowrap;
+}
+
+.warga-row-actions--center {
+    justify-content: center !important;
+}
+
+.warga-row-actions--end {
+    justify-content: flex-end !important;
+}
+
+.warga-row-actions--start {
+    justify-content: flex-start !important;
+}
+
+.btn-act-detail {
+    background: #17a2b8;
+    color: #ffffff;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 4px;
+    font-size: 11.5px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    text-decoration: none;
+    transition: all 0.15s ease;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+    white-space: nowrap;
+    height: 32px;
+}
+
+.btn-act-detail i {
+    font-size: 15px;
+}
+
+.btn-act-detail:hover {
+    background: #138496;
+    color: #ffffff;
+    box-shadow: 0 2px 5px rgba(23, 162, 184, 0.3);
+}
+
+.btn-act-edit {
+    background: #ffc107;
+    color: #212529;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 4px;
+    font-size: 11.5px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    text-decoration: none;
+    transition: all 0.15s ease;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+    white-space: nowrap;
+    height: 32px;
+}
+
+.btn-act-edit i {
+    font-size: 15px;
+}
+
+.btn-act-edit:hover {
+    background: #e0a800;
+    color: #212529;
+    box-shadow: 0 2px 5px rgba(255, 193, 7, 0.35);
+}
+
+.btn-act-delete {
+    background: #dc3545;
+    color: #ffffff;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 11.5px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+    transition: all 0.15s ease;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+    white-space: nowrap;
+    height: 32px;
+}
+
+.btn-act-delete:hover {
+    background: #c82333;
+    color: #ffffff;
+    box-shadow: 0 2px 5px rgba(220, 53, 69, 0.3);
+}
+
+/* ── Pagination Bar ─────────────────────────────────────── */
+.warga-pagination-bar {
+    padding: 12px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #ffffff;
+    border-top: 1px solid #f1f3f5;
+    font-size: 12.5px;
+    color: #6c757d;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.warga-page-buttons {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+
+.warga-page-btn {
+    border: 1px solid #dee2e6;
+    background: #ffffff;
+    color: #007bff;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 500;
+    min-width: 36px;
+    height: 36px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+    outline: none;
+    font-family: inherit;
+}
+
+.warga-page-btn:hover:not(:disabled):not(.warga-page-btn--active) {
+    background: #e9ecef;
+    border-color: #dee2e6;
+    color: #0056b3;
+}
+
+.warga-page-btn--active {
+    background: #007bff !important;
+    border-color: #007bff !important;
+    color: #ffffff !important;
+    font-weight: 600;
+    cursor: default;
+}
+
+.warga-page-btn:disabled,
+.warga-page-btn--disabled {
+    color: #adb5bd !important;
+    background: #f8f9fa !important;
+    border-color: #dee2e6 !important;
+    cursor: not-allowed;
+    opacity: 0.65;
+}
+
+/* ── TAB 2: Verifikasi Pengajuan Badges & Buttons ───────── */
+.badge-aksi-ubah {
+    background: #17a2b8;
+    color: #ffffff;
+    font-size: 11.5px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 4px;
+    display: inline-block;
+    white-space: nowrap;
+}
+
+.badge-aksi-tambah {
+    background: #28a745;
+    color: #ffffff;
+    font-size: 11.5px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 4px;
+    display: inline-block;
+    white-space: nowrap;
+}
+
+.badge-aksi-pindah {
+    background: #f39c12;
+    color: #ffffff;
+    font-size: 11.5px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 4px;
+    display: inline-block;
+    white-space: nowrap;
+}
+
+.badge-lampiran-file {
+    background: #e9ecef;
+    border: 1px solid #ced4da;
+    color: #343a40;
+    font-size: 11.5px;
+    font-weight: 600;
+    padding: 4px 8px;
+    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+}
+
+.badge-status-menunggu {
+    background: #ffc107;
+    color: #212529;
+    border: none;
+    font-size: 11.5px;
+    font-weight: 600;
+    padding: 5px 10px;
+    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+}
+
+.badge-status-menunggu i {
+    font-size: 13px;
+    color: #212529;
+}
+
+.btn-tindakan-setujui {
+    background: #28a745;
+    color: #ffffff;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    transition: all 0.15s ease;
+    height: 32px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+    white-space: nowrap;
+}
+
+.btn-tindakan-setujui i {
+    font-size: 15px;
+}
+
+.btn-tindakan-setujui:hover {
+    background: #218838;
+}
+
+.btn-tindakan-review {
+    background: #007bff;
+    color: #ffffff;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    transition: all 0.15s ease;
+    height: 32px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+    white-space: nowrap;
+}
+
+.btn-tindakan-review i {
+    font-size: 15px;
+}
+
+.btn-tindakan-review:hover {
+    background: #0069d9;
+}
+
+/* ── Top Kembali ke Daftar KK Button ────────────────────── */
+.btn-kembali-kk {
+    background: #2b3137;
+    color: #ffffff;
+    border: 1px solid #2b3137;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    transition: all 0.15s ease;
+    white-space: nowrap;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    height: 38px;
+}
+
+.btn-kembali-kk:hover {
+    background: #1e2226;
+    border-color: #1e2226;
+    color: #ffffff;
+}
+
+.btn-kembali-kk i {
+    font-size: 16px;
+}
+
+/* ── VIEW DETAIL KK (Screenshot 2) ──────────────────────── */
+.detail-kk-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.detail-section-card {
+    background: #ffffff;
+    border-radius: 4px;
+    border: 1px solid #e9ecef;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+}
+
+.detail-section-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 18px;
+    background: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+    cursor: pointer;
+}
+
+.detail-section-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #212529;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.detail-section-title i {
+    font-size: 18px;
+    color: #007bff;
+}
+
+.detail-profil-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    padding: 18px 20px;
+}
+
+.detail-profil-item__label {
+    font-size: 11px;
+    font-weight: 700;
+    color: #6c757d;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0 0 4px;
+}
+
+.detail-profil-item__value {
+    font-size: 13.5px;
+    font-weight: 700;
+    color: #212529;
+    margin: 0 0 2px;
+}
+
+.detail-profil-item__sub {
+    font-size: 11.5px;
+    color: #6c757d;
+    margin: 0;
+}
+
+.badge-ekonomi-detail {
+    background: #f1f3f5;
+    color: #495057;
+    border: 1px solid #ced4da;
+    font-size: 11.5px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 4px;
+    display: inline-block;
+    white-space: nowrap;
+}
+
+/* Header actions di Card Susunan Anggota Keluarga */
+.detail-anggota-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-reset-password {
+    background: #28a745;
+    color: #ffffff;
+    border: none;
+    padding: 7px 14px;
+    border-radius: 4px;
+    font-size: 12.5px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.15s ease;
+    height: 34px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+    white-space: nowrap;
+}
+
+.btn-reset-password i {
+    font-size: 16px;
+}
+
+.btn-reset-password:hover {
+    background: #218838;
+}
+
+.btn-tambah-anggota {
+    background: #007bff;
+    color: #ffffff;
+    border: none;
+    padding: 7px 14px;
+    border-radius: 4px;
+    font-size: 12.5px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.15s ease;
+    height: 34px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+    white-space: nowrap;
+}
+
+.btn-tambah-anggota i {
+    font-size: 16px;
+}
+
+.btn-tambah-anggota:hover {
+    background: #0069d9;
+}
+
+/* Badges di tabel anggota */
+.badge-hub-kepala {
+    background: #007bff;
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 4px;
+    display: inline-block;
+    white-space: nowrap;
+}
+
+.badge-hub-istri {
+    background: #17a2b8;
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 4px;
+    display: inline-block;
+    white-space: nowrap;
+}
+
+.badge-hub-anak {
+    background: #e9ecef;
+    color: #343a40;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 4px;
+    display: inline-block;
+    border: 1px solid #ced4da;
+    white-space: nowrap;
+}
+
+.badge-warga-hidup {
+    background: #155724;
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 20px;
+    display: inline-block;
+    white-space: nowrap;
+}
+
+/* Tombol aksi khusus di tabel anggota */
+.btn-act-detail-blue {
+    background: #007bff;
+    color: #ffffff;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 4px;
+    font-size: 11.5px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    text-decoration: none;
+    transition: all 0.15s ease;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+    white-space: nowrap;
+    height: 32px;
+}
+
+.btn-act-detail-blue:hover {
+    background: #0069d9;
+}
+
+.btn-act-detail-blue i {
+    font-size: 15px;
+}
+
+.btn-act-edit-green {
+    background: #28a745;
+    color: #ffffff;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 4px;
+    font-size: 11.5px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    text-decoration: none;
+    transition: all 0.15s ease;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+    white-space: nowrap;
+    height: 32px;
+}
+
+.btn-act-edit-green:hover {
+    background: #218838;
+}
+
+.btn-act-edit-green i {
+    font-size: 15px;
+}
+
+/* Footer info di bawah tabel anggota */
+.detail-footer-sync {
+    padding: 10px 18px;
+    background: #ffffff;
+    border-top: 1px solid #f1f3f5;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 12px;
+    color: #6c757d;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.detail-footer-sync__left {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #28a745;
+}
+
+/* Responsive */
+@media (max-width: 960px) {
+    .warga-stats-grid {
+        grid-template-columns: 1fr;
+    }
+    .detail-profil-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 600px) {
+    .detail-profil-grid {
+        grid-template-columns: 1fr;
+    }
+}

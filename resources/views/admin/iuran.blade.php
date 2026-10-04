@@ -45,17 +45,17 @@
      ======================================================== --}}
 <div class="iuran-stats-grid">
     <div class="iuran-stat-box iuran-stat-box--green" style="cursor: pointer;" onclick="switchIuranTab('riwayat')" title="Lihat riwayat penerimaan kas">
-        <div class="iuran-stat-box__val">Rp 3.850.000</div>
+        <div class="iuran-stat-box__val" id="stat-total-kas">Rp 3.850.000</div>
         <div class="iuran-stat-box__label">Total Penerimaan Kas</div>
         <i class='bx bx-wallet iuran-stat-box__icon'></i>
     </div>
     <div class="iuran-stat-box iuran-stat-box--blue" style="cursor: pointer;" onclick="switchIuranTab('riwayat')" title="Lihat KK telah lunas">
-        <div class="iuran-stat-box__val">77 KK</div>
+        <div class="iuran-stat-box__val" id="stat-kk-lunas">77 KK</div>
         <div class="iuran-stat-box__label">KK Telah Lunas</div>
         <i class='bx bx-group iuran-stat-box__icon'></i>
     </div>
     <div class="iuran-stat-box iuran-stat-box--red" style="cursor: pointer;" onclick="switchIuranTab('tunggakan')" title="Lihat KK belum membayar">
-        <div class="iuran-stat-box__val">11 KK</div>
+        <div class="iuran-stat-box__val" id="stat-kk-belum">11 KK</div>
         <div class="iuran-stat-box__label">KK Belum Membayar</div>
         <i class='bx bx-clipboard iuran-stat-box__icon'></i>
     </div>
@@ -71,11 +71,9 @@
         <div class="iuran-tabs-left">
             <button type="button" class="iuran-tab-btn iuran-tab-btn--active" id="tab-btn-tunggakan" onclick="switchIuranTab('tunggakan')">
                 Daftar Tunggakan KK
-                <span class="badge-tab-red">11 KK Belum Lunas</span>
             </button>
             <button type="button" class="iuran-tab-btn" id="tab-btn-riwayat" onclick="switchIuranTab('riwayat')">
                 Riwayat Penerimaan Kas
-                <span class="badge-tab-gray">77 Transaksi</span>
             </button>
         </div>
         <div class="iuran-tabs-right">
@@ -88,11 +86,18 @@
     <div id="pane-tab-tunggakan">
         {{-- Toolbar Search & Info --}}
         <div class="iuran-toolbar-row">
-            <div class="iuran-search-wrap">
-                <i class='bx bx-search iuran-search-icon'></i>
-                <input type="text" id="search-tunggakan-input" class="iuran-search-input"
-                       placeholder="Cari Nama Kepala Keluarga, Blok, atau No. KK..."
-                       onkeyup="filterTunggakanTable()">
+            <div class="iuran-toolbar-left">
+                <div class="iuran-search-wrap">
+                    <i class='bx bx-search iuran-search-icon'></i>
+                    <input type="text" id="search-tunggakan-input" class="iuran-search-input"
+                           placeholder="Cari Nama Kepala Keluarga, Blok, atau No. KK..."
+                           onkeyup="filterTunggakanTable()">
+                </div>
+                <select id="filter-tunggakan-ekonomi" class="iuran-filter-select" onchange="filterTunggakanTable()">
+                    <option value="">Semua Status Ekonomi</option>
+                    <option value="mampu">Ekonomi: Mampu</option>
+                    <option value="kurang mampu">Ekonomi: Kurang Mampu</option>
+                </select>
             </div>
             <div class="iuran-besaran-tag" id="tag-besaran-toolbar">
                 <i class='bx bx-money'></i>
@@ -126,9 +131,16 @@
                 <tbody id="tbody-tunggakan">
                     @foreach($listTunggakan as $idx => $t)
                     <tr class="row-tunggakan-item"
+                        id="row-tunggakan-{{ $t['id'] }}"
+                        data-id="{{ $t['id'] }}"
                         data-nokk="{{ $t['no_kk'] }}"
                         data-nama="{{ strtolower($t['nama_kepala']) }}"
-                        data-blok="{{ strtolower($t['blok']) }}">
+                        data-nama-raw="{{ $t['nama_kepala'] }}"
+                        data-blok="{{ strtolower($t['blok']) }}"
+                        data-blok-raw="{{ $t['blok'] }}"
+                        data-periode="{{ $t['periode'] }}"
+                        data-nominal="{{ $t['nominal'] }}"
+                        data-ekonomi="{{ strtolower($t['status_ekonomi']) }}">
                         <td style="text-align: center; color: #495057; font-weight: 500;">{{ $idx + 1 }}</td>
                         <td>
                             <div class="no-kk-text">{{ $t['no_kk'] }}</div>
@@ -153,7 +165,7 @@
                         </td>
                         <td style="text-align: center;">
                             <button type="button" class="btn-tandai-lunas"
-                                    onclick="tandaiLunasKK({{ $t['id'] }}, '{{ addslashes($t['nama_kepala']) }}', '{{ $t['nominal'] }}')"
+                                    onclick="bukaModalTandaiLunas({{ $t['id'] }}, '{{ addslashes($t['nama_kepala']) }}', '{{ $t['no_kk'] }}', '{{ $t['periode'] }}', '{{ $t['nominal'] }}', '{{ addslashes($t['blok']) }}')"
                                     title="Catat dan verifikasi pembayaran lunas">
                                 <i class='bx bx-check-circle'></i> Tandai Lunas
                             </button>
@@ -173,17 +185,39 @@
 
     {{-- ═══ TAB 2: RIWAYAT PENERIMAAN KAS ═══ --}}
     <div id="pane-tab-riwayat" style="display: none;">
-        {{-- Toolbar Search --}}
+        {{-- Toolbar Search & Filter Bulan/Tahun --}}
         <div class="iuran-toolbar-row">
-            <div class="iuran-search-wrap">
-                <i class='bx bx-search iuran-search-icon'></i>
-                <input type="text" id="search-riwayat-input" class="iuran-search-input"
-                       placeholder="Cari transaksi lunas, nama warga, atau nomor KK..."
-                       onkeyup="filterRiwayatTable()">
+            <div class="iuran-toolbar-left">
+                <div class="iuran-search-wrap">
+                    <i class='bx bx-search iuran-search-icon'></i>
+                    <input type="text" id="search-riwayat-input" class="iuran-search-input"
+                           placeholder="Cari transaksi lunas, nama warga, atau nomor KK..."
+                           onkeyup="filterRiwayatTable()">
+                </div>
+                <select id="filter-riwayat-bulan" class="iuran-filter-select" onchange="filterRiwayatTable()">
+                    <option value="">Semua Bulan</option>
+                    <option value="januari">Januari</option>
+                    <option value="februari">Februari</option>
+                    <option value="maret">Maret</option>
+                    <option value="april">April</option>
+                    <option value="mei">Mei</option>
+                    <option value="juni">Juni</option>
+                    <option value="juli">Juli</option>
+                    <option value="agustus">Agustus</option>
+                    <option value="september">September</option>
+                    <option value="oktober">Oktober</option>
+                    <option value="november">November</option>
+                    <option value="desember">Desember</option>
+                </select>
+                <select id="filter-riwayat-tahun" class="iuran-filter-select" onchange="filterRiwayatTable()">
+                    <option value="">Semua Tahun</option>
+                    <option value="2026">2026</option>
+                    <option value="2025">2025</option>
+                </select>
             </div>
-            <div class="iuran-besaran-tag">
+            <div class="iuran-besaran-tag" id="tag-riwayat-toolbar">
                 <i class='bx bx-check-double'></i>
-                <span>Total 77 KK Telah Lunas Terverifikasi</span>
+                <span id="label-total-riwayat-toolbar">Total {{ count($listRiwayat) }} Transaksi Lunas</span>
             </div>
         </div>
 
@@ -215,7 +249,11 @@
                     <tr class="row-riwayat-item"
                         data-nokk="{{ $r['no_kk'] }}"
                         data-nama="{{ strtolower($r['nama_kepala']) }}"
-                        data-blok="{{ strtolower($r['blok']) }}">
+                        data-blok="{{ strtolower($r['blok']) }}"
+                        data-periode="{{ strtolower($r['periode']) }}"
+                        data-bulan="{{ strtolower($r['bulan'] ?? '') }}"
+                        data-tahun="{{ $r['tahun'] ?? '' }}"
+                        data-tgl="{{ strtolower($r['tanggal_bayar']) }}">
                         <td style="text-align: center; color: #495057; font-weight: 500;">{{ $rIdx + 1 }}</td>
                         <td>
                             <div class="no-kk-text">{{ $r['no_kk'] }}</div>
@@ -270,14 +308,6 @@
                 <label style="display:block;font-size:12px;font-weight:700;margin-bottom:6px;color:#495057;">Besaran Tarif Iuran Wajib per KK:</label>
                 <input type="text" id="modal-input-tarif" value="Rp 50.000" style="width:100%;height:38px;padding:6px 12px;border:1px solid #ced4da;border-radius:4px;font-size:13px;box-sizing:border-box;">
             </div>
-            <div style="margin-bottom: 14px;">
-                <label style="display:block;font-size:12px;font-weight:700;margin-bottom:6px;color:#495057;">Periode Bulan Aktif:</label>
-                <select id="modal-select-periode" style="width:100%;height:38px;padding:6px 12px;border:1px solid #ced4da;border-radius:4px;font-size:13px;box-sizing:border-box;">
-                    <option value="Februari 2026" selected>Februari 2026</option>
-                    <option value="Maret 2026">Maret 2026</option>
-                    <option value="April 2026">April 2026</option>
-                </select>
-            </div>
             <div>
                 <label style="display:block;font-size:12px;font-weight:700;margin-bottom:6px;color:#495057;">Catatan Pengumuman Kas RT:</label>
                 <textarea id="modal-input-catatan" rows="3" style="width:100%;padding:8px 12px;border:1px solid #ced4da;border-radius:4px;font-size:12.5px;box-sizing:border-box;" placeholder="Contoh: Batas pelunasan iuran kebersihan & keamanan tanggal 15 setiap bulan.">Batas pelunasan iuran kebersihan &amp; keamanan RT 04 adalah tanggal 15 setiap bulan.</textarea>
@@ -286,6 +316,74 @@
         <div class="iuran-modal-footer">
             <button type="button" onclick="tutupModalAturIuran()" style="background:#f8f9fa;border:1px solid #ced4da;padding:8px 16px;border-radius:4px;font-size:12.5px;font-weight:600;cursor:pointer;">Batal</button>
             <button type="button" onclick="simpanPengaturanIuran()" style="background:#007bff;color:#fff;border:none;padding:8px 16px;border-radius:4px;font-size:12.5px;font-weight:600;cursor:pointer;">Simpan Pengaturan</button>
+        </div>
+    </div>
+</div>
+
+{{-- ========================================================
+     MODAL KONFIRMASI PEMBAYARAN IURAN (TANDAI LUNAS)
+     ======================================================== --}}
+<div class="iuran-modal-backdrop" id="modal-tandai-lunas">
+    <div class="iuran-modal-content iuran-modal-content--lunas">
+        <div class="iuran-modal-header iuran-modal-header--green">
+            <h3 class="iuran-modal-title iuran-modal-title--white">
+                <i class='bx bx-check-circle'></i> Konfirmasi Pembayaran Iuran (Tandai Lunas)
+            </h3>
+            <button type="button" class="iuran-modal-close iuran-modal-close--white" onclick="tutupModalTandaiLunas()">&times;</button>
+        </div>
+        <div class="iuran-modal-body" style="padding: 18px 20px 20px;">
+            <input type="hidden" id="modal-lunas-id" value="">
+            <input type="hidden" id="modal-lunas-nokk-val" value="">
+            <input type="hidden" id="modal-lunas-nama-val" value="">
+            <input type="hidden" id="modal-lunas-periode-val" value="">
+            <input type="hidden" id="modal-lunas-nominal-val" value="">
+            <input type="hidden" id="modal-lunas-blok-val" value="">
+
+            {{-- Upper Card Info Box --}}
+            <div class="modal-lunas-infobox">
+                <div class="modal-lunas-row" style="margin-bottom: 10px;">
+                    <div>
+                        <div class="modal-lunas-nama" id="modal-lunas-nama-text">Agus Supriyanto</div>
+                        <div class="modal-lunas-nokk">No KK : <span id="modal-lunas-nokk-text">3276021204850001</span></div>
+                    </div>
+                    <div>
+                        <span class="modal-lunas-badge-belum">
+                            <i class='bx bx-minus-circle'></i> Belum Lunas
+                        </span>
+                    </div>
+                </div>
+                <div class="modal-lunas-row" style="padding-top: 8px; border-top: 1px dashed #e9ecef;">
+                    <div class="modal-lunas-periode">
+                        Periode Tagihan: <strong id="modal-lunas-periode-text">Februari 2026</strong>
+                    </div>
+                    <div class="modal-lunas-nominal-wrap">
+                        <span>Nominal Iuran:</span>
+                        <span class="modal-lunas-nominal-badge" id="modal-lunas-nominal-badge">Rp 50.000</span>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Form Field: Tanggal Pembayaran --}}
+            <div style="margin-bottom: 12px;">
+                <label style="display:block;font-size:12px;font-weight:700;margin-bottom:6px;color:#343a40;">Tanggal Pembayaran *</label>
+                <input type="date" id="modal-lunas-tanggal" style="width:100%;height:38px;padding:6px 12px;border:1px solid #ced4da;border-radius:4px;font-size:13px;box-sizing:border-box;" value="2026-02-14">
+            </div>
+
+            {{-- Information Banner --}}
+            <div class="modal-lunas-alert">
+                <i class='bx bx-info-circle'></i>
+                <div>
+                    Setelah ditandai lunas, status KK ini akan otomatis berubah menjadi <strong>LUNAS</strong> dan tercatat di riwayat penerimaan kas RT 04.
+                </div>
+            </div>
+
+            {{-- Action Buttons --}}
+            <div style="display: flex; justify-content: flex-end; gap: 10px;">
+                <button type="button" class="btn-modal-batal" onclick="tutupModalTandaiLunas()">Batal</button>
+                <button type="button" class="btn-modal-simpan-lunas" onclick="eksekusiTandaiLunas()">
+                    <i class='bx bx-check'></i> Konfirmasi &amp; Simpan Lunas
+                </button>
+            </div>
         </div>
     </div>
 </div>
@@ -325,14 +423,22 @@
 
     // Render & Pagination Tabel Tunggakan
     function renderTunggakanPagination() {
-        var q = (document.getElementById('search-tunggakan-input').value || '').toLowerCase().trim();
+        var searchInput = document.getElementById('search-tunggakan-input');
+        var q = (searchInput ? searchInput.value : '').toLowerCase().trim();
+        var filterEkoSelect = document.getElementById('filter-tunggakan-ekonomi');
+        var filterEko = (filterEkoSelect ? filterEkoSelect.value : '').toLowerCase().trim();
         var allRows = Array.from(document.querySelectorAll('#tbody-tunggakan tr.row-tunggakan-item'));
 
         var matchedRows = allRows.filter(function(row) {
             var nokk = (row.dataset.nokk || '').toLowerCase();
             var nama = (row.dataset.nama || '').toLowerCase();
             var blok = (row.dataset.blok || '').toLowerCase();
-            return !q || nokk.includes(q) || nama.includes(q) || blok.includes(q);
+            var eko = (row.dataset.ekonomi || '').toLowerCase();
+
+            var matchSearch = !q || nokk.includes(q) || nama.includes(q) || blok.includes(q);
+            var matchEko = !filterEko || eko.includes(filterEko);
+
+            return matchSearch && matchEko;
         });
 
         var totalItems = matchedRows.length;
@@ -354,7 +460,7 @@
 
         var infoEl = document.getElementById('info-tunggakan-count');
         if (totalItems === 0) {
-            infoEl.innerHTML = 'Tidak ada data tunggakan warga yang cocok dengan pencarian';
+            infoEl.innerHTML = 'Tidak ada data tunggakan warga yang cocok dengan filter';
         } else {
             infoEl.innerHTML = 'Menampilkan <strong>' + (startIndex + 1) + ' - ' + endIndex + '</strong> dari <strong>' + totalItems + '</strong> data KK Belum Lunas RT 04';
         }
@@ -363,7 +469,6 @@
         container.innerHTML = '';
 
         if (totalPages <= 1 && totalItems <= TUNGGAKAN_PAGE_SIZE) {
-            // Tetap render tombol disabled 1
             var bPrev = createPageBtn('&lt;', true, false, function(){});
             var b1 = createPageBtn('1', false, true, function(){});
             var bNext = createPageBtn('&gt;', true, false, function(){});
@@ -408,14 +513,37 @@
 
     // Render & Pagination Tabel Riwayat
     function renderRiwayatPagination() {
-        var q = (document.getElementById('search-riwayat-input').value || '').toLowerCase().trim();
+        var searchRiwayatInput = document.getElementById('search-riwayat-input');
+        var q = (searchRiwayatInput ? searchRiwayatInput.value : '').toLowerCase().trim();
+        var filterBulanSelect = document.getElementById('filter-riwayat-bulan');
+        var filterBulan = (filterBulanSelect ? filterBulanSelect.value : '').toLowerCase().trim();
+        var filterTahunSelect = document.getElementById('filter-riwayat-tahun');
+        var filterTahun = (filterTahunSelect ? filterTahunSelect.value : '').trim();
         var allRows = Array.from(document.querySelectorAll('#tbody-riwayat tr.row-riwayat-item'));
 
         var matchedRows = allRows.filter(function(row) {
             var nokk = (row.dataset.nokk || '').toLowerCase();
             var nama = (row.dataset.nama || '').toLowerCase();
             var blok = (row.dataset.blok || '').toLowerCase();
-            return !q || nokk.includes(q) || nama.includes(q) || blok.includes(q);
+            var periode = (row.dataset.periode || '').toLowerCase();
+            var bulan = (row.dataset.bulan || '').toLowerCase();
+            var tahun = (row.dataset.tahun || '').trim();
+            var tgl = (row.dataset.tgl || '').toLowerCase();
+
+            var matchSearch = !q || nokk.includes(q) || nama.includes(q) || blok.includes(q) || periode.includes(q);
+
+            var matchBulan = true;
+            if (filterBulan) {
+                var bulanAbbr = filterBulan.substring(0, 3);
+                matchBulan = bulan.includes(filterBulan) || periode.includes(bulanAbbr) || tgl.includes(bulanAbbr);
+            }
+
+            var matchTahun = true;
+            if (filterTahun) {
+                matchTahun = (tahun === filterTahun) || periode.includes(filterTahun) || tgl.includes(filterTahun);
+            }
+
+            return matchSearch && matchBulan && matchTahun;
         });
 
         var totalItems = matchedRows.length;
@@ -437,9 +565,14 @@
 
         var infoEl = document.getElementById('info-riwayat-count');
         if (totalItems === 0) {
-            infoEl.innerHTML = 'Tidak ada data transaksi lunas yang cocok dengan pencarian';
+            infoEl.innerHTML = 'Tidak ada data transaksi lunas yang cocok dengan filter';
         } else {
             infoEl.innerHTML = 'Menampilkan <strong>' + (startIndex + 1) + ' - ' + endIndex + '</strong> dari <strong>' + totalItems + '</strong> data transaksi lunas';
+        }
+
+        var labelToolbar = document.getElementById('label-total-riwayat-toolbar');
+        if (labelToolbar) {
+            labelToolbar.textContent = 'Ditemukan ' + totalItems + ' Transaksi Lunas';
         }
 
         var container = document.getElementById('pagination-riwayat');
@@ -512,17 +645,118 @@
         renderRiwayatPagination();
     }
 
-    // Tandai Lunas KK
-    function tandaiLunasKK(id, nama, nominal) {
-        if (confirm('Konfirmasi pembayaran iuran ' + nominal + ' untuk ' + nama + '?\nStatus akan otomatis diperbarui menjadi LUNAS.')) {
-            alert('Pembayaran iuran dari ' + nama + ' sebesar ' + nominal + ' berhasil diverifikasi Lunas.');
-        }
+    // Modal Tandai Lunas
+    function bukaModalTandaiLunas(id, nama, noKk, periode, nominal, blok) {
+        document.getElementById('modal-lunas-id').value = id;
+        document.getElementById('modal-lunas-nama-val').value = nama;
+        document.getElementById('modal-lunas-nokk-val').value = noKk;
+        document.getElementById('modal-lunas-periode-val').value = periode;
+        document.getElementById('modal-lunas-nominal-val').value = nominal;
+        document.getElementById('modal-lunas-blok-val').value = blok || '';
+
+        document.getElementById('modal-lunas-nama-text').textContent = nama;
+        document.getElementById('modal-lunas-nokk-text').textContent = noKk;
+        document.getElementById('modal-lunas-periode-text').textContent = (periode === 'Feb 2026' || periode === 'Februari 2026') ? 'Februari 2026' : periode;
+        document.getElementById('modal-lunas-nominal-badge').textContent = nominal;
+
+        // Set default tanggal (2026-02-14 seperti di screenshot atau hari ini)
+        document.getElementById('modal-lunas-tanggal').value = '2026-02-14';
+
+        document.getElementById('modal-tandai-lunas').style.display = 'flex';
     }
 
-    // Cetak Kwitansi
-    function cetakKwitansi(noKk, nama, nominal) {
-        alert('Mencetak kwitansi resmi pembayaran iuran warga:\n\nNama: ' + nama + '\nNo. KK: ' + noKk + '\nNominal: ' + nominal + '\nStatus: Lunas (Terverifikasi)');
-        window.print();
+    function tutupModalTandaiLunas() {
+        document.getElementById('modal-tandai-lunas').style.display = 'none';
+    }
+
+    // Eksekusi Konfirmasi & Simpan Lunas
+    let totalKasNominal = 3850000;
+    let totalKkLunas = 77;
+    let totalKkTunggakan = 11;
+
+    function eksekusiTandaiLunas() {
+        var id = document.getElementById('modal-lunas-id').value;
+        var nama = document.getElementById('modal-lunas-nama-val').value;
+        var noKk = document.getElementById('modal-lunas-nokk-val').value;
+        var periode = document.getElementById('modal-lunas-periode-val').value;
+        var nominal = document.getElementById('modal-lunas-nominal-val').value;
+        var blok = document.getElementById('modal-lunas-blok-val').value;
+        var tglRaw = document.getElementById('modal-lunas-tanggal').value;
+
+        // Format tanggal bayar untuk riwayat
+        var formattedTgl = '14 Feb 2026 12:00 WIB';
+        if (tglRaw) {
+            var parts = tglRaw.split('-');
+            if (parts.length === 3) {
+                var months = ['','Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+                var mIdx = parseInt(parts[1], 10);
+                formattedTgl = `${parts[2]} ${months[mIdx] || parts[1]} ${parts[0]} 12:00 WIB`;
+            }
+        }
+
+        // Hapus row dari tabel tunggakan
+        var rowTunggakan = document.getElementById('row-tunggakan-' + id);
+        if (rowTunggakan) {
+            rowTunggakan.remove();
+        }
+
+        // Tambahkan baris transaksi baru di atas tabel riwayat
+        var tbodyRiwayat = document.getElementById('tbody-riwayat');
+        if (tbodyRiwayat) {
+            var newTr = document.createElement('tr');
+            newTr.className = 'row-riwayat-item';
+            newTr.dataset.nokk = noKk;
+            newTr.dataset.nama = (nama || '').toLowerCase();
+            newTr.dataset.blok = (blok || '').toLowerCase();
+            newTr.dataset.periode = (periode || '').toLowerCase();
+            newTr.dataset.bulan = 'februari';
+            newTr.dataset.tahun = '2026';
+            newTr.dataset.tgl = formattedTgl.toLowerCase();
+            newTr.innerHTML = `
+                <td style="text-align: center; color: #495057; font-weight: 500;">1</td>
+                <td><div class="no-kk-text">${noKk}</div></td>
+                <td>
+                    <div class="nama-warga-text">${nama}</div>
+                    <div class="blok-sub-text"><i class='bx bx-home'></i> ${blok || '-'}</div>
+                </td>
+                <td>
+                    <div style="font-weight: 600; color: #212529;">Periode: ${periode}</div>
+                    <div style="font-size: 11.5px; color: #6c757d; margin-top: 2px;">${formattedTgl}</div>
+                </td>
+                <td><span class="badge-periode-pill">Cash</span></td>
+                <td><div class="nominal-text">${nominal}</div></td>
+                <td style="text-align: center;">
+                    <span class="badge-status-lunas"><i class='bx bx-check'></i> Lunas</span>
+                </td>
+            `;
+            tbodyRiwayat.insertBefore(newTr, tbodyRiwayat.firstChild);
+        }
+
+        // Update nominal & counter statistik secara realtime
+        totalKasNominal += 50000;
+        totalKkLunas += 1;
+        totalKkTunggakan = Math.max(0, totalKkTunggakan - 1);
+
+        var statKas = document.getElementById('stat-total-kas');
+        if (statKas) statKas.textContent = 'Rp ' + totalKasNominal.toLocaleString('id-ID');
+
+        var statLunas = document.getElementById('stat-kk-lunas');
+        if (statLunas) statLunas.textContent = totalKkLunas + ' KK';
+
+        var statBelum = document.getElementById('stat-kk-belum');
+        if (statBelum) statBelum.textContent = totalKkTunggakan + ' KK';
+
+        var badgeTabTunggakan = document.getElementById('badge-tab-tunggakan');
+        if (badgeTabTunggakan) badgeTabTunggakan.textContent = totalKkTunggakan + ' KK Belum Lunas';
+
+        var badgeTabRiwayat = document.getElementById('badge-tab-riwayat');
+        if (badgeTabRiwayat) badgeTabRiwayat.textContent = totalKkLunas + ' Transaksi';
+
+        // Re-render pagination kedua tabel
+        renderTunggakanPagination();
+        renderRiwayatPagination();
+
+        tutupModalTandaiLunas();
     }
 
     // Modal Atur Iuran
@@ -536,15 +770,24 @@
 
     function simpanPengaturanIuran() {
         var tarif = document.getElementById('modal-input-tarif').value;
-        var periode = document.getElementById('modal-select-periode').value;
+        var periodeEl = document.getElementById('modal-select-periode');
+        var periode = periodeEl ? periodeEl.value : 'Februari 2026';
 
-        document.getElementById('header-periode-badge').textContent = 'Periode Aktif: ' + periode;
         document.getElementById('label-besaran-wajib').textContent = tarif + ' / KK';
-        document.getElementById('val-besaran-toolbar').textContent = tarif + ' / KK';
+        var valToolbar = document.getElementById('val-besaran-toolbar');
+        if (valToolbar) valToolbar.textContent = tarif + ' / KK';
 
         tutupModalAturIuran();
-        alert('Pengaturan tarif ' + tarif + ' untuk ' + periode + ' berhasil disimpan.');
+        alert('Pengaturan tarif ' + tarif + ' berhasil disimpan.');
     }
+
+    // Close modal ketika klik di area luar backdrop
+    document.addEventListener('click', function(e) {
+        var modalLunas = document.getElementById('modal-tandai-lunas');
+        var modalAtur = document.getElementById('modal-atur-iuran');
+        if (e.target === modalLunas) tutupModalTandaiLunas();
+        if (e.target === modalAtur) tutupModalAturIuran();
+    });
 
     // Inisialisasi awal saat load
     document.addEventListener('DOMContentLoaded', function() {

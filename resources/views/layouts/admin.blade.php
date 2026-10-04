@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
@@ -51,7 +51,7 @@
             Kelola Pengumuman
         </a>
 
-        <a href="{{ route('admin.data-warga') }}" class="admin-sidebar__nav-link {{ request()->routeIs('admin.data-warga') ? 'admin-sidebar__nav-link--active' : '' }}">
+        <a href="{{ route('admin.data-warga') }}" class="admin-sidebar__nav-link {{ request()->routeIs('admin.data-warga*') ? 'admin-sidebar__nav-link--active' : '' }}">
             Kelola Data Warga & Verifikasi
         </a>
 

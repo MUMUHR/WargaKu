@@ -75,8 +75,28 @@ Route::prefix('admin')->name('admin.')->group(function () {
             ->with('success', 'Pengumuman berhasil ' . ($status === 'publish' ? 'dipublikasikan' : 'disimpan sebagai draf') . '.');
     })->name('pengumuman.store');
 
+    // Kelola Data Warga & Anggota Keluarga
     Route::get('/data-warga', function () { return view('admin.data-warga'); })->name('data-warga');
+    Route::get('/data-warga/tambah-anggota', function () { return view('admin.warga-tambah-anggota'); })->name('data-warga.tambah-anggota');
+    Route::post('/data-warga/tambah-anggota', function () {
+        $nama = request('nama') ?? 'Anggota Baru';
+        return redirect()->route('admin.data-warga', ['view' => 'detail'])
+            ->with('success', 'Anggota keluarga baru (' . $nama . ') berhasil ditambahkan ke database RT.');
+    })->name('data-warga.tambah-anggota.store');
+
+    Route::get('/data-warga/edit-anggota/{nik?}', function ($nik = '3275015509010003') {
+        return view('admin.warga-edit-anggota', compact('nik'));
+    })->name('data-warga.edit-anggota');
+    Route::post('/data-warga/edit-anggota', function () {
+        $nama = request('nama') ?? 'Data Warga';
+        return redirect()->route('admin.data-warga', ['view' => 'detail'])
+            ->with('success', 'Pembaruan data master warga (' . $nama . ') berhasil disimpan.');
+    })->name('data-warga.edit-anggota.store');
     Route::get('/surat', function () { return view('admin.surat'); })->name('surat');
+    Route::get('/surat/preview/{id?}', function ($id = 1) {
+        $surat = \App\Data\DummyData::findPengajuanSuratAdmin($id);
+        return view('admin.surat-preview', compact('surat', 'id'));
+    })->name('surat.preview');
     Route::get('/iuran', function () { return view('admin.iuran'); })->name('iuran');
     Route::get('/pengaturan', function () { return view('admin.pengaturan'); })->name('pengaturan');
 });

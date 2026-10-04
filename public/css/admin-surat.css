@@ -362,15 +362,15 @@
     background: #007bff;
     color: #ffffff;
     border: none;
-    padding: 5px 8px;
+    padding: 6px 13px;
     border-radius: 4px;
-    font-size: 11px;
+    font-size: 12.5px;
     font-weight: 600;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
-    gap: 4px;
-    height: 28px;
+    gap: 5px;
+    height: 33px;
     transition: all 0.15s;
     white-space: nowrap;
 }
@@ -380,22 +380,22 @@
 }
 
 .btn-surat-preview-draft i {
-    font-size: 13px;
+    font-size: 15px;
 }
 
 .btn-surat-setujui {
     background: #28a745;
     color: #ffffff;
     border: none;
-    padding: 5px 8px;
+    padding: 6px 14px;
     border-radius: 4px;
-    font-size: 11px;
+    font-size: 12.5px;
     font-weight: 600;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
-    gap: 4px;
-    height: 28px;
+    gap: 5px;
+    height: 33px;
     transition: all 0.15s;
     white-space: nowrap;
 }
@@ -405,22 +405,22 @@
 }
 
 .btn-surat-setujui i {
-    font-size: 13px;
+    font-size: 15px;
 }
 
 .btn-surat-tolak {
     background: #dc3545;
     color: #ffffff;
     border: none;
-    padding: 5px 8px;
+    padding: 6px 14px;
     border-radius: 4px;
-    font-size: 11px;
+    font-size: 12.5px;
     font-weight: 600;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
-    gap: 4px;
-    height: 28px;
+    gap: 5px;
+    height: 33px;
     transition: all 0.15s;
     white-space: nowrap;
 }
@@ -430,22 +430,22 @@
 }
 
 .btn-surat-tolak i {
-    font-size: 13px;
+    font-size: 15px;
 }
 
 .btn-surat-cetak {
     background: #007bff;
     color: #ffffff;
     border: none;
-    padding: 5px 10px;
+    padding: 6px 15px;
     border-radius: 4px;
-    font-size: 11px;
+    font-size: 12.5px;
     font-weight: 600;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
-    gap: 5px;
-    height: 28px;
+    gap: 6px;
+    height: 33px;
     transition: all 0.15s;
     white-space: nowrap;
 }
@@ -455,22 +455,22 @@
 }
 
 .btn-surat-cetak i {
-    font-size: 14px;
+    font-size: 15px;
 }
 
 .btn-surat-alasan {
     background: #e9ecef;
     color: #495057;
     border: 1px solid #ced4da;
-    padding: 5px 10px;
+    padding: 6px 15px;
     border-radius: 4px;
-    font-size: 11px;
+    font-size: 12.5px;
     font-weight: 600;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
-    gap: 5px;
-    height: 28px;
+    gap: 6px;
+    height: 33px;
     transition: all 0.15s;
     white-space: nowrap;
 }
@@ -481,7 +481,7 @@
 }
 
 .btn-surat-alasan i {
-    font-size: 14px;
+    font-size: 15px;
 }
 
 /* ── Pagination Bar ── */
@@ -557,4 +557,316 @@
     .surat-stats-grid {
         grid-template-columns: 1fr;
     }
+}
+
+/* ═══════════════════════════════════════════════════════
+   MODAL POPUPS: PERSETUJUAN & CATATAN ALASAN PENOLAKAN
+   ═══════════════════════════════════════════════════════ */
+.surat-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.48);
+    z-index: 1050;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    backdrop-filter: blur(2px);
+}
+
+.surat-modal-dialog {
+    background: #ffffff;
+    width: 100%;
+    max-width: 580px;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 14px 38px rgba(0, 0, 0, 0.22);
+    animation: suratModalFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes suratModalFadeIn {
+    from { opacity: 0; transform: translateY(-12px) scale(0.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Header Variants */
+.surat-modal-header {
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.surat-modal-header--green {
+    background: #15803d;
+    color: #ffffff;
+}
+
+.surat-modal-header--red {
+    background: #dc3545;
+    color: #ffffff;
+}
+
+.surat-modal-header--plain {
+    background: #ffffff;
+    border-bottom: 1px solid #e9ecef;
+    color: #212529;
+}
+
+.surat-modal-title {
+    font-size: 15px;
+    font-weight: 700;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.surat-modal-header--green .surat-modal-title,
+.surat-modal-header--red .surat-modal-title {
+    color: #ffffff;
+}
+
+.surat-modal-header--plain .surat-modal-title {
+    color: #212529;
+}
+
+.surat-modal-close-btn {
+    background: none;
+    border: none;
+    font-size: 20px;
+    line-height: 1;
+    cursor: pointer;
+    padding: 2px 6px;
+    border-radius: 4px;
+    opacity: 0.85;
+    transition: opacity 0.15s;
+}
+
+.surat-modal-header--green .surat-modal-close-btn,
+.surat-modal-header--red .surat-modal-close-btn {
+    color: #ffffff;
+}
+
+.surat-modal-header--plain .surat-modal-close-btn {
+    color: #6c757d;
+}
+
+.surat-modal-close-btn:hover {
+    opacity: 1;
+}
+
+.surat-modal-body {
+    padding: 20px 24px;
+}
+
+/* Info block in Modal Persetujuan */
+.surat-modal-info-block {
+    margin-bottom: 18px;
+    font-size: 13px;
+}
+
+.surat-modal-info-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 6px;
+}
+
+.surat-modal-info-label {
+    width: 115px;
+    color: #495057;
+    font-size: 13px;
+}
+
+.surat-modal-info-val {
+    font-size: 13px;
+}
+
+.surat-modal-info-val--blue {
+    color: #0d6efd;
+    font-weight: 700;
+}
+
+.surat-modal-info-val--dark {
+    color: #212529;
+    font-weight: 700;
+}
+
+/* Two Column Grid for inputs */
+.surat-modal-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 14px;
+}
+
+.surat-modal-field {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.surat-modal-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: #212529;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.surat-modal-label .req {
+    color: #dc3545;
+}
+
+.surat-modal-label i {
+    color: #0d6efd;
+    font-size: 15px;
+}
+
+.surat-modal-input {
+    height: 38px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    padding: 0 12px;
+    font-size: 13px;
+    color: #212529;
+    font-family: inherit;
+    width: 100%;
+    box-sizing: border-box;
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.surat-modal-input:focus {
+    border-color: #80bdff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
+}
+
+.surat-modal-input[readonly] {
+    background-color: #f1f3f5;
+    color: #495057;
+    cursor: not-allowed;
+    border-color: #dee2e6;
+}
+
+.surat-modal-subtext {
+    font-size: 11px;
+    color: #6c757d;
+    margin-top: 2px;
+}
+
+/* Modal Footer */
+.surat-modal-footer {
+    padding: 12px 24px;
+    border-top: 1px solid #f1f3f5;
+    background: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+.btn-modal-batal {
+    background: #f1f3f5;
+    color: #495057;
+    border: 1px solid #ced4da;
+    padding: 9px 20px;
+    border-radius: 5px;
+    font-size: 13.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.btn-modal-batal:hover {
+    background: #e2e6ea;
+    color: #212529;
+}
+
+.btn-modal-simpan {
+    background: #15803d;
+    color: #ffffff;
+    border: 1px solid #15803d;
+    padding: 9px 22px;
+    border-radius: 5px;
+    font-size: 13.5px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    transition: all 0.15s;
+}
+
+.btn-modal-simpan:hover {
+    background: #166534;
+    border-color: #166534;
+}
+
+.btn-modal-simpan i {
+    font-size: 17px;
+}
+
+.btn-modal-tolak {
+    background: #dc3545;
+    color: #ffffff;
+    border: 1px solid #dc3545;
+    padding: 9px 22px;
+    border-radius: 5px;
+    font-size: 13.5px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    transition: all 0.15s;
+}
+
+.btn-modal-tolak:hover {
+    background: #c82333;
+    border-color: #bd2130;
+}
+
+.btn-modal-tolak i {
+    font-size: 17px;
+}
+
+.btn-modal-tutup-alasan {
+    background: #4a6984;
+    color: #ffffff;
+    border: none;
+    padding: 8px 24px;
+    border-radius: 5px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.btn-modal-tutup-alasan:hover {
+    background: #364f66;
+}
+
+/* Red Alert Box for Catatan Alasan Penolakan */
+.surat-alasan-box {
+    background: #fff5f5;
+    border: 1px solid #fed7d7;
+    border-radius: 6px;
+    padding: 14px 16px;
+    margin-top: 12px;
+}
+
+.surat-alasan-box__title {
+    color: #c53030;
+    font-size: 12.5px;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.surat-alasan-box__desc {
+    color: #c53030;
+    font-size: 12.5px;
+    line-height: 1.5;
+    margin: 0;
 }

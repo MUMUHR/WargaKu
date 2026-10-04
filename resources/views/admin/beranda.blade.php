@@ -178,8 +178,6 @@
         <div class="dash-iuran-body">
             <p class="dash-iuran-label">Terkumpul Bulan Ini</p>
             <div class="dash-iuran-amount">Rp 4.250.000</div>
-            <p class="dash-iuran-target">Target: Rp 7.400.000</p>
-
             <a href="{{ route('admin.iuran') }}" class="btn-buka-iuran">
                 <span>Buka Kelola & Rekap Iuran</span>
                 <i class="bx bx-right-arrow-alt" style="font-size: 16px;"></i>

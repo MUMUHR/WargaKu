@@ -1,0 +1,1158 @@
+/* =======================================================
+   WargaKu — warga-surat.css
+   Styles untuk Layanan Pengajuan Surat Pengantar RT 04
+   ======================================================= */
+
+.warga-surat-page {
+    margin-bottom: 35px;
+}
+
+/* ── 3 Big Stat Cards Grid ─────────────────────────────── */
+.ws-stat-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+    margin-bottom: 28px;
+}
+
+.ws-stat-card {
+    border-radius: 8px;
+    color: #ffffff;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.09);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    min-height: 140px;
+}
+
+.ws-stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.14);
+}
+
+.ws-stat-card--yellow {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+}
+
+.ws-stat-card--green {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+.ws-stat-card--red {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+}
+
+.ws-stat-card__body {
+    padding: 22px 24px 16px;
+    position: relative;
+    z-index: 1;
+}
+
+.ws-stat-card__number {
+    font-size: 44px;
+    font-weight: 800;
+    line-height: 1;
+    margin-bottom: 8px;
+    letter-spacing: -0.5px;
+}
+
+.ws-stat-card__label {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    opacity: 0.95;
+    line-height: 1.3;
+}
+
+.ws-stat-card__watermark {
+    position: absolute;
+    right: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 80px;
+    color: rgba(255, 255, 255, 0.2);
+    pointer-events: none;
+}
+
+.ws-stat-card__footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 11px 20px;
+    background: rgba(0, 0, 0, 0.14);
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: background 0.15s ease;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.ws-stat-card__footer:hover {
+    background: rgba(0, 0, 0, 0.25);
+    color: #ffffff;
+}
+
+/* ── Tab Navigation ────────────────────────────────────── */
+.ws-tab-nav {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #ffffff;
+    border: 1px solid #dee2e6;
+    border-bottom: none;
+    border-radius: 8px 8px 0 0;
+    padding: 8px 16px 0;
+}
+
+.ws-tab-btn {
+    background: transparent;
+    border: none;
+    border-bottom: 3.5px solid transparent;
+    padding: 14px 22px;
+    font-size: 14.5px;
+    font-weight: 600;
+    color: #64748b;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.2s ease;
+    position: relative;
+    top: 1px;
+}
+
+.ws-tab-btn i {
+    font-size: 19px;
+}
+
+.ws-tab-btn:hover {
+    color: #28a745;
+}
+
+.ws-tab-btn--active {
+    color: #28a745;
+    border-bottom-color: #28a745;
+    font-weight: 800;
+    background: transparent;
+}
+
+/* ── Tab Container ─────────────────────────────────────── */
+.ws-tab-content-wrapper {
+    background: #ffffff;
+    border: 1px solid #dee2e6;
+    border-radius: 0 0 8px 8px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+    margin-bottom: 28px;
+    overflow: hidden;
+}
+
+/* ── Tab 1: Riwayat Content ─────────────────────────────── */
+.ws-toolbar {
+    padding: 22px 28px;
+    border-bottom: 1px solid #edf2f7;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    flex-wrap: wrap;
+    background: #ffffff;
+}
+
+.ws-toolbar__title {
+    font-size: 16.5px;
+    font-weight: 800;
+    color: #111827;
+    margin-bottom: 4px;
+}
+
+.ws-toolbar__sub {
+    font-size: 13px;
+    color: #64748b;
+}
+
+.ws-toolbar__actions {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.ws-filter-select {
+    height: 44px;
+    padding: 8px 16px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-size: 13.5px;
+    color: #334155;
+    background: #ffffff;
+    outline: none;
+    cursor: pointer;
+    font-weight: 500;
+    transition: border-color 0.15s;
+}
+
+.ws-filter-select:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.12);
+}
+
+.ws-search-wrap {
+    position: relative;
+    width: 290px;
+}
+
+.ws-search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+    color: #94a3b8;
+}
+
+.ws-search-input {
+    width: 100%;
+    height: 44px;
+    padding: 8px 14px 8px 38px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-size: 13.5px;
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.ws-search-input:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.12);
+}
+
+/* Table */
+.ws-table-wrap {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.ws-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+    text-align: left;
+}
+
+.ws-table thead th {
+    background: #28a745;
+    color: #ffffff;
+    padding: 15px 20px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    border: none;
+    white-space: nowrap;
+}
+
+.ws-table tbody td {
+    padding: 18px 20px;
+    border-bottom: 1px solid #f1f5f9;
+    color: #334155;
+    vertical-align: middle;
+}
+
+.ws-table tbody tr:hover {
+    background-color: #f8fafc;
+}
+
+.ws-badge-no-surat {
+    background: #f1f5f9;
+    color: #0f172a;
+    border: 1px solid #cbd5e1;
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-family: monospace;
+    font-size: 12.5px;
+    font-weight: 700;
+    display: inline-block;
+}
+
+/* Badges Status */
+.ws-badge-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 12px;
+    border-radius: 5px;
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.ws-badge-status--disetujui {
+    background: #28a745;
+    color: #ffffff;
+}
+
+.ws-badge-status--menunggu {
+    background: #f59e0b;
+    color: #ffffff;
+}
+
+.ws-badge-status--ditolak {
+    background: #dc3545;
+    color: #ffffff;
+}
+
+.ws-badge-status--dibatalkan {
+    background: #6c757d;
+    color: #ffffff;
+}
+
+/* Action Buttons inside Table */
+.ws-btn-esurat {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #28a745;
+    color: #ffffff !important;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 18px;
+    font-size: 13.5px;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.15s ease, box-shadow 0.15s ease;
+    box-shadow: 0 2px 4px rgba(40, 167, 69, 0.25);
+}
+
+.ws-btn-esurat:hover {
+    background: #218838;
+    box-shadow: 0 4px 8px rgba(40, 167, 69, 0.35);
+}
+
+.ws-btn-preview-outline {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: #ffffff;
+    color: #334155;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    padding: 9px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.ws-btn-preview-outline:hover {
+    background: #f1f5f9;
+    color: #0f172a;
+    border-color: #94a3b8;
+}
+
+.ws-btn-batal-outline {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: #ffffff;
+    color: #dc2626;
+    border: 1px solid #fca5a5;
+    border-radius: 6px;
+    padding: 9px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.ws-btn-batal-outline:hover {
+    background: #fee2e2;
+    border-color: #ef4444;
+}
+
+.ws-btn-alasan-outline {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: #ffffff;
+    color: #dc2626;
+    border: 1px solid #fca5a5;
+    border-radius: 6px;
+    padding: 9px 17px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.ws-btn-alasan-outline:hover {
+    background: #fee2e2;
+}
+
+/* Table Footer */
+.ws-table-footer {
+    padding: 20px 28px;
+    border-top: 1px solid #edf2f7;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 14px;
+    color: #475569;
+    background: #ffffff;
+    flex-wrap: wrap;
+    gap: 14px;
+}
+
+.ws-pagination {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.ws-page-btn {
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    min-height: 42px;
+    padding: 9px 18px;
+    border-radius: 6px;
+    font-size: 14px;
+    color: #334155;
+    cursor: pointer;
+    font-weight: 700;
+    transition: all 0.15s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ws-page-btn:hover:not(:disabled) {
+    background: #f1f5f9;
+    color: #0f172a;
+    border-color: #94a3b8;
+}
+
+.ws-page-btn--active {
+    background: #28a745 !important;
+    color: #ffffff !important;
+    border-color: #28a745 !important;
+    box-shadow: 0 2px 5px rgba(40, 167, 69, 0.28);
+}
+
+.ws-page-btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    background: #f8fafc;
+    border-color: #e2e8f0;
+    color: #94a3b8;
+}
+
+/* ── Tab 2: Form Buat Pengajuan Baru ─────────────────────── */
+.ws-form-card {
+    background: #ffffff;
+}
+
+.ws-form-card__header {
+    background: linear-gradient(135deg, #28a745 0%, #218838 100%);
+    color: #ffffff;
+    padding: 18px 28px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.ws-form-card__icon {
+    font-size: 26px;
+}
+
+.ws-form-card__title {
+    font-size: 16.5px;
+    color: #ffffff;
+    font-weight: 800;
+    margin: 0;
+    line-height: 1.25;
+}
+
+.ws-form-card__sub {
+    font-size: 12.5px;
+    color: rgba(255, 255, 255, 0.92);
+    margin: 3px 0 0 0;
+}
+
+.ws-form-card__body {
+    padding: 28px 34px;
+}
+
+/* Radio Mode Box */
+.ws-mode-box {
+    border: 1.5px solid #bbf7d0;
+    background: #f0fdf4;
+    border-radius: 8px;
+    padding: 16px 22px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 24px;
+}
+
+.ws-mode-box__icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: #28a745;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 19px;
+    flex-shrink: 0;
+}
+
+.ws-mode-box__title {
+    font-size: 14.5px;
+    font-weight: 700;
+    color: #14532d;
+    margin-bottom: 2px;
+}
+
+.ws-mode-box__desc {
+    font-size: 12.5px;
+    color: #166534;
+}
+
+/* Form Group */
+.ws-form-group {
+    margin-bottom: 24px;
+}
+
+.ws-form-header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.ws-label {
+    font-size: 13.5px;
+    font-weight: 700;
+    color: #1e293b;
+    display: block;
+    margin-bottom: 6px;
+}
+
+.ws-req {
+    color: #dc3545;
+}
+
+.ws-select {
+    width: 100%;
+    height: 48px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    padding: 10px 16px;
+    font-size: 14.5px;
+    color: #0f172a;
+    background: #ffffff;
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.ws-select:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 3.5px rgba(0, 123, 255, 0.14);
+}
+
+/* Master Data Readonly Box */
+.ws-readonly-section {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 22px 26px;
+    margin-bottom: 26px;
+}
+
+.ws-readonly-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+    font-size: 12px;
+    font-weight: 800;
+    color: #475569;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+}
+
+.ws-badge-verified-kk {
+    background: #dcfce7;
+    color: #15803d;
+    border: 1px solid #bbf7d0;
+    border-radius: 5px;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 4px 12px;
+    text-transform: none;
+    letter-spacing: normal;
+}
+
+.ws-readonly-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px 26px;
+}
+
+.ws-readonly-field {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.ws-readonly-label {
+    font-size: 12.5px;
+    color: #64748b;
+    font-weight: 700;
+}
+
+.ws-readonly-input {
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    height: 46px;
+    padding: 10px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #1e293b;
+    outline: none;
+    cursor: not-allowed;
+}
+
+.ws-textarea {
+    width: 100%;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    padding: 14px 18px;
+    font-size: 14px;
+    color: #0f172a;
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    font-family: inherit;
+    line-height: 1.55;
+    resize: vertical;
+    min-height: 125px;
+}
+
+.ws-textarea:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 3.5px rgba(0, 123, 255, 0.14);
+}
+
+.ws-help-text {
+    font-size: 12.5px;
+    color: #64748b;
+    margin-top: 6px;
+}
+
+/* Agreement Checkbox */
+.ws-checkbox-wrap {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin: 24px 0 30px;
+    padding: 16px 20px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    font-size: 13.5px;
+    line-height: 1.55;
+    color: #334155;
+}
+
+.ws-checkbox {
+    margin-top: 2px;
+    width: 19px;
+    height: 19px;
+    accent-color: #28a745;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+/* Form Action Buttons Bar */
+.ws-form-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 14px;
+    padding-top: 22px;
+    border-top: 1px solid #edf2f7;
+}
+
+.ws-btn-action-preview {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #ffffff;
+    color: #007bff;
+    border: 1.5px solid #007bff;
+    border-radius: 6px;
+    height: 48px;
+    padding: 12px 22px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.ws-btn-action-preview:hover {
+    background: #e7f1ff;
+}
+
+.ws-btn-action-reset {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #ffffff;
+    color: #64748b;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    height: 48px;
+    padding: 12px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.ws-btn-action-reset:hover {
+    background: #f1f5f9;
+    color: #0f172a;
+}
+
+.ws-btn-action-submit {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: #28a745;
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    height: 48px;
+    padding: 12px 28px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.15s ease, box-shadow 0.15s ease;
+    box-shadow: 0 2px 5px rgba(40, 167, 69, 0.28);
+}
+
+.ws-btn-action-submit:hover {
+    background: #218838;
+    box-shadow: 0 4px 10px rgba(40, 167, 69, 0.38);
+}
+
+/* ── Modal Popups ───────────────────────────────────────── */
+.ws-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 9999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(2px);
+    padding: 20px;
+}
+
+.ws-modal-overlay.active {
+    display: flex;
+}
+
+.ws-modal-card {
+    background: #ffffff;
+    border-radius: 8px;
+    width: 100%;
+    max-width: 540px;
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.22);
+    overflow: hidden;
+    animation: wsModalIn 0.2s ease;
+}
+
+@keyframes wsModalIn {
+    from { opacity: 0; transform: scale(0.96) translateY(-10px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.ws-modal-card--large {
+    max-width: 760px;
+}
+
+.ws-modal-header {
+    padding: 16px 24px;
+    background: #f8fafc;
+    border-bottom: 1px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.ws-modal-title {
+    font-size: 16px;
+    font-weight: 800;
+    color: #0f172a;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.ws-modal-close {
+    background: transparent;
+    border: none;
+    color: #64748b;
+    font-size: 22px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.ws-modal-close:hover {
+    color: #0f172a;
+}
+
+.ws-modal-body {
+    padding: 24px 28px;
+}
+
+.ws-modal-footer {
+    padding: 16px 28px;
+    background: #f8fafc;
+    border-top: 1px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 14px;
+}
+
+/* ── CETAK SURAT PENGANTAR (SCREENSHOT 3) ───────────────── */
+.ws-cetak-body {
+    background: #e2e8f0;
+    min-height: 100vh;
+    padding: 24px 16px 40px;
+    font-family: 'Times New Roman', Times, serif;
+    color: #000000;
+}
+
+.ws-cetak-topbar {
+    max-width: 860px;
+    margin: 0 auto 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+}
+
+.ws-btn-kembali-layar {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: #ffffff;
+    color: #334155;
+    border: 1px solid #cbd5e1;
+    border-radius: 5px;
+    height: 42px;
+    padding: 8px 18px;
+    font-size: 13.5px;
+    font-family: sans-serif;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.15s;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.ws-btn-kembali-layar:hover {
+    background: #f8fafc;
+    color: #0f172a;
+}
+
+.ws-cetak-topbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.ws-btn-print {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: #ffffff;
+    color: #1e293b;
+    border: 1px solid #cbd5e1;
+    border-radius: 5px;
+    height: 42px;
+    padding: 8px 18px;
+    font-size: 13.5px;
+    font-family: sans-serif;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    transition: all 0.15s;
+}
+
+.ws-btn-print:hover {
+    background: #f1f5f9;
+}
+
+.ws-btn-download-pdf {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: #28a745;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    height: 42px;
+    padding: 8px 20px;
+    font-size: 13.5px;
+    font-family: sans-serif;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(40, 167, 69, 0.25);
+    transition: all 0.15s;
+}
+
+.ws-btn-download-pdf:hover {
+    background: #218838;
+}
+
+/* Paper Sheet Layout */
+.ws-paper-sheet {
+    background: #ffffff;
+    width: 210mm;
+    min-height: auto;
+    margin: 0 auto;
+    padding: 16mm 20mm 14mm;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.12);
+    box-sizing: border-box;
+    line-height: 1.45;
+    font-size: 11.5pt;
+    page-break-inside: avoid;
+    break-inside: avoid;
+}
+
+/* Kop Surat */
+.ws-kop {
+    text-align: center;
+    margin-bottom: 6px;
+}
+
+.ws-kop-instansi {
+    font-size: 13.5pt;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+    margin: 0;
+    text-transform: uppercase;
+}
+
+.ws-kop-sub {
+    font-size: 12pt;
+    font-weight: bold;
+    margin: 2px 0 0 0;
+    text-transform: uppercase;
+}
+
+.ws-kop-kota {
+    font-size: 10.5pt;
+    margin: 2px 0 0 0;
+}
+
+.ws-kop-line {
+    border-top: 3px solid #000000;
+    border-bottom: 1px solid #000000;
+    height: 2px;
+    margin: 8px 0 16px;
+}
+
+/* Judul Surat */
+.ws-judul-surat-box {
+    text-align: center;
+    margin-bottom: 16px;
+}
+
+.ws-judul-surat {
+    font-size: 14pt;
+    font-weight: bold;
+    text-decoration: underline;
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.ws-nomor-surat {
+    font-size: 11pt;
+    margin-top: 2px;
+}
+
+.ws-surat-content {
+    margin-bottom: 16px;
+    text-align: justify;
+}
+
+.ws-surat-table-data {
+    width: 100%;
+    margin: 8px 0 12px;
+    border-collapse: collapse;
+}
+
+.ws-surat-table-data td {
+    padding: 2.5px 0;
+    vertical-align: top;
+}
+
+.ws-surat-num {
+    width: 25px;
+}
+
+.ws-surat-lbl {
+    width: 175px;
+}
+
+.ws-surat-sep {
+    width: 15px;
+    text-align: center;
+}
+
+.ws-surat-val {
+    font-weight: 500;
+}
+
+/* Tanda Tangan */
+.ws-ttd-grid {
+    margin-top: 24px;
+    display: flex;
+    justify-content: space-between;
+    text-align: center;
+}
+
+.ws-ttd-box {
+    width: 210px;
+}
+
+.ws-ttd-space {
+    height: 55px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.ws-ttd-img-rt {
+    max-height: 55px;
+    max-width: 130px;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto;
+    filter: contrast(1.1);
+}
+
+.ws-ttd-nama {
+    font-weight: bold;
+    border-bottom: 1px solid #000;
+    display: inline-block;
+    padding-bottom: 2px;
+    min-width: 160px;
+}
+
+.ws-ttd-tengah {
+    margin-top: 16px;
+    text-align: center;
+}
+
+/* Validation Footer Banner */
+.ws-cetak-footer-bar {
+    max-width: 860px;
+    margin: 18px auto 0;
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: sans-serif;
+    font-size: 12.5px;
+    color: #475569;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.ws-btn-salin-validasi {
+    background: #f1f5f9;
+    border: 1px solid #cbd5e1;
+    border-radius: 5px;
+    height: 36px;
+    padding: 6px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #334155;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.ws-btn-salin-validasi:hover {
+    background: #e2e8f0;
+}
+
+/* ── PRINT MEDIA QUERY (Strict 1 Page A4) ─────────────────── */
+@page {
+    size: A4 portrait;
+    margin: 10mm 15mm;
+}
+
+@media print {
+    html, body, .ws-cetak-body {
+        background: #ffffff !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        height: auto !important;
+        overflow: visible !important;
+    }
+    .ws-cetak-topbar,
+    .ws-cetak-footer-bar,
+    .admin-sidebar,
+    .admin-topbar,
+    .admin-footer {
+        display: none !important;
+    }
+    .ws-paper-sheet {
+        box-shadow: none !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-height: auto !important;
+        height: auto !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        page-break-after: avoid !important;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+        overflow: hidden !important;
+    }
+}
+
+/* ── Responsive ─────────────────────────────────────────── */
+@media (max-width: 900px) {
+    .ws-stat-grid {
+        grid-template-columns: 1fr;
+    }
+    .ws-readonly-grid {
+        grid-template-columns: 1fr;
+    }
+    .ws-paper-sheet {
+        width: 100%;
+        min-height: auto;
+        padding: 15px;
+    }
+}

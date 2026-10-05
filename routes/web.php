@@ -53,7 +53,22 @@ Route::post('/login', function () {
 Route::prefix('warga')->name('warga.')->group(function () {
     Route::get('/', function () { return view('warga.beranda'); })->name('beranda');
     Route::get('/keluarga', function () { return view('warga.keluarga'); })->name('keluarga');
+    Route::get('/keluarga/tambah', function () { return view('warga.keluarga-tambah'); })->name('keluarga.tambah');
+    Route::post('/keluarga/tambah', function () {
+        return redirect()->route('warga.keluarga')
+            ->with('success', 'Pendaftaran anggota keluarga baru berhasil diajukan dan menunggu verifikasi Pengurus RT 04.');
+    })->name('keluarga.tambah.store');
+    Route::get('/keluarga/edit/{nik?}', function ($nik = null) { return view('warga.keluarga-edit', compact('nik')); })->name('keluarga.edit');
+    Route::post('/keluarga/edit', function () {
+        return redirect()->route('warga.keluarga')
+            ->with('success', 'Pengajuan perubahan data warga berhasil dikirim dan masuk dalam antrean verifikasi RT.');
+    })->name('keluarga.edit.store');
     Route::get('/surat', function () { return view('warga.surat'); })->name('surat');
+    Route::post('/surat', function () {
+        return redirect()->route('warga.surat')
+            ->with('success', 'Pengajuan surat pengantar berhasil dikirim dan masuk dalam antrean verifikasi Pengurus RT 04.');
+    })->name('surat.store');
+    Route::get('/surat/cetak/{id?}', function ($id = 1) { return view('warga.surat-cetak', compact('id')); })->name('surat.cetak');
     Route::get('/iuran', function () { return view('warga.iuran'); })->name('iuran');
     Route::get('/profil', function () { return view('warga.profil'); })->name('profil');
 });

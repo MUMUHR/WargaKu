@@ -1,0 +1,475 @@
+/* =======================================================
+   WargaKu — warga.css
+   Styles khusus Portal Mandiri Warga (AdminLTE Classic Style)
+   ======================================================= */
+
+/* ── Sidebar Active Nav Item ── */
+.warga-nav-link--active {
+    background: #28a745 !important;
+    color: #ffffff !important;
+    font-weight: 600 !important;
+    border-radius: 4px !important;
+}
+
+.warga-nav-link--active:hover {
+    background: #218838 !important;
+    color: #ffffff !important;
+}
+
+/* ── Page Header ── */
+.warga-page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 2px;
+    margin-bottom: 16px;
+    gap: 16px;
+}
+
+.warga-page-header__left {
+    display: flex;
+    flex-direction: column;
+}
+
+.warga-page-header__title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #212529;
+    margin: 0;
+    line-height: 1.2;
+}
+
+.warga-page-header__sub {
+    font-size: 12.5px;
+    color: #6c757d;
+    margin: 3px 0 0;
+    font-weight: 400;
+}
+
+.warga-page-header__breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12.5px;
+    margin: 0;
+    white-space: nowrap;
+}
+
+.warga-page-header__breadcrumb a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.warga-page-header__breadcrumb a:hover {
+    text-decoration: underline;
+}
+
+.warga-page-header__breadcrumb .sep {
+    color: #6c757d;
+}
+
+.warga-page-header__breadcrumb .current {
+    color: #6c757d;
+}
+
+/* ── Greeting Card ── */
+.warga-greeting-card {
+    background: #ffffff;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    padding: 18px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 22px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.warga-greeting-card__title {
+    font-size: 17px;
+    font-weight: 700;
+    color: #212529;
+    margin: 0 0 4px;
+}
+
+.warga-greeting-card__sub {
+    font-size: 13px;
+    color: #6c757d;
+    margin: 0;
+}
+
+.btn-detail-kk {
+    background: #2b3137;
+    color: #ffffff;
+    border: 1px solid #2b3137;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 12.5px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    white-space: nowrap;
+    transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.btn-detail-kk:hover {
+    background: #1e2226;
+    border-color: #1e2226;
+    color: #ffffff;
+}
+
+/* ── Two Large Stat Summary Cards ── */
+.warga-summary-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    margin-bottom: 24px;
+}
+
+.warga-summary-card {
+    border-radius: 4px;
+    overflow: hidden;
+    color: #ffffff;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+    min-height: 125px;
+}
+
+.warga-summary-card--teal {
+    background: #007a87;
+}
+
+.warga-summary-card--amber {
+    background: #f39c12;
+}
+
+.warga-summary-card__body {
+    padding: 18px 22px 14px;
+    position: relative;
+    z-index: 2;
+}
+
+.warga-summary-card__val {
+    font-size: 32px;
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 4px;
+    letter-spacing: -0.02em;
+}
+
+.warga-summary-card__label {
+    font-size: 13px;
+    opacity: 0.95;
+    font-weight: 500;
+}
+
+.warga-summary-card__watermark {
+    position: absolute;
+    right: 18px;
+    top: 10px;
+    font-size: 74px;
+    opacity: 0.22;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.warga-summary-card__footer {
+    background: rgba(0, 0, 0, 0.15);
+    color: #ffffff;
+    text-decoration: none;
+    padding: 7px 16px;
+    font-size: 12px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: background 0.15s ease;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.warga-summary-card__footer:hover {
+    background: rgba(0, 0, 0, 0.25);
+    color: #ffffff;
+}
+
+/* ── Three Quick Action Cards ── */
+.warga-actions-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-bottom: 24px;
+}
+
+.warga-action-card {
+    background: #ffffff;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    padding: 20px 22px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.warga-action-card__head {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.warga-action-card__icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    flex-shrink: 0;
+}
+
+.warga-action-card__icon--blue {
+    background: #e0f2fe;
+    color: #0284c7;
+}
+
+.warga-action-card__icon--green {
+    background: #dcfce7;
+    color: #16a34a;
+}
+
+.warga-action-card__icon--cyan {
+    background: #cffafe;
+    color: #0891b2;
+}
+
+.warga-action-card__title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #212529;
+    margin: 0;
+}
+
+.warga-action-card__sub {
+    font-size: 11.5px;
+    color: #6c757d;
+    margin: 2px 0 0;
+}
+
+.warga-action-card__desc {
+    font-size: 12.5px;
+    color: #495057;
+    line-height: 1.5;
+    margin: 0 0 18px;
+    min-height: 54px;
+}
+
+.btn-warga-action-btn {
+    width: 100%;
+    background: #2b3137;
+    color: #ffffff;
+    border: 1px solid #2b3137;
+    padding: 9px 16px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    text-decoration: none;
+    transition: background 0.15s ease, border-color 0.15s ease;
+    box-sizing: border-box;
+}
+
+.btn-warga-action-btn:hover {
+    background: #1e2226;
+    border-color: #1e2226;
+    color: #ffffff;
+}
+
+/* ── Riwayat Pengajuan Surat Terakhir Table Card ── */
+.warga-table-card {
+    background: #ffffff;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    overflow: hidden;
+}
+
+.warga-table-card__header {
+    padding: 14px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.warga-table-card__title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #212529;
+    margin: 0;
+}
+
+.warga-table-link-more {
+    font-size: 12.5px;
+    color: #007bff;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.warga-table-link-more:hover {
+    text-decoration: underline;
+}
+
+.warga-table-wrap {
+    overflow-x: auto;
+    width: 100%;
+}
+
+.warga-dashboard-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #ffffff;
+}
+
+.warga-dashboard-table thead th {
+    font-size: 11px;
+    font-weight: 700;
+    color: #495057;
+    text-transform: uppercase;
+    padding: 12px 18px;
+    border-bottom: 1px solid #dee2e6;
+    background: #ffffff;
+    text-align: left;
+    letter-spacing: 0.04em;
+}
+
+.warga-dashboard-table tbody td {
+    font-size: 13px;
+    color: #212529;
+    padding: 13px 18px;
+    border-bottom: 1px solid #f1f3f5;
+    vertical-align: middle;
+}
+
+.warga-dashboard-table tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+.warga-surat-title {
+    font-weight: 700;
+    font-size: 13.5px;
+    color: #212529;
+    line-height: 1.45;
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* Batasi maksimal 2 baris jika teks panjang */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: break-word;
+    max-width: 480px;
+}
+
+.badge-warga-diproses {
+    background: #fef3c7;
+    color: #b45309;
+    border-radius: 12px;
+    padding: 4px 12px;
+    font-size: 11.5px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    white-space: nowrap;
+}
+
+.badge-warga-selesai {
+    background: #dcfce7;
+    color: #15803d;
+    border-radius: 12px;
+    padding: 4px 12px;
+    font-size: 11.5px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    white-space: nowrap;
+}
+
+.btn-warga-table-detail {
+    color: #007bff;
+    font-size: 12.5px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0;
+}
+
+.btn-warga-table-detail:hover {
+    text-decoration: underline;
+}
+
+.btn-warga-table-download {
+    color: #16a34a;
+    font-size: 12.5px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0;
+}
+
+.btn-warga-table-download:hover {
+    text-decoration: underline;
+}
+
+.warga-table-card__footer {
+    padding: 10px 18px;
+    background: #f8f9fa;
+    border-top: 1px solid #f1f3f5;
+    font-size: 11.5px;
+    color: #6c757d;
+}
+
+/* ── Responsive ── */
+@media (max-width: 992px) {
+    .warga-actions-grid {
+        grid-template-columns: 1fr;
+    }
+    .warga-summary-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 600px) {
+    .warga-greeting-card {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 14px;
+    }
+    .btn-detail-kk {
+        width: 100%;
+        justify-content: center;
+    }
+}

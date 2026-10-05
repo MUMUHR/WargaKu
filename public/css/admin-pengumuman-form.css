@@ -48,8 +48,8 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 12px 18px;
-    background: #2b3137;
+    padding: 13px 20px;
+    background: #28a745;
     color: #ffffff;
 }
 
@@ -302,10 +302,10 @@
 .btn-cancel {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    padding: 8px 16px;
+    gap: 8px;
+    padding: 10px 20px;
     border-radius: 4px;
-    font-size: 13px;
+    font-size: 13.5px;
     font-weight: 600;
     cursor: pointer;
     background: #ffffff;
@@ -317,7 +317,7 @@
 }
 
 .btn-cancel i {
-    font-size: 16px;
+    font-size: 17px;
 }
 
 .btn-cancel:hover {
@@ -329,10 +329,10 @@
 .btn-draft {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    padding: 8px 16px;
+    gap: 8px;
+    padding: 10px 20px;
     border-radius: 4px;
-    font-size: 13px;
+    font-size: 13.5px;
     font-weight: 600;
     cursor: pointer;
     background: #ffffff;
@@ -344,7 +344,7 @@
 }
 
 .btn-draft i {
-    font-size: 15px;
+    font-size: 16px;
 }
 
 .btn-draft:hover {
@@ -356,28 +356,29 @@
 .btn-publish {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    padding: 8px 18px;
+    gap: 8px;
+    padding: 10px 24px;
     border-radius: 4px;
-    font-size: 13px;
-    font-weight: 600;
+    font-size: 14px;
+    font-weight: 700;
     cursor: pointer;
-    background: #2b3137;
+    background: #28a745;
     color: #ffffff;
-    border: none;
+    border: 1px solid #28a745;
     text-decoration: none;
     transition: all 0.15s ease;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 2px 5px rgba(40, 167, 69, 0.28);
 }
 
 .btn-publish i {
-    font-size: 16px;
+    font-size: 17px;
 }
 
 .btn-publish:hover {
-    background: #1e2226;
+    background: #218838;
+    border-color: #1e7e34;
     color: #ffffff;
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.18);
+    box-shadow: 0 3px 8px rgba(40, 167, 69, 0.38);
 }
 
 /* ── Sidebar cards ──────────────────────────────────────── */

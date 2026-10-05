@@ -1,0 +1,498 @@
+/* =======================================================
+   WargaKu — warga-profil.css
+   Styles khusus Halaman Profil & Keamanan Akun Warga
+   AdminLTE Classic Style — Tombol Hijau & Tampilan Rapi Sejajar
+   ======================================================= */
+
+/* ── Page Header & Breadcrumb ── */
+.warga-profil-header {
+    margin-bottom: 20px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.warga-profil-header__left {
+    flex: 1;
+    min-width: 280px;
+}
+
+.warga-profil-header__breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: #6c757d;
+    margin-bottom: 8px;
+}
+
+.warga-profil-header__breadcrumb a {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.warga-profil-header__breadcrumb a:hover {
+    text-decoration: underline;
+}
+
+.warga-profil-header__breadcrumb .sep {
+    color: #adb5bd;
+}
+
+.warga-profil-header__title {
+    font-size: 27px;
+    font-weight: 800;
+    color: #212529;
+    margin: 0 0 6px 0;
+    line-height: 1.25;
+}
+
+.warga-profil-header__sub {
+    font-size: 14px;
+    color: #6c757d;
+    margin: 0;
+    line-height: 1.5;
+}
+
+.warga-profil-badge-verified {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: #f0fdf4;
+    border: 1.5px solid #bbf7d0;
+    color: #16a34a;
+    padding: 8px 18px;
+    border-radius: 20px;
+    font-size: 13.5px;
+    font-weight: 700;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.warga-profil-badge-verified i {
+    font-size: 18px;
+}
+
+/* ── 2-Column Cards Grid ── */
+.warga-profil-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+    margin-bottom: 24px;
+    align-items: stretch;
+}
+
+.warga-profil-card {
+    background: #ffffff;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.warga-profil-card--blue {
+    border-top: 3.5px solid #007bff;
+}
+
+.warga-profil-card--green {
+    border-top: 3.5px solid #28a745;
+}
+
+.warga-profil-card__header {
+    padding: 15px 22px;
+    border-bottom: 1px solid #f1f3f5;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #ffffff;
+}
+
+.warga-profil-card__title {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    font-size: 16px;
+    font-weight: 700;
+    color: #212529;
+    margin: 0;
+}
+
+.warga-profil-card__title i {
+    font-size: 21px;
+}
+
+.warga-profil-card__badge-tag {
+    background: #f1f3f5;
+    border: 1px solid #e9ecef;
+    color: #495057;
+    font-size: 11.5px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 4px;
+    letter-spacing: 0.4px;
+}
+
+.warga-profil-card__form {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    justify-content: space-between;
+}
+
+.warga-profil-card__body {
+    padding: 22px 24px 18px;
+    flex: 1;
+}
+
+.warga-profil-card__subtitle {
+    font-size: 13px;
+    color: #6c757d;
+    margin: 0 0 18px 0;
+    line-height: 1.5;
+}
+
+/* ── Form Groups & Inputs ── */
+.warga-profil-form-group {
+    margin-bottom: 18px;
+}
+
+.warga-profil-form-group:last-child {
+    margin-bottom: 0;
+}
+
+.warga-profil-label-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 7px;
+}
+
+.warga-profil-label {
+    display: block;
+    font-size: 13.5px;
+    font-weight: 700;
+    color: #343a40;
+    margin: 0;
+}
+
+.warga-profil-label .req {
+    color: #dc3545;
+}
+
+.warga-profil-badge-nik {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: #28a745;
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 9px;
+    border-radius: 4px;
+    letter-spacing: 0.3px;
+}
+
+.warga-profil-input-group {
+    display: flex;
+    align-items: stretch;
+    width: 100%;
+}
+
+.warga-profil-input-icon {
+    width: 44px;
+    background: #f8f9fa;
+    border: 1.5px solid #ced4da;
+    border-right: none;
+    border-radius: 5px 0 0 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6c757d;
+    font-size: 19px;
+    flex-shrink: 0;
+}
+
+.warga-profil-input {
+    flex: 1;
+    height: 42px;
+    padding: 8px 14px;
+    font-size: 14px;
+    border: 1.5px solid #ced4da;
+    border-radius: 0 5px 5px 0;
+    color: #212529;
+    background-color: #ffffff;
+    outline: none;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.warga-profil-input:focus {
+    border-color: #28a745;
+    box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+}
+
+.warga-profil-input:disabled,
+.warga-profil-input[readonly] {
+    background-color: #f1f3f5;
+    color: #495057;
+    cursor: not-allowed;
+    border-color: #ced4da;
+    font-weight: 500;
+}
+
+.warga-profil-help-text {
+    font-size: 12px;
+    color: #6c757d;
+    margin-top: 6px;
+    line-height: 1.45;
+}
+
+.warga-profil-help-text a {
+    color: #007bff;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.warga-profil-help-text a:hover {
+    text-decoration: underline;
+}
+
+/* ── Action Buttons (HIJAU KHAS WARGAKU) ── */
+.warga-profil-card__footer {
+    padding: 14px 24px 20px;
+    display: flex;
+    justify-content: flex-end;
+    background: #ffffff;
+    border-top: 1px solid #f8f9fa;
+}
+
+.btn-profil-action {
+    background: #28a745;
+    color: #ffffff;
+    border: none;
+    padding: 10px 22px;
+    border-radius: 5px;
+    font-size: 13.5px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(40, 167, 69, 0.25);
+    transition: background 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
+}
+
+.btn-profil-action:hover {
+    background: #218838;
+    box-shadow: 0 4px 8px rgba(33, 136, 56, 0.35);
+    transform: translateY(-1px);
+}
+
+.btn-profil-action:active {
+    transform: translateY(0);
+    box-shadow: 0 1px 3px rgba(33, 136, 56, 0.3);
+}
+
+.btn-profil-action i {
+    font-size: 17px;
+}
+
+/* ── Full Width Logout Banner Card ── */
+.warga-profil-logout-card {
+    background: #ffffff;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    padding: 18px 26px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.04);
+    margin-bottom: 30px;
+}
+
+.warga-profil-logout-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.warga-profil-logout-iconbox {
+    width: 48px;
+    height: 48px;
+    border-radius: 8px;
+    background: #fee2e2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #dc2626;
+    font-size: 26px;
+    flex-shrink: 0;
+}
+
+.warga-profil-logout-title {
+    font-size: 15.5px;
+    font-weight: 700;
+    color: #212529;
+    margin: 0 0 3px 0;
+}
+
+.warga-profil-logout-sub {
+    font-size: 13px;
+    color: #6c757d;
+    margin: 0;
+}
+
+.btn-profil-logout-outline {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    border: 1.5px solid #dc3545;
+    background: transparent;
+    color: #dc3545;
+    padding: 9px 22px;
+    border-radius: 5px;
+    font-size: 13.5px;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.btn-profil-logout-outline:hover {
+    background: #dc3545;
+    color: #ffffff;
+    box-shadow: 0 2px 6px rgba(220, 53, 69, 0.3);
+}
+
+.btn-profil-logout-outline i {
+    font-size: 17px;
+}
+
+/* ── Modal Konfirmasi Ubah Password (Sesuai Screenshot 2) ── */
+.profil-modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1060;
+    padding: 20px;
+}
+
+.profil-modal-content {
+    background: #ffffff;
+    border-radius: 8px;
+    width: 100%;
+    max-width: 450px;
+    padding: 28px 28px 24px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+    animation: profilModalFadeIn 0.2s ease;
+    box-sizing: border-box;
+}
+
+@keyframes profilModalFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.profil-modal-title {
+    font-size: 18px;
+    font-weight: 800;
+    color: #111827;
+    margin: 0 0 12px 0;
+    line-height: 1.35;
+}
+
+.profil-modal-desc {
+    font-size: 13px;
+    color: #4b5563;
+    line-height: 1.5;
+    margin: 0 0 24px 0;
+}
+
+.profil-modal-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+
+.btn-profil-modal-batal {
+    background: #dc3545;
+    color: #ffffff;
+    border: none;
+    padding: 11px 16px;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+.btn-profil-modal-batal:hover {
+    background: #bb2d3b;
+}
+
+.btn-profil-modal-konfirmasi {
+    background: #28a745;
+    color: #ffffff;
+    border: none;
+    padding: 11px 16px;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+.btn-profil-modal-konfirmasi:hover {
+    background: #218838;
+}
+
+/* ── Alert Toast Sederhana ── */
+.profil-toast-alert {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: #28a745;
+    color: #ffffff;
+    padding: 12px 22px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+    display: none;
+    align-items: center;
+    gap: 10px;
+    z-index: 1070;
+}
+
+/* ── Responsive Rules ── */
+@media (max-width: 900px) {
+    .warga-profil-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 576px) {
+    .warga-profil-logout-card {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .btn-profil-logout-outline {
+        width: 100%;
+        justify-content: center;
+    }
+}

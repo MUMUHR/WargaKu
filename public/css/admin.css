@@ -1,4 +1,4 @@
-﻿/* =======================================================
+/* =======================================================
    WargaKu â€” admin.css
    Layout khusus Panel Admin RT (sidebar + topbar)
    ======================================================= */
@@ -6,6 +6,7 @@
 /* â”€â”€ Body  */
 .admin-body {
     display: flex;
+    flex-direction: row;
     min-height: 100vh;
     background: #f0f2f5;
     font-family: var(--font-family-base);
@@ -313,7 +314,7 @@
 
 /* â”€â”€ Content Area â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .admin-content {
-    flex: 1;
+    flex: 1 0 auto;
     padding: 10px 20px 24px;
 }
 
@@ -328,6 +329,7 @@
     font-size: var(--font-size-xs);
     color: var(--color-gray-500);
     flex-shrink: 0;
+    margin-top: auto;
 }
 
 .admin-footer__link {

@@ -1,5 +1,5 @@
 Table users {
-  id bigint [pk, increment, note: 'Laravel id() = BIGINT UNSIGNED']
+  id int [pk, increment, note: 'Laravel id() = INT UNSIGNED']
   username varchar(50) [unique, not null, note: 'warga: NIK pendaftar pertama; admin: adminrt']
   password varchar(255) [not null]
   no_telp varchar(20)
@@ -17,8 +17,8 @@ Table keluarga {
 }
 
 Table warga {
-  id bigint [pk, increment]
-  user_id bigint [ref: > users.id, note: 'nullable, akun KK bersama']
+  id int [pk, increment]
+  user_id int [ref: > users.id, note: 'nullable, akun KK bersama']
   no_kk varchar(16) [ref: > keluarga.no_kk, not null]
   nik varchar(16) [unique, not null]
   nama varchar(100) [not null]
@@ -63,8 +63,8 @@ Table warga {
 }
 
 Table pengajuan_perubahan_data {
-  id bigint [pk, increment]
-  warga_id bigint [ref: > warga.id, note: 'nullable jika jenis_pengajuan = tambah_anggota']
+  id int [pk, increment]
+  warga_id int [ref: > warga.id, note: 'nullable jika jenis_pengajuan = tambah_anggota']
   no_kk varchar(16) [ref: > keluarga.no_kk, not null]
   jenis_pengajuan enum('ubah_data', 'tambah_anggota') [not null]
   data_lama json [note: 'null jika tambah_anggota']
@@ -78,9 +78,9 @@ Table pengajuan_perubahan_data {
 }
 
 Table pengajuan_surat {
-  id bigint [pk, increment]
-  pemohon_id bigint [ref: > warga.id, not null, note: 'warga pemilik akun yang login dan mengajukan (otomatis dari sesi)']
-  warga_tujuan_id bigint [ref: > warga.id, note: 'dipilih via dropdown anggota KK']
+  id int [pk, increment]
+  pemohon_id int [ref: > warga.id, not null, note: 'warga pemilik akun yang login dan mengajukan (otomatis dari sesi)']
+  warga_tujuan_id int [ref: > warga.id, note: 'dipilih via dropdown anggota KK']
   nama_lengkap varchar(100)
   tempat_tanggal_lahir varchar(255)
   jenis_kelamin enum('laki_laki', 'perempuan')
@@ -96,7 +96,7 @@ Table pengajuan_surat {
 }
 
 Table iuran {
-  id bigint [pk, increment]
+  id int [pk, increment]
   no_kk varchar(16) [ref: > keluarga.no_kk, not null]
   nominal decimal(10,2) [not null, note: 'total iuran bulanan; default (Rp 50.000), bisa diubah Admin ']
   catatan text [note: 'nullable, rincian iuran']

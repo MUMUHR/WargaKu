@@ -308,7 +308,7 @@
 }
 
 .iuran-table thead {
-    background: #2b3137;
+    background: #28a745;
     color: #ffffff;
 }
 
@@ -322,6 +322,7 @@
     white-space: nowrap;
     border: none;
     vertical-align: middle;
+    color: #ffffff;
 }
 
 .iuran-table thead th.text-center {

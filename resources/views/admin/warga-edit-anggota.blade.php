@@ -85,11 +85,6 @@
         </h1>
         <p class="admin-page-header__sub">Pembaruan langsung data master warga oleh Admin RT. Perubahan akan langsung tersimpan ke database kependudukan tanpa proses verifikasi berulang.</p>
     </div>
-    <div>
-        <a href="{{ route('admin.data-warga', ['view' => 'detail']) }}" class="btn-kembali-kk" style="text-decoration:none;">
-            <i class='bx bx-arrow-back'></i> Kembali ke Detail KK
-        </a>
-    </div>
 </div>
 
 <form action="{{ route('admin.data-warga.edit-anggota.store') }}" method="POST" id="form-edit-anggota">

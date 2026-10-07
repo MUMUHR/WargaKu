@@ -105,7 +105,7 @@
     </div>
 
     <footer class="admin-footer" role="contentinfo">
-        <span>Copyright &copy; 2025 <a href="{{ route('home') }}" class="admin-footer__link">WargaKu RT 04 / RW 08</a>. AdminLTE Classic Style.</span>
+        <span>Copyright &copy; 2025 <a href="{{ route('home') }}" class="admin-footer__link">WargaKu RT 04 / RW 08</a></span>
         <span class="admin-footer__right">Versi 3.2.0</span>
     </footer>
 </div>

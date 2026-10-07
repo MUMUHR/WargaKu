@@ -52,7 +52,7 @@
             <p class="kelola-stat-mini__label">DRAF (DRAFT)</p>
             <div style="display:flex;align-items:center;gap:8px">
                 <p class="kelola-stat-mini__number">3</p>
-                <span class="badge-draft-sm">Revisi</span>
+                <span class="badge-draft-sm">Draft</span>
             </div>
         </div>
         <div class="kelola-stat-mini__icon kelola-stat-mini__icon--draft">
@@ -148,7 +148,7 @@
                     </td>
                     <td>
                         <div class="kelola-actions">
-                            <a href="{{ route('admin.pengumuman.create') }}" class="btn-action-edit">
+                            <a href="{{ route('admin.pengumuman.edit', $p['id']) }}" class="btn-action-edit">
                                 <i class='bx bx-edit'></i> Edit
                             </a>
                             <button type="button" class="btn-action-delete" onclick="konfirmasiHapus({{ $p['id'] }}, '{{ addslashes($p['judul']) }}')">

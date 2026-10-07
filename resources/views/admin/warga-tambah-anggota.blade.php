@@ -38,11 +38,6 @@
         </h1>
         <p class="admin-page-header__sub">Penambahan data anggota keluarga baru langsung ke database kependudukan RT 04 oleh Admin RT tanpa proses verifikasi bersilang.</p>
     </div>
-    <div>
-        <a href="{{ route('admin.data-warga', ['view' => 'detail']) }}" class="btn-kembali-kk" style="text-decoration:none;">
-            <i class='bx bx-arrow-back'></i> Kembali ke Detail KK
-        </a>
-    </div>
 </div>
 
 <form action="{{ route('admin.data-warga.tambah-anggota.store') }}" method="POST" id="form-tambah-anggota">

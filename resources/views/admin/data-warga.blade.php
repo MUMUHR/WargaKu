@@ -42,9 +42,6 @@
         <p class="admin-page-header__sub" id="page-subtitle">Kelola data master kependudukan warga RT 04, status mutasi, dan validasi permohonan perubahan data dari warga.</p>
     </div>
     <div id="header-actions">
-        <button type="button" class="btn-cetak-induk" id="btn-cetak" onclick="window.print()">
-            <i class='bx bx-printer'></i> Cetak Buku Induk RT
-        </button>
         <button type="button" class="btn-kembali-kk" onclick="tutupDetailKK()" id="btn-kembali-kk" style="display:none;">
             <i class='bx bx-arrow-back'></i> Kembali ke Daftar KK
         </button>
@@ -142,6 +139,8 @@
                     <option value="">Semua Status Tinggal</option>
                     <option value="tetap">Tetap</option>
                     <option value="kontrak">Kontrak / Sewa</option>
+                    <option value="kos">Kos</option>
+                    <option value="menumpang">Menumpang</option>
                 </select>
             </div>
             <div class="warga-filter-col warga-filter-col--select">
@@ -364,7 +363,6 @@
                         <i class='bx bxl-whatsapp' style="color:#25d366;font-size:16px;"></i>
                         <span id="detail-kontak" style="color:#007bff;font-weight:700;">0812-8901-2345</span>
                     </div>
-                    <div class="detail-profil-item__sub">Terhubung ke WhatsApp Grup Warga RT</div>
                 </div>
                 <div>
                     <div class="detail-profil-item__label">STATUS EKONOMI</div>
@@ -565,6 +563,8 @@
                     <select class="edit-status-select" id="edit-input-tinggal">
                         <option value="Tetap">Tetap</option>
                         <option value="Kontrak / Sewa">Kontrak / Sewa</option>
+                        <option value="Kos">Kos</option>
+                        <option value="Menumpang">Menumpang</option>
                     </select>
                 </div>
                 <div class="edit-status-field">
@@ -871,9 +871,12 @@
         // Update header & tombol
         document.getElementById('page-title').innerHTML = 'Detail Kartu Keluarga (KK): <span style="color:#007bff;font-weight:700">' + noKk + '</span>';
         document.getElementById('page-subtitle').textContent = 'Informasi lengkap kepala keluarga, susunan seluruh anggota keluarga terdaftar, dokumen KK, dan status kependudukan.';
-        document.getElementById('btn-cetak').style.display = 'none';
-        document.getElementById('btn-kembali-kk').style.display = 'inline-flex';
-        document.getElementById('btn-kembali-ke-detail').style.display = 'none';
+        var btnCetak = document.getElementById('btn-cetak');
+        if (btnCetak) btnCetak.style.display = 'none';
+        var btnKembaliKk = document.getElementById('btn-kembali-kk');
+        if (btnKembaliKk) btnKembaliKk.style.display = 'inline-flex';
+        var btnKembaliDetail = document.getElementById('btn-kembali-ke-detail');
+        if (btnKembaliDetail) btnKembaliDetail.style.display = 'none';
         document.getElementById('header-breadcrumb').innerHTML = '<i class=\'bx bx-home-alt\'></i> Portal RT 04 / Kelola Data Warga / <span style="color:#007bff;font-weight:600">Detail Kartu Keluarga</span>';
         document.getElementById('topbar-breadcrumb-label').textContent = 'Detail Kartu Keluarga';
 
@@ -908,9 +911,12 @@
 
         document.getElementById('page-title').textContent = 'Kelola Data Warga & Verifikasi Kependudukan';
         document.getElementById('page-subtitle').textContent = 'Kelola data master kependudukan warga RT 04, status mutasi, dan validasi permohonan perubahan data dari warga.';
-        document.getElementById('btn-cetak').style.display = 'inline-flex';
-        document.getElementById('btn-kembali-kk').style.display = 'none';
-        document.getElementById('btn-kembali-ke-detail').style.display = 'none';
+        var btnCetak = document.getElementById('btn-cetak');
+        if (btnCetak) btnCetak.style.display = 'inline-flex';
+        var btnKembaliKk = document.getElementById('btn-kembali-kk');
+        if (btnKembaliKk) btnKembaliKk.style.display = 'none';
+        var btnKembaliDetail = document.getElementById('btn-kembali-ke-detail');
+        if (btnKembaliDetail) btnKembaliDetail.style.display = 'none';
         document.getElementById('header-breadcrumb').innerHTML = '<i class=\'bx bx-home-alt\'></i> <span>Portal RT 04</span>';
         document.getElementById('topbar-breadcrumb-label').textContent = 'Kelola Data Warga';
 
@@ -1171,7 +1177,16 @@
         var selectEkonomi = document.getElementById('edit-input-ekonomi');
         
         if (selectTinggal) {
-            selectTinggal.value = (statusTinggal && statusTinggal.toLowerCase().includes('kontrak')) ? 'Kontrak / Sewa' : 'Tetap';
+            var stLower = (statusTinggal || '').toLowerCase();
+            if (stLower.includes('kontrak') || stLower.includes('sewa')) {
+                selectTinggal.value = 'Kontrak / Sewa';
+            } else if (stLower.includes('kos')) {
+                selectTinggal.value = 'Kos';
+            } else if (stLower.includes('menumpang') || stLower.includes('tumpang')) {
+                selectTinggal.value = 'Menumpang';
+            } else {
+                selectTinggal.value = 'Tetap';
+            }
         }
         if (selectEkonomi) {
             selectEkonomi.value = (statusEkonomi && statusEkonomi.toLowerCase().includes('kurang')) ? 'Kurang Mampu' : 'Mampu';

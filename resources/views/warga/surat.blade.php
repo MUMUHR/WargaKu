@@ -146,36 +146,7 @@
                     </thead>
                     <tbody id="tbody-riwayat-surat">
                         
-                        {{-- Row 1: Disetujui (Dimas) --}}
-                        <tr class="ws-row-item" data-status="disetujui" data-pemohon="dimas arya pratama" data-nosurat="470/882/rt04/x/2025" data-keperluan="pengantar permohonan surat keterangan catatan kepolisian skck">
-                            <td style="font-weight: 600; color: #475569;">24 Okt 2025</td>
-                            <td>
-                                <strong style="color: #0f172a; font-size: 14px;">Dimas Arya Pratama</strong>
-                            </td>
-                            <td>
-                                <div style="line-height: 1.5; color: #334155; font-size: 13.5px;">
-                                    Pengantar permohonan Surat Keterangan Catatan Kepolisian (SKCK) untuk persyaratan rekrutmen BUMN
-                                </div>
-                            </td>
-                            <td>
-                                <span class="ws-badge-no-surat">470/882/RT04/X/2025</span>
-                            </td>
-                            <td>
-                                <span class="ws-badge-status ws-badge-status--disetujui">
-                                    <i class='bx bx-check-circle'></i> Disetujui
-                                </span>
-                            </td>
-                            <td>
-                                <div style="display: flex; align-items: center; justify-content: flex-start;">
-                                    <a href="{{ route('warga.surat.cetak') }}" class="ws-btn-esurat" title="Lihat dan Unduh Surat">
-                                        <i class='bx bx-download'></i>
-                                        <span>Unduh e-Surat</span>
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
-
-                        {{-- Row 2: Menunggu Verifikasi (Siti Aminah) --}}
+                        {{-- Row 1: Menunggu Verifikasi (Siti Aminah) --}}
                         <tr class="ws-row-item" data-status="menunggu" data-pemohon="siti aminah" data-nosurat="" data-keperluan="pengantar permohonan surat keterangan catatan kepolisian skck">
                             <td style="font-weight: 600; color: #475569;">22 Okt 2025</td>
                             <td>
@@ -204,6 +175,35 @@
                                         <i class='bx bx-x-circle'></i>
                                         <span>Batalkan</span>
                                     </button>
+                                </div>
+                            </td>
+                        </tr>
+
+                        {{-- Row 2: Disetujui (Dimas) --}}
+                        <tr class="ws-row-item" data-status="disetujui" data-pemohon="dimas arya pratama" data-nosurat="470/882/rt04/x/2025" data-keperluan="pengantar permohonan surat keterangan catatan kepolisian skck">
+                            <td style="font-weight: 600; color: #475569;">24 Okt 2025</td>
+                            <td>
+                                <strong style="color: #0f172a; font-size: 14px;">Dimas Arya Pratama</strong>
+                            </td>
+                            <td>
+                                <div style="line-height: 1.5; color: #334155; font-size: 13.5px;">
+                                    Pengantar permohonan Surat Keterangan Catatan Kepolisian (SKCK) untuk persyaratan rekrutmen BUMN
+                                </div>
+                            </td>
+                            <td>
+                                <span class="ws-badge-no-surat">470/882/RT04/X/2025</span>
+                            </td>
+                            <td>
+                                <span class="ws-badge-status ws-badge-status--disetujui">
+                                    <i class='bx bx-check-circle'></i> Disetujui
+                                </span>
+                            </td>
+                            <td>
+                                <div style="display: flex; align-items: center; justify-content: flex-start;">
+                                    <a href="{{ route('warga.surat.cetak') }}" class="ws-btn-esurat" title="Lihat dan Unduh Surat">
+                                        <i class='bx bx-download'></i>
+                                        <span>Unduh e-Surat</span>
+                                    </a>
                                 </div>
                             </td>
                         </tr>
@@ -581,7 +581,7 @@
             
             <div style="background: #ffffff; border: 1px solid #cbd5e1; padding: 24px; border-radius: 4px; font-family: 'Times New Roman', Times, serif; color: #000; line-height: 1.5;">
                 <div style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 16px;">
-                    <p style="font-size: 13pt; font-weight: bold; margin: 0;">RUKUN TETANGGA 04 / RW 08 KELURAHAN BARANANGSIANG</p>
+                    <p style="font-size: 13pt; font-weight: bold; margin: 0;">RUKUN TETANGGA 04 KELURAHAN BARANANGSIANG</p>
                     <p style="font-size: 11pt; font-weight: bold; margin: 2px 0 0 0;">KECAMATAN BOGOR TIMUR – KOTA BOGOR</p>
                 </div>
 
@@ -590,7 +590,7 @@
                     <p style="font-size: 10pt; margin: 2px 0 0 0; color: #64748b;">(Nomor surat akan diterbitkan otomatis setelah verifikasi RT)</p>
                 </div>
 
-                <p style="font-size: 11pt;">Yang bertanda tangan di bawah ini Ketua RT 04 RW 08, menerangkan bahwa:</p>
+                <p style="font-size: 11pt;">Yang bertanda tangan di bawah ini Ketua RT 04, menerangkan bahwa:</p>
                 <table style="width: 100%; font-size: 11pt; margin-bottom: 16px;">
                     <tr>
                         <td style="width: 170px;">Nama Lengkap</td>
@@ -615,7 +615,7 @@
                     <tr>
                         <td>Alamat</td>
                         <td>:</td>
-                        <td id="prev-alamat">Jl. Melati Blok B No. 14, RT 04 / RW 08</td>
+                        <td id="prev-alamat">Jl. Melati Blok B No. 14, RT 04</td>
                     </tr>
                     <tr>
                         <td>Keperluan</td>
@@ -635,10 +635,14 @@
                     </div>
 
                     <div style="width: 200px;">
-                        <p style="margin: 0;">Bogor, 24 Oktober 2025</p>
-                        <p style="margin: 0; font-weight: bold;">Ketua RT. 04 RW. 08,</p>
-                        <div style="height: 60px; display: flex; align-items: center; justify-content: center;">
-                            <img src="{{ asset('tanda_tangan_rt.png') }}" alt="Tanda Tangan RT" style="max-height: 58px; max-width: 130px; object-fit: contain;">
+                        <p style="margin: 0;" id="prev-tanggal-surat">Bogor, -</p>
+                        <p style="margin: 0; font-weight: bold;">Ketua RT. 04,</p>
+                        <div style="height: 60px; display: flex; align-items: center; justify-content: center;" id="prev-ttd-rt-box">
+                            {{-- Area tanda tangan: Jangan munculkan gambar ttd jika belum disetujui --}}
+                            <div id="prev-ttd-rt-empty" style="font-size: 11px; color: #64748b; font-style: italic; border: 1px dashed #cbd5e1; border-radius: 4px; padding: 6px 10px; background: #f8fafc; line-height: 1.3;">
+                                (Menunggu Persetujuan RT)
+                            </div>
+                            <img id="prev-ttd-rt-img" src="{{ asset('tanda_tangan_rt.png') }}" alt="Tanda Tangan RT" style="display: none; max-height: 58px; max-width: 130px; object-fit: contain;">
                         </div>
                         <span style="font-weight: bold; border-bottom: 1px solid #000; display: inline-block; padding-bottom: 2px; min-width: 140px;">Supriyadi</span>
                     </div>
@@ -666,7 +670,7 @@ const masterWarga = {
         ttlSurat: 'Bogor, 08 Agustus 2005',
         jk: 'Laki-Laki',
         agama: 'Islam',
-        alamat: 'Jl. Melati Blok B No. 14, RT 04 / RW 08 Kel. Baranangsiang'
+        alamat: 'Jl. Melati Blok B No. 14, RT 04 Kel. Baranangsiang'
     },
     bambang: {
         nama: 'Bpk. Bambang Pamungkas',
@@ -674,7 +678,7 @@ const masterWarga = {
         ttlSurat: 'Depok, 15 Agustus 1988',
         jk: 'Laki-Laki',
         agama: 'Islam',
-        alamat: 'Jl. Melati Blok B No. 14, RT 04 / RW 08 Kel. Baranangsiang'
+        alamat: 'Jl. Melati Blok B No. 14, RT 04 Kel. Baranangsiang'
     },
     siti: {
         nama: 'Siti Aminah',
@@ -682,7 +686,7 @@ const masterWarga = {
         ttlSurat: 'Bandung, 12 April 1983',
         jk: 'Perempuan',
         agama: 'Islam',
-        alamat: 'Jl. Melati Blok B No. 14, RT 04 / RW 08 Kel. Baranangsiang'
+        alamat: 'Jl. Melati Blok B No. 14, RT 04 Kel. Baranangsiang'
     },
     nabila: {
         nama: 'Nabila Putri Kirani',
@@ -690,7 +694,7 @@ const masterWarga = {
         ttlSurat: 'Bogor, 10 November 2012',
         jk: 'Perempuan',
         agama: 'Islam',
-        alamat: 'Jl. Melati Blok B No. 14, RT 04 / RW 08 Kel. Baranangsiang'
+        alamat: 'Jl. Melati Blok B No. 14, RT 04 Kel. Baranangsiang'
     }
 };
 
@@ -743,7 +747,24 @@ function resetFormSurat() {
     }, 50);
 }
 
-// Pratinjau Surat Baru sebelum Kirim
+// Helper Tanda Tangan RT Preview (Hanya muncul jika surat disetujui)
+function aturTtdPreview(isDisetujui, tanggalTerbit) {
+    const imgTtd = document.getElementById('prev-ttd-rt-img');
+    const emptyTtd = document.getElementById('prev-ttd-rt-empty');
+    const tglEl = document.getElementById('prev-tanggal-surat');
+
+    if (isDisetujui) {
+        if (imgTtd) imgTtd.style.display = 'block';
+        if (emptyTtd) emptyTtd.style.display = 'none';
+        if (tglEl) tglEl.textContent = 'Bogor, ' + (tanggalTerbit || '24 Oktober 2025');
+    } else {
+        if (imgTtd) imgTtd.style.display = 'none';
+        if (emptyTtd) emptyTtd.style.display = 'block';
+        if (tglEl) tglEl.textContent = 'Bogor, (Menunggu Tanggal Terbit)';
+    }
+}
+
+// Pratinjau Surat Baru sebelum Kirim (Draft Belum Disetujui)
 function bukaPreviewSuratBaru() {
     const selectEl = document.getElementById('select-warga-tujuan');
     const key = selectEl.value;
@@ -764,19 +785,25 @@ function bukaPreviewSuratBaru() {
     const ttdPemohon = document.getElementById('prev-ttd-pemohon');
     if (ttdPemohon) ttdPemohon.textContent = data.nama;
 
+    // Surat belum disetujui: Jangan munculkan tanda tangan RT
+    aturTtdPreview(false);
+
     bukaModal('modal-preview-surat');
 }
 
-// Preview Draft Row 2
+// Preview Draft Surat (Status Menunggu Verifikasi)
 function bukaPreviewDraft(nama, keperluan) {
     document.getElementById('prev-nama').textContent = nama;
     document.getElementById('prev-ttl').textContent = 'Bogor, 12 April 1983';
     document.getElementById('prev-jk').textContent = 'Perempuan';
     document.getElementById('prev-agama').textContent = 'Islam';
-    document.getElementById('prev-alamat').textContent = 'Jl. Melati Blok B No. 14, RT 04 / RW 08';
+    document.getElementById('prev-alamat').textContent = 'Jl. Melati Blok B No. 14, RT 04';
     document.getElementById('prev-keperluan').textContent = keperluan;
     const ttdPemohon = document.getElementById('prev-ttd-pemohon');
     if (ttdPemohon) ttdPemohon.textContent = nama;
+
+    // Surat berstatus menunggu verifikasi: Jangan munculkan tanda tangan RT
+    aturTtdPreview(false);
 
     bukaModal('modal-preview-surat');
 }
@@ -823,7 +850,18 @@ const suratPerPage = 10;
 function updatePagination() {
     const statusVal = document.getElementById('filter-status-select').value.toLowerCase();
     const searchVal = document.getElementById('search-surat-input').value.toLowerCase().trim();
-    const allRows = Array.from(document.querySelectorAll('#tbody-riwayat-surat .ws-row-item'));
+    const tbody = document.getElementById('tbody-riwayat-surat');
+    if (!tbody) return;
+    const allRows = Array.from(tbody.querySelectorAll('.ws-row-item'));
+
+    // Prioritaskan status 'menunggu' selalu di paling depan, disusul 'disetujui' dan 'ditolak'
+    allRows.sort((a, b) => {
+        const statusOrder = { 'menunggu': 1, 'disetujui': 2, 'ditolak': 3 };
+        const orderA = statusOrder[(a.dataset.status || '').toLowerCase()] || 99;
+        const orderB = statusOrder[(b.dataset.status || '').toLowerCase()] || 99;
+        return orderA - orderB;
+    });
+    allRows.forEach(r => tbody.appendChild(r));
 
     // Filter matching rows
     const matchingRows = allRows.filter(row => {

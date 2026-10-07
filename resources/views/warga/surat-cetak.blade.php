@@ -36,9 +36,9 @@
         
         {{-- Kop Surat --}}
         <div class="ws-kop">
-            <p class="ws-kop-instansi">RUKUN TETANGGA 04 / RW 08 KELURAHAN BARANANGSIANG</p>
+            <p class="ws-kop-instansi">RUKUN TETANGGA 04 KELURAHAN BARANANGSIANG</p>
             <p class="ws-kop-sub">KECAMATAN BOGOR TIMUR – KOTA BOGOR</p>
-            <p class="ws-kop-kota">Sekretariat: Jl. Melati Blok B No. 14, RT 04 / RW 08 Kode Pos: 16143</p>
+            <p class="ws-kop-kota">Sekretariat: Jl. Melati Blok B No. 14, RT 04 Kode Pos: 16143</p>
         </div>
         <div class="ws-kop-line"></div>
 
@@ -51,7 +51,7 @@
         {{-- Isi Surat --}}
         <div class="ws-surat-content">
             <p>
-                Yang bertanda tangan di bawah ini Ketua RT. 04 RW. 08 Kelurahan Baranangsiang Kecamatan Bogor Timur Kota Bogor, menerangkan bahwa:
+                Yang bertanda tangan di bawah ini Ketua RT. 04 Kelurahan Baranangsiang Kecamatan Bogor Timur Kota Bogor, menerangkan bahwa:
             </p>
 
             <table class="ws-surat-table-data">
@@ -83,7 +83,7 @@
                     <td class="ws-surat-num">5.</td>
                     <td class="ws-surat-lbl">Alamat</td>
                     <td class="ws-surat-sep">:</td>
-                    <td class="ws-surat-val">Jl. Melati Blok B No. 14, RT 04 / RW 08 Kel. Baranangsiang Kec. Bogor Timur Kota Bogor</td>
+                    <td class="ws-surat-val">Jl. Melati Blok B No. 14, RT 04 Kel. Baranangsiang Kec. Bogor Timur Kota Bogor</td>
                 </tr>
                 <tr>
                     <td class="ws-surat-num">6.</td>
@@ -100,8 +100,8 @@
             </p>
         </div>
 
-        {{-- Tanda Tangan Tiga Pihak --}}
-        <div class="ws-ttd-grid">
+        {{-- Tanda Tangan Dua Pihak (Pemohon & Ketua RT) --}}
+        <div class="ws-ttd-grid" style="margin-top: 40px; margin-bottom: 30px;">
             <div class="ws-ttd-box">
                 <p style="margin: 0;">&nbsp;</p>
                 <p style="margin: 0; font-weight: bold;">Pemohon,</p>
@@ -111,19 +111,12 @@
 
             <div class="ws-ttd-box">
                 <p style="margin: 0;">Bogor, 24 Oktober 2025</p>
-                <p style="margin: 0; font-weight: bold;">Ketua RT. 04 RW. 08,</p>
+                <p style="margin: 0; font-weight: bold;">Ketua RT. 04,</p>
                 <div class="ws-ttd-space">
                     <img src="{{ asset('tanda_tangan_rt.png') }}" alt="Tanda Tangan Ketua RT 04" class="ws-ttd-img-rt">
                 </div>
                 <span class="ws-ttd-nama">Supriyadi</span>
             </div>
-        </div>
-
-        <div class="ws-ttd-tengah">
-            <p style="margin: 0; font-weight: bold;">Mengetahui,</p>
-            <p style="margin: 0; font-weight: bold;">Ketua RW. 08</p>
-            <div class="ws-ttd-space"></div>
-            <span class="ws-ttd-nama">Hendra Wijaya</span>
         </div>
 
     </div>
@@ -132,7 +125,7 @@
     <div class="ws-cetak-footer-bar">
         <div style="display: flex; align-items: center; gap: 8px;">
             <i class='bx bx-info-circle' style="color: #0284c7; font-size: 16px;"></i>
-            <span>Dokumen ini diterbitkan secara elektronik oleh Pengurus RT 04 RW 08 Kelurahan Baranangsiang.</span>
+            <span>Dokumen ini diterbitkan secara elektronik oleh Pengurus RT 04 Kelurahan Baranangsiang.</span>
         </div>
         <button type="button" class="ws-btn-salin-validasi" onclick="salinValidasi(this)">
             <i class='bx bx-link-alt'></i>

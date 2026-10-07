@@ -1,10 +1,22 @@
 @extends('layouts.admin')
 
-@section('title', 'Tambah Pengumuman Baru')
-@section('meta_description', 'Form tambah pengumuman baru RT 04 / RW 08 — WargaKu')
+@php
+    $isEdit = $isEdit ?? false;
+    $pengumuman = $pengumuman ?? null;
+    $actionUrl = $isEdit ? route('admin.pengumuman.update', $pengumuman['id'] ?? 1) : route('admin.pengumuman.store');
+    $judulVal = $isEdit ? ($pengumuman['judul'] ?? '') : '';
+    $isiVal = $isEdit ? ($pengumuman['isi'] ?? '') : '';
+    $gambarVal = $isEdit ? ($pengumuman['gambar'] ?? null) : null;
+    $statusVal = $isEdit ? ($pengumuman['status_publikasi'] ?? 'publish') : 'publish';
+@endphp
+
+@section('title', $isEdit ? 'Edit Pengumuman RT' : 'Tambah Pengumuman Baru')
+@section('meta_description', ($isEdit ? 'Form edit pengumuman RT 04 / RW 08' : 'Form tambah pengumuman baru RT 04 / RW 08') . ' — WargaKu')
 
 @section('breadcrumb')
     <a href="{{ route('admin.pengumuman') }}" class="admin-topbar__breadcrumb-link">Kelola Pengumuman</a>
+    <span class="admin-topbar__breadcrumb-sep">/</span>
+    <span class="admin-topbar__breadcrumb-current">{{ $isEdit ? 'Edit Pengumuman' : 'Tambah Pengumuman' }}</span>
 @endsection
 
 @push('styles')
@@ -17,10 +29,10 @@
 <div class="admin-page-header">
     <div>
         <nav style="font-size:12px;color:#6c757d;margin-bottom:4px">
-            Home / <a href="{{ route('admin.pengumuman') }}" style="color:#6c757d;text-decoration:none">Kelola Pengumuman</a> / <span style="color:#212529;font-weight:600">Tambah Pengumuman Baru</span>
+            Home / <a href="{{ route('admin.pengumuman') }}" style="color:#6c757d;text-decoration:none">Kelola Pengumuman</a> / <span style="color:#212529;font-weight:600">{{ $isEdit ? 'Edit Pengumuman' : 'Tambah Pengumuman Baru' }}</span>
         </nav>
-        <h1 class="admin-page-header__title">Form Tambah Pengumuman RT</h1>
-        <p class="admin-page-header__sub">Buat dan publikasikan informasi resmi untuk seluruh warga RT 04 / RW 08.</p>
+        <h1 class="admin-page-header__title">{{ $isEdit ? 'Form Edit Pengumuman RT' : 'Form Tambah Pengumuman RT' }}</h1>
+        <p class="admin-page-header__sub">{{ $isEdit ? 'Perbarui isi dan informasi publikasi pengumuman untuk seluruh warga RT 04 / RW 08.' : 'Buat dan publikasikan informasi resmi untuk seluruh warga RT 04 / RW 08.' }}</p>
     </div>
     <a href="{{ route('admin.pengumuman') }}" class="btn-kembali">
         <i class='bx bx-arrow-back'></i> Kembali ke Daftar
@@ -28,7 +40,7 @@
 </div>
 
 {{-- Form Grid --}}
-<form id="form-pengumuman" action="{{ route('admin.pengumuman.store') }}" method="POST" enctype="multipart/form-data">
+<form id="form-pengumuman" action="{{ $actionUrl }}" method="POST" enctype="multipart/form-data">
 @csrf
 <div class="form-pengumuman-grid">
 
@@ -38,7 +50,7 @@
             <div class="form-card__head">
                 <h2 class="form-card__title">
                     <i class='bx bx-notepad'></i>
-                    Konten & Informasi Pengumuman
+                    Konten &amp; Informasi Pengumuman
                 </h2>
                 <span class="form-card__badge">RT 04 / RW 08</span>
             </div>
@@ -53,11 +65,12 @@
                         </div>
                         <div style="display:flex;align-items:center;gap:6px">
                             <span class="form-label__required">(Wajib diisi)</span>
-                            <span class="form-label__counter"><span id="judul-count">58</span> / 150</span>
+                            <span class="form-label__counter"><span id="judul-count">{{ strlen($judulVal) }}</span> / 150</span>
                         </div>
                     </div>
                     <input type="text" id="judul" name="judul" class="form-input"
-                           value="Kerja Bakti Lingkungan Serentak & PSN Menjelang Musim Hujan"
+                           value="{{ old('judul', $judulVal) }}"
+                           placeholder="Masukkan judul pengumuman yang jelas dan ringkas..."
                            maxlength="150" required
                            oninput="document.getElementById('judul-count').textContent=this.value.length">
                     <p class="form-hint">Maksimal 150 karakter. Pastikan judul mencerminkan topik utama kegiatan/edaran warga.</p>
@@ -101,20 +114,12 @@
                         </button>
                     </div>
                     <textarea id="isi" name="isi" class="editor-textarea" required
-                              oninput="updateEditorMeta()">Kepada Yth. Seluruh Bapak/Ibu Warga RT 04 / RW 08,
-
-Menindaklanjuti imbauan kebersihan lingkungan dan pencegahan genangan musim penghujan, Pengurus RT 04 mengundang kehadiran segenap warga dalam kegiatan Gerakan Kerja Bakti Serentak & Pemberantasan Sarang Nyamuk (PSN) yang akan dilaksanakan pada:
-
-• Hari / Tanggal : Minggu, 18 Mei 2025
-• Waktu         : Pukul 06.30 WIB s.d Selesai
-• Titik Kumpul  : Balai Warga RT 04 & Lapangan Voli
-• Agenda Utama  : Pembersihan selokan air utama, pemangkasan ranting pohon rawan patah, serta pemilahan sampah anorganik.
-
-Diharapkan setiap rumah tangga mengirimkan sekurang-kurangnya 1 orang perwakilan. Ibu-ibu PKK akan mengoordinasikan dapur umum konsumsi sarapan pagi bersama di Balai RT.</textarea>
+                              placeholder="Tuliskan isi pengumuman secara lengkap, mencakup hari/tanggal, waktu, lokasi kegiatan, atau hal penting lainnya..."
+                              oninput="updateEditorMeta()">{{ old('isi', $isiVal) }}</textarea>
                     <div class="editor-meta">
-                        <span id="editor-kata">128 Kata</span>
+                        <span id="editor-kata">0 Kata</span>
                         <span>|</span>
-                        <span id="editor-char">859 Karakter</span>
+                        <span id="editor-char">0 Karakter</span>
                     </div>
                 </div>
 
@@ -136,13 +141,13 @@ Diharapkan setiap rumah tangga mengirimkan sekurang-kurangnya 1 orang perwakilan
                 </span>
                 <div class="form-card__footer-actions">
                     <a href="{{ route('admin.pengumuman') }}" class="btn-cancel">
-                        <i class='bx bx-x'></i> Batal & Kembali
+                        <i class='bx bx-x'></i> Batal &amp; Kembali
                     </a>
                     <button type="submit" name="status" value="draft" class="btn-draft">
                         <i class='bx bx-file-blank'></i> Simpan Draf
                     </button>
                     <button type="submit" name="status" value="publish" class="btn-publish">
-                        <i class='bx bx-send'></i> Simpan & Publikasikan
+                        <i class='bx bx-send'></i> {{ $isEdit ? 'Simpan Perubahan' : 'Simpan & Publikasikan' }}
                     </button>
                 </div>
             </div>
@@ -163,15 +168,17 @@ Diharapkan setiap rumah tangga mengirimkan sekurang-kurangnya 1 orang perwakilan
             <div class="sidebar-card__body">
                 <div class="thumb-preview__label">
                     <span>Pratinjau Sampul Aktif:</span>
-                    <span id="thumb-status-indicator">● Tersedia</span>
+                    <span id="thumb-status-indicator" style="color: {{ $gambarVal ? '#28a745' : '#6c757d' }}">
+                        {{ $gambarVal ? '● Tersedia' : '○ Kosong' }}
+                    </span>
                 </div>
                 
-                <div class="thumb-preview-card" id="thumb-preview-card">
+                <div class="thumb-preview-card" id="thumb-preview-card" style="display: {{ $gambarVal ? 'block' : 'none' }};">
                     <span class="thumb-preview__badge">Format: 1920 × 1080 (16:9)</span>
-                    <img src="{{ asset('images/pengumuman/kerjabakti.jpg') }}" alt="Pratinjau Sampul"
+                    <img src="{{ $gambarVal ? asset($gambarVal) : '' }}" alt="Pratinjau Sampul"
                          class="thumb-preview__img" id="thumb-preview-img">
                     <div class="thumb-preview__overlay-bar">
-                        <span class="thumb-preview__filename" id="thumb-filename">foto_kerja_bakti_rt04.jpg</span>
+                        <span class="thumb-preview__filename" id="thumb-filename">{{ $gambarVal ? basename($gambarVal) : '' }}</span>
                         <div class="thumb-preview__actions">
                             <button type="button" class="btn-thumb-change" onclick="document.getElementById('input-gambar').click()">
                                 <i class='bx bx-sync'></i> Ganti
@@ -189,7 +196,7 @@ Diharapkan setiap rumah tangga mengirimkan sekurang-kurangnya 1 orang perwakilan
                         <i class='bx bx-cloud-upload'></i>
                     </div>
                     <p class="upload-zone__text">
-                        Tarik & letakkan foto di sini, atau
+                        Tarik &amp; letakkan foto di sini, atau
                         <a href="#" class="upload-zone__link" onclick="event.preventDefault()">Pilih Berkas</a>
                     </p>
                     <span class="upload-zone__hint">JPG, JPEG, PNG</span>
@@ -209,16 +216,16 @@ Diharapkan setiap rumah tangga mengirimkan sekurang-kurangnya 1 orang perwakilan
             <div class="sidebar-card__head">
                 <h3 class="sidebar-card__title">
                     <i class='bx bx-slider-alt'></i>
-                    Status & Informasi Publikasi
+                    Status &amp; Informasi Publikasi
                 </h3>
                 <span style="background:#28a745;color:#ffffff;font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:3px;">Pengaturan</span>
             </div>
             <div class="sidebar-card__body">
                 <p style="font-size:12.5px;font-weight:700;color:#212529;margin:0 0 10px">Status Publikasi *</p>
 
-                <label class="status-option status-option--active" for="status-publish" id="label-status-publish">
+                <label class="status-option {{ $statusVal === 'publish' ? 'status-option--active' : '' }}" for="status-publish" id="label-status-publish">
                     <input type="radio" id="status-publish" name="status_publikasi"
-                           value="publish" checked class="status-option__radio">
+                           value="publish" {{ $statusVal === 'publish' ? 'checked' : '' }} class="status-option__radio">
                     <div>
                         <p class="status-option__label">
                             <i class='bx bx-check-circle' style="color:#28a745;font-size:16px;"></i>
@@ -228,9 +235,9 @@ Diharapkan setiap rumah tangga mengirimkan sekurang-kurangnya 1 orang perwakilan
                     </div>
                 </label>
 
-                <label class="status-option" for="status-draft" id="label-status-draft">
+                <label class="status-option {{ $statusVal === 'draft' ? 'status-option--active' : '' }}" for="status-draft" id="label-status-draft">
                     <input type="radio" id="status-draft" name="status_publikasi"
-                           value="draft" class="status-option__radio">
+                           value="draft" {{ $statusVal === 'draft' ? 'checked' : '' }} class="status-option__radio">
                     <div>
                         <p class="status-option__label">
                             Simpan sebagai Draf
@@ -253,7 +260,7 @@ Diharapkan setiap rumah tangga mengirimkan sekurang-kurangnya 1 orang perwakilan
                     </div>
                     <div class="pembuat-row" style="margin-top:2px;">
                         <span class="pembuat-row__key">Waktu Pembuatan:</span>
-                        <span class="pembuat-row__val">Hari ini (Otomatis)</span>
+                        <span class="pembuat-row__val">{{ $isEdit && isset($pengumuman['created_at']) ? \App\Data\DummyData::formatTanggal($pengumuman['created_at']) : 'Hari ini (Otomatis)' }}</span>
                     </div>
                 </div>
             </div>
@@ -278,7 +285,8 @@ Diharapkan setiap rumah tangga mengirimkan sekurang-kurangnya 1 orang perwakilan
     // Update word/char count textarea editor
     function updateEditorMeta() {
         var isi = document.getElementById('isi').value;
-        var kata = isi.trim() === '' ? 0 : isi.trim().split(/\s+/).length;
+        var trimmed = isi.trim();
+        var kata = trimmed === '' ? 0 : trimmed.split(/\s+/).length;
         var char = isi.length;
         document.getElementById('editor-kata').textContent = kata + ' Kata';
         document.getElementById('editor-char').textContent = char + ' Karakter';
@@ -318,7 +326,11 @@ Diharapkan setiap rumah tangga mengirimkan sekurang-kurangnya 1 orang perwakilan
         var card = document.getElementById('thumb-preview-card');
         var input = document.getElementById('input-gambar');
         var indicator = document.getElementById('thumb-status-indicator');
+        var img = document.getElementById('thumb-preview-img');
+        var fn = document.getElementById('thumb-filename');
         if (input) input.value = '';
+        if (img) img.src = '';
+        if (fn) fn.textContent = '';
         if (card) card.style.display = 'none';
         if (indicator) {
             indicator.textContent = '○ Kosong';

@@ -31,7 +31,7 @@
         </p>
     </div>
 
-    <form id="form-edit-keluarga" action="{{ route('warga.keluarga.edit.store') }}" method="POST">
+    <form id="form-edit-keluarga" action="{{ route('warga.keluarga.edit.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
 
         <div class="warga-form-grid">
@@ -442,7 +442,7 @@
                         
                         {{-- Dropzone --}}
                         <div class="wf-upload-dropzone" onclick="document.getElementById('file-input-edit').click()">
-                            <input type="file" id="file-input-edit" style="display:none;" multiple accept=".pdf,.jpg,.jpeg,.png">
+                            <input type="file" id="file-input-edit" name="bukti" style="display:none;" multiple accept=".pdf,.jpg,.jpeg,.png">
                             <div class="wf-upload-icon-circle">
                                 <i class='bx bx-file'></i>
                             </div>

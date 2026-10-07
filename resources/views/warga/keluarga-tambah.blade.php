@@ -33,7 +33,7 @@
         </p>
     </div>
 
-    <form id="form-tambah-anggota" action="{{ route('warga.keluarga.tambah.store') }}" method="POST">
+    <form id="form-tambah-anggota" action="{{ route('warga.keluarga.tambah.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
         
         <div class="warga-form-grid">
@@ -260,8 +260,8 @@
                     <div class="wf-card__body">
                         
                         {{-- Dropzone --}}
-                        <div class="wf-upload-dropzone" onclick="document.getElementById('file-input-tambah').click()">
-                            <input type="file" id="file-input-tambah" style="display:none;" multiple accept=".pdf,.jpg,.jpeg,.png">
+                        <div class="wf-upload-dropzone" id="dropzone-tambah" onclick="document.getElementById('file-input-tambah').click()" style="cursor: pointer;">
+                            <input type="file" id="file-input-tambah" name="bukti" style="display:none;" multiple accept=".pdf,.jpg,.jpeg,.png">
                             <div class="wf-upload-icon-circle">
                                 <i class='bx bx-cloud-upload'></i>
                             </div>
@@ -270,54 +270,10 @@
                             <div class="wf-upload-text-hint">Mendukung format PDF, JPG, PNG (Maksimal 2 MB per berkas)</div>
                         </div>
 
-                        {{-- Berkas Terlampir --}}
-                        <div class="wf-attached-section">
-                            <div class="wf-attached-title">BERKAS TERLAMPIR (2 FILE TERDETEKSI)</div>
-                            <div class="wf-file-list" id="tambah-file-list">
-                                
-                                {{-- Item 1 --}}
-                                <div class="wf-file-item" id="file-item-1">
-                                    <div class="wf-file-info">
-                                        <i class='bx bxs-file-pdf wf-file-icon-pdf'></i>
-                                        <div style="min-width:0;">
-                                            <div class="wf-file-name" title="Surat_Keterangan_Lahir_RS_Hermina.pdf">Surat_Keterangan_Lahir_RS_Hermina.pdf</div>
-                                            <div class="wf-file-meta">
-                                                <span>1.1 MB</span> • <span>✓ Siap Diunggah</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="wf-file-actions">
-                                        <button type="button" class="wf-file-btn" title="Lihat Berkas" onclick="alert('Pratinjau dokumen: Surat_Keterangan_Lahir_RS_Hermina.pdf')">
-                                            <i class='bx bx-show'></i>
-                                        </button>
-                                        <button type="button" class="wf-file-btn wf-file-btn--delete" title="Hapus Berkas" onclick="document.getElementById('file-item-1').remove()">
-                                            <i class='bx bx-trash'></i>
-                                        </button>
-                                    </div>
-                                </div>
-
-                                {{-- Item 2 --}}
-                                <div class="wf-file-item" id="file-item-2">
-                                    <div class="wf-file-info">
-                                        <i class='bx bxs-file-image wf-file-icon-img'></i>
-                                        <div style="min-width:0;">
-                                            <div class="wf-file-name" title="Buku_Nikah_Hal_1-2.jpg">Buku_Nikah_Hal_1-2.jpg</div>
-                                            <div class="wf-file-meta">
-                                                <span>850 KB</span> • <span>✓ Siap Diunggah</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="wf-file-actions">
-                                        <button type="button" class="wf-file-btn" title="Lihat Berkas" onclick="alert('Pratinjau dokumen: Buku_Nikah_Hal_1-2.jpg')">
-                                            <i class='bx bx-show'></i>
-                                        </button>
-                                        <button type="button" class="wf-file-btn wf-file-btn--delete" title="Hapus Berkas" onclick="document.getElementById('file-item-2').remove()">
-                                            <i class='bx bx-trash'></i>
-                                        </button>
-                                    </div>
-                                </div>
-
-                            </div>
+                        {{-- Berkas Terlampir (Default Kosong & Tersembunyi) --}}
+                        <div class="wf-attached-section" id="section-berkas-terlampir" style="display: none;">
+                            <div class="wf-attached-title" id="judul-berkas-terlampir">BERKAS TERLAMPIR (0 FILE)</div>
+                            <div class="wf-file-list" id="tambah-file-list"></div>
                         </div>
 
                     </div>
@@ -379,7 +335,7 @@
 
 @push('scripts')
 <script>
-document-addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', function () {
     const btnTrigger = document.getElementById('btn-trigger-modal');
     const modal = document.getElementById('modal-konfirmasi-tambah');
     const btnBatal = document.getElementById('btn-modal-batal');
@@ -387,6 +343,116 @@ document-addEventListener('DOMContentLoaded', function () {
     const checkboxPersetujuan = document.getElementById('persetujuan');
     const form = document.getElementById('form-tambah-anggota');
 
+    // ── Logika Upload & Berkas Terlampir Dinamis ──
+    const fileInput = document.getElementById('file-input-tambah');
+    const dropzone = document.getElementById('dropzone-tambah');
+    const attachedSection = document.getElementById('section-berkas-terlampir');
+    const fileListContainer = document.getElementById('tambah-file-list');
+    const attachedTitle = document.getElementById('judul-berkas-terlampir');
+    let uploadedFiles = [];
+
+    function renderUploadedFiles() {
+        if (!attachedSection || !fileListContainer) return;
+        if (uploadedFiles.length === 0) {
+            attachedSection.style.display = 'none';
+            fileListContainer.innerHTML = '';
+            return;
+        }
+
+        attachedSection.style.display = 'block';
+        if (attachedTitle) {
+            attachedTitle.textContent = `BERKAS TERLAMPIR (${uploadedFiles.length} FILE TERDETEKSI)`;
+        }
+        fileListContainer.innerHTML = '';
+
+        uploadedFiles.forEach((file, index) => {
+            const isPdf = file.name.toLowerCase().endsWith('.pdf');
+            const iconClass = isPdf ? 'bxs-file-pdf wf-file-icon-pdf' : 'bxs-file-image wf-file-icon-img';
+            const sizeInMB = file.size / (1024 * 1024);
+            const sizeStr = sizeInMB >= 0.1 
+                ? sizeInMB.toFixed(1) + ' MB' 
+                : Math.max(1, Math.round(file.size / 1024)) + ' KB';
+
+            const item = document.createElement('div');
+            item.className = 'wf-file-item';
+            item.innerHTML = `
+                <div class="wf-file-info">
+                    <i class='bx ${iconClass}'></i>
+                    <div style="min-width:0;">
+                        <div class="wf-file-name" title="${file.name}">${file.name}</div>
+                        <div class="wf-file-meta">
+                            <span>${sizeStr}</span> • <span>✓ Siap Diunggah</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="wf-file-actions">
+                    <button type="button" class="wf-file-btn" title="Lihat Berkas" onclick="previewFileTambah(${index})">
+                        <i class='bx bx-show'></i>
+                    </button>
+                    <button type="button" class="wf-file-btn wf-file-btn--delete" title="Hapus Berkas" onclick="hapusFileTambah(${index})">
+                        <i class='bx bx-trash'></i>
+                    </button>
+                </div>
+            `;
+            fileListContainer.appendChild(item);
+        });
+    }
+
+    window.previewFileTambah = function(index) {
+        if (uploadedFiles[index]) {
+            alert('Pratinjau berkas: ' + uploadedFiles[index].name);
+        }
+    };
+
+    window.hapusFileTambah = function(index) {
+        uploadedFiles.splice(index, 1);
+        renderUploadedFiles();
+    };
+
+    if (fileInput) {
+        fileInput.addEventListener('change', function(e) {
+            const files = Array.from(e.target.files);
+            files.forEach(f => {
+                if (!uploadedFiles.some(existing => existing.name === f.name && existing.size === f.size)) {
+                    uploadedFiles.push(f);
+                }
+            });
+            renderUploadedFiles();
+        });
+    }
+
+    if (dropzone) {
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropzone.addEventListener(eventName, function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                dropzone.style.borderColor = '#28a745';
+                dropzone.style.backgroundColor = '#f0fff4';
+            }, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropzone.addEventListener(eventName, function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                dropzone.style.borderColor = '';
+                dropzone.style.backgroundColor = '';
+            }, false);
+        });
+
+        dropzone.addEventListener('drop', function(e) {
+            const dt = e.dataTransfer;
+            const files = Array.from(dt.files);
+            files.forEach(f => {
+                if (!uploadedFiles.some(existing => existing.name === f.name && existing.size === f.size)) {
+                    uploadedFiles.push(f);
+                }
+            });
+            renderUploadedFiles();
+        });
+    }
+
+    // ── Logika Modal Konfirmasi ──
     btnTrigger.addEventListener('click', function () {
         if (!form.checkValidity()) {
             form.reportValidity();

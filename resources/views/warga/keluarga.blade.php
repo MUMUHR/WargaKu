@@ -97,11 +97,11 @@
     <div class="kk-tab-header">
         <button class="kk-tab-btn kk-tab-btn--active" id="tab-daftar" onclick="switchTab('daftar')" type="button">
             <i class='bx bxs-group'></i>
-            Daftar Anggota Keluarga <span class="kk-tab-badge">4</span>
+            Daftar Anggota Keluarga
         </button>
         <button class="kk-tab-btn" id="tab-riwayat" onclick="switchTab('riwayat')" type="button">
             <i class='bx bx-history'></i>
-            Riwayat Pengajuan Perubahan Data <span class="kk-tab-badge kk-tab-badge--orange">3</span>
+            Riwayat Pengajuan Perubahan Data <span class="kk-tab-dot" title="Ada pengajuan status menunggu"></span>
         </button>
     </div>
 
@@ -302,7 +302,7 @@
                                 <i class='bx bx-file-blank'></i> KTP_Dimas.pdf
                             </a>
                         </td>
-                        <td><span class="kk-badge-rstatus kk-badge-rstatus--menunggu">Menunggu</span></td>
+                        <td><span class="kk-badge-rstatus kk-badge-rstatus--menunggu"><span class="kk-status-dot">●</span> Menunggu</span></td>
                         <td style="color:#6c757d; font-size:12.5px;">-</td>
                         <td style="text-align:center;">
                             <button type="button" class="kk-btn-lihat" id="btn-lihat-1" onclick="alert('Detail pengajuan perubahan data Dimas Arya Pratama.')">
@@ -323,7 +323,7 @@
                                 <i class='bx bx-file-blank'></i> Akta_Kelahiran.jpg
                             </a>
                         </td>
-                        <td><span class="kk-badge-rstatus kk-badge-rstatus--disetujui">Disetujui</span></td>
+                        <td><span class="kk-badge-rstatus kk-badge-rstatus--disetujui"><span class="kk-status-dot">●</span> Disetujui</span></td>
                         <td style="color:#6c757d; font-size:12.5px;">-</td>
                         <td style="text-align:center;">
                             <button type="button" class="kk-btn-lihat kk-btn-lihat--green" id="btn-lihat-2" onclick="alert('Pengajuan disetujui. Nabila berhasil ditambahkan.')">
@@ -344,7 +344,7 @@
                                 <i class='bx bx-file-blank'></i> Ijazah_Siti.pdf
                             </a>
                         </td>
-                        <td><span class="kk-badge-rstatus kk-badge-rstatus--ditolak">Ditolak</span></td>
+                        <td><span class="kk-badge-rstatus kk-badge-rstatus--ditolak"><span class="kk-status-dot">●</span> Ditolak</span></td>
                         <td style="color:#dc3545; font-size:12.5px; font-weight:500;">Scan dokumen buram dan tidak terbaca jelas</td>
                         <td style="text-align:center;">
                             <button type="button" class="kk-btn-lihat kk-btn-lihat--green" id="btn-lihat-3" onclick="alert('Pengajuan ditolak. Silakan ajukan ulang dengan scan yang lebih jelas.')">

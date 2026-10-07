@@ -181,7 +181,7 @@
                 <div class="month-card-body">
                     <div class="month-card-nominal">Rp 75.000</div>
                     <div class="month-card-info month-card-info--berjalan">
-                        <i class='bx bx-calendar-event'></i> Jatuh tempo: 10 Mei 2025
+                        -
                     </div>
                 </div>
                 <div class="month-card-footer">
@@ -198,7 +198,7 @@
                 <div class="month-card-body">
                     <div class="month-card-nominal">Rp 75.000</div>
                     <div class="month-card-info month-card-info--future">
-                        <i class='bx bx-time'></i> Periode bulan depan
+                        -
                     </div>
                 </div>
                 <div class="month-card-footer">
@@ -215,7 +215,7 @@
                 <div class="month-card-body">
                     <div class="month-card-nominal">Rp 75.000</div>
                     <div class="month-card-info month-card-info--future">
-                        <i class='bx bx-time'></i> Belum masuk periode
+                        -
                     </div>
                 </div>
                 <div class="month-card-footer">
@@ -232,7 +232,7 @@
                 <div class="month-card-body">
                     <div class="month-card-nominal">Rp 75.000</div>
                     <div class="month-card-info month-card-info--future">
-                        <i class='bx bx-time'></i> Belum masuk periode
+                        -
                     </div>
                 </div>
                 <div class="month-card-footer">
@@ -249,7 +249,7 @@
                 <div class="month-card-body">
                     <div class="month-card-nominal">Rp 75.000</div>
                     <div class="month-card-info month-card-info--future">
-                        <i class='bx bx-time'></i> Belum masuk periode
+                        -
                     </div>
                 </div>
                 <div class="month-card-footer">
@@ -266,7 +266,7 @@
                 <div class="month-card-body">
                     <div class="month-card-nominal">Rp 75.000</div>
                     <div class="month-card-info month-card-info--future">
-                        <i class='bx bx-time'></i> Belum masuk periode
+                        -
                     </div>
                 </div>
                 <div class="month-card-footer">
@@ -283,7 +283,7 @@
                 <div class="month-card-body">
                     <div class="month-card-nominal">Rp 75.000</div>
                     <div class="month-card-info month-card-info--future">
-                        <i class='bx bx-time'></i> Belum masuk periode
+                        -
                     </div>
                 </div>
                 <div class="month-card-footer">
@@ -300,7 +300,7 @@
                 <div class="month-card-body">
                     <div class="month-card-nominal">Rp 75.000</div>
                     <div class="month-card-info month-card-info--future">
-                        <i class='bx bx-time'></i> Belum masuk periode
+                        -
                     </div>
                 </div>
                 <div class="month-card-footer">
@@ -331,14 +331,14 @@
                 { name: "Februari 2025", nominal: "Rp 75.000", status: "lunas", infoText: "Dibayar: 04 Feb 2025", footer: "Iuran Kebersihan & Keamanan RT 04 (Lunas)" },
                 { name: "Maret 2025", nominal: "Rp 75.000", status: "lunas", infoText: "Dibayar: 07 Mar 2025", footer: "Iuran Kebersihan & Keamanan RT 04 (Lunas)" },
                 { name: "April 2025", nominal: "Rp 75.000", status: "lunas", infoText: "Dibayar: 05 Apr 2025", footer: "Iuran Kebersihan & Keamanan RT 04 (Lunas)" },
-                { name: "Mei 2025", nominal: "Rp 75.000", status: "berjalan", infoText: "Jatuh tempo: 10 Mei 2025", footer: "Iuran Wajib Bulanan RT 04" },
-                { name: "Juni 2025", nominal: "Rp 75.000", status: "future", infoText: "Periode bulan depan", footer: "Iuran Wajib Bulanan RT 04" },
-                { name: "Juli 2025", nominal: "Rp 75.000", status: "future", infoText: "Belum masuk periode", footer: "Iuran Wajib Bulanan RT 04" },
-                { name: "Agustus 2025", nominal: "Rp 75.000", status: "future", infoText: "Belum masuk periode", footer: "Iuran Wajib Bulanan RT 04" },
-                { name: "September 2025", nominal: "Rp 75.000", status: "future", infoText: "Belum masuk periode", footer: "Iuran Wajib Bulanan RT 04" },
-                { name: "Oktober 2025", nominal: "Rp 75.000", status: "future", infoText: "Belum masuk periode", footer: "Iuran Wajib Bulanan RT 04" },
-                { name: "November 2025", nominal: "Rp 75.000", status: "future", infoText: "Belum masuk periode", footer: "Iuran Wajib Bulanan RT 04" },
-                { name: "Desember 2025", nominal: "Rp 75.000", status: "future", infoText: "Belum masuk periode", footer: "Iuran Wajib Bulanan RT 04" }
+                { name: "Mei 2025", nominal: "Rp 75.000", status: "berjalan", infoText: "-", footer: "Iuran Wajib Bulanan RT 04" },
+                { name: "Juni 2025", nominal: "Rp 75.000", status: "future", infoText: "-", footer: "Iuran Wajib Bulanan RT 04" },
+                { name: "Juli 2025", nominal: "Rp 75.000", status: "future", infoText: "-", footer: "Iuran Wajib Bulanan RT 04" },
+                { name: "Agustus 2025", nominal: "Rp 75.000", status: "future", infoText: "-", footer: "Iuran Wajib Bulanan RT 04" },
+                { name: "September 2025", nominal: "Rp 75.000", status: "future", infoText: "-", footer: "Iuran Wajib Bulanan RT 04" },
+                { name: "Oktober 2025", nominal: "Rp 75.000", status: "future", infoText: "-", footer: "Iuran Wajib Bulanan RT 04" },
+                { name: "November 2025", nominal: "Rp 75.000", status: "future", infoText: "-", footer: "Iuran Wajib Bulanan RT 04" },
+                { name: "Desember 2025", nominal: "Rp 75.000", status: "future", infoText: "-", footer: "Iuran Wajib Bulanan RT 04" }
             ]
         },
         "2024": {
@@ -440,7 +440,7 @@
                     <div class="month-card-body">
                         <div class="month-card-nominal">${m.nominal}</div>
                         <div class="month-card-info month-card-info--berjalan">
-                            <i class='bx bx-calendar-event'></i> ${m.infoText}
+                            ${m.infoText}
                         </div>
                     </div>
                 `;
@@ -455,7 +455,7 @@
                     <div class="month-card-body">
                         <div class="month-card-nominal">${m.nominal}</div>
                         <div class="month-card-info month-card-info--future">
-                            <i class='bx bx-time'></i> ${m.infoText}
+                            ${m.infoText}
                         </div>
                     </div>
                 `;

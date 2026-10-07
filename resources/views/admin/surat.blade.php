@@ -16,6 +16,20 @@
 @php
     use App\Data\DummyData;
     $listSurat = DummyData::listPengajuanSuratAdmin();
+    // Prioritaskan status Menunggu di paling depan, yang sudah disetujui / ditolak di belakang
+    usort($listSurat, function ($a, $b) {
+        $prio = [
+            'menunggu' => 1,
+            'disetujui' => 2,
+            'ditolak' => 3,
+        ];
+        $prioA = $prio[strtolower($a['status'] ?? '')] ?? 99;
+        $prioB = $prio[strtolower($b['status'] ?? '')] ?? 99;
+        if ($prioA !== $prioB) {
+            return $prioA <=> $prioB;
+        }
+        return ($a['id'] ?? 0) <=> ($b['id'] ?? 0);
+    });
 @endphp
 
 {{-- ========================================================
@@ -90,10 +104,7 @@
             <h2 class="surat-card-title">Daftar Pengajuan Surat Pengantar RT</h2>
             <span class="badge-count-surat" id="badge-total-surat">Menampilkan 5 dari 33 permohonan</span>
         </div>
-        <div class="sync-indicator-text">
-            <span class="sync-dot-green">●</span>
-            <span>Auto-sinkronisasi Database Aktif</span>
-        </div>
+       
     </div>
 
     <div class="surat-table-wrap">
@@ -158,8 +169,6 @@
                                 <span>{{ $s['nomor_surat'] }}</span>
                                 <i class='bx bx-copy'></i>
                             </div>
-                        @elseif($s['status'] === 'Ditolak')
-                            <span style="color: #dc3545; font-size: 11.5px; font-weight: 600;">Dibatalkan</span>
                         @else
                             <span style="color: #adb5bd; font-size: 13px;">-</span>
                         @endif
@@ -359,7 +368,25 @@
     function renderSuratPagination() {
         var status = (document.getElementById('filter-status-select').value || '').toLowerCase().trim();
         var q = (document.getElementById('search-surat-input').value || '').toLowerCase().trim();
-        var allRows = Array.from(document.querySelectorAll('#tbody-surat tr.row-surat-item'));
+        var tbody = document.getElementById('tbody-surat');
+        if (!tbody) return;
+        var allRows = Array.from(tbody.querySelectorAll('tr.row-surat-item'));
+
+        // Prioritaskan status 'menunggu' tampil paling pertama (di atas), status lainnya ('disetujui'/'ditolak') pindah ke belakang
+        allRows.sort(function(a, b) {
+            var statusOrder = { 'menunggu': 1, 'disetujui': 2, 'ditolak': 3 };
+            var orderA = statusOrder[(a.dataset.status || '').toLowerCase()] || 99;
+            var orderB = statusOrder[(b.dataset.status || '').toLowerCase()] || 99;
+            if (orderA !== orderB) {
+                return orderA - orderB;
+            }
+            return (parseInt(a.dataset.id, 10) || 0) - (parseInt(b.dataset.id, 10) || 0);
+        });
+
+        // Re-append ke tbody agar urutan visual DOM benar-benar terupdate
+        allRows.forEach(function(row) {
+            tbody.appendChild(row);
+        });
 
         var matchedRows = allRows.filter(function(row) {
             var rowStatus = (row.dataset.status || '').toLowerCase();

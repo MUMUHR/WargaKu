@@ -152,9 +152,6 @@
                 </select>
             </div>
             <div class="warga-filter-col warga-filter-col--actions">
-                <button type="button" class="btn-filter-submit" onclick="terapkanFilterKK()">
-                    <i class='bx bx-filter-alt'></i> Filter
-                </button>
                 <button type="button" class="btn-filter-reset" onclick="resetFilterKK()" title="Reset Filter">
                     <i class='bx bx-refresh'></i>
                 </button>

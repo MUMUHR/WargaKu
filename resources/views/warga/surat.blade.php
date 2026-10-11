@@ -4,9 +4,9 @@
 @section('meta_description', 'Layanan Pengajuan Surat Pengantar RT 04 Mandiri secara Online — WargaKu')
 
 @section('topbar_section')
-    <a href="{{ route('warga.beranda') }}" class="admin-topbar__breadcrumb-link">Beranda</a>
+    <span class="admin-topbar__breadcrumb-link">Layanan Warga</span>
     <span class="admin-topbar__breadcrumb-sep" aria-hidden="true">/</span>
-    <span class="admin-topbar__breadcrumb-current">Pengajuan Surat</span>
+    <span class="admin-topbar__breadcrumb-current">Pengajuan Surat Pengantar</span>
 @endsection
 
 @push('styles')
@@ -15,17 +15,10 @@
 
 @section('content')
 
-{{-- ── Breadcrumb & Header ── --}}
+{{-- ── Header Halaman ── --}}
 <div class="warga-surat-page">
     
     <div style="margin-bottom: 22px;">
-        <nav style="font-size:12px;color:#6c757d;margin-bottom:6px;display:flex;align-items:center;gap:6px;" aria-label="Breadcrumb">
-            <a href="{{ route('warga.beranda') }}" style="color:#6c757d;text-decoration:none;">Beranda</a>
-            <span>/</span>
-            <span style="color:#6c757d;">Layanan Warga</span>
-            <span>/</span>
-            <span style="color:#007bff;font-weight:600;">Pengajuan Surat Pengantar</span>
-        </nav>
         <h1 style="font-size:22px;font-weight:800;color:#111827;margin-bottom:4px;">
             Layanan Pengajuan Surat Pengantar RT 04
         </h1>
@@ -94,11 +87,17 @@
     <div class="ws-tab-nav">
         <button type="button" class="ws-tab-btn ws-tab-btn--active" id="tab-riwayat-btn" onclick="switchSuratTab('riwayat')">
             <i class='bx bx-history'></i>
-            <span>Riwayat &amp; Status Pengajuan</span>
+            <span>
+                <span class="ws-tab-label-main">Riwayat &amp; Status</span>
+                <span class="ws-tab-label-extra"> Pengajuan</span>
+            </span>
         </button>
         <button type="button" class="ws-tab-btn" id="tab-buat-btn" onclick="switchSuratTab('buat')">
             <i class='bx bx-edit'></i>
-            <span>Buat Pengajuan Surat Baru</span>
+            <span>
+                <span class="ws-tab-label-main">Buat Pengajuan</span>
+                <span class="ws-tab-label-extra"> Surat Baru</span>
+            </span>
         </button>
     </div>
 
@@ -567,7 +566,7 @@
 
 {{-- ══ MODAL 3: PRATINJAU DOKUMEN CEPAT ══ --}}
 <div class="ws-modal-overlay" id="modal-preview-surat">
-    <div class="ws-modal-card ws-modal-card--large">
+    <div class="ws-modal-card ws-modal-card--large ws-modal-card--preview">
         <div class="ws-modal-header">
             <div class="ws-modal-title">
                 <i class='bx bx-show' style="color: #007bff; font-size: 20px;"></i>
@@ -577,74 +576,82 @@
                 <i class='bx bx-x'></i>
             </button>
         </div>
-        <div class="ws-modal-body" style="background: #f8fafc; max-height: 70vh; overflow-y: auto;">
+        <div class="ws-modal-body ws-preview-modal-body">
             
-            <div style="background: #ffffff; border: 1px solid #cbd5e1; padding: 24px; border-radius: 4px; font-family: 'Times New Roman', Times, serif; color: #000; line-height: 1.5;">
-                <div style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 16px;">
-                    <p style="font-size: 13pt; font-weight: bold; margin: 0;">RUKUN TETANGGA 04 KELURAHAN BARANANGSIANG</p>
-                    <p style="font-size: 11pt; font-weight: bold; margin: 2px 0 0 0;">KECAMATAN BOGOR TIMUR – KOTA BOGOR</p>
+            <div style="text-align: center; margin-bottom: 12px; font-size: 12px; color: #64748b; font-family: sans-serif; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                <i class='bx bx-info-circle' style="font-size: 15px; color: #0284c7;"></i>
+                <span>Format pratinjau dokumen skala tetap (A4). Geser ke samping jika tampilan terpotong di layar kecil.</span>
+            </div>
+
+            {{-- Kertas Dokumen Tetap (Non-Responsive A4 fixed width agar proporsi kertas & posisi tanda tangan tidak berubah) --}}
+            <div class="ws-paper-preview">
+                <div style="text-align: center; line-height: 1.35; margin-bottom: 8px;">
+                    <p style="font-size: 15px; font-weight: bold; letter-spacing: 0.5px; margin: 0; text-transform: uppercase;">RUKUN TETANGGA 04 KELURAHAN BARANANGSIANG</p>
+                    <p style="font-size: 14px; font-weight: bold; margin: 2px 0 0 0; text-transform: uppercase;">KECAMATAN BOGOR TIMUR – KOTA BOGOR</p>
+                    <p style="font-size: 12.5px; margin: 2px 0 0 0;">Sekretariat: Jl. Melati Blok B No. 14, RT 04 Kode Pos: 16143</p>
+                </div>
+                <div style="border-top: 3px solid #000; border-bottom: 1px solid #000; height: 2px; margin: 10px 0 22px 0;"></div>
+
+                <div style="text-align: center; margin-bottom: 22px;">
+                    <p style="font-size: 15.5px; font-weight: bold; text-decoration: underline; margin: 0; letter-spacing: 0.5px;">SURAT PENGANTAR</p>
+                    <p style="font-size: 13px; font-weight: bold; margin: 3px 0 0 0; color: #64748b;">(Nomor surat akan diterbitkan otomatis setelah verifikasi RT)</p>
                 </div>
 
-                <div style="text-align: center; margin-bottom: 16px;">
-                    <p style="font-size: 13pt; font-weight: bold; text-decoration: underline; margin: 0;">SURAT PENGANTAR</p>
-                    <p style="font-size: 10pt; margin: 2px 0 0 0; color: #64748b;">(Nomor surat akan diterbitkan otomatis setelah verifikasi RT)</p>
-                </div>
-
-                <p style="font-size: 11pt;">Yang bertanda tangan di bawah ini Ketua RT 04, menerangkan bahwa:</p>
-                <table style="width: 100%; font-size: 11pt; margin-bottom: 16px;">
+                <p style="font-size: 13.5px; line-height: 1.5; text-indent: 30px; text-align: justify; margin-bottom: 12px;">Yang bertanda tangan di bawah ini Ketua RT 04, menerangkan bahwa:</p>
+                <table style="width: 100%; font-size: 13.5px; line-height: 1.5; margin: 12px 0 16px 0; border-collapse: collapse;">
                     <tr>
-                        <td style="width: 170px;">Nama Lengkap</td>
-                        <td style="width: 15px;">:</td>
-                        <td style="font-weight: bold;" id="prev-nama">Dimas Arya Pratama</td>
+                        <td style="width: 175px; padding: 3px 0;">Nama Lengkap</td>
+                        <td style="width: 20px; padding: 3px 0; text-align: center;">:</td>
+                        <td style="font-weight: bold; padding: 3px 0;" id="prev-nama">Dimas Arya Pratama</td>
                     </tr>
                     <tr>
-                        <td>Tempat/Tgl Lahir</td>
-                        <td>:</td>
-                        <td id="prev-ttl">Bogor, 08 Agustus 2005</td>
+                        <td style="padding: 3px 0;">Tempat/Tgl Lahir</td>
+                        <td style="padding: 3px 0; text-align: center;">:</td>
+                        <td style="padding: 3px 0;" id="prev-ttl">Bogor, 08 Agustus 2005</td>
                     </tr>
                     <tr>
-                        <td>Jenis Kelamin</td>
-                        <td>:</td>
-                        <td id="prev-jk">Laki-Laki</td>
+                        <td style="padding: 3px 0;">Jenis Kelamin</td>
+                        <td style="padding: 3px 0; text-align: center;">:</td>
+                        <td style="padding: 3px 0;" id="prev-jk">Laki-Laki</td>
                     </tr>
                     <tr>
-                        <td>Agama</td>
-                        <td>:</td>
-                        <td id="prev-agama">Islam</td>
+                        <td style="padding: 3px 0;">Agama</td>
+                        <td style="padding: 3px 0; text-align: center;">:</td>
+                        <td style="padding: 3px 0;" id="prev-agama">Islam</td>
                     </tr>
                     <tr>
-                        <td>Alamat</td>
-                        <td>:</td>
-                        <td id="prev-alamat">Jl. Melati Blok B No. 14, RT 04</td>
+                        <td style="padding: 3px 0;">Alamat</td>
+                        <td style="padding: 3px 0; text-align: center;">:</td>
+                        <td style="padding: 3px 0;" id="prev-alamat">Jl. Melati Blok B No. 14, RT 04</td>
                     </tr>
                     <tr>
-                        <td>Keperluan</td>
-                        <td>:</td>
-                        <td id="prev-keperluan" style="font-weight: 500;">-</td>
+                        <td style="padding: 3px 0;">Keperluan</td>
+                        <td style="padding: 3px 0; text-align: center;">:</td>
+                        <td style="font-weight: 500; padding: 3px 0;" id="prev-keperluan">-</td>
                     </tr>
                 </table>
 
-                <p style="font-size: 11pt;">Demikian surat keterangan pengantar ini dibuat untuk dapat dipergunakan sebagaimana mestinya.</p>
+                <p style="font-size: 13.5px; line-height: 1.5; text-indent: 30px; text-align: justify; margin-bottom: 24px;">Demikian surat keterangan pengantar ini dibuat untuk dapat dipergunakan sebagaimana mestinya.</p>
 
-                <div style="display: flex; justify-content: space-between; margin-top: 36px; text-align: center;">
+                <div style="display: flex; justify-content: space-between; text-align: center; margin-top: 60px; margin-bottom: 25px;">
                     <div style="width: 200px;">
                         <p style="margin: 0;">&nbsp;</p>
-                        <p style="margin: 0; font-weight: bold;">Pemohon,</p>
-                        <div style="height: 60px;"></div>
-                        <span style="font-weight: bold; border-bottom: 1px solid #000; display: inline-block; padding-bottom: 2px; min-width: 140px;" id="prev-ttd-pemohon">Dimas Arya Pratama</span>
+                        <p style="margin: 0; font-weight: bold; font-size: 13.5px;">Pemohon,</p>
+                        <div style="height: 65px;"></div>
+                        <span style="font-weight: bold; text-decoration: underline; display: inline-block; font-size: 13.5px;" id="prev-ttd-pemohon">Dimas Arya Pratama</span>
                     </div>
 
                     <div style="width: 200px;">
-                        <p style="margin: 0;" id="prev-tanggal-surat">Bogor, -</p>
-                        <p style="margin: 0; font-weight: bold;">Ketua RT. 04,</p>
-                        <div style="height: 60px; display: flex; align-items: center; justify-content: center;" id="prev-ttd-rt-box">
+                        <p style="margin: 0; font-size: 13.5px;" id="prev-tanggal-surat">Bogor, -</p>
+                        <p style="margin: 0; font-weight: bold; font-size: 13.5px;">Ketua RT. 04,</p>
+                        <div style="height: 65px; display: flex; align-items: center; justify-content: center;" id="prev-ttd-rt-box">
                             {{-- Area tanda tangan: Jangan munculkan gambar ttd jika belum disetujui --}}
                             <div id="prev-ttd-rt-empty" style="font-size: 11px; color: #64748b; font-style: italic; border: 1px dashed #cbd5e1; border-radius: 4px; padding: 6px 10px; background: #f8fafc; line-height: 1.3;">
                                 (Menunggu Persetujuan RT)
                             </div>
                             <img id="prev-ttd-rt-img" src="{{ asset('tanda_tangan_rt.png') }}" alt="Tanda Tangan RT" style="display: none; max-height: 58px; max-width: 130px; object-fit: contain;">
                         </div>
-                        <span style="font-weight: bold; border-bottom: 1px solid #000; display: inline-block; padding-bottom: 2px; min-width: 140px;">Supriyadi</span>
+                        <span style="font-weight: bold; text-decoration: underline; display: inline-block; font-size: 13.5px;">Supriyadi</span>
                     </div>
                 </div>
             </div>

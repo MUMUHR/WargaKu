@@ -239,7 +239,7 @@
 
 .surat-table {
     width: 100%;
-    min-width: 1220px;
+    min-width: 1060px;
     table-layout: fixed;
     border-collapse: collapse;
     background: #ffffff;
@@ -282,6 +282,10 @@
     vertical-align: middle;
     color: #212529;
     text-align: left;
+}
+
+.surat-table td:last-child {
+    padding: 10px 8px;
 }
 
 .surat-table td.text-center {
@@ -354,30 +358,34 @@
 .surat-row-actions {
     display: inline-flex;
     align-items: center;
-    gap: 4px;
+    gap: 6px;
     justify-content: flex-start;
     white-space: nowrap;
 }
 
 .btn-surat-preview-draft {
-    background: #007bff;
+    background: #0284c7;
     color: #ffffff;
     border: none;
-    padding: 6px 13px;
-    border-radius: 4px;
-    font-size: 12.5px;
+    padding: 6px 11px;
+    border-radius: 6px;
+    font-size: 12px;
     font-weight: 600;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
     gap: 5px;
-    height: 33px;
-    transition: all 0.15s;
+    height: 32px;
+    transition: all 0.15s ease;
     white-space: nowrap;
+    text-decoration: none;
+    box-shadow: 0 1px 2px rgba(2, 132, 199, 0.2);
 }
 
 .btn-surat-preview-draft:hover {
-    background: #0069d9;
+    background: #0369a1;
+    color: #ffffff;
+    box-shadow: 0 2px 4px rgba(2, 132, 199, 0.3);
 }
 
 .btn-surat-preview-draft i {
@@ -385,24 +393,26 @@
 }
 
 .btn-surat-setujui {
-    background: #28a745;
+    background: #16a34a;
     color: #ffffff;
     border: none;
-    padding: 6px 14px;
-    border-radius: 4px;
-    font-size: 12.5px;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 12px;
     font-weight: 600;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
     gap: 5px;
-    height: 33px;
-    transition: all 0.15s;
+    height: 32px;
+    transition: all 0.15s ease;
     white-space: nowrap;
+    box-shadow: 0 1px 2px rgba(22, 163, 74, 0.2);
 }
 
 .btn-surat-setujui:hover {
-    background: #218838;
+    background: #15803d;
+    box-shadow: 0 2px 4px rgba(22, 163, 74, 0.3);
 }
 
 .btn-surat-setujui i {
@@ -410,24 +420,26 @@
 }
 
 .btn-surat-tolak {
-    background: #dc3545;
+    background: #dc2626;
     color: #ffffff;
     border: none;
-    padding: 6px 14px;
-    border-radius: 4px;
-    font-size: 12.5px;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 12px;
     font-weight: 600;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
     gap: 5px;
-    height: 33px;
-    transition: all 0.15s;
+    height: 32px;
+    transition: all 0.15s ease;
     white-space: nowrap;
+    box-shadow: 0 1px 2px rgba(220, 38, 38, 0.2);
 }
 
 .btn-surat-tolak:hover {
-    background: #c82333;
+    background: #b91c1c;
+    box-shadow: 0 2px 4px rgba(220, 38, 38, 0.3);
 }
 
 .btn-surat-tolak i {
@@ -435,24 +447,27 @@
 }
 
 .btn-surat-cetak {
-    background: #007bff;
+    background: #0284c7;
     color: #ffffff;
     border: none;
-    padding: 6px 15px;
-    border-radius: 4px;
-    font-size: 12.5px;
+    padding: 6px 13px;
+    border-radius: 6px;
+    font-size: 12px;
     font-weight: 600;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    height: 33px;
-    transition: all 0.15s;
+    height: 32px;
+    transition: all 0.15s ease;
     white-space: nowrap;
+    text-decoration: none;
+    box-shadow: 0 1px 2px rgba(2, 132, 199, 0.2);
 }
 
 .btn-surat-cetak:hover {
-    background: #0069d9;
+    background: #0369a1;
+    color: #ffffff;
 }
 
 .btn-surat-cetak i {
@@ -460,25 +475,26 @@
 }
 
 .btn-surat-alasan {
-    background: #e9ecef;
-    color: #495057;
-    border: 1px solid #ced4da;
-    padding: 6px 15px;
-    border-radius: 4px;
-    font-size: 12.5px;
+    background: #f1f5f9;
+    color: #475569;
+    border: 1px solid #cbd5e1;
+    padding: 6px 13px;
+    border-radius: 6px;
+    font-size: 12px;
     font-weight: 600;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    height: 33px;
-    transition: all 0.15s;
+    height: 32px;
+    transition: all 0.15s ease;
     white-space: nowrap;
 }
 
 .btn-surat-alasan:hover {
-    background: #dee2e6;
-    color: #212529;
+    background: #e2e8f0;
+    color: #1e293b;
+    border-color: #94a3b8;
 }
 
 .btn-surat-alasan i {

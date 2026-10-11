@@ -29,7 +29,7 @@
             <span class="navbar-public__brand-name">WargaKu</span>
         </a>
 
-        {{-- Nav tengah --}}
+        {{-- Nav tengah (Desktop) --}}
         <nav class="navbar-public__nav" aria-label="Menu utama">
             <a href="{{ route('home') }}"
                class="navbar-public__link {{ request()->routeIs('home') ? 'navbar-public__link--active' : '' }}">
@@ -41,10 +41,41 @@
             </a>
         </nav>
 
-        {{-- Tombol kanan --}}
+        {{-- Tombol kanan (Desktop) --}}
         <div class="navbar-public__actions">
             <a href="{{ route('login') }}" class="btn btn--nav-login btn--sm">Masuk</a>
             <a href="{{ route('register') }}" class="btn btn--nav-register btn--sm">Daftar penguna baru</a>
+        </div>
+
+        {{-- Tombol Toggle Hamburger (Mobile & Tablet) --}}
+        <button type="button" class="navbar-public__toggle" id="navbar-public-toggle" aria-label="Buka menu navigasi" aria-expanded="false" aria-controls="navbar-public-mobile">
+            <span class="navbar-public__toggle-bar"></span>
+            <span class="navbar-public__toggle-bar"></span>
+            <span class="navbar-public__toggle-bar"></span>
+        </button>
+    </div>
+
+    {{-- Menu Dropdown Mobile --}}
+    <div class="navbar-public__mobile-menu" id="navbar-public-mobile">
+        <nav class="navbar-public__mobile-nav" aria-label="Menu mobile">
+            <a href="{{ route('home') }}"
+               class="navbar-public__mobile-link {{ request()->routeIs('home') ? 'navbar-public__mobile-link--active' : '' }}">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+                </svg>
+                <span>Home / Beranda</span>
+            </a>
+            <a href="{{ route('pengumuman.index') }}"
+               class="navbar-public__mobile-link {{ request()->routeIs('pengumuman.*') ? 'navbar-public__mobile-link--active' : '' }}">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"/>
+                </svg>
+                <span>Pengumuman RT</span>
+            </a>
+        </nav>
+        <div class="navbar-public__mobile-actions">
+            <a href="{{ route('login') }}" class="btn btn--nav-login" style="width:100%;">Masuk</a>
+            <a href="{{ route('register') }}" class="btn btn--nav-register" style="width:100%;">Daftar pengguna baru</a>
         </div>
     </div>
 </header>
@@ -102,16 +133,40 @@
 <script>
     (function() {
         const nav = document.getElementById('navbar-public');
-        if (!nav) return;
-        const handleScroll = () => {
-            if (window.scrollY > 40) {
-                nav.classList.add('navbar-public--scrolled');
-            } else {
-                nav.classList.remove('navbar-public--scrolled');
-            }
-        };
-        window.addEventListener('scroll', handleScroll, { passive: true });
-        handleScroll();
+        const toggleBtn = document.getElementById('navbar-public-toggle');
+        const mobileMenu = document.getElementById('navbar-public-mobile');
+
+        // Scroll listener untuk transparansi navbar
+        if (nav) {
+            const handleScroll = () => {
+                if (window.scrollY > 40) {
+                    nav.classList.add('navbar-public--scrolled');
+                } else {
+                    nav.classList.remove('navbar-public--scrolled');
+                }
+            };
+            window.addEventListener('scroll', handleScroll, { passive: true });
+            handleScroll();
+        }
+
+        // Toggle menu mobile
+        if (toggleBtn && mobileMenu) {
+            toggleBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const isOpen = mobileMenu.classList.toggle('navbar-public__mobile-menu--open');
+                toggleBtn.classList.toggle('navbar-public__toggle--active', isOpen);
+                toggleBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+            });
+
+            // Tutup jika klik di luar navbar
+            document.addEventListener('click', function(e) {
+                if (!nav.contains(e.target)) {
+                    mobileMenu.classList.remove('navbar-public__mobile-menu--open');
+                    toggleBtn.classList.remove('navbar-public__toggle--active');
+                    toggleBtn.setAttribute('aria-expanded', 'false');
+                }
+            });
+        }
     })();
 </script>
 </body>

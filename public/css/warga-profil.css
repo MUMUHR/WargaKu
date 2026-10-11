@@ -483,16 +483,56 @@
 @media (max-width: 900px) {
     .warga-profil-grid {
         grid-template-columns: 1fr;
+        gap: 18px;
+    }
+    .warga-profil-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+    .warga-profil-badge-verified {
+        padding: 6px 14px;
+        font-size: 12.5px;
     }
 }
 
 @media (max-width: 576px) {
+    .warga-profil-header__title {
+        font-size: 20px;
+    }
+    .warga-profil-card-head {
+        padding: 14px 18px;
+    }
+    .warga-profil-card-body {
+        padding: 16px 18px;
+    }
+    .btn-profil-submit-green {
+        width: 100%;
+        justify-content: center;
+        height: 44px;
+    }
     .warga-profil-logout-card {
         flex-direction: column;
         align-items: flex-start;
+        gap: 12px;
+        padding: 16px 18px;
     }
     .btn-profil-logout-outline {
         width: 100%;
         justify-content: center;
+    }
+    .profil-modal-box {
+        width: 92%;
+        max-width: 92%;
+        padding: 24px 18px;
+    }
+    .profil-modal-actions {
+        flex-direction: column-reverse;
+        gap: 8px;
+    }
+    .btn-profil-modal-batal,
+    .btn-profil-modal-konfirmasi {
+        width: 100%;
+        height: 42px;
     }
 }

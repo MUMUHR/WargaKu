@@ -81,11 +81,9 @@
             </button>
             <nav class="admin-topbar__breadcrumb" aria-label="Breadcrumb">
                 <a href="{{ route('warga.beranda') }}" class="admin-topbar__breadcrumb-link">Beranda</a>
-                <span class="admin-topbar__breadcrumb-sep" aria-hidden="true">/</span>
                 @hasSection('topbar_section')
+                    <span class="admin-topbar__breadcrumb-sep" aria-hidden="true">/</span>
                     @yield('topbar_section')
-                @else
-                    <span class="admin-topbar__breadcrumb-current">Kependudukan</span>
                 @endif
             </nav>
         </div>
@@ -110,17 +108,54 @@
     </footer>
 </div>
 
+{{-- Backdrop Overlay untuk Mobile Sidebar --}}
+<div class="admin-sidebar-backdrop" id="admin-sidebar-backdrop"></div>
+
 @stack('scripts')
 <script>
     (function () {
-        var sidebar = document.getElementById('admin-sidebar');
-        var main    = document.getElementById('admin-main');
-        var btn     = document.getElementById('btn-sidebar-toggle');
+        var sidebar  = document.getElementById('admin-sidebar');
+        var main     = document.getElementById('admin-main');
+        var btn      = document.getElementById('btn-sidebar-toggle');
+        var backdrop = document.getElementById('admin-sidebar-backdrop');
         if (!btn || !sidebar || !main) return;
-        btn.addEventListener('click', function () {
-            var collapsed = sidebar.classList.toggle('admin-sidebar--collapsed');
-            main.classList.toggle('admin-main--expanded', collapsed);
-            btn.setAttribute('aria-expanded', String(!collapsed));
+
+        function toggleSidebar() {
+            var isMobile = window.innerWidth <= 768;
+            if (isMobile) {
+                var isOpen = sidebar.classList.toggle('admin-sidebar--open');
+                if (backdrop) backdrop.classList.toggle('admin-sidebar-backdrop--active', isOpen);
+                btn.setAttribute('aria-expanded', String(isOpen));
+            } else {
+                var collapsed = sidebar.classList.toggle('admin-sidebar--collapsed');
+                main.classList.toggle('admin-main--expanded', collapsed);
+                btn.setAttribute('aria-expanded', String(!collapsed));
+            }
+        }
+
+        function closeMobileSidebar() {
+            sidebar.classList.remove('admin-sidebar--open');
+            if (backdrop) backdrop.classList.remove('admin-sidebar-backdrop--active');
+            btn.setAttribute('aria-expanded', 'false');
+        }
+
+        btn.addEventListener('click', function (e) {
+            e.stopPropagation();
+            toggleSidebar();
+        });
+
+        if (backdrop) {
+            backdrop.addEventListener('click', closeMobileSidebar);
+        }
+
+        // Tutup sidebar saat link di mobile diklik
+        var navLinks = sidebar.querySelectorAll('.admin-sidebar__nav-link');
+        navLinks.forEach(function (link) {
+            link.addEventListener('click', function () {
+                if (window.innerWidth <= 768) {
+                    closeMobileSidebar();
+                }
+            });
         });
     })();
 </script>

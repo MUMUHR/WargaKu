@@ -180,6 +180,14 @@
 
 .kk-tab-btn:hover { color: #212529; background: #f0f0f0; }
 
+.kk-tab-btn-text-desktop {
+    display: inline;
+}
+
+.kk-tab-btn-text-mobile {
+    display: none;
+}
+
 .kk-tab-btn--active {
     color: #007bff;
     border-bottom-color: #007bff;
@@ -751,12 +759,821 @@
     .kk-info-card__body { flex-direction: column; }
     .kk-info-divider { width: 100%; height: 1px; }
     .kk-modal__cols { grid-template-columns: 1fr; gap: 16px; }
-    .kk-modal { max-width: 100%; }
+    .kk-modal { max-width: 96%; }
 }
 
 @media (max-width: 768px) {
-    .kk-toolbar { flex-direction: column; align-items: stretch; }
-    .kk-toolbar__left { flex-direction: column; }
-    .kk-btn-tambah { width: 100%; justify-content: center; }
-    .kk-tab-btn { font-size: 12px; padding: 11px 14px; }
+    .kk-toolbar { 
+        flex-direction: column; 
+        align-items: stretch;
+        gap: 12px;
+    }
+    .kk-toolbar__left { 
+        flex-direction: column;
+        align-items: stretch;
+        width: 100%;
+    }
+    .kk-search-wrap {
+        width: 100% !important;
+    }
+    .kk-btn-tambah { 
+        width: 100%; 
+        justify-content: center; 
+    }
+    .kk-tab-header {
+        display: flex;
+        width: 100%;
+        background: #f8fafc;
+        border-bottom: 2px solid #dee2e6;
+    }
+
+    .kk-tab-btn { 
+        flex: 1 1 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        font-size: 12.5px; 
+        padding: 12px 6px; 
+        gap: 6px;
+        white-space: nowrap;
+        border-bottom: 3px solid transparent;
+    }
+
+    .kk-tab-btn-text-desktop {
+        display: none;
+    }
+
+    .kk-tab-btn-text-mobile {
+        display: inline;
+    }
+
+    .kk-tab-btn--active {
+        background: #ffffff;
+        color: #007bff;
+        border-bottom-color: #007bff;
+        font-weight: 700;
+    }
+
+    .kk-modal-overlay {
+        padding: 10px;
+    }
+    .kk-modal {
+        width: 100%;
+        max-width: 100%;
+        max-height: 92vh;
+        margin: 0;
+    }
+    .kk-modal__header {
+        padding: 14px 18px;
+    }
+    .kk-modal__body {
+        padding: 16px 18px;
+        max-height: calc(92vh - 120px);
+        overflow-y: auto;
+    }
+    .kk-modal__footer {
+        padding: 12px 18px;
+        flex-direction: column-reverse;
+        gap: 8px;
+    }
+    .kk-modal__btn-tutup,
+    .kk-modal__btn-edit {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .kk-tab-btn {
+        padding: 10px 4px;
+        font-size: 11.5px;
+        gap: 4px;
+    }
+    .kk-tab-btn i {
+        font-size: 15px;
+    }
+    .kk-stat-card__number {
+        font-size: 32px;
+    }
+    .kk-info-item {
+        padding: 14px 16px;
+    }
+    .kk-info-item__val {
+        font-size: 16px;
+    }
+}
+
+/* =======================================================
+   MODAL POPUP LIHAT PENGAJUAN PERUBAHAN DATA (POV WARGA)
+   ======================================================= */
+/* =======================================================
+   MODAL POPUP LIHAT PENGAJUAN PERUBAHAN DATA (POV WARGA)
+   IDENTIK DENGAN REVIEW VERIFIKASI ADMIN (LEBAR 1220px)
+   ======================================================= */
+.kk-pengajuan-modal {
+    background: #ffffff;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 1220px; /* Diperlebar 1220px sama seperti admin agar sangat leluasa */
+    max-height: 92vh;
+    box-shadow: 0 24px 50px rgba(0, 0, 0, 0.32);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+    border: 1px solid #cbd5e1;
+    animation: modalPopIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    box-sizing: border-box;
+}
+
+.kk-pengajuan-modal__header {
+    background: #1e293b;
+    color: #ffffff;
+    padding: 18px 26px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-bottom: 1px solid #334155;
+    flex-shrink: 0;
+}
+
+.kk-pengajuan-modal__title-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.kk-pengajuan-modal__title {
+    font-size: 17px;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0;
+}
+
+.kk-pengajuan-modal__status-badge {
+    background: #ffc107;
+    color: #212529;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 9px;
+    border-radius: 4px;
+    letter-spacing: 0.02em;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.kk-pengajuan-modal__status-badge--menunggu {
+    background: #ffc107;
+    color: #212529;
+    font-weight: 800;
+}
+
+.kk-pengajuan-modal__status-badge--disetujui {
+    background: #28a745;
+    color: #ffffff;
+    font-weight: 800;
+}
+
+.kk-pengajuan-modal__status-badge--ditolak {
+    background: #dc3545;
+    color: #ffffff;
+    font-weight: 800;
+}
+
+.kk-pengajuan-modal__subtitle {
+    font-size: 12.5px;
+    color: #94a3b8;
+    margin-top: 6px;
+}
+
+.kk-pengajuan-modal__subtitle strong {
+    color: #f1f5f9;
+}
+
+.kk-pengajuan-modal__close {
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    font-size: 24px;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0 4px;
+    transition: color 0.15s ease;
+}
+
+.kk-pengajuan-modal__close:hover {
+    color: #ffffff;
+}
+
+.kk-pengajuan-modal__body {
+    padding: 22px 26px;
+    overflow-y: auto;
+    flex: 1;
+    background: #ffffff;
+}
+
+/* Strip Info Target Data */
+.kk-target-strip {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 14px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.kk-target-strip__left {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.kk-target-strip__title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.kk-target-strip__sub {
+    font-size: 12px;
+    color: #64748b;
+    margin-top: 2px;
+}
+
+.kk-target-strip__date {
+    font-size: 12.5px;
+    color: #64748b;
+    white-space: nowrap;
+}
+
+/* 2 Columns Grid */
+.kk-pengajuan-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    align-items: start;
+}
+
+/* Kartu / Box */
+.kk-pengajuan-card {
+    display: flex;
+    flex-direction: column;
+}
+
+.kk-pengajuan-card__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.kk-pengajuan-card__title {
+    font-size: 13.5px;
+    font-weight: 700;
+    color: #1e293b;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin: 0;
+}
+
+.kk-pengajuan-card__badge-green {
+    background: #dcfce7;
+    color: #15803d;
+    font-size: 11.5px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 12px;
+}
+
+/* Comparison Table Wrap */
+.kk-ptable-wrap {
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #ffffff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+}
+
+.kk-ptable {
+    width: 100%;
+    border-collapse: collapse;
+    background: #ffffff;
+}
+
+.kk-ptable thead th {
+    background: #f8fafc;
+    color: #64748b;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 12px 14px;
+    border-bottom: 1px solid #e2e8f0;
+    text-align: left;
+    letter-spacing: 0.04em;
+}
+
+.kk-ptable tbody td {
+    padding: 13px 14px;
+    font-size: 12.5px;
+    border-bottom: 1px solid #f1f5f9;
+    vertical-align: middle;
+}
+
+.kk-ptable tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.kk-ptable-field {
+    font-weight: 600;
+    color: #334155;
+    white-space: nowrap;
+}
+
+.kk-ptable-old {
+    color: #64748b;
+}
+
+/* Flex Row untuk Nilai Baru + Badge agar tetap 1 baris */
+.kk-val-new {
+    color: #1e293b;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    white-space: nowrap;
+}
+
+.kk-badge-diubah {
+    background: #16a34a;
+    color: #ffffff;
+    font-size: 10.5px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 4px;
+    white-space: nowrap;
+    display: inline-block;
+}
+
+/* Alasan & Catatan Box */
+.kk-alasan-box {
+    margin-top: 14px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    padding: 12px 16px;
+}
+
+.kk-alasan-box__label {
+    font-size: 11px;
+    font-weight: 700;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+}
+
+.kk-alasan-box__val {
+    font-size: 12.5px;
+    color: #334155;
+    line-height: 1.5;
+}
+
+.kk-catatan-rt-box {
+    margin-top: 12px;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 6px;
+    padding: 12px 16px;
+}
+
+.kk-catatan-rt-box__label {
+    font-size: 11px;
+    font-weight: 700;
+    color: #b91c1c;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+}
+
+.kk-catatan-rt-box__val {
+    font-size: 12.5px;
+    color: #991b1b;
+    line-height: 1.5;
+}
+
+/* Tab Dokumen */
+.kk-doc-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+}
+
+.kk-doc-tab-btn {
+    padding: 8px 14px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    transition: all 0.15s ease;
+    border: 1px solid #e2e8f0;
+    background: #ffffff;
+    color: #64748b;
+    white-space: nowrap;
+}
+
+.kk-doc-tab-btn:hover {
+    background: #f1f5f9;
+    color: #334155;
+    border-color: #cbd5e1;
+}
+
+.kk-doc-tab-btn--active {
+    background: #1e293b;
+    color: #ffffff;
+    border-color: #1e293b;
+    box-shadow: 0 2px 4px rgba(30, 41, 59, 0.25);
+}
+
+/* Container Pratinjau Dokumen Serupa Admin */
+.kk-doc-preview-box {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+}
+
+.kk-doc-display-container {
+    background: #ffffff;
+    border: 1.5px dashed #cbd5e1;
+    border-radius: 8px;
+    padding: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 380px;
+    max-height: 440px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.03);
+}
+
+.kk-doc-preview-img {
+    max-height: 410px;
+    max-width: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    border-radius: 4px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.kk-doc-preview-img:hover {
+    transform: scale(1.02);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
+}
+
+.kk-doc-info-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+    padding: 0 4px;
+}
+
+.kk-doc-actions {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 14px;
+}
+
+.kk-doc-btn {
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    color: #475569;
+    font-size: 12.5px;
+    font-weight: 600;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    transition: all 0.15s ease;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    text-decoration: none;
+}
+
+.kk-doc-btn:hover {
+    background: #f1f5f9;
+    color: #1e293b;
+    border-color: #94a3b8;
+}
+
+.kk-mobile-row-label {
+    display: none;
+}
+
+/* Modal Footer POV Warga */
+.kk-pengajuan-modal__footer {
+    background: #f8fafc;
+    border-top: 1px solid #e2e8f0;
+    padding: 16px 26px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    flex-shrink: 0;
+}
+
+.kk-pengajuan-modal__footer-status {
+    font-size: 12.5px;
+    color: #475569;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.kk-pengajuan-modal__footer-btns {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.kk-pbtn-close {
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    color: #475569;
+    padding: 9px 18px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.kk-pbtn-close:hover {
+    background: #f1f5f9;
+    color: #1e293b;
+}
+
+.kk-pbtn-reapply {
+    background: #0284c7;
+    border: none;
+    color: #ffffff;
+    padding: 9px 18px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+    transition: all 0.15s ease;
+}
+
+.kk-pbtn-reapply:hover {
+    background: #0369a1;
+}
+
+@media (max-width: 992px) {
+    .kk-pengajuan-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    .kk-pengajuan-modal {
+        max-width: 96%;
+    }
+}
+
+@media (max-width: 768px) {
+    .kk-pengajuan-modal {
+        width: 100%;
+        max-width: 100%;
+        max-height: 94vh;
+        margin: 0;
+        border-radius: 10px;
+    }
+    .kk-pengajuan-modal__header {
+        padding: 14px 16px;
+    }
+    .kk-pengajuan-modal__title {
+        font-size: 15.5px;
+    }
+    .kk-pengajuan-modal__subtitle {
+        font-size: 11.5px;
+        line-height: 1.45;
+    }
+    .kk-pengajuan-modal__body {
+        padding: 14px 14px;
+    }
+
+    /* Strip Target Data Atas-Bawah */
+    .kk-target-strip {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+        padding: 12px 14px;
+        margin-bottom: 16px;
+    }
+    .kk-target-strip__title {
+        font-size: 13.5px;
+    }
+    .kk-target-strip__date {
+        width: 100%;
+        font-size: 11px;
+        background: #f1f5f9;
+        padding: 4px 8px;
+        border-radius: 4px;
+        color: #475569;
+    }
+
+    /* Header Card */
+    .kk-pengajuan-card__header {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        gap: 6px;
+    }
+    .kk-pengajuan-card__title {
+        font-size: 12.5px;
+    }
+    .kk-pengajuan-card__badge-green {
+        font-size: 10.5px;
+        padding: 2px 8px;
+    }
+
+    /* ══════════════════════════════════════════════════════════
+       RESPONSIVE ATAS-BAWAH TABEL KOMPARASI (DATA LAMA DI ATAS,
+       USULAN BARU DI BAWAH) TANPA KEPOTONG
+       ══════════════════════════════════════════════════════════ */
+    .kk-ptable-wrap {
+        border-radius: 6px;
+    }
+    .kk-ptable thead {
+        display: none !important;
+    }
+    .kk-ptable,
+    .kk-ptable tbody,
+    .kk-ptable tbody tr,
+    .kk-ptable tbody td {
+        display: block !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+    .kk-ptable tbody tr {
+        border-bottom: 1px solid #e2e8f0;
+        padding: 12px 14px;
+        background: #ffffff;
+    }
+    .kk-ptable tbody tr:nth-child(even) {
+        background: #f8fafc;
+    }
+    .kk-ptable tbody tr:last-child {
+        border-bottom: none;
+    }
+
+    /* 1. Baris Field (Judul Atribut) */
+    .kk-ptable tbody td.kk-ptable-field {
+        padding: 0 0 6px 0 !important;
+        border: none !important;
+        font-size: 13px !important;
+        font-weight: 700 !important;
+        color: #0f172a !important;
+        border-bottom: 1px dashed #e2e8f0 !important;
+        margin-bottom: 6px;
+        white-space: normal !important;
+    }
+
+    /* 2. Baris Data Lama (Di Atas) */
+    .kk-ptable tbody td.kk-ptable-old {
+        padding: 3px 0 !important;
+        border: none !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        gap: 8px !important;
+        font-size: 12px !important;
+        color: #64748b !important;
+        white-space: normal !important;
+    }
+
+    /* 3. Baris Usulan Baru (Di Bawah) */
+    .kk-ptable tbody td.kk-ptable-new {
+        padding: 4px 0 2px 0 !important;
+        border: none !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        gap: 8px !important;
+        font-size: 12.5px !important;
+        color: #0f172a !important;
+        font-weight: 600 !important;
+        white-space: normal !important;
+    }
+
+    .kk-mobile-row-label {
+        display: inline-block !important;
+        font-size: 10.5px !important;
+        font-weight: 700 !important;
+        color: #94a3b8 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.3px !important;
+        flex-shrink: 0;
+    }
+
+    .kk-val-new {
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 6px !important;
+        white-space: nowrap !important;
+    }
+
+    .kk-badge-diubah {
+        font-size: 9.5px !important;
+        padding: 1px 6px !important;
+    }
+
+    /* Alasan Box */
+    .kk-alasan-box, .kk-catatan-rt-box {
+        padding: 10px 12px;
+        margin-top: 10px;
+    }
+    .kk-alasan-box__val, .kk-catatan-rt-box__val {
+        font-size: 12px;
+    }
+
+    /* Pratinjau Dokumen di Mobile */
+    .kk-doc-preview-box {
+        padding: 12px;
+        margin-bottom: 12px;
+    }
+    .kk-doc-display-container {
+        min-height: 220px;
+        max-height: 300px;
+        padding: 8px;
+    }
+    .kk-doc-preview-img {
+        max-height: 280px;
+    }
+    .kk-doc-info-bar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+        margin-top: 8px;
+    }
+    .kk-doc-actions {
+        flex-direction: column;
+        gap: 8px;
+        margin-top: 10px;
+    }
+    .kk-doc-btn {
+        width: 100%;
+        justify-content: center;
+        padding: 9px;
+    }
+
+    /* Footer di Mobile */
+    .kk-pengajuan-modal__footer {
+        padding: 12px 14px;
+        flex-direction: column-reverse;
+        align-items: stretch;
+        gap: 10px;
+    }
+    .kk-pengajuan-modal__footer-btns {
+        flex-direction: column;
+        width: 100%;
+        gap: 8px;
+    }
+    .kk-pbtn-close, .kk-pbtn-reapply {
+        width: 100%;
+        justify-content: center;
+        text-align: center;
+        padding: 10px;
+    }
+    .kk-pengajuan-modal__footer-status {
+        width: 100%;
+        text-align: center;
+        justify-content: center;
+        font-size: 11px;
+    }
 }

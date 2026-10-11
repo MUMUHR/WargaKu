@@ -111,13 +111,13 @@
         <table class="surat-table" id="table-pengajuan-surat">
             <colgroup>
                 <col style="width: 3.5%;">
+                <col style="width: 10.5%;">
+                <col style="width: 13%;">
                 <col style="width: 11%;">
-                <col style="width: 15%;">
-                <col style="width: 12%;">
-                <col style="width: 22%;">
-                <col style="width: 11%;">
-                <col style="width: 7.5%;">
                 <col style="width: 18%;">
+                <col style="width: 9%;">
+                <col style="width: 8%;">
+                <col style="width: 27%;">
             </colgroup>
             <thead>
                 <tr>
@@ -155,7 +155,6 @@
                             {{ $s['pemohon_nama'] }}
                         </a>
                         <div style="font-size: 11.5px; color: #6c757d; margin-top: 2px;">NIK: {{ $s['pemohon_nik'] }}</div>
-                        <div style="font-size: 11px; color: #868e96;">{{ $s['pemohon_alamat'] }}</div>
                     </td>
                     <td>
                         <div style="font-weight: 700; color: #212529; font-size: 13px;">{{ $s['warga_tujuan'] }}</div>

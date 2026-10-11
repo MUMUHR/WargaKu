@@ -17,12 +17,12 @@
     <div class="ws-cetak-topbar">
         <a href="{{ route('warga.surat') }}" class="ws-btn-kembali-layar">
             <i class='bx bx-arrow-back'></i>
-            <span>Kembali ke Layar Pengajuan Surat</span>
+            <span>Kembali ke Pengajuan Surat</span>
         </a>
         <div class="ws-cetak-topbar-actions">
             <button type="button" class="ws-btn-print" onclick="window.print()">
                 <i class='bx bx-printer'></i>
-                <span>Cetak Surat (Print)</span>
+                <span>Cetak (Print)</span>
             </button>
             <button type="button" class="ws-btn-download-pdf" onclick="window.print()">
                 <i class='bx bx-download'></i>
@@ -101,7 +101,7 @@
         </div>
 
         {{-- Tanda Tangan Dua Pihak (Pemohon & Ketua RT) --}}
-        <div class="ws-ttd-grid" style="margin-top: 40px; margin-bottom: 30px;">
+        <div class="ws-ttd-grid">
             <div class="ws-ttd-box">
                 <p style="margin: 0;">&nbsp;</p>
                 <p style="margin: 0; font-weight: bold;">Pemohon,</p>

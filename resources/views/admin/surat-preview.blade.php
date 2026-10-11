@@ -181,19 +181,27 @@
             padding: 0 16px 40px 16px;
             display: flex;
             justify-content: center;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
         }
 
         .surat-a4-paper {
-            width: 794px; /* Standard A4 at 96 DPI */
-            min-height: 1123px;
+            width: 210mm; /* Standard A4 */
+            min-width: 210mm;
+            max-width: 210mm;
+            min-height: 297mm;
             background: #ffffff;
             box-shadow: 0 4px 25px rgba(0, 0, 0, 0.08);
             border-radius: 2px;
-            padding: 55px 75px;
+            padding-top: 2.5cm;
+            padding-bottom: 2.5cm;
+            padding-left: 3cm;
+            padding-right: 2.5cm;
             font-family: 'Times New Roman', Times, serif;
             color: #000000;
             line-height: 1.5;
             position: relative;
+            box-sizing: border-box;
         }
 
         /* Kop Surat */
@@ -252,7 +260,7 @@
         /* Paragraphs & Data */
         .doc-paragraph {
             font-size: 14px;
-            line-height: 1.65;
+            line-height: 1.5;
             text-align: justify;
             margin-bottom: 14px;
             text-indent: 30px;
@@ -262,32 +270,32 @@
             width: 100%;
             border-collapse: collapse;
             font-size: 14px;
-            line-height: 1.85;
-            margin: 10px 0 18px 20px;
+            line-height: 1.5;
+            margin: 12px 0 16px 0;
         }
 
         .doc-data-table td {
-            padding: 2px 0;
+            padding: 3px 0;
             vertical-align: top;
         }
 
         .doc-label-col {
-            width: 165px;
+            width: 175px;
         }
 
         .doc-sep-col {
-            width: 18px;
+            width: 20px;
         }
 
         .doc-val-col {
-            padding-right: 30px;
+            padding-right: 20px;
         }
 
         .doc-closing-paragraph {
             font-size: 14px;
-            line-height: 1.65;
+            line-height: 1.5;
             text-align: justify;
-            margin-bottom: 35px;
+            margin-bottom: 24px;
             text-indent: 30px;
         }
 
@@ -296,8 +304,10 @@
             display: flex;
             justify-content: space-between;
             font-size: 14px;
+            margin-top: 70px;
             margin-bottom: 35px;
-            padding: 0 10px;
+            padding: 0;
+            line-height: 1.5;
         }
 
         .doc-sig-box {
@@ -306,7 +316,20 @@
         }
 
         .doc-sig-space {
-            height: 70px;
+            height: 85px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .doc-sig-img {
+            max-height: 75px;
+            max-width: 150px;
+            object-fit: contain;
+            display: block;
+            margin: 0 auto;
+            filter: contrast(1.15);
         }
 
         .doc-sig-name {
@@ -319,7 +342,15 @@
             font-size: 14px;
         }
 
-        /* Print CSS */
+        /* Print CSS (Atas 2.5cm, Bawah 2.5cm, Kiri 3cm, Kanan 2.5cm) */
+        @page {
+            size: A4 portrait;
+            margin-top: 2.5cm;
+            margin-bottom: 2.5cm;
+            margin-left: 3cm;
+            margin-right: 2.5cm;
+        }
+
         @media print {
             body {
                 background: #ffffff !important;
@@ -338,7 +369,7 @@
             .surat-a4-paper {
                 box-shadow: none !important;
                 border-radius: 0 !important;
-                padding: 40px 50px !important;
+                padding: 0 !important;
                 width: 100% !important;
                 min-height: auto !important;
             }
@@ -356,6 +387,7 @@
     $nik = $surat['pemohon_nik'] ?? '3275012304780001';
     $alamat = $surat['pemohon_alamat'] ?? 'Blok B4 No. 12';
     $keperluan = $surat['keperluan'] ?? 'Pengantar permohonan Surat Keterangan Catatan Kepolisian (SKCK) untuk persyaratan rekrutmen BUMN';
+    $isDisetujui = ($status === 'Disetujui' || (!empty($nomorSurat) && $nomorSurat !== '-' && $nomorSurat !== 'Dibatalkan'));
 @endphp
 
 {{-- ═══ TOP NAVBAR ═══ --}}
@@ -373,7 +405,7 @@
         </button>
 
         {{-- Tombol Tolak & Setujui hanya jika status belum Disetujui --}}
-        <div id="wrap-action-pending" style="{{ $status === 'Disetujui' ? 'display: none;' : 'display: flex; gap: 10px;' }}">
+        <div id="wrap-action-pending" style="{{ $isDisetujui ? 'display: none;' : 'display: flex; gap: 10px;' }}">
             <button type="button" class="btn-preview-action btn-preview-tolak" onclick="bukaModalTolakPreview()">
                 <i class='bx bx-x-circle'></i> Tolak Permohonan
             </button>
@@ -474,7 +506,16 @@
             <div class="doc-sig-box">
                 <div style="margin-bottom: 6px;" id="label-doc-tanggal">Depok, {{ date('d F Y') }}</div>
                 <div style="margin-bottom: 6px;">Ketua RT. 04</div>
-                <div class="doc-sig-space" style="height: 85px;"></div>
+                <div class="doc-sig-space" id="box-ttd-rt" style="height: 85px;">
+                    <img src="{{ asset('tanda_tangan_rt.png') }}" 
+                         alt="Tanda Tangan Ketua RT 04" 
+                         class="doc-sig-img" 
+                         id="img-ttd-rt"
+                         style="{{ $isDisetujui ? 'display: block;' : 'display: none;' }}">
+                    <div id="empty-ttd-rt" class="no-print" style="{{ $isDisetujui ? 'display: none;' : 'display: block; font-size: 11px; color: #94a3b8; font-style: italic; border: 1px dashed #cbd5e1; border-radius: 4px; padding: 6px 8px; background: #f8fafc;' }}">
+                        (Menunggu Persetujuan RT)
+                    </div>
+                </div>
                 <div class="doc-sig-name">Supriyadi</div>
             </div>
         </div>
@@ -587,8 +628,8 @@
         var savedStatus = localStorage.getItem('surat_status_' + SURAT_ID);
         var savedNomor = localStorage.getItem('surat_nomor_' + SURAT_ID);
 
-        if (savedStatus === 'disetujui' || '{{ $status }}' === 'Disetujui') {
-            tampilkanModeDisetujui(savedNomor || '{{ $nomorSurat ?? "04/SP/RT04/II/2026" }}');
+        if (savedStatus === 'disetujui' || '{{ $status }}' === 'Disetujui' || ('{{ $nomorSurat }}' && '{{ $nomorSurat }}' !== '-' && '{{ $nomorSurat }}' !== 'Dibatalkan')) {
+            tampilkanModeDisetujui(savedNomor || '{{ $nomorSurat ?? "05/SP/RT04/II/2026" }}');
         }
     });
 
@@ -598,6 +639,12 @@
 
         var labelNomor = document.getElementById('label-doc-nomor');
         if (labelNomor) labelNomor.textContent = noSurat;
+
+        var imgTtd = document.getElementById('img-ttd-rt');
+        if (imgTtd) imgTtd.style.display = 'block';
+
+        var emptyTtd = document.getElementById('empty-ttd-rt');
+        if (emptyTtd) emptyTtd.style.display = 'none';
     }
 
     // Modal Persetujuan Handlers

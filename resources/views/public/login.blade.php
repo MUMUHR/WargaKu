@@ -22,11 +22,11 @@
     showPassword: false,
     fillWarga() {
         this.username = '3271048809920001';
-        this.password = 'password123';
+        this.password = 'warga123';
     },
     fillAdmin() {
         this.username = 'adminrt';
-        this.password = 'password123';
+        this.password = 'admin123';
     }
 }">
 

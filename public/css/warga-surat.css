@@ -101,45 +101,56 @@
 /* ── Tab Navigation ────────────────────────────────────── */
 .ws-tab-nav {
     display: flex;
-    align-items: center;
-    gap: 10px;
-    background: #ffffff;
+    align-items: stretch;
+    background: #f1f5f9;
     border: 1px solid #dee2e6;
     border-bottom: none;
     border-radius: 8px 8px 0 0;
-    padding: 8px 16px 0;
+    padding: 0;
+    overflow: hidden;
 }
 
 .ws-tab-btn {
+    flex: 1;
     background: transparent;
     border: none;
-    border-bottom: 3.5px solid transparent;
-    padding: 14px 22px;
-    font-size: 14.5px;
+    border-bottom: 3px solid transparent;
+    padding: 13px 18px;
+    font-size: 14px;
     font-weight: 600;
     color: #64748b;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
-    gap: 10px;
+    justify-content: center;
+    gap: 8px;
     transition: all 0.2s ease;
-    position: relative;
-    top: 1px;
+    text-align: center;
+    border-radius: 0;
 }
 
 .ws-tab-btn i {
-    font-size: 19px;
+    font-size: 18px;
 }
 
 .ws-tab-btn:hover {
-    color: #28a745;
+    color: #1e293b;
+    background: #e2e8f0;
 }
 
 .ws-tab-btn--active {
-    color: #28a745;
-    border-bottom-color: #28a745;
-    font-weight: 800;
-    background: transparent;
+    color: #16a34a;
+    border-bottom-color: #16a34a;
+    background: #ffffff;
+    font-weight: 700;
+}
+
+.ws-tab-label-main {
+    display: inline;
+}
+
+.ws-tab-label-extra {
+    display: inline;
 }
 
 /* ── Tab Container ─────────────────────────────────────── */
@@ -792,6 +803,38 @@
     max-width: 760px;
 }
 
+.ws-modal-card--preview {
+    max-width: 780px;
+}
+
+/* Modal Body Khusus Preview Surat Non-Responsive */
+.ws-preview-modal-body {
+    background: #e2e8f0 !important;
+    padding: 24px 20px !important;
+    max-height: 75vh;
+    overflow-y: auto !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Kertas Surat Preview Non-Responsive (Mempertahankan skala format dokumen A4) */
+.ws-paper-preview {
+    background: #ffffff;
+    width: 680px;
+    min-width: 680px;
+    max-width: 680px;
+    min-height: 960px;
+    margin: 0 auto;
+    padding: 80px 80px 80px 96px;
+    border: 1px solid #cbd5e1;
+    border-radius: 3px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    box-sizing: border-box;
+    font-family: 'Times New Roman', Times, serif;
+    color: #000000;
+    line-height: 1.5;
+}
+
 .ws-modal-header {
     padding: 16px 24px;
     background: #f8fafc;
@@ -848,7 +891,7 @@
 }
 
 .ws-cetak-topbar {
-    max-width: 860px;
+    max-width: 794px;
     margin: 0 auto 18px;
     display: flex;
     align-items: center;
@@ -858,6 +901,7 @@
 
 .ws-btn-kembali-layar {
     display: inline-flex;
+    white-space: nowrap;
     align-items: center;
     gap: 7px;
     background: #ffffff;
@@ -887,6 +931,7 @@
 
 .ws-btn-print {
     display: inline-flex;
+    white-space: nowrap;
     align-items: center;
     gap: 7px;
     background: #ffffff;
@@ -909,6 +954,7 @@
 
 .ws-btn-download-pdf {
     display: inline-flex;
+    white-space: nowrap;
     align-items: center;
     gap: 7px;
     background: #28a745;
@@ -929,29 +975,39 @@
     background: #218838;
 }
 
-/* Paper Sheet Layout */
+/* Paper Sheet Layout (Standar Normal A4: 210mm x 297mm | Margin: Atas 2.5cm, Bawah 2.5cm, Kiri 3cm, Kanan 2.5cm) */
 .ws-paper-sheet {
     background: #ffffff;
     width: 210mm;
-    min-height: auto;
+    min-width: 210mm;
+    max-width: 210mm;
+    min-height: 297mm;
     margin: 0 auto;
-    padding: 16mm 20mm 14mm;
-    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.12);
+    padding-top: 2.5cm;
+    padding-bottom: 2.5cm;
+    padding-left: 3cm;
+    padding-right: 2.5cm;
+    box-shadow: 0 4px 25px rgba(0, 0, 0, 0.12);
     box-sizing: border-box;
-    line-height: 1.45;
-    font-size: 11.5pt;
+    line-height: 1.5;
+    font-size: 12pt;
+    font-family: 'Times New Roman', Times, serif;
+    color: #000000;
+    position: relative;
     page-break-inside: avoid;
     break-inside: avoid;
 }
 
 /* Kop Surat */
 .ws-kop {
+    width: 100%;
     text-align: center;
-    margin-bottom: 6px;
+    line-height: 1.35;
+    margin-bottom: 8px;
 }
 
 .ws-kop-instansi {
-    font-size: 13.5pt;
+    font-size: 16px;
     font-weight: bold;
     letter-spacing: 0.5px;
     margin: 0;
@@ -959,57 +1015,72 @@
 }
 
 .ws-kop-sub {
-    font-size: 12pt;
+    font-size: 15px;
     font-weight: bold;
     margin: 2px 0 0 0;
     text-transform: uppercase;
 }
 
 .ws-kop-kota {
-    font-size: 10.5pt;
+    font-size: 13px;
     margin: 2px 0 0 0;
 }
 
 .ws-kop-line {
+    width: 100%;
     border-top: 3px solid #000000;
     border-bottom: 1px solid #000000;
     height: 2px;
-    margin: 8px 0 16px;
+    margin: 10px 0 24px 0;
 }
 
 /* Judul Surat */
 .ws-judul-surat-box {
+    width: 100%;
     text-align: center;
-    margin-bottom: 16px;
+    margin-bottom: 24px;
 }
 
 .ws-judul-surat {
-    font-size: 14pt;
+    font-size: 16.5px;
     font-weight: bold;
     text-decoration: underline;
     margin: 0;
     text-transform: uppercase;
     letter-spacing: 1px;
+    display: inline-block;
 }
 
 .ws-nomor-surat {
-    font-size: 11pt;
-    margin-top: 2px;
+    font-size: 14px;
+    font-weight: bold;
+    margin-top: 4px;
 }
 
+/* Isi Paragraf & Tabel Dokumen (Memenuhi 100% Area Margin) */
 .ws-surat-content {
-    margin-bottom: 16px;
+    width: 100%;
+}
+
+.ws-surat-content p {
+    width: 100%;
+    font-size: 14px;
+    line-height: 1.5;
     text-align: justify;
+    margin-bottom: 14px;
+    text-indent: 30px;
 }
 
 .ws-surat-table-data {
     width: 100%;
-    margin: 8px 0 12px;
+    margin: 12px 0 16px 0;
     border-collapse: collapse;
+    font-size: 14px;
+    line-height: 1.5;
 }
 
 .ws-surat-table-data td {
-    padding: 2.5px 0;
+    padding: 3px 0;
     vertical-align: top;
 }
 
@@ -1022,7 +1093,7 @@
 }
 
 .ws-surat-sep {
-    width: 15px;
+    width: 20px;
     text-align: center;
 }
 
@@ -1030,20 +1101,24 @@
     font-weight: 500;
 }
 
-/* Tanda Tangan */
+/* Tanda Tangan (Jarak Proporsional agar Bawah Kertas Tidak Kosong) */
 .ws-ttd-grid {
-    margin-top: 24px;
+    width: 100%;
+    margin-top: 70px;
+    margin-bottom: 35px;
     display: flex;
     justify-content: space-between;
     text-align: center;
+    font-size: 14px;
+    line-height: 1.5;
 }
 
 .ws-ttd-box {
-    width: 210px;
+    width: 220px;
 }
 
 .ws-ttd-space {
-    height: 55px;
+    height: 75px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1051,8 +1126,8 @@
 }
 
 .ws-ttd-img-rt {
-    max-height: 55px;
-    max-width: 130px;
+    max-height: 65px;
+    max-width: 140px;
     object-fit: contain;
     display: block;
     margin: 0 auto;
@@ -1061,10 +1136,8 @@
 
 .ws-ttd-nama {
     font-weight: bold;
-    border-bottom: 1px solid #000;
+    text-decoration: underline;
     display: inline-block;
-    padding-bottom: 2px;
-    min-width: 160px;
 }
 
 .ws-ttd-tengah {
@@ -1074,7 +1147,7 @@
 
 /* Validation Footer Banner */
 .ws-cetak-footer-bar {
-    max-width: 860px;
+    max-width: 210mm;
     margin: 18px auto 0;
     background: #ffffff;
     border: 1px solid #cbd5e1;
@@ -1106,10 +1179,13 @@
     background: #e2e8f0;
 }
 
-/* ── PRINT MEDIA QUERY (Strict 1 Page A4) ─────────────────── */
+/* ── PRINT MEDIA QUERY (Strict 1 Page A4: Atas 2.5cm, Bawah 2.5cm, Kiri 3cm, Kanan 2.5cm) ── */
 @page {
     size: A4 portrait;
-    margin: 10mm 15mm;
+    margin-top: 2.5cm;
+    margin-bottom: 2.5cm;
+    margin-left: 3cm;
+    margin-right: 2.5cm;
 }
 
 @media print {
@@ -1129,11 +1205,13 @@
     }
     .ws-paper-sheet {
         box-shadow: none !important;
+        border-radius: 0 !important;
+        padding: 0 !important;
         width: 100% !important;
         max-width: 100% !important;
+        min-width: 100% !important;
         min-height: auto !important;
         height: auto !important;
-        padding: 0 !important;
         margin: 0 !important;
         page-break-after: avoid !important;
         page-break-inside: avoid !important;
@@ -1146,13 +1224,172 @@
 @media (max-width: 900px) {
     .ws-stat-grid {
         grid-template-columns: 1fr;
+        gap: 14px;
     }
     .ws-readonly-grid {
         grid-template-columns: 1fr;
     }
-    .ws-paper-sheet {
+    /* JANGAN UBAH BENTUK KERTAS SURAT (.ws-paper-sheet) AGAR FORMAT RESMI TIDAK PECAH */
+    .ws-cetak-body {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    .ws-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 14px;
+    }
+    .ws-toolbar__actions {
+        flex-direction: column;
+        align-items: stretch;
         width: 100%;
-        min-height: auto;
-        padding: 15px;
+    }
+    .ws-filter-select {
+        width: 100% !important;
+    }
+    .ws-search-wrap {
+        width: 100% !important;
+    }
+}
+
+@media (max-width: 768px) {
+    /* Cetak Surat Action Bar di HP: Rapi, 2 Baris, Tidak Tumpuk/Meluap */
+    .ws-cetak-topbar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+        margin-bottom: 14px;
+        max-width: 100%;
+    }
+    .ws-btn-kembali-layar {
+        width: 100%;
+        justify-content: center;
+        white-space: nowrap;
+        height: 42px;
+    }
+    .ws-cetak-topbar-actions {
+        width: 100%;
+        display: flex;
+        gap: 10px;
+    }
+    .ws-btn-print,
+    .ws-btn-download-pdf {
+        flex: 1 1 50%;
+        width: 50%;
+        justify-content: center;
+        white-space: nowrap;
+        height: 42px;
+        padding: 8px 12px;
+        font-size: 13px;
+    }
+    .ws-cetak-footer-bar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+        text-align: center;
+    }
+    .ws-btn-salin-validasi {
+        width: 100%;
+        justify-content: center;
+    }
+    /* Tab Navigation di HP: Tetap Sejajar Rapi 50%-50%, Lega dan Nyaman Diklik */
+    .ws-tab-nav {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        background: #f1f5f9;
+        border: 1px solid #dee2e6;
+        border-bottom: none;
+        border-radius: 8px 8px 0 0;
+        padding: 0;
+    }
+    .ws-tab-btn {
+        flex: 1 1 50%;
+        width: 50%;
+        min-height: 52px;
+        justify-content: center;
+        padding: 13px 8px;
+        font-size: 13px;
+        gap: 7px;
+        border-radius: 0;
+        border: none;
+        border-bottom: 3.5px solid transparent;
+        white-space: nowrap;
+        background: transparent;
+        touch-action: manipulation;
+        -webkit-tap-highlight-color: transparent;
+        cursor: pointer;
+    }
+    .ws-tab-btn:first-child {
+        border-right: 1px solid #dee2e6;
+    }
+    .ws-tab-btn--active {
+        background: #ffffff;
+        color: #16a34a;
+        border-bottom-color: #16a34a;
+        font-weight: 700;
+    }
+    .ws-tab-btn i {
+        font-size: 19px;
+    }
+    .ws-form-card__body {
+        padding: 18px 16px;
+    }
+    .ws-readonly-section {
+        padding: 16px 14px;
+    }
+    .ws-form-actions {
+        flex-direction: column-reverse;
+        gap: 10px;
+    }
+    .ws-form-actions button,
+    .ws-form-actions a {
+        width: 100%;
+        justify-content: center;
+        height: 44px;
+    }
+    .ws-modal-card {
+        width: 95% !important;
+        max-width: 95% !important;
+        margin: 12px;
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+}
+
+@media (max-width: 576px) {
+    /* Di layar kecil: Label adaptif ringkas agar padding lega dan mudah dipencet jempol */
+    .ws-tab-label-extra {
+        display: none !important;
+    }
+    .ws-tab-btn {
+        font-size: 13.5px;
+        font-weight: 600;
+        padding: 13px 10px;
+        gap: 6px;
+        min-height: 52px;
+    }
+    .ws-tab-btn i {
+        font-size: 19px;
+    }
+}
+
+@media (max-width: 480px) {
+    .ws-stat-card__number {
+        font-size: 36px;
+    }
+    .ws-stat-card__body {
+        padding: 16px 18px 12px;
+    }
+    .ws-stat-card__footer {
+        padding: 9px 14px;
+        font-size: 12px;
+    }
+    .ws-table-wrap {
+        -webkit-overflow-scrolling: touch;
+    }
+    .ws-table thead th,
+    .ws-table tbody td {
+        padding: 12px 14px;
     }
 }

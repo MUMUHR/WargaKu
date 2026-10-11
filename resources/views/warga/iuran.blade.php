@@ -19,13 +19,6 @@
      HEADER & BREADCRUMB
      ======================================================== --}}
 <div class="warga-iuran-header">
-    <nav class="warga-iuran-header__breadcrumb" aria-label="Breadcrumb">
-        <a href="{{ route('warga.beranda') }}">Beranda</a>
-        <span class="sep">/</span>
-        <span>Layanan Keuangan</span>
-        <span class="sep">/</span>
-        <span style="color: #007bff; font-weight: 600;">Iuran Warga RT 04</span>
-    </nav>
     <h1 class="warga-iuran-header__title">Monitoring Iuran Warga RT 04</h1>
     <p class="warga-iuran-header__sub">Sistem monitoring status pembayaran iuran warga per bulan (read-only) resmi tercatat oleh Bendahara RT 04 / RW 08.</p>
 </div>

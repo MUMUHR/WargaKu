@@ -20,13 +20,6 @@
      ======================================================== --}}
 <div class="warga-profil-header">
     <div class="warga-profil-header__left">
-        <nav class="warga-profil-header__breadcrumb" aria-label="Breadcrumb">
-            <a href="{{ route('warga.beranda') }}">Beranda</a>
-            <span class="sep">/</span>
-            <span>Akun Warga</span>
-            <span class="sep">/</span>
-            <span style="color: #007bff; font-weight: 600;">Profil &amp; Keamanan</span>
-        </nav>
         <h1 class="warga-profil-header__title">Profil &amp; Keamanan Akun</h1>
         <p class="warga-profil-header__sub">Kelola nomor kontak aktif kepala keluarga dan perbarui kata sandi portal warga.</p>
     </div>

@@ -358,20 +358,117 @@
   font-size: var(--font-size-base);
 }
 
-/* Responsive Halaman Home */
+/* ─────────────────────────────────────────
+   RESPONSIVE HALAMAN HOME (LANDING PAGE)
+   ───────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .hero {
+    height: auto;
+    min-height: 580px;
+  }
+  .hero__content {
+    padding-top: calc(64px + var(--space-8));
+    padding-bottom: var(--space-12);
+  }
+  .announcements-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-5);
+  }
+}
+
 @media (max-width: 900px) {
   .features-grid {
     grid-template-columns: 1fr;
+    gap: var(--space-8);
   }
   .features-image {
     order: -1;
   }
-  .announcements-grid {
-    grid-template-columns: 1fr 1fr;
+  .features-image img {
+    height: 320px !important;
+    border-radius: var(--radius-lg, 8px);
   }
 }
 
-@media (max-width: 640px) {
-  .hero__title { font-size: var(--font-size-2xl); }
-  .announcements-grid { grid-template-columns: 1fr; }
+@media (max-width: 768px) {
+  .hero {
+    height: auto;
+    min-height: 520px;
+  }
+  .hero__content {
+    gap: 18px;
+    padding-top: calc(60px + var(--space-6));
+    padding-bottom: var(--space-10);
+  }
+  .hero__title {
+    font-size: clamp(1.85rem, 5.5vw, 2.35rem);
+    line-height: 1.22;
+  }
+  .hero__title-bar {
+    width: 3px;
+  }
+  .hero__subtitle {
+    font-size: 0.925rem;
+    line-height: 1.6;
+    margin-bottom: var(--space-6);
+  }
+  .section {
+    padding-block: var(--space-10);
+  }
+  .features-image img {
+    height: 260px !important;
+  }
+  .announcements-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-5);
+  }
+}
+
+@media (max-width: 480px) {
+  .hero {
+    min-height: 480px;
+  }
+  .hero__content {
+    gap: 14px;
+    padding-top: calc(60px + var(--space-5));
+    padding-bottom: var(--space-8);
+  }
+  .hero__title {
+    font-size: 1.65rem;
+  }
+  .hero__title-box {
+    margin-bottom: var(--space-3);
+  }
+  .hero__actions {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    gap: var(--space-3);
+  }
+  .hero__actions .btn {
+    width: 100%;
+    text-align: center;
+    padding-block: 0.65rem;
+  }
+  .section__title {
+    font-size: 1.45rem;
+  }
+  .section__subtitle {
+    font-size: 0.9rem;
+  }
+  .features-image img {
+    height: 220px !important;
+  }
+  .feature-item {
+    gap: var(--space-3);
+  }
+  .how-it-works-item {
+    gap: var(--space-3);
+  }
+  .announcement-card__body {
+    padding: var(--space-4);
+  }
+  .announcement-card__title {
+    font-size: 1.05rem;
+  }
 }

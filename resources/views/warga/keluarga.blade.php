@@ -19,11 +19,6 @@
         <h1 class="warga-page-header__title">Data Keluarga</h1>
         <p class="warga-page-header__sub">Sistem Administrasi Kependudukan Terpadu RT 04 / RW 08</p>
     </div>
-    <nav class="warga-page-header__breadcrumb" aria-label="Breadcrumb">
-        <a href="{{ route('warga.beranda') }}">Beranda</a>
-        <span class="sep">/</span>
-        <span class="current">Data Keluarga</span>
-    </nav>
 </div>
 
 @if(session('success'))
@@ -97,11 +92,14 @@
     <div class="kk-tab-header">
         <button class="kk-tab-btn kk-tab-btn--active" id="tab-daftar" onclick="switchTab('daftar')" type="button">
             <i class='bx bxs-group'></i>
-            Daftar Anggota Keluarga
+            <span class="kk-tab-btn-text-desktop">Daftar Anggota Keluarga</span>
+            <span class="kk-tab-btn-text-mobile">Anggota Keluarga</span>
         </button>
         <button class="kk-tab-btn" id="tab-riwayat" onclick="switchTab('riwayat')" type="button">
             <i class='bx bx-history'></i>
-            Riwayat Pengajuan Perubahan Data <span class="kk-tab-dot" title="Ada pengajuan status menunggu"></span>
+            <span class="kk-tab-btn-text-desktop">Riwayat Pengajuan Perubahan Data</span>
+            <span class="kk-tab-btn-text-mobile">Riwayat Pengajuan</span>
+            <span class="kk-tab-dot" title="Ada pengajuan status menunggu"></span>
         </button>
     </div>
 
@@ -298,15 +296,15 @@
                         <td><span class="kk-badge-jenis kk-badge-jenis--ubah">Ubah Data</span></td>
                         <td style="font-weight:600; color:#212529;">Dimas Arya Pratama</td>
                         <td>
-                            <a href="javascript:void(0)" class="kk-file-link" onclick="alert('Preview: KTP_Dimas.pdf')">
+                            <a href="javascript:void(0)" class="kk-file-link" onclick="bukaModalLihatPengajuan(1)" title="Klik untuk pratinjau berkas">
                                 <i class='bx bx-file-blank'></i> KTP_Dimas.pdf
                             </a>
                         </td>
                         <td><span class="kk-badge-rstatus kk-badge-rstatus--menunggu"><span class="kk-status-dot">●</span> Menunggu</span></td>
                         <td style="color:#6c757d; font-size:12.5px;">-</td>
                         <td style="text-align:center;">
-                            <button type="button" class="kk-btn-lihat" id="btn-lihat-1" onclick="alert('Detail pengajuan perubahan data Dimas Arya Pratama.')">
-                                Lihat Perubahan
+                            <button type="button" class="kk-btn-lihat" id="btn-lihat-1" onclick="bukaModalLihatPengajuan(1)">
+                                <i class='bx bx-show'></i> Lihat Perubahan
                             </button>
                         </td>
                     </tr>
@@ -319,15 +317,15 @@
                         <td><span class="kk-badge-jenis kk-badge-jenis--tambah">Tambah Anggota</span></td>
                         <td style="font-weight:600; color:#212529;">Nabila Putri Kirani</td>
                         <td>
-                            <a href="javascript:void(0)" class="kk-file-link" onclick="alert('Preview: Akta_Kelahiran.jpg')">
-                                <i class='bx bx-file-blank'></i> Akta_Kelahiran.jpg
+                            <a href="javascript:void(0)" class="kk-file-link" onclick="bukaModalLihatPengajuan(2)" title="Klik untuk pratinjau berkas">
+                                <i class='bx bx-file-blank'></i> Akta_Kelahiran.pdf
                             </a>
                         </td>
                         <td><span class="kk-badge-rstatus kk-badge-rstatus--disetujui"><span class="kk-status-dot">●</span> Disetujui</span></td>
-                        <td style="color:#6c757d; font-size:12.5px;">-</td>
+                        <td style="color:#6c757d; font-size:12.5px;">Data telah diverifikasi oleh RT</td>
                         <td style="text-align:center;">
-                            <button type="button" class="kk-btn-lihat kk-btn-lihat--green" id="btn-lihat-2" onclick="alert('Pengajuan disetujui. Nabila berhasil ditambahkan.')">
-                                Selesai
+                            <button type="button" class="kk-btn-lihat kk-btn-lihat--green" id="btn-lihat-2" onclick="bukaModalLihatPengajuan(2)">
+                                <i class='bx bx-check-circle'></i> Selesai
                             </button>
                         </td>
                     </tr>
@@ -340,15 +338,15 @@
                         <td><span class="kk-badge-jenis kk-badge-jenis--ubah">Ubah Data</span></td>
                         <td style="font-weight:600; color:#212529;">Siti Aminah</td>
                         <td>
-                            <a href="javascript:void(0)" class="kk-file-link" onclick="alert('Preview: Ijazah_Siti.pdf')">
+                            <a href="javascript:void(0)" class="kk-file-link" onclick="bukaModalLihatPengajuan(3)" title="Klik untuk pratinjau berkas">
                                 <i class='bx bx-file-blank'></i> Ijazah_Siti.pdf
                             </a>
                         </td>
                         <td><span class="kk-badge-rstatus kk-badge-rstatus--ditolak"><span class="kk-status-dot">●</span> Ditolak</span></td>
                         <td style="color:#dc3545; font-size:12.5px; font-weight:500;">Scan dokumen buram dan tidak terbaca jelas</td>
                         <td style="text-align:center;">
-                            <button type="button" class="kk-btn-lihat kk-btn-lihat--green" id="btn-lihat-3" onclick="alert('Pengajuan ditolak. Silakan ajukan ulang dengan scan yang lebih jelas.')">
-                                Selesai
+                            <button type="button" class="kk-btn-lihat kk-btn-lihat--green" id="btn-lihat-3" onclick="bukaModalLihatPengajuan(3)">
+                                <i class='bx bx-info-circle'></i> Lihat Catatan
                             </button>
                         </td>
                     </tr>
@@ -461,6 +459,138 @@
     </div>
 </div>
 
+{{-- ══ MODAL LIHAT PENGAJUAN PERUBAHAN DATA (POV WARGA) ══ --}}
+<div class="kk-modal-overlay" id="modal-pengajuan-overlay" onclick="tutupPengajuanViaOverlay(event)">
+    <div class="kk-pengajuan-modal" id="modal-pengajuan-container" role="dialog" aria-modal="true" aria-labelledby="modal-pengajuan-title">
+        <!-- Header -->
+        <div class="kk-pengajuan-modal__header">
+            <div>
+                <div class="kk-pengajuan-modal__title-row">
+                    <h2 class="kk-pengajuan-modal__title" id="modal-pengajuan-title">Review Verifikasi Pengajuan</h2>
+                    <span class="kk-pengajuan-modal__status-badge kk-pengajuan-modal__status-badge--menunggu" id="modal-p-status-badge">Menunggu Persetujuan RT</span>
+                </div>
+                <div class="kk-pengajuan-modal__subtitle">
+                    Pemohon: <strong>Bpk. Bambang Pamungkas</strong> &bull; No. KK: <strong>3271048809920001</strong> &bull; Blok B No. 14, RT 04 / RW 08
+                </div>
+            </div>
+            <button type="button" class="kk-pengajuan-modal__close" onclick="tutupModalLihatPengajuan()" aria-label="Tutup" id="btn-pengajuan-close">
+                <i class='bx bx-x'></i>
+            </button>
+        </div>
+
+        <!-- Body -->
+        <div class="kk-pengajuan-modal__body">
+            <!-- Strip Target Data -->
+            <div class="kk-target-strip">
+                <div class="kk-target-strip__left">
+                    <div class="kk-target-strip__title" id="modal-p-target-title">Target Data: Dimas Arya Pratama (Anak)</div>
+                    <div class="kk-target-strip__sub" id="modal-p-target-sub">NIK: 3271042006060003 &bull; Laki-Laki &bull; Lahir: Depok, 20-06-2006</div>
+                </div>
+                <div class="kk-target-strip__date" id="modal-p-tgl">
+                    Diajukan pada: 14 Mei 2025, 14:20 WIB
+                </div>
+            </div>
+
+            <!-- 2-Columns Grid: Komparasi vs Pratinjau Dokumen -->
+            <div class="kk-pengajuan-grid">
+                <!-- Kolom Kiri: Komparasi Data -->
+                <div class="kk-pengajuan-card">
+                    <div class="kk-pengajuan-card__header">
+                        <div class="kk-pengajuan-card__title">
+                            <i class='bx bx-git-compare' style="color:#0284c7; font-size:16px;"></i>
+                            <span>Komparasi Data Lama vs Usulan Baru</span>
+                        </div>
+                        <span class="kk-pengajuan-card__badge-green" id="modal-p-attr-count">3 Atribut Diperbarui</span>
+                    </div>
+
+                    <div class="kk-ptable-wrap">
+                        <table class="kk-ptable">
+                            <thead>
+                                <tr>
+                                    <th style="width: 32%;">FIELD / ATRIBUT</th>
+                                    <th style="width: 34%;">DATA LAMA</th>
+                                    <th style="width: 34%;">USULAN BARU WARGA</th>
+                                </tr>
+                            </thead>
+                            <tbody id="modal-p-table-body">
+                                <!-- Dynamic rows -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Alasan Pengajuan -->
+                    <div class="kk-alasan-box">
+                        <div class="kk-alasan-box__label">Alasan Pengajuan Perubahan:</div>
+                        <div class="kk-alasan-box__val" id="modal-p-alasan">-</div>
+                    </div>
+
+                    <!-- Catatan RT (Jika Ditolak atau Ada Catatan) -->
+                    <div class="kk-catatan-rt-box" id="modal-p-catatan-rt-box" style="display:none;">
+                        <div class="kk-catatan-rt-box__label"><i class='bx bx-error-circle'></i> Catatan Verifikasi Pengurus RT:</div>
+                        <div class="kk-catatan-rt-box__val" id="modal-p-catatan-rt">-</div>
+                    </div>
+                </div>
+
+                <!-- Kolom Kanan: Pratinjau Dokumen Pendukung -->
+                <div class="kk-pengajuan-card">
+                    <div class="kk-pengajuan-card__header">
+                        <div class="kk-pengajuan-card__title">
+                            <i class='bx bx-check-shield' style="color:#16a34a; font-size:16px;"></i>
+                            <span>Pratinjau Dokumen Pendukung</span>
+                        </div>
+                        <span class="kk-pengajuan-card__badge-green" id="modal-p-doc-count">2 Dokumen</span>
+                    </div>
+
+                    <!-- Tabs Dokumen -->
+                    <div class="kk-doc-tabs" id="modal-p-doc-tabs">
+                        <!-- Dynamic tabs -->
+                    </div>
+
+                    <!-- Visual Document Box Serupa Admin -->
+                    <div class="kk-doc-preview-box">
+                        <div class="kk-doc-display-container">
+                            <img id="modal-p-doc-img" src="{{ asset('contoh_Ijazah.png') }}" alt="Pratinjau Dokumen" class="kk-doc-preview-img" onclick="bukaZoomDokumen()" title="Klik untuk memperbesar gambar">
+                        </div>
+
+                        <div class="kk-doc-info-bar">
+                            <span id="modal-p-doc-filename" style="font-size: 12px; color: #475569; font-weight: 600;">1. Ijazah_S1_Siti.png</span>
+                            <span id="modal-p-doc-verified" style="font-size: 11.5px; color: #16a34a; font-weight: 600;">
+                                <i class='bx bx-check-circle'></i> Dokumen Asli Terverifikasi
+                            </span>
+                        </div>
+
+                        <!-- Action buttons for document -->
+                        <div class="kk-doc-actions">
+                            <button type="button" class="kk-doc-btn" onclick="bukaZoomDokumen()" id="btn-perbesar-berkas">
+                                <i class='bx bx-zoom-in'></i> Perbesar Berkas
+                            </button>
+                            <a id="btn-unduh-berkas" href="{{ asset('contoh_Ijazah.png') }}" download class="kk-doc-btn">
+                                <i class='bx bx-download'></i> Unduh File Asli
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer POV Warga -->
+        <div class="kk-pengajuan-modal__footer">
+            <button type="button" class="kk-pbtn-close" onclick="tutupModalLihatPengajuan()">
+                Tutup / Batal
+            </button>
+            <div class="kk-pengajuan-modal__footer-btns">
+                <div class="kk-pengajuan-modal__footer-status" id="modal-p-footer-status">
+                    <i class='bx bx-info-circle' style="color:#0284c7;"></i>
+                    <span>Pengajuan ini sedang dalam antrean verifikasi oleh Pengurus RT 04.</span>
+                </div>
+                <a href="{{ route('warga.keluarga.edit') }}" class="kk-pbtn-reapply" id="modal-p-btn-reapply" style="display:none;">
+                    <i class='bx bx-refresh'></i> Ajukan Ulang Perubahan
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
 @endsection
 
 @push('scripts')
@@ -524,6 +654,243 @@ function copyNoKK() {
         setTimeout(function(){ btn.innerHTML="<i class='bx bx-copy'></i>"; btn.style.color=''; }, 1800);
     });
 }
-document.addEventListener('keydown', function(e){ if(e.key==='Escape') tutupDetailWarga(); });
+
+/* ══════════════════════════════════════════════════════════
+   DATA & HANDLER LIHAT PENGAJUAN PERUBAHAN DATA (POV WARGA)
+   ══════════════════════════════════════════════════════════ */
+var urlIjazah = "{{ asset('contoh_Ijazah.png') }}";
+var urlBukuNikah = "{{ asset('contoh_buku_nikah.png') }}";
+
+var dataPengajuan = {
+    1: {
+        status: 'menunggu',
+        statusLabel: 'Menunggu Persetujuan RT',
+        targetTitle: 'Target Data: Siti Rahmawati (Anak)',
+        targetSub: 'NIK: 3275015509010003 • Perempuan • Lahir: Bekasi, 06-09-2001',
+        tgl: 'Diajukan pada: 18 Feb 2025, 09:15 WIB',
+        attrCount: '3 Atribut Diperbarui',
+        komparasi: [
+            { field: 'Pekerjaan Utama', old: 'Pelajar/Mahasiswa', new: 'Karyawan Swasta', changed: true },
+            { field: 'Pendidikan Terakhir', old: 'SLTA / Sederajat', new: 'D4/S1', changed: true },
+            { field: 'Status Perkawinan', old: 'Belum Kawin', new: 'Kawin Tercatat', changed: true },
+            { field: 'Agama', old: 'Islam', new: 'Islam (Tetap)', changed: false }
+        ],
+        alasan: 'Siti telah menyelesaikan perkuliahan S1 dan bekerja sebagai Karyawan Swasta serta melangsungkan pernikahan.',
+        catatanRT: '',
+        footerText: 'Pengajuan ini sedang dalam antrean verifikasi oleh Pengurus RT 04. Mohon menunggu konfirmasi.',
+        docs: [
+            {
+                label: '1. Ijazah_S1_Siti.png',
+                icon: 'bx-file-blank',
+                iconColor: '#dc2626',
+                src: urlIjazah,
+                verified: 'Dokumen Asli Terverifikasi'
+            },
+            {
+                label: '2. Buku_Nikah_Hal1.png',
+                icon: 'bx-book-open',
+                iconColor: '#0284c7',
+                src: urlBukuNikah,
+                verified: 'Dokumen Asli Terverifikasi'
+            }
+        ]
+    },
+    2: {
+        status: 'disetujui',
+        statusLabel: 'Telah Disetujui RT',
+        targetTitle: 'Target Data: Nabila Putri Kirani (Tambah Anggota Baru)',
+        targetSub: 'NIK: 3271045011120004 • Perempuan • Lahir: Depok, 10-11-2012',
+        tgl: 'Diajukan pada: 28 Apr 2025, 09:15 WIB',
+        attrCount: 'Pendaftaran Anggota Baru',
+        komparasi: [
+            { field: 'Nama Anggota', old: '(Belum Terdaftar)', new: 'Nabila Putri Kirani', changed: true },
+            { field: 'Hubungan Keluarga', old: '-', new: 'Anak Kandung', changed: true },
+            { field: 'Tempat, Tgl Lahir', old: '-', new: 'Depok, 10 November 2012', changed: true },
+            { field: 'Pendidikan', old: '-', new: 'SMP / Sederajat', changed: true }
+        ],
+        alasan: 'Pembaruan kartu keluarga dengan mendaftarkan anak kedua.',
+        catatanRT: 'Data telah diverifikasi dan disinkronkan dengan database kependudukan RT 04.',
+        footerText: 'Pengajuan telah disetujui oleh RT 04. Data keluarga Anda telah resmi diperbarui.',
+        docs: [
+            {
+                label: '1. Akta_Kelahiran_Nabila.png',
+                icon: 'bx-file-blank',
+                iconColor: '#0284c7',
+                src: urlIjazah,
+                verified: 'Dokumen Asli Terverifikasi'
+            }
+        ]
+    },
+    3: {
+        status: 'ditolak',
+        statusLabel: 'Ditolak oleh RT',
+        targetTitle: 'Target Data: Ibu Siti Aminah (Istri)',
+        targetSub: 'NIK: 3271046204830002 • Perempuan • Lahir: Jakarta, 12-04-1983',
+        tgl: 'Diajukan pada: 10 Jan 2025, 11:05 WIB',
+        attrCount: 'Perubahan Pendidikan Terakhir',
+        komparasi: [
+            { field: 'Pendidikan Terakhir', old: 'SMA / Sederajat', new: 'D3 Akuntansi', changed: true },
+            { field: 'Pekerjaan Utama', old: 'Ibu Rumah Tangga', new: 'Wiraswasta', changed: true }
+        ],
+        alasan: 'Memperbarui data ijazah D3 dan status pekerjaan mandiri.',
+        catatanRT: 'Scan dokumen ijazah buram dan nomor seri tidak terbaca dengan jelas. Mohon unggah ulang dengan foto/scan beresolusi tinggi.',
+        footerText: 'Pengajuan ditolak oleh Ketua RT 04. Silakan ajukan ulang perubahan berkas.',
+        docs: [
+            {
+                label: '1. Ijazah_Siti.png',
+                icon: 'bx-file-blank',
+                iconColor: '#dc2626',
+                src: urlIjazah,
+                verified: 'Perlu Unggah Ulang Berkas Asli'
+            }
+        ]
+    }
+};
+
+var currentPengajuanId = 1;
+var currentDocIdx = 0;
+
+function bukaModalLihatPengajuan(id) {
+    var p = dataPengajuan[id];
+    if (!p) return;
+    currentPengajuanId = id;
+    currentDocIdx = 0;
+
+    // Status Badge
+    var badgeEl = document.getElementById('modal-p-status-badge');
+    badgeEl.textContent = p.statusLabel;
+    badgeEl.className = 'kk-pengajuan-modal__status-badge kk-pengajuan-modal__status-badge--' + p.status;
+
+    // Target info
+    document.getElementById('modal-p-target-title').textContent = p.targetTitle;
+    document.getElementById('modal-p-target-sub').textContent = p.targetSub;
+    document.getElementById('modal-p-tgl').textContent = p.tgl;
+
+    // Atribut count
+    document.getElementById('modal-p-attr-count').textContent = p.attrCount;
+
+    // Komparasi Table
+    var tbody = document.getElementById('modal-p-table-body');
+    var rowsHtml = '';
+    p.komparasi.forEach(function(item) {
+        rowsHtml += '<tr>' +
+            '<td class="kk-ptable-field">' + item.field + '</td>' +
+            '<td class="kk-ptable-old">' +
+                '<span class="kk-mobile-row-label">Data Lama:</span>' +
+                '<span>' + item.old + '</span>' +
+            '</td>' +
+            '<td class="kk-ptable-new">' +
+                '<span class="kk-mobile-row-label">Usulan Baru:</span>' +
+                (item.changed ? 
+                    ('<div class="kk-val-new"><span>' + item.new + '</span><span class="kk-badge-diubah">Diubah</span></div>') : 
+                    ('<span class="kk-ptable-old">' + item.new + '</span>')
+                ) +
+            '</td>' +
+        '</tr>';
+    });
+    tbody.innerHTML = rowsHtml;
+
+    // Alasan Pengajuan
+    document.getElementById('modal-p-alasan').textContent = p.alasan;
+
+    // Catatan RT
+    var catBox = document.getElementById('modal-p-catatan-rt-box');
+    if (p.catatanRT && p.catatanRT.trim() !== '') {
+        document.getElementById('modal-p-catatan-rt').textContent = p.catatanRT;
+        catBox.style.display = 'block';
+    } else {
+        catBox.style.display = 'none';
+    }
+
+    // Dokumen Tabs & Content
+    document.getElementById('modal-p-doc-count').textContent = p.docs.length + ' Dokumen';
+    renderDocTabs(p.docs, 0);
+    renderDocPreview(p.docs[0]);
+
+    // Footer Status & Tombol Reapply
+    var footerStatusEl = document.getElementById('modal-p-footer-status');
+    var iconClass = p.status === 'disetujui' ? 'bx-check-circle' : (p.status === 'ditolak' ? 'bx-error-circle' : 'bx-time-five');
+    var iconColor = p.status === 'disetujui' ? '#16a34a' : (p.status === 'ditolak' ? '#dc2626' : '#d97706');
+    footerStatusEl.innerHTML = "<i class='bx " + iconClass + "' style='color:" + iconColor + "; font-size:16px;'></i> <span>" + p.footerText + "</span>";
+
+    var reapplyBtn = document.getElementById('modal-p-btn-reapply');
+    if (p.status === 'ditolak') {
+        reapplyBtn.style.display = 'inline-flex';
+    } else {
+        reapplyBtn.style.display = 'none';
+    }
+
+    // Tampilkan Modal
+    document.getElementById('modal-pengajuan-overlay').classList.add('kk-modal-overlay--open');
+    document.body.style.overflow = 'hidden';
+}
+
+function renderDocTabs(docs, activeIdx) {
+    var tabsContainer = document.getElementById('modal-p-doc-tabs');
+    var html = '';
+    docs.forEach(function(doc, idx) {
+        var activeClass = idx === activeIdx ? 'kk-doc-tab-btn--active' : '';
+        var iconColorStyle = doc.iconColor ? 'style="color:' + doc.iconColor + ';"' : '';
+        html += '<button type="button" class="kk-doc-tab-btn ' + activeClass + '" onclick="switchDocPreview(' + idx + ')">' +
+            "<i class='bx " + doc.icon + "' " + iconColorStyle + "></i> " + doc.label +
+        '</button>';
+    });
+    tabsContainer.innerHTML = html;
+}
+
+function switchDocPreview(idx) {
+    currentDocIdx = idx;
+    var p = dataPengajuan[currentPengajuanId];
+    if (!p || !p.docs[idx]) return;
+    renderDocTabs(p.docs, idx);
+    renderDocPreview(p.docs[idx]);
+}
+
+function renderDocPreview(doc) {
+    var imgEl = document.getElementById('modal-p-doc-img');
+    imgEl.src = doc.src;
+    imgEl.alt = doc.label;
+    document.getElementById('modal-p-doc-filename').textContent = doc.label;
+    
+    var btnUnduh = document.getElementById('btn-unduh-berkas');
+    if (btnUnduh) {
+        btnUnduh.href = doc.src;
+        btnUnduh.setAttribute('download', doc.label);
+    }
+    
+    var verEl = document.getElementById('modal-p-doc-verified');
+    if (doc.verified.includes('Perlu Unggah')) {
+        verEl.style.color = '#dc2626';
+        verEl.innerHTML = "<i class='bx bx-error-circle'></i> " + doc.verified;
+    } else {
+        verEl.style.color = '#16a34a';
+        verEl.innerHTML = "<i class='bx bx-check-circle'></i> " + doc.verified;
+    }
+}
+
+function bukaZoomDokumen() {
+    var imgEl = document.getElementById('modal-p-doc-img');
+    if (imgEl && imgEl.src) {
+        window.open(imgEl.src, '_blank');
+    }
+}
+
+function tutupModalLihatPengajuan() {
+    document.getElementById('modal-pengajuan-overlay').classList.remove('kk-modal-overlay--open');
+    document.body.style.overflow = '';
+}
+
+function tutupPengajuanViaOverlay(e) {
+    if (e.target.id === 'modal-pengajuan-overlay') {
+        tutupModalLihatPengajuan();
+    }
+}
+
+document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape') {
+        tutupDetailWarga();
+        tutupModalLihatPengajuan();
+    }
+});
 </script>
 @endpush

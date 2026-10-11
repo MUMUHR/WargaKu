@@ -15,16 +15,9 @@
 
 @section('content')
 
-{{-- ── Breadcrumb & Header ── --}}
+{{-- ── Header Halaman ── --}}
 <div class="warga-form-page">
     <div style="margin-bottom: 20px;">
-        <nav style="font-size:12px;color:#6c757d;margin-bottom:6px;display:flex;align-items:center;gap:6px;" aria-label="Breadcrumb">
-            <a href="{{ route('warga.beranda') }}" style="color:#6c757d;text-decoration:none;">Home</a>
-            <span>/</span>
-            <a href="{{ route('warga.keluarga') }}" style="color:#6c757d;text-decoration:none;">Data Warga</a>
-            <span>/</span>
-            <span style="color:#007bff;font-weight:600;">Tambah Anggota Keluarga Baru</span>
-        </nav>
         <h1 style="font-size:22px;font-weight:800;color:#111827;margin-bottom:4px;">
             Form Pendaftaran Anggota Keluarga Baru
         </h1>

@@ -15,20 +15,33 @@
 
 @section('content')
 
-{{-- ── Breadcrumb & Header ── --}}
+{{-- ── Header Halaman ── --}}
 <div class="warga-form-page">
-    <div style="margin-bottom: 20px;">
-        <nav style="font-size:12px;color:#6c757d;margin-bottom:6px;display:flex;align-items:center;gap:6px;" aria-label="Breadcrumb">
-            <a href="{{ route('warga.keluarga') }}" style="color:#6c757d;text-decoration:none;">Data Warga</a>
-            <span>/</span>
-            <span style="color:#007bff;font-weight:600;">Form Pengajuan Perubahan Data</span>
-        </nav>
-        <h1 style="font-size:22px;font-weight:800;color:#111827;margin-bottom:4px;">
-            Formulir Pengajuan Perubahan Data Warga
-        </h1>
-        <p style="font-size:13px;color:#6c757d;margin:0;">
-            Sampaikan permohonan koreksi atau pembaruan data kependudukan ke pengurus RT 04
-        </p>
+    <div class="wf-header-action-row">
+        <div>
+            <h1 style="font-size:22px;font-weight:800;color:#0f172a;margin-bottom:4px;letter-spacing:-0.3px;">
+                Formulir Pengajuan Perubahan Data Warga
+            </h1>
+            <p style="font-size:13px;color:#64748b;margin:0;">
+                Sampaikan permohonan koreksi atau pembaruan data kependudukan ke Pengurus RT 04
+            </p>
+        </div>
+        <div>
+            <a href="{{ route('warga.keluarga') }}" class="wf-btn-back">
+                <i class='bx bx-arrow-back'></i>
+                <span>Kembali ke Data Keluarga</span>
+            </a>
+        </div>
+    </div>
+
+    {{-- Banner Petunjuk --}}
+    <div class="wf-info-banner">
+        <div class="wf-info-banner__icon">
+            <i class='bx bx-info-circle'></i>
+        </div>
+        <div class="wf-info-banner__text">
+            <strong>Petunjuk Pengajuan:</strong> Pilih anggota keluarga yang hendak diperbarui pada <strong>Langkah 1</strong>. Selanjutnya sesuaikan data baru pada kolom <strong>Data Usulan Baru</strong> (baris yang berubah akan otomatis disorot hijau). Lampirkan dokumen bukti resmi pendukung di kolom kanan sebelum mengirim pengajuan.
+        </div>
     </div>
 
     <form id="form-edit-keluarga" action="{{ route('warga.keluarga.edit.store') }}" method="POST" enctype="multipart/form-data">
@@ -42,26 +55,33 @@
                 <div class="wf-card">
                     <div class="wf-card__header-light">
                         <div class="wf-header-title">
-                            <i class='bx bx-id-card' style="color:#007bff;font-size:19px;"></i>
-                            <span>1. Identitas Pemohon &amp; Sasaran Perubahan</span>
+                            <i class='bx bx-user-pin' style="color:#007bff;font-size:19px;"></i>
+                            <span>1. Pilih Anggota Keluarga Sasaran Perubahan</span>
                         </div>
                         <span class="wf-badge-step-blue">LANGKAH 1</span>
                     </div>
                     <div class="wf-card__body">
                         
-                        <div style="display:flex;align-items:center;justify-content:space-between;background:#f8f9fa;border:1px solid #e9ecef;border-radius:4px;padding:10px 16px;margin-bottom:16px;">
-                            <div style="font-size:12.5px;color:#495057;">
-                                Kepala Keluarga: <strong style="color:#212529;">Bambang Pamungkas</strong>
+                        {{-- Ringkasan KK --}}
+                        <div class="wf-kk-bar">
+                            <div class="wf-kk-bar__item">
+                                <span class="wf-kk-bar__label">No. Kartu Keluarga (KK)</span>
+                                <span class="wf-kk-bar__chip">3271048809920001</span>
                             </div>
-                            <div style="font-size:12px;color:#6c757d;display:flex;align-items:center;gap:6px;">
-                                <span>No. Kartu Keluarga (KK):</span>
-                                <span style="background:#e7f1ff;color:#007bff;font-weight:700;padding:2px 8px;border-radius:4px;font-size:12px;">3271048809920001</span>
+                            <div class="wf-kk-bar__item">
+                                <span class="wf-kk-bar__label">Kepala Keluarga</span>
+                                <strong class="wf-kk-bar__val">Bpk. Bambang Pamungkas</strong>
+                            </div>
+                            <div class="wf-kk-bar__item">
+                                <span class="wf-kk-bar__label">Wilayah Domisili</span>
+                                <span class="wf-kk-bar__val">RT 04 / RW 08</span>
                             </div>
                         </div>
 
                         <div>
                             <label class="wf-label" for="select-target-anggota">
-                                <span>Pilih Anggota Keluarga yang Ingin Diubah <span class="wf-req">*</span></span>
+                                <span>Pilih Anggota Keluarga yang Ingin Diperbarui <span class="wf-req">*</span></span>
+                                <span class="wf-label-hint">Data tabel otomatis dimuat sesuai pilihan</span>
                             </label>
                             <select id="select-target-anggota" name="target_anggota" class="wf-select" onchange="gantiAnggota(this.value)" required>
                                 <option value="dimas" selected>Dimas Arya Pratama — (Anak Kandung | NIK: 3271048809920003)</option>
@@ -69,6 +89,22 @@
                                 <option value="siti">Siti Aminah — (Istri | NIK: 3271046204830002)</option>
                                 <option value="nabila">Nabila Putri Kirani — (Anak Kandung | NIK: 3271045011120004)</option>
                             </select>
+                        </div>
+
+                        {{-- Kartu Ringkasan Anggota Terpilih --}}
+                        <div class="wf-target-card" id="member-preview-card">
+                            <div class="wf-target-card__user">
+                                <div class="wf-target-card__avatar" id="preview-avatar">DA</div>
+                                <div>
+                                    <div class="wf-target-card__name" id="preview-name">Dimas Arya Pratama</div>
+                                    <div class="wf-target-card__nik">NIK: <span id="preview-nik">3271048809920003</span> • Hubungan: <span id="preview-shdk">Anak Kandung</span></div>
+                                </div>
+                            </div>
+                            <div>
+                                <span class="wf-target-card__status">
+                                    <i class='bx bx-check-circle'></i> Siap Diedit
+                                </span>
+                            </div>
                         </div>
 
                     </div>
@@ -85,17 +121,18 @@
                     </div>
                     <div class="wf-card__body" style="padding:16px 20px;">
                         
+                        <div class="wf-comparison-table-wrap">
                         <table class="wf-comparison-table">
                             <thead>
                                 <tr>
-                                    <th class="col-param">NAMA FIELD / PARAMETER</th>
+                                    <th class="col-param">NAMA PARAMETER</th>
                                     <th class="col-old">
-                                        <i class='bx bx-lock-alt' style="vertical-align:middle;font-size:13px;"></i>
-                                        DATA LAMA / EKSISTING (READ-ONLY)
+                                        <i class='bx bx-lock-alt' style="vertical-align:middle;font-size:13px;margin-right:2px;"></i>
+                                        DATA EKSISTING (SAAT INI)
                                     </th>
                                     <th class="col-new">
-                                        <i class='bx bx-edit' style="vertical-align:middle;font-size:13px;"></i>
-                                        DATA BARU YANG DIAJUKAN (DAPAT DIEDIT)
+                                        <i class='bx bx-edit' style="vertical-align:middle;font-size:13px;margin-right:2px;"></i>
+                                        DATA USULAN BARU (DAPAT DIEDIT)
                                     </th>
                                 </tr>
                             </thead>
@@ -106,7 +143,7 @@
                                     <td>
                                         <div class="wf-param-title">
                                             <span>1. NIK</span>
-                                            <span class="wf-badge-updated">● Diperbarui</span>
+                                            <span class="wf-badge-updated">● Diubah</span>
                                         </div>
                                         <div class="wf-param-desc">Nomor Induk Kependudukan (16 digit)</div>
                                     </td>
@@ -118,8 +155,7 @@
                                     </td>
                                     <td>
                                         <div class="wf-input-editable-wrap">
-                                            <input type="text" id="new-nik" name="new_nik" class="wf-input" value="3271048809920003">
-                                            <i class='bx bx-pencil edit-icon-indicator'></i>
+                                            <input type="text" id="new-nik" name="new_nik" class="wf-input" value="3271048809920003" maxlength="16">
                                         </div>
                                     </td>
                                 </tr>
@@ -129,9 +165,9 @@
                                     <td>
                                         <div class="wf-param-title">
                                             <span>2. Nama Lengkap</span>
-                                            <span class="wf-badge-updated">● Diperbarui</span>
+                                            <span class="wf-badge-updated">● Diubah</span>
                                         </div>
-                                        <div class="wf-param-desc">Sesuai Akta / KTP-el</div>
+                                        <div class="wf-param-desc">Sesuai KTP-el / Akta Kelahiran</div>
                                     </td>
                                     <td>
                                         <div class="wf-input-old-lock">
@@ -142,7 +178,6 @@
                                     <td>
                                         <div class="wf-input-editable-wrap">
                                             <input type="text" id="new-nama" name="new_nama" class="wf-input" value="Dimas Arya Pratama">
-                                            <i class='bx bx-pencil edit-icon-indicator'></i>
                                         </div>
                                     </td>
                                 </tr>
@@ -152,7 +187,7 @@
                                     <td>
                                         <div class="wf-param-title">
                                             <span>3. Tempat Lahir</span>
-                                            <span class="wf-badge-updated">● Diperbarui</span>
+                                            <span class="wf-badge-updated">● Diubah</span>
                                         </div>
                                         <div class="wf-param-desc">Kota / Kabupaten kelahiran</div>
                                     </td>
@@ -165,7 +200,6 @@
                                     <td>
                                         <div class="wf-input-editable-wrap">
                                             <input type="text" id="new-tempat-lahir" name="new_tempat_lahir" class="wf-input" value="Bogor">
-                                            <i class='bx bx-pencil edit-icon-indicator'></i>
                                         </div>
                                     </td>
                                 </tr>
@@ -175,9 +209,9 @@
                                     <td>
                                         <div class="wf-param-title">
                                             <span>4. Tanggal Lahir</span>
-                                            <span class="wf-badge-updated">● Diperbarui</span>
+                                            <span class="wf-badge-updated">● Diubah</span>
                                         </div>
-                                        <div class="wf-param-desc">Format: Tanggal / Bulan / Tahun</div>
+                                        <div class="wf-param-desc">Sesuai akta kelahiran</div>
                                     </td>
                                     <td>
                                         <div class="wf-input-old-lock">
@@ -187,8 +221,7 @@
                                     </td>
                                     <td>
                                         <div class="wf-input-editable-wrap">
-                                            <input type="text" id="new-tgl-lahir" name="new_tgl_lahir" class="wf-input" value="08-08-2005">
-                                            <i class='bx bx-pencil edit-icon-indicator'></i>
+                                            <input type="date" id="new-tgl-lahir" name="new_tgl_lahir" class="wf-input" value="2005-08-08">
                                         </div>
                                     </td>
                                 </tr>
@@ -198,9 +231,9 @@
                                     <td>
                                         <div class="wf-param-title">
                                             <span>5. Jenis Kelamin</span>
-                                            <span class="wf-badge-updated">● Diperbarui</span>
+                                            <span class="wf-badge-updated">● Diubah</span>
                                         </div>
-                                        <div class="wf-param-desc">Sesuai identitas hukum</div>
+                                        <div class="wf-param-desc">Identitas hukum kependudukan</div>
                                     </td>
                                     <td>
                                         <div class="wf-input-old-lock">
@@ -214,7 +247,6 @@
                                                 <option value="Laki-Laki" selected>Laki-Laki</option>
                                                 <option value="Perempuan">Perempuan</option>
                                             </select>
-                                            <i class='bx bx-pencil edit-icon-indicator' style="right:28px;"></i>
                                         </div>
                                     </td>
                                 </tr>
@@ -224,7 +256,7 @@
                                     <td>
                                         <div class="wf-param-title">
                                             <span>6. Agama</span>
-                                            <span class="wf-badge-updated">● Diperbarui</span>
+                                            <span class="wf-badge-updated">● Diubah</span>
                                         </div>
                                         <div class="wf-param-desc">Agama resmi terdaftar</div>
                                     </td>
@@ -244,7 +276,6 @@
                                                 <option value="Buddha">Buddha</option>
                                                 <option value="Konghucu">Konghucu</option>
                                             </select>
-                                            <i class='bx bx-pencil edit-icon-indicator' style="right:28px;"></i>
                                         </div>
                                     </td>
                                 </tr>
@@ -254,9 +285,9 @@
                                     <td>
                                         <div class="wf-param-title">
                                             <span>7. Pendidikan Terakhir</span>
-                                            <span class="wf-badge-updated">● Diperbarui</span>
+                                            <span class="wf-badge-updated">● Diubah</span>
                                         </div>
-                                        <div class="wf-param-desc">Berdasarkan ijazah kelulusan</div>
+                                        <div class="wf-param-desc">Berdasarkan ijazah resmi</div>
                                     </td>
                                     <td>
                                         <div class="wf-input-old-lock">
@@ -267,18 +298,17 @@
                                     <td>
                                         <div class="wf-input-editable-wrap">
                                             <select id="new-pendidikan" name="new_pendidikan" class="wf-select">
-                                                <option value="Tidak / Belum Sekolah">Tidak / Belum Sekolah (tidak_belum_sekolah)</option>
-                                                <option value="Belum Tamat SD / Sederajat">Belum Tamat SD / Sederajat (belum_tamat_sd)</option>
-                                                <option value="SD / Sederajat">SD / Sederajat (sd_sederajat)</option>
-                                                <option value="SMP / Sederajat">SMP / Sederajat (smp_sederajat)</option>
-                                                <option value="SLTA / Sederajat" selected>SLTA / SMA / SMK / Sederajat (sma_sederajat)</option>
-                                                <option value="Diploma I / II">Diploma I / II (d1_d2)</option>
-                                                <option value="Diploma III">Diploma III (d3)</option>
-                                                <option value="Diploma IV / Strata 1 (S1)">Diploma IV / Strata 1 (S1) (d4_s1)</option>
-                                                <option value="Strata 2 (S2)">Strata 2 (S2) (s2)</option>
-                                                <option value="Strata 3 (S3)">Strata 3 (S3) (s3)</option>
+                                                <option value="Tidak / Belum Sekolah">Tidak / Belum Sekolah</option>
+                                                <option value="Belum Tamat SD / Sederajat">Belum Tamat SD / Sederajat</option>
+                                                <option value="SD / Sederajat">SD / Sederajat</option>
+                                                <option value="SMP / Sederajat">SMP / Sederajat</option>
+                                                <option value="SLTA / Sederajat" selected>SLTA / SMA / SMK / Sederajat</option>
+                                                <option value="Diploma I / II">Diploma I / II</option>
+                                                <option value="Diploma III">Diploma III</option>
+                                                <option value="Diploma IV / Strata 1 (S1)">Diploma IV / Strata 1 (S1)</option>
+                                                <option value="Strata 2 (S2)">Strata 2 (S2)</option>
+                                                <option value="Strata 3 (S3)">Strata 3 (S3)</option>
                                             </select>
-                                            <i class='bx bx-pencil edit-icon-indicator' style="right:28px;"></i>
                                         </div>
                                     </td>
                                 </tr>
@@ -288,7 +318,7 @@
                                     <td>
                                         <div class="wf-param-title">
                                             <span>8. Pekerjaan</span>
-                                            <span class="wf-badge-updated">● Diperbarui</span>
+                                            <span class="wf-badge-updated">● Diubah</span>
                                         </div>
                                         <div class="wf-param-desc">Profesi / Mata Pencaharian</div>
                                     </td>
@@ -309,12 +339,11 @@
                                                 <option value="Buruh Harian Lepas">Buruh Harian Lepas / Pabrik</option>
                                                 <option value="Ibu Rumah Tangga">Ibu Rumah Tangga</option>
                                                 <option value="Pensiunan">Pensiunan</option>
-                                                <option value="Guru / Dosen">Guru / Dosen / Tenaga Pendidik</option>
-                                                <option value="Tenaga Medis">Tenaga Medis / Dokter / Perawat</option>
+                                                <option value="Guru / Dosen">Guru / Dosen</option>
+                                                <option value="Tenaga Medis">Tenaga Medis</option>
                                                 <option value="TNI / POLRI">TNI / POLRI</option>
                                                 <option value="Lainnya">Lainnya</option>
                                             </select>
-                                            <i class='bx bx-pencil edit-icon-indicator' style="right:28px;"></i>
                                         </div>
                                     </td>
                                 </tr>
@@ -323,10 +352,10 @@
                                 <tr id="row-alamat">
                                     <td>
                                         <div class="wf-param-title">
-                                            <span>9. Alamat</span>
-                                            <span class="wf-badge-updated">● Diperbarui</span>
+                                            <span>9. Alamat Domisili</span>
+                                            <span class="wf-badge-updated">● Diubah</span>
                                         </div>
-                                        <div class="wf-param-desc">Alamat tempat tinggal saat ini</div>
+                                        <div class="wf-param-desc">Tempat tinggal saat ini</div>
                                     </td>
                                     <td>
                                         <div class="wf-input-old-lock">
@@ -337,7 +366,6 @@
                                     <td>
                                         <div class="wf-input-editable-wrap">
                                             <input type="text" id="new-alamat" name="new_alamat" class="wf-input" value="Jl. Melati Blok B No. 14, RT 04 / RW 08">
-                                            <i class='bx bx-pencil edit-icon-indicator'></i>
                                         </div>
                                     </td>
                                 </tr>
@@ -346,8 +374,8 @@
                                 <tr id="row-shdk">
                                     <td>
                                         <div class="wf-param-title">
-                                            <span>10. Status Hubungan Keluarga</span>
-                                            <span class="wf-badge-updated">● Diperbarui</span>
+                                            <span>10. Hubungan Keluarga (SHDK)</span>
+                                            <span class="wf-badge-updated">● Diubah</span>
                                         </div>
                                         <div class="wf-param-desc">Kedudukan dalam Kartu Keluarga</div>
                                     </td>
@@ -360,18 +388,17 @@
                                     <td>
                                         <div class="wf-input-editable-wrap">
                                             <select id="new-shdk" name="new_shdk" class="wf-select">
-                                                <option value="Anak Kandung" selected>Anak Kandung (anak)</option>
-                                                <option value="Kepala Keluarga">Kepala Keluarga (kepala_keluarga)</option>
-                                                <option value="Suami">Suami (suami)</option>
-                                                <option value="Istri">Istri (istri)</option>
-                                                <option value="Menantu">Menantu (menantu)</option>
-                                                <option value="Cucu">Cucu (cucu)</option>
-                                                <option value="Orang Tua">Orang Tua (orang_tua)</option>
-                                                <option value="Mertua">Mertua (mertua)</option>
-                                                <option value="Famili Lain">Famili Lain (famili_lain)</option>
-                                                <option value="Lainnya">Lainnya (lainnya)</option>
+                                                <option value="Anak Kandung" selected>Anak Kandung</option>
+                                                <option value="Kepala Keluarga">Kepala Keluarga</option>
+                                                <option value="Suami">Suami</option>
+                                                <option value="Istri">Istri</option>
+                                                <option value="Menantu">Menantu</option>
+                                                <option value="Cucu">Cucu</option>
+                                                <option value="Orang Tua">Orang Tua</option>
+                                                <option value="Mertua">Mertua</option>
+                                                <option value="Famili Lain">Famili Lain</option>
+                                                <option value="Lainnya">Lainnya</option>
                                             </select>
-                                            <i class='bx bx-pencil edit-icon-indicator' style="right:28px;"></i>
                                         </div>
                                     </td>
                                 </tr>
@@ -381,7 +408,7 @@
                                     <td>
                                         <div class="wf-param-title">
                                             <span>11. Status Warga</span>
-                                            <span class="wf-badge-updated">● Diperbarui</span>
+                                            <span class="wf-badge-updated">● Diubah</span>
                                         </div>
                                         <div class="wf-param-desc">Status kependudukan / keberadaan</div>
                                     </td>
@@ -399,25 +426,34 @@
                                                 <option value="Pindah Rumah">Pindah Rumah</option>
                                                 <option value="Meninggal">Meninggal</option>
                                             </select>
-                                            <i class='bx bx-pencil edit-icon-indicator' style="right:28px;"></i>
-                                        </div>
-                                        <div class="wf-help-text" style="font-size:11px;">
-                                            ⓘ Pilih 'Pindah KK' jika warga membuat KK baru, atau 'Pindah Rumah' jika keluar dari wilayah RT.
                                         </div>
                                     </td>
                                 </tr>
 
                             </tbody>
                         </table>
+                        </div>
+
+                        {{-- Legend --}}
+                        <div class="wf-table-legend">
+                            <div class="wf-table-legend-item">
+                                <span class="wf-legend-dot" style="background:#94a3b8;"></span>
+                                <span>Kolom Abu-abu: Data eksisting terkunci (read-only)</span>
+                            </div>
+                            <div class="wf-table-legend-item">
+                                <span class="wf-legend-dot" style="background:#16a34a;"></span>
+                                <span>Sorotan Hijau: Menandakan field telah diubah dari data lama</span>
+                            </div>
+                        </div>
 
                         {{-- Alasan / Keterangan --}}
-                        <div class="wf-form-group" style="margin-top:20px; margin-bottom:0;">
+                        <div class="wf-form-group" style="margin-top:22px; margin-bottom:0;">
                             <label class="wf-label" for="alasan_perubahan">
                                 <span>Alasan / Keterangan Pengajuan Perubahan <span class="wf-req">*</span></span>
                             </label>
-                            <textarea id="alasan_perubahan" name="alasan_perubahan" rows="4" class="wf-textarea" placeholder="Tuliskan alasan atau keterangan lengkap permohonan perubahan data yang diajukan (contoh: pembaruan jenjang pendidikan setelah kelulusan, perubahan jenis pekerjaan/profesi baru, koreksi data, dll)..." required></textarea>
-                            <div class="wf-help-text" style="font-size:11.5px;color:#6c757d;">
-                                ⓘ Penjelasan membantu Ketua RT mempercepat proses otentikasi berkas Anda.
+                            <textarea id="alasan_perubahan" name="alasan_perubahan" rows="3" class="wf-textarea" placeholder="Tuliskan alasan lengkap permohonan perubahan data yang diajukan (contoh: pembaruan jenjang pendidikan setelah kelulusan, penggantian pekerjaan, perbaikan ejaan nama, dll)..." required></textarea>
+                            <div class="wf-help-text" style="font-size:11.5px;color:#64748b;margin-top:5px;">
+                                ⓘ Keterangan yang jelas membantu Ketua RT memverifikasi berkas Anda lebih cepat.
                             </div>
                         </div>
 
@@ -433,10 +469,10 @@
                 <div class="wf-card">
                     <div class="wf-card__header-light">
                         <div class="wf-header-title">
-                            <i class='bx bx-cloud-upload' style="color:#28a745;font-size:19px;"></i>
-                            <span>3. Bukti Dokumen Pendukung</span>
+                            <i class='bx bx-cloud-upload' style="color:#0284c7;font-size:19px;"></i>
+                            <span>3. Dokumen Bukti Pendukung</span>
                         </div>
-                        <span class="wf-badge-step-green">LANGKAH 3</span>
+                        <span class="wf-badge-step-blue">LANGKAH 3</span>
                     </div>
                     <div class="wf-card__body">
                         
@@ -444,21 +480,21 @@
                         <div class="wf-upload-dropzone" onclick="document.getElementById('file-input-edit').click()">
                             <input type="file" id="file-input-edit" name="bukti" style="display:none;" multiple accept=".pdf,.jpg,.jpeg,.png">
                             <div class="wf-upload-icon-circle">
-                                <i class='bx bx-file'></i>
+                                <i class='bx bx-cloud-upload' style="font-size:26px;color:#0284c7;"></i>
                             </div>
-                            <div class="wf-upload-text-main">Tarik &amp; lepas berkas di sini, atau <span style="color:#007bff;text-decoration:underline;">Pilih File</span></div>
-                            <div class="wf-upload-text-hint">Format yang didukung: PDF, JPG, PNG (Maks. 5 MB per berkas)</div>
+                            <div class="wf-upload-text-main">Tarik berkas ke sini, atau <span style="color:#0284c7;text-decoration:underline;">Pilih File</span></div>
+                            <div class="wf-upload-text-hint">Format didukung: PDF, JPG, PNG (Maks. 5 MB)</div>
                         </div>
 
-                        {{-- Berkas Terpilih (Awalnya Kosong) --}}
-                        <div class="wf-attached-section" id="edit-attached-section" style="display:none;">
+                        {{-- Berkas Terpilih --}}
+                        <div class="wf-attached-section" id="edit-attached-section" style="display:none;margin-top:14px;">
                             <div class="wf-attached-title" id="edit-attached-title">BERKAS TERPILIH (0 BERKAS)</div>
                             <div class="wf-file-list" id="edit-file-list"></div>
                         </div>
 
-                        <div id="edit-empty-file-notice" style="margin-top:16px; padding:14px; border-radius:6px; background:#f8fafc; border:1px dashed #cbd5e1; text-align:center; font-size:12px; color:#64748b;">
-                            <i class='bx bx-info-circle' style="font-size:16px; vertical-align:middle; color:#0284c7; margin-right:4px;"></i>
-                            Belum ada dokumen yang diunggah. Silakan klik atau tarik berkas ke area di atas.
+                        <div id="edit-empty-file-notice" style="margin-top:14px; padding:12px; border-radius:6px; background:#f8fafc; border:1px dashed #cbd5e1; text-align:center; font-size:12px; color:#64748b;">
+                            <i class='bx bx-info-circle' style="font-size:15px; vertical-align:middle; color:#0284c7; margin-right:4px;"></i>
+                            Belum ada dokumen yang dipilih. Contoh: KTP, Akta Kelahiran, Ijazah, atau Surat Nikah.
                         </div>
 
                     </div>
@@ -466,18 +502,18 @@
 
                 {{-- CARD 4: Pernyataan & Eksekusi Pengajuan --}}
                 <div class="wf-card">
-                    <div class="wf-card__header-dark">
+                    <div class="wf-card__header-light">
                         <div class="wf-header-title">
-                            <i class='bx bx-shield-quarter' style="font-size:18px;"></i>
-                            <span>4. Pernyataan &amp; Eksekusi Pengajuan</span>
+                            <i class='bx bx-shield-quarter' style="color:#16a34a;font-size:19px;"></i>
+                            <span>4. Pernyataan &amp; Eksekusi</span>
                         </div>
                     </div>
                     <div class="wf-card__body">
                         
                         <div class="wf-checkbox-wrap">
                             <input type="checkbox" id="persetujuan-edit" class="wf-checkbox" required>
-                            <label for="persetujuan-edit" style="cursor:pointer;">
-                                Saya menyatakan bahwa data dan dokumen yang saya ajukan adalah <strong>benar, sah, dan dapat dipertanggungjawabkan secara hukum</strong>. Pemalsuan dokumen dapat dikenakan sanksi administrasi kependudukan.
+                            <label for="persetujuan-edit" style="cursor:pointer;font-size:12.5px;">
+                                Saya menyatakan bahwa data dan dokumen yang saya ajukan adalah <strong>benar, sah, dan dapat dipertanggungjawabkan</strong> secara hukum kependudukan.
                             </label>
                         </div>
 
@@ -499,18 +535,25 @@
     </form>
 </div>
 
-{{-- ── MODAL KONFIRMASI EDIT (SCREENSHOT 4) ── --}}
+{{-- ── MODAL KONFIRMASI EDIT ── --}}
 <div class="wf-modal-overlay" id="modal-konfirmasi-edit">
     <div class="wf-modal-box">
+        <div class="wf-modal-icon-circle">
+            <i class='bx bx-help-circle'></i>
+        </div>
         <h2 class="wf-modal-heading">
-            Apakah Kamu yakin mengedit data keluarga
+            Konfirmasi Pengajuan Perubahan
         </h2>
+        <p class="wf-modal-desc">
+            Apakah Anda yakin ingin mengirim permohonan perubahan data keluarga ini? Data yang diajukan akan diverifikasi dan disetujui terlebih dahulu oleh Ketua RT 04.
+        </p>
         <div class="wf-modal-actions">
             <button type="button" class="wf-modal-btn-batal" id="btn-modal-edit-batal">
-                Batal
+                Periksa Kembali
             </button>
             <button type="button" class="wf-modal-btn-konfirmasi" id="btn-modal-edit-konfirmasi">
-                Konfirmasi
+                <i class='bx bx-check'></i>
+                <span>Ya, Kirim Pengajuan</span>
             </button>
         </div>
     </div>
@@ -651,15 +694,16 @@ document.addEventListener('DOMContentLoaded', function () {
 // Dynamic Data Loading when switching members
 const anggotaData = {
     dimas: {
+        avatar: 'DA',
         nik: '3271048809920003',
         nama: 'Dimas Arya Pratama',
         tempatLahir: 'Bogor',
         tglLahir: '08-08-2005',
-        tglLahirNew: '08-08-2005',
+        tglLahirNew: '2005-08-08',
         jk: 'Laki-Laki',
         agama: 'Islam',
         pendidikanOld: 'SLTA / Sederajat',
-        pendidikanNew: 'SLTA / Sederajat',
+        pendidikanNew: 'SLTA / SMA / SMK / Sederajat',
         pekerjaanOld: 'Pelajar / Mahasiswa',
         pekerjaanNew: 'Pelajar / Mahasiswa',
         alamat: 'Jl. Melati Blok B No. 14, RT 04 / RW 08',
@@ -668,11 +712,12 @@ const anggotaData = {
         alasan: ''
     },
     bambang: {
+        avatar: 'BP',
         nik: '3271041203780002',
         nama: 'Bambang Pamungkas',
         tempatLahir: 'Bogor',
         tglLahir: '15-08-1988',
-        tglLahirNew: '15-08-1988',
+        tglLahirNew: '1988-08-15',
         jk: 'Laki-Laki',
         agama: 'Islam',
         pendidikanOld: 'Diploma IV / Strata 1 (S1)',
@@ -685,15 +730,16 @@ const anggotaData = {
         alasan: ''
     },
     siti: {
+        avatar: 'SA',
         nik: '3271046204830002',
         nama: 'Siti Aminah',
         tempatLahir: 'Bandung',
         tglLahir: '12-04-1983',
-        tglLahirNew: '12-04-1983',
+        tglLahirNew: '1983-04-12',
         jk: 'Perempuan',
         agama: 'Islam',
         pendidikanOld: 'SLTA / Sederajat',
-        pendidikanNew: 'SLTA / Sederajat',
+        pendidikanNew: 'SLTA / SMA / SMK / Sederajat',
         pekerjaanOld: 'Ibu Rumah Tangga',
         pekerjaanNew: 'Ibu Rumah Tangga',
         alamat: 'Jl. Melati Blok B No. 14, RT 04 / RW 08',
@@ -702,11 +748,12 @@ const anggotaData = {
         alasan: ''
     },
     nabila: {
+        avatar: 'NK',
         nik: '3271045011120004',
         nama: 'Nabila Putri Kirani',
         tempatLahir: 'Bogor',
         tglLahir: '10-11-2012',
-        tglLahirNew: '10-11-2012',
+        tglLahirNew: '2012-11-10',
         jk: 'Perempuan',
         agama: 'Islam',
         pendidikanOld: 'SD / Sederajat',
@@ -743,9 +790,11 @@ function checkRowDifference(item) {
     let oldVal = oldEl.innerText.trim();
     let newVal = newEl.value.trim();
 
-    if (item.isDate) {
-        oldVal = oldVal.replace(/\//g, '-');
-        newVal = newVal.replace(/\//g, '-');
+    if (item.isDate && newVal.includes('-')) {
+        const parts = newVal.split('-');
+        if (parts.length === 3 && parts[0].length === 4) {
+            newVal = `${parts[2]}-${parts[1]}-${parts[0]}`;
+        }
     }
 
     if (newVal !== '' && newVal.toLowerCase() !== oldVal.toLowerCase()) {
@@ -773,6 +822,18 @@ function gantiAnggota(key) {
     const data = anggotaData[key];
     if (!data) return;
 
+    // Perbarui widget kartu preview anggota
+    const previewAvatar = document.getElementById('preview-avatar');
+    const previewName = document.getElementById('preview-name');
+    const previewNik = document.getElementById('preview-nik');
+    const previewShdk = document.getElementById('preview-shdk');
+
+    if (previewAvatar) previewAvatar.innerText = data.avatar || 'WG';
+    if (previewName) previewName.innerText = data.nama;
+    if (previewNik) previewNik.innerText = data.nik;
+    if (previewShdk) previewShdk.innerText = data.shdk;
+
+    // Perbarui data tabel
     document.getElementById('old-nik').innerText = data.nik;
     document.getElementById('new-nik').value = data.nik;
 

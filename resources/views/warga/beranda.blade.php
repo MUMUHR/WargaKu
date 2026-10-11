@@ -3,10 +3,6 @@
 @section('title', 'Dashboard Warga')
 @section('meta_description', 'Portal Layanan Mandiri Warga RT 04 / RW 08 Kelurahan Sukamaju')
 
-@section('topbar_section')
-    <span class="admin-topbar__breadcrumb-current">Kependudukan</span>
-@endsection
-
 @section('content')
 
 {{-- ── Page Header ── --}}
@@ -15,11 +11,6 @@
         <h1 class="warga-page-header__title">Dashboard Warga</h1>
         <p class="warga-page-header__sub">Sistem Administrasi Rukun Tetangga 04 Mandiri Terpadu</p>
     </div>
-    <nav class="warga-page-header__breadcrumb" aria-label="Breadcrumb">
-        <a href="{{ route('warga.beranda') }}">Home</a>
-        <span class="sep">/</span>
-        <span class="current">Dashboard</span>
-    </nav>
 </div>
 
 {{-- ── Card Selamat Datang ── --}}

@@ -2,55 +2,45 @@
 
 namespace App\Http\Controllers;
 
-use App\Data\DummyData;
+use App\Enums\StatusPublikasi;
+use App\Models\Pengumuman;
+use Illuminate\View\View;
 
 class PublicController extends Controller
 {
     /**
-     * Landing Page (2.2.1)
-     * Menampilkan pengumuman publish terbaru (maks 3 untuk preview)
+     * Landing Page
      */
-    public function home()
+    public function home(): View
     {
-        $pengumuman = array_slice(DummyData::pengumumanPublish(), 0, 3);
+        $pengumuman = Pengumuman::where('status_publikasi', StatusPublikasi::PUBLISH)
+            ->latest()
+            ->take(3)
+            ->get();
+
         return view('public.home', compact('pengumuman'));
     }
 
     /**
-     * Daftar Semua Pengumuman Publish — halaman Pengumuman RT (2.2.1 / Landing_Page_Pengumuman)
-     * Dummy pagination: 5 per halaman
+     * Daftar Pengumuman Publik
      */
-    public function pengumumanIndex()
+    public function pengumumanIndex(): View
     {
-        $semua = DummyData::pengumumanPublish();
-        $perHalaman = 5;
-        $halaman = max(1, (int) request('halaman', 1));
-        $total = count($semua);
-        $totalHalaman = (int) ceil($total / $perHalaman);
-        $offset = ($halaman - 1) * $perHalaman;
-        $pengumuman = array_slice($semua, $offset, $perHalaman);
+        $pengumuman = Pengumuman::where('status_publikasi', StatusPublikasi::PUBLISH)
+            ->latest()
+            ->paginate(6);
 
-        return view('public.pengumuman-index', [
-            'pengumuman'   => $pengumuman,
-            'halaman'      => $halaman,
-            'total'        => $total,
-            'totalHalaman' => $totalHalaman,
-            'perHalaman'   => $perHalaman,
-            'offset'       => $offset,
-        ]);
+        return view('public.pengumuman-index', compact('pengumuman'));
     }
 
     /**
-     * Detail Pengumuman (X2)
+     * Detail Pengumuman
      */
-    public function pengumumanShow(int $id)
+    public function pengumumanShow(int $id): View
     {
-        $item = DummyData::findPengumuman($id);
+        $item = Pengumuman::where('status_publikasi', StatusPublikasi::PUBLISH)
+            ->findOrFail($id);
 
-        if (! $item || $item['status_publikasi'] !== 'publish') {
-            abort(404, 'Pengumuman tidak ditemukan.');
-        }
-
-        return view('public.pengumuman-show', ['item' => $item]);
+        return view('public.pengumuman-show', compact('item', 'id'));
     }
 }

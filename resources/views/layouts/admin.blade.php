@@ -72,7 +72,10 @@
 
     <div class="admin-sidebar__footer">
         <span class="admin-sidebar__logout-label">Logout dari akun</span>
-        <a href="{{ route('login') }}" class="admin-sidebar__logout-btn" id="btn-logout-sidebar">Logout</a>
+        <form method="POST" action="{{ route('logout') }}" style="margin:0;">
+            @csrf
+            <button type="submit" class="admin-sidebar__logout-btn" id="btn-logout-sidebar">Logout</button>
+        </form>
     </div>
 </aside>
 

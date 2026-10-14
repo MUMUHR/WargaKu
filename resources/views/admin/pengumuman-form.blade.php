@@ -3,11 +3,15 @@
 @php
     $isEdit = $isEdit ?? false;
     $pengumuman = $pengumuman ?? null;
-    $actionUrl = $isEdit ? route('admin.pengumuman.update', $pengumuman['id'] ?? 1) : route('admin.pengumuman.store');
-    $judulVal = $isEdit ? ($pengumuman['judul'] ?? '') : '';
-    $isiVal = $isEdit ? ($pengumuman['isi'] ?? '') : '';
-    $gambarVal = $isEdit ? ($pengumuman['gambar'] ?? null) : null;
-    $statusVal = $isEdit ? ($pengumuman['status_publikasi'] ?? 'publish') : 'publish';
+    $pengumumanId = is_object($pengumuman) ? $pengumuman->id : ($pengumuman['id'] ?? null);
+    $actionUrl = $isEdit ? route('admin.pengumuman.update', $pengumumanId) : route('admin.pengumuman.store');
+    $judulVal = old('judul', is_object($pengumuman) ? $pengumuman->judul : ($pengumuman['judul'] ?? ''));
+    $isiVal = old('isi', is_object($pengumuman) ? $pengumuman->isi : ($pengumuman['isi'] ?? ''));
+    $gambarVal = is_object($pengumuman) ? $pengumuman->gambar : ($pengumuman['gambar'] ?? null);
+    $rawStatus = is_object($pengumuman) ? $pengumuman->status_publikasi : ($pengumuman['status_publikasi'] ?? 'publish');
+    $statusVal = old('status_publikasi', is_object($rawStatus) ? $rawStatus->value : $rawStatus);
+    $penulisVal = is_object($pengumuman) && $pengumuman->admin ? ($pengumuman->admin->nama ?? $pengumuman->admin->name ?? 'Admin RT') : 'Admin RT';
+    $waktuVal = is_object($pengumuman) && $pengumuman->created_at ? $pengumuman->created_at->format('d F Y') : (isset($pengumuman['created_at']) ? date('d F Y', strtotime($pengumuman['created_at'])) : 'Hari ini (Otomatis)');
 @endphp
 
 @section('title', $isEdit ? 'Edit Pengumuman RT' : 'Tambah Pengumuman Baru')
@@ -38,6 +42,21 @@
         <i class='bx bx-arrow-back'></i> Kembali ke Daftar
     </a>
 </div>
+
+{{-- Alert Error Validasi --}}
+@if ($errors->any())
+    <div style="background:#fde8e8;border-left:4px solid #dc3545;padding:12px 18px;border-radius:6px;margin-bottom:20px;box-shadow:0 1px 3px rgba(0,0,0,0.05);">
+        <div style="display:flex;align-items:center;gap:8px;font-weight:700;color:#dc3545;margin-bottom:6px;font-size:14px;">
+            <i class='bx bx-error-circle' style="font-size:19px;"></i>
+            <span>Terdapat data yang belum sesuai:</span>
+        </div>
+        <ul style="margin:0;padding-left:24px;color:#721c24;font-size:13px;line-height:1.5;">
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
 
 {{-- Form Grid --}}
 <form id="form-pengumuman" action="{{ $actionUrl }}" method="POST" enctype="multipart/form-data">
@@ -146,7 +165,7 @@
                     <button type="submit" name="status" value="draft" class="btn-draft">
                         <i class='bx bx-file-blank'></i> Simpan Draf
                     </button>
-                    <button type="submit" name="status" value="publish" class="btn-publish">
+                    <button type="submit" class="btn-publish">
                         <i class='bx bx-send'></i> {{ $isEdit ? 'Simpan Perubahan' : 'Simpan & Publikasikan' }}
                     </button>
                 </div>
@@ -206,7 +225,7 @@
 
                 <div class="upload-zone__disclaimer">
                     <i class='bx bx-image-alt'></i>
-                    <span>Gambar akan ditampilkan di daftar pengumuman portal warga dan aplikasi mobile RT.</span>
+                    <span>Gambar akan ditampilkan di daftar pengumuman portal warga</span>
                 </div>
             </div>
         </div>
@@ -255,12 +274,12 @@
                         <span class="pembuat-row__key">Penulis Akun:</span>
                         <span class="pembuat-row__val">
                             <i class='bx bx-user-circle' style="color:#007bff;font-size:15px"></i>
-                            Admin RT
+                            {{ $penulisVal }}
                         </span>
                     </div>
                     <div class="pembuat-row" style="margin-top:2px;">
                         <span class="pembuat-row__key">Waktu Pembuatan:</span>
-                        <span class="pembuat-row__val">{{ $isEdit && isset($pengumuman['created_at']) ? \App\Data\DummyData::formatTanggal($pengumuman['created_at']) : 'Hari ini (Otomatis)' }}</span>
+                        <span class="pembuat-row__val">{{ $waktuVal }}</span>
                     </div>
                 </div>
             </div>

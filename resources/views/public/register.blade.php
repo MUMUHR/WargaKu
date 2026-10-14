@@ -18,14 +18,7 @@
 
 <div class="register-wrapper" x-data="{ 
     submitted: false,
-    agreed: false,
-    handleSubmit(e) {
-        if (!this.agreed) {
-            alert('Silakan centang pernyataan kebenaran data kependudukan terlebih dahulu.');
-            return;
-        }
-        this.submitted = true;
-    }
+    agreed: false
 }">
 
     {{-- ═══════════════════════════════════════════
@@ -67,8 +60,23 @@
                 <p class="register-subtitle">Lengkapi data Kartu Keluarga & identitas Kepala Keluarga / Pendaftar Utama</p>
             </header>
 
+            {{-- Pesan Error Validasi --}}
+            @if ($errors->any())
+                <div class="register-alert register-alert--error">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                    <div>
+                        <strong>Terdapat kesalahan pada data yang dimasukkan:</strong>
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                </div>
+            @endif
+
             {{-- Form Registrasi --}}
-            <form action="{{ route('register.post') }}" method="POST" @submit.prevent="handleSubmit($event)">
+            <form action="{{ route('register.post') }}" method="POST" class="register-form">
                 @csrf
 
                 {{-- ═══ SECTION 1: DATA KARTU KELUARGA ═══ --}}
@@ -303,6 +311,16 @@
                     </div>
                 </div>
 
+                {{-- Info Kata Sandi Default --}}
+                <div class="register-default-pass-info">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="12" y1="16" x2="12" y2="12"/>
+                        <line x1="12" y1="8" x2="12.01" y2="8"/>
+                    </svg>
+                    <span>Kata sandi default akun Anda adalah <strong>NIK</strong>. Anda dapat langsung masuk menggunakan NIK dan dapat mengubah kata sandi di menu profil.</span>
+                </div>
+
                 {{-- Pernyataan Persetujuan --}}
                 <div class="register-statement" @click="agreed = !agreed">
                     <input type="checkbox" id="agreed" x-model="agreed" @click.stop>
@@ -310,7 +328,7 @@
                 </div>
 
                 {{-- Tombol Submit --}}
-                <button type="submit" class="btn--register-submit">
+                <button type="submit" class="btn--register-submit" :disabled="!agreed" :style="!agreed ? 'opacity:0.6;cursor:not-allowed;' : ''">
                     <span>Daftar Akun Warga Baru</span>
                     <svg viewBox="0 0 24 24" aria-hidden="true">
                         <line x1="5" y1="12" x2="19" y2="12"/>
@@ -336,30 +354,6 @@
         </div>
     </main>
 
-    {{-- ═══════════════════════════════════════════
-         MODAL SUKSES REGISTRASI (PROTOTIPE FRONTEND)
-         ═══════════════════════════════════════════ --}}
-    <div class="modal-overlay" x-show="submitted" style="display: none;" x-transition>
-        <div class="modal-box">
-            <div class="modal-icon">
-                <svg viewBox="0 0 24 24">
-                    <polyline points="20 6 9 17 4 12"/>
-                </svg>
-            </div>
-            <h2 class="modal-title">Pendaftaran Berhasil Diajukan!</h2>
-            <p class="modal-desc">
-                Data Kartu Keluarga & Pendaftar Utama Anda telah kami terima dengan status <strong>Menunggu Verifikasi Admin RT</strong>.<br><br>
-                Setelah diverifikasi oleh pengurus RT 04, akun Anda akan aktif dan dapat digunakan untuk masuk aplikasi.
-            </p>
-            <a href="{{ route('login') }}" class="btn--register-submit" style="text-decoration:none;">
-                <span>Lanjut ke Halaman Login</span>
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                    <line x1="5" y1="12" x2="19" y2="12"/>
-                    <polyline points="12 5 19 12 12 19"/>
-                </svg>
-            </a>
-        </div>
-    </div>
 
 </div>
 

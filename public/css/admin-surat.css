@@ -239,7 +239,7 @@
 
 .surat-table {
     width: 100%;
-    min-width: 1060px;
+    min-width: 1150px;
     table-layout: fixed;
     border-collapse: collapse;
     background: #ffffff;
@@ -285,7 +285,7 @@
 }
 
 .surat-table td:last-child {
-    padding: 10px 8px;
+    padding: 10px 14px;
 }
 
 .surat-table td.text-center {
@@ -312,13 +312,14 @@
 .nomor-surat-copy {
     display: inline-flex;
     align-items: center;
-    gap: 5px;
+    gap: 6px;
     color: #007bff;
     font-weight: 700;
-    font-size: 12px;
+    font-size: 11.5px;
     cursor: pointer;
     text-decoration: none;
     transition: color 0.15s;
+    white-space: nowrap;
 }
 
 .nomor-surat-copy:hover {
@@ -328,6 +329,7 @@
 
 .nomor-surat-copy i {
     font-size: 14px;
+    flex-shrink: 0;
 }
 
 .badge-status-surat {

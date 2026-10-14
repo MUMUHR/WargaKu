@@ -398,3 +398,79 @@ select.form-control {
     gap: var(--space-3);
   }
 }
+
+/* ─────────────────────────────────────────
+   ALERT & VALIDATION ERRORS
+   ───────────────────────────────────────── */
+.register-alert {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  margin-bottom: var(--space-5);
+  border-width: 1px;
+  border-style: solid;
+}
+.register-alert svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  margin-top: 2px;
+  stroke-width: 2;
+  fill: none;
+  stroke: currentColor;
+}
+.register-alert--error {
+  background-color: #fef2f2;
+  color: #991b1b;
+  border-color: #fecaca;
+}
+.register-alert--error ul {
+  margin: var(--space-1) 0 0 var(--space-4);
+  padding: 0;
+  list-style: disc;
+}
+.register-alert--error li {
+  margin-bottom: 2px;
+}
+.form-error {
+  font-size: 0.78rem;
+  color: #dc2626;
+  margin-top: var(--space-1);
+}
+.form-control.is-invalid {
+  border-color: #dc2626;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+}
+
+/* Info Kata Sandi Default Warga */
+.register-default-pass-info {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: var(--radius-md);
+  color: #1e40af;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  margin-top: var(--space-4);
+  margin-bottom: var(--space-2);
+}
+.register-default-pass-info svg {
+  width: 18px;
+  height: 18px;
+  stroke: #2563eb;
+  stroke-width: 2;
+  fill: none;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.register-default-pass-info strong {
+  color: #1d4ed8;
+  font-weight: var(--font-weight-semibold);
+}
+

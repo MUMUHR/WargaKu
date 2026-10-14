@@ -211,6 +211,29 @@
   text-decoration: underline;
 }
 
+/* Tulisan kecil panduan login warga menggunakan NIK */
+.auth-helper-text {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+  font-size: 0.75rem;
+  color: #64748b;
+  line-height: 1.4;
+}
+.auth-helper-text svg {
+  width: 14px;
+  height: 14px;
+  stroke: #2563eb;
+  stroke-width: 2;
+  fill: none;
+  flex-shrink: 0;
+}
+.auth-helper-text strong {
+  color: #1e293b;
+  font-weight: var(--font-weight-semibold);
+}
+
 /* Tombol Masuk Aplikasi */
 .btn--auth-submit {
   display: inline-flex;
@@ -278,40 +301,6 @@
   text-decoration: underline;
 }
 
-/* Quick test pills (hanya di fase frontend prototyping) */
-.auth-demo-hint {
-  margin-top: var(--space-6);
-  padding: 0.75rem 1rem;
-  background-color: #f8fafc;
-  border: 1px dashed #cbd5e1;
-  border-radius: 8px;
-  font-size: var(--font-size-xs);
-  color: #64748b;
-}
-.auth-demo-hint-title {
-  font-weight: var(--font-weight-semibold);
-  color: #334155;
-  margin-bottom: var(--space-2);
-}
-.auth-demo-buttons {
-  display: flex;
-  gap: var(--space-2);
-}
-.auth-demo-btn {
-  padding: 0.3rem 0.65rem;
-  font-size: 0.75rem;
-  background-color: #e2e8f0;
-  border: 1px solid #cbd5e1;
-  border-radius: 4px;
-  cursor: pointer;
-  color: #1e293b;
-  font-weight: var(--font-weight-medium);
-  transition: background-color var(--transition-fast);
-}
-.auth-demo-btn:hover {
-  background-color: #cbd5e1;
-}
-
 /* Responsive */
 @media (max-width: 860px) {
   .auth-wrapper {
@@ -325,3 +314,46 @@
     padding: var(--space-8) var(--space-5);
   }
 }
+
+/* ─────────────────────────────────────────
+   ALERT & ERROR MESSAGES
+   ───────────────────────────────────────── */
+.auth-alert {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  margin-bottom: var(--space-4);
+  border-width: 1px;
+  border-style: solid;
+}
+.auth-alert svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  stroke-width: 2;
+  fill: none;
+  stroke: currentColor;
+}
+.auth-alert--error {
+  background-color: #fef2f2;
+  color: #991b1b;
+  border-color: #fecaca;
+}
+.auth-alert--success {
+  background-color: #f0fdf4;
+  color: #166534;
+  border-color: #bbf7d0;
+}
+.form-error {
+  font-size: 0.78rem;
+  color: #dc2626;
+  margin-top: var(--space-1);
+}
+.form-input.is-invalid {
+  border-color: #dc2626;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+}
+

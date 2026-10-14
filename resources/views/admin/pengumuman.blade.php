@@ -24,12 +24,27 @@
     </a>
 </div>
 
+{{-- Alert Notifikasi --}}
+@if (session('success'))
+    <div style="background:#f0fdf4;border:1px solid #bbf7d0;color:#166534;padding:12px 18px;border-radius:8px;margin-bottom:18px;display:flex;align-items:center;gap:10px;font-size:13.5px;font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,0.05);">
+        <i class='bx bx-check-circle' style="font-size:22px;color:#22c55e;"></i>
+        <span>{{ session('success') }}</span>
+    </div>
+@endif
+
+@if (session('error'))
+    <div style="background:#fef2f2;border:1px solid #fecaca;color:#991b1b;padding:12px 18px;border-radius:8px;margin-bottom:18px;display:flex;align-items:center;gap:10px;font-size:13.5px;font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,0.05);">
+        <i class='bx bx-error-circle' style="font-size:22px;color:#ef4444;"></i>
+        <span>{{ session('error') }}</span>
+    </div>
+@endif
+
 {{-- Stat Mini Row --}}
 <div class="kelola-stat-row">
     <div class="kelola-stat-mini">
         <div class="kelola-stat-mini__info">
             <p class="kelola-stat-mini__label">TOTAL PENGUMUMAN</p>
-            <p class="kelola-stat-mini__number">12</p>
+            <p class="kelola-stat-mini__number">{{ $totalPengumuman ?? (isset($pengumuman) ? count($pengumuman) : 0) }}</p>
         </div>
         <div class="kelola-stat-mini__icon kelola-stat-mini__icon--total">
             <i class='bx bx-bullhorn'></i>
@@ -39,7 +54,7 @@
         <div class="kelola-stat-mini__info">
             <p class="kelola-stat-mini__label">TAYANG (PUBLISH)</p>
             <div style="display:flex;align-items:center;gap:8px">
-                <p class="kelola-stat-mini__number">9</p>
+                <p class="kelola-stat-mini__number">{{ $totalPublish ?? 0 }}</p>
                 <span class="badge-publish-sm">Aktif</span>
             </div>
         </div>
@@ -51,7 +66,7 @@
         <div class="kelola-stat-mini__info">
             <p class="kelola-stat-mini__label">DRAF (DRAFT)</p>
             <div style="display:flex;align-items:center;gap:8px">
-                <p class="kelola-stat-mini__number">3</p>
+                <p class="kelola-stat-mini__number">{{ $totalDraft ?? 0 }}</p>
                 <span class="badge-draft-sm">Draft</span>
             </div>
         </div>
@@ -95,11 +110,6 @@
     </div>
 
     {{-- Data Table --}}
-    @php
-        use App\Data\DummyData;
-        $pengumuman = DummyData::pengumuman();
-    @endphp
-
     <div class="kelola-table-wrap">
         <table class="kelola-table" id="table-pengumuman">
             <thead>
@@ -114,12 +124,28 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach($pengumuman as $i => $p)
+                @forelse($pengumuman as $i => $p)
+                @php
+                    $id = $p->id ?? $p['id'];
+                    $judul = $p->judul ?? $p['judul'];
+                    $isi = $p->isi ?? $p['isi'];
+                    $sub = $p->sub ?? $p['sub'] ?? Str::limit(strip_tags($isi), 85);
+                    $gambar = $p->gambar ?? $p['gambar'] ?? null;
+                    $createdAt = $p->created_at ?? $p['created_at'];
+                    $statusObj = $p->status_publikasi ?? $p['status_publikasi'];
+                    $statusVal = is_object($statusObj) ? $statusObj->value : $statusObj;
+                    $penulis = isset($p->admin) ? ($p->admin->username ?? 'Admin RT') : 'Admin RT';
+                @endphp
                 <tr data-index="{{ $i + 1 }}">
                     <td style="text-align: center; font-weight: 500; color: #495057;">{{ $i + 1 }}</td>
                     <td>
-                        @if($p['gambar'])
-                            <img src="{{ asset($p['gambar']) }}" alt="Thumbnail" class="kelola-thumb-img">
+                        @if($gambar)
+                            @php
+                                $imgSrc = Str::startsWith($gambar, ['http', 'images/', 'storage/']) 
+                                    ? asset($gambar) 
+                                    : asset('storage/' . $gambar);
+                            @endphp
+                            <img src="{{ $imgSrc }}" alt="Thumbnail" class="kelola-thumb-img">
                         @else
                             <div class="kelola-thumb-img" style="background:#e9ecef;display:flex;align-items:center;justify-content:center;color:#adb5bd;font-size:18px;">
                                 <i class='bx bx-image'></i>
@@ -127,20 +153,20 @@
                         @endif
                     </td>
                     <td>
-                        <div class="kelola-title-text">{{ $p['judul'] }}</div>
-                        <div class="kelola-sub-text">{{ $p['sub'] ?? Str::limit($p['isi'], 85) }}</div>
+                        <div class="kelola-title-text">{{ $judul }}</div>
+                        <div class="kelola-sub-text">{{ $sub }}</div>
                     </td>
                     <td style="white-space: nowrap; color: #495057; font-size: 12.5px;">
-                        {{ \App\Data\DummyData::formatTanggal($p['created_at'], true) }}
+                        {{ $createdAt ? (is_string($createdAt) ? date('d M Y', strtotime($createdAt)) : $createdAt->format('d M Y')) : '-' }}
                     </td>
                     <td>
                         <div style="display:flex;align-items:center;gap:5px;font-size:12.5px;color:#495057;font-weight:500;">
                             <i class='bx bx-user' style="color:#6c757d;font-size:14px;"></i>
-                            Admin RT
+                            {{ $penulis }}
                         </div>
                     </td>
                     <td>
-                        @if($p['status_publikasi'] === 'publish')
+                        @if($statusVal === 'publish')
                             <span class="badge-publish-sm">Publish</span>
                         @else
                             <span class="badge-draft-sm">Draft</span>
@@ -148,16 +174,27 @@
                     </td>
                     <td>
                         <div class="kelola-actions">
-                            <a href="{{ route('admin.pengumuman.edit', $p['id']) }}" class="btn-action-edit">
+                            <a href="{{ route('admin.pengumuman.edit', $id) }}" class="btn-action-edit">
                                 <i class='bx bx-edit'></i> Edit
                             </a>
-                            <button type="button" class="btn-action-delete" onclick="konfirmasiHapus({{ $p['id'] }}, '{{ addslashes($p['judul']) }}')">
+                            <button type="button" class="btn-action-delete" onclick="konfirmasiHapus({{ $id }}, '{{ addslashes($judul) }}')">
                                 <i class='bx bx-trash'></i> Hapus
                             </button>
                         </div>
                     </td>
                 </tr>
-                @endforeach
+                @empty
+                <tr>
+                    <td colspan="7" style="text-align: center; padding: 48px 20px; color: #6c757d;">
+                        <i class='bx bx-news' style="font-size: 42px; color: #cbd5e1; margin-bottom: 8px; display: block;"></i>
+                        <p style="font-size: 14px; font-weight: 600; color: #334155; margin: 0 0 4px;">Belum Ada Pengumuman RT</p>
+                        <p style="font-size: 12.5px; color: #64748b; margin: 0 0 16px;">Klik tombol di bawah untuk membuat dan menerbitkan pengumuman baru untuk warga.</p>
+                        <a href="{{ route('admin.pengumuman.create') }}" class="btn-tambah-pengumuman" style="display:inline-flex;padding:6px 14px;font-size:12.5px;">
+                            <i class='bx bx-plus'></i> Tambah Pengumuman Baru
+                        </a>
+                    </td>
+                </tr>
+                @endforelse
             </tbody>
         </table>
     </div>
@@ -183,10 +220,14 @@
             <h3 style="font-size:17px;font-weight:700;margin:0 0 8px;color:#212529">Hapus Pengumuman?</h3>
             <p style="color:#6c757d;font-size:13px;margin:0;line-height:1.4" id="modal-hapus-judul"></p>
         </div>
-        <div style="display:flex;gap:12px;justify-content:center">
-            <button onclick="tutupModal()" style="flex:1;background:#ffffff;border:1px solid #ced4da;color:#495057;padding:10px 18px;border-radius:4px;font-size:14px;font-weight:600;cursor:pointer;">Batal</button>
-            <button onclick="tutupModal()" style="flex:1;background:#dc3545;border:none;color:#ffffff;padding:10px 18px;border-radius:4px;font-size:14px;font-weight:600;cursor:pointer;">Ya, Hapus</button>
-        </div>
+        <form id="form-hapus-pengumuman" method="POST" action="">
+            @csrf
+            @method('DELETE')
+            <div style="display:flex;gap:12px;justify-content:center">
+                <button type="button" onclick="tutupModal()" style="flex:1;background:#ffffff;border:1px solid #ced4da;color:#495057;padding:10px 18px;border-radius:4px;font-size:14px;font-weight:600;cursor:pointer;">Batal</button>
+                <button type="submit" style="flex:1;background:#dc3545;border:none;color:#ffffff;padding:10px 18px;border-radius:4px;font-size:14px;font-weight:600;cursor:pointer;">Ya, Hapus</button>
+            </div>
+        </form>
     </div>
 </div>
 
@@ -338,6 +379,7 @@
     // Modal konfirmasi hapus
     function konfirmasiHapus(id, judul) {
         document.getElementById('modal-hapus-judul').textContent = '"' + judul + '"';
+        document.getElementById('form-hapus-pengumuman').action = '{{ url("admin/pengumuman") }}/' + id;
         var modal = document.getElementById('modal-hapus');
         modal.style.display = 'flex';
     }

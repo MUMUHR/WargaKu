@@ -31,8 +31,16 @@
                 warga dapat dikelola secara terstruktur, transparan, dan terpercaya dalam satu tempat.
             </p>
             <div class="hero__actions">
-                <a href="{{ route('login') }}" class="btn btn--hero-login">Masuk</a>
-                <a href="{{ route('register') }}" class="btn btn--hero-register">Daftar pengguna baru</a>
+                @auth
+                    @if(auth()->user()->isAdmin())
+                        <a href="{{ route('admin.beranda') }}" class="btn btn--hero-login">Buka Portal Admin RT</a>
+                    @else
+                        <a href="{{ route('warga.beranda') }}" class="btn btn--hero-login">Buka Portal Warga</a>
+                    @endif
+                @else
+                    <a href="{{ route('login') }}" class="btn btn--hero-login">Masuk</a>
+                    <a href="{{ route('register') }}" class="btn btn--hero-register">Daftar pengguna baru</a>
+                @endauth
             </div>
         </div>
     </div>
@@ -131,6 +139,31 @@
      SECTION PENGUMUMAN TERKINI
      ═══════════════════════════════════════════ --}}
 <section class="announcements-section" aria-label="Pengumuman terkini">
+    @php
+        $pengumuman = $pengumuman ?? [
+            [
+                'id' => 1,
+                'judul' => 'Kerja Bakti Lingkungan Serentak & PSN Menjelang Musim Hujan',
+                'isi' => 'Kegiatan gotong royong membersihkan saluran air, selokan, dan pencegahan sarang nyamuk jelang musim penghujan di seluruh gang RT 04.',
+                'gambar' => 'images/pengumuman/kerjabakti.jpg',
+                'created_at' => '2025-05-16 08:00:00',
+            ],
+            [
+                'id' => 2,
+                'judul' => 'Jadwal Fogging Nyamuk DBD Wilayah RT 04 / RW 08',
+                'isi' => 'Penyemprotan disinfeksi dan pengasapan fogging DBD terjadwal dari Puskesmas. Mohon warga menutup makanan dan mengamankan hewan peliharaan.',
+                'gambar' => 'images/pengumuman/fogging.jpg',
+                'created_at' => '2025-05-12 07:30:00',
+            ],
+            [
+                'id' => 4,
+                'judul' => 'Edaran Pembayaran Iuran Kebersihan & Kas RT Periode Mei 2025',
+                'isi' => 'Pemberitahuan penarikan iuran rutin warga untuk kebersihan lingkungan, sampah, dan uang kas RT periode Mei 2025.',
+                'gambar' => 'images/pengumuman/sembako.jpg',
+                'created_at' => '2025-05-01 08:00:00',
+            ],
+        ];
+    @endphp
     <div class="container">
         <div class="section__header">
             <h2 class="section__title" style="color:var(--color-white);">Pengumuman Terkini</h2>
@@ -163,7 +196,7 @@
 
                         <div class="announcement-card__body">
                             <p class="announcement-card__meta">
-                                {{ \App\Data\DummyData::formatTanggal($p['created_at']) }}
+                                {{ date('d F Y', strtotime($p['created_at'])) }}
                             </p>
                             <h3 class="announcement-card__title">{{ $p['judul'] }}</h3>
                             <p class="announcement-card__excerpt">

@@ -4,7 +4,7 @@
 | --- | --- |
 | Project | PBL-TRPL102, Program Studi Teknologi Rekayasa Perangkat Lunak, Politeknik Negeri Batam |
 | Lingkungan | RT 04 / RW 08 |
-| Versi PRD | 2.7 (2026-10-02) — menggantikan v2.6. Perubahan v2.7: kebijakan pembersihan Tailwind dibatalkan (setup Tailwind bawaan Breeze dibiarkan terpasang dan tidak dipakai), view login dan registrasi ditulis ulang mengikuti PNG, lokasi CSS vanilla dipindah ke `public/css/`. Perubahan v2.6: varian Breeze ditetapkan Blade + Alpine.js (O-01 selesai) dan aturan JavaScript ditambahkan; pengecualian login Admin RT pada BR-04; Bagian 12 disamakan dengan aturan 4 (teks antarmuka hanya Bahasa Indonesia). Dasar v2.5: sinkronisasi dengan laporan RPL-102 revisi 1, `DB_WAR.dbml`, dan diagram arsitektur; keputusan O-03, O-12, O-13, O-14, O-15 sudah dimasukkan, O-16 sebagian. Nama file PNG di Lampiran C dikoreksi sesuai tangkapan layar folder terbaru |
+| Versi PRD | 2.8 (2026-10-14) — menggantikan v2.7. Perubahan v2.8: sinkronisasi penuh dengan `DB_WAR.dbml`, `Diagram_Arsitektur_Workflow_WargaKu.md`, dan Laporan RPL-102 revisi 1 (penamaan tabel `riwayat_perubahan` dan `surat`, relasi `keluarga_id` mengacu ke PK `keluarga.id`, penghapusan kolom snapshot & `admin_id` pada tabel `surat`, penyesuaian FK `nullOnDelete` & `cascadeOnDelete`, serta penyelesaian O-06 dan O-18 mengikuti tangkapan layar pada Laporan Bab 2.2 dan 3.1). Perubahan v2.7: kebijakan pembersihan Tailwind dibatalkan (setup Tailwind bawaan Breeze dibiarkan terpasang dan tidak dipakai), view login dan registrasi ditulis ulang mengikuti PNG, lokasi CSS vanilla dipindah ke `public/css/`. Perubahan v2.6: varian Breeze ditetapkan Blade + Alpine.js (O-01 selesai) dan aturan JavaScript ditambahkan; pengecualian login Admin RT pada BR-04; Bagian 12 disamakan dengan aturan 4 (teks antarmuka hanya Bahasa Indonesia). Dasar v2.5: sinkronisasi dengan laporan RPL-102 revisi 1, `DB_WAR.dbml`, dan diagram arsitektur; keputusan O-03, O-12, O-13, O-14, O-15 sudah dimasukkan, O-16 sebagian. Nama file PNG di Lampiran C dikoreksi sesuai tangkapan layar folder terbaru |
 | Stack | Laravel 12 (sudah disetup), Laravel Breeze varian Blade + Alpine.js (sudah terpasang), view Blade murni (tanpa Livewire/Inertia), MySQL, CSS vanilla untuk seluruh tampilan (Tailwind bawaan Breeze dibiarkan terpasang dan tidak dipakai), JavaScript seperlunya |
 | Strategi | **Frontend-First**: seluruh tampilan diselesaikan dan divisualisasikan dulu, baru backend |
 | Acuan terkait | `DB_WAR.dbml` (skema resmi, 7 tabel, tidak boleh diubah), `Diagram_Arsitektur_Workflow_WargaKu.md`, laporan RPL-102 revisi 1, desain UI/UX tim (folder `ui-wargaku/`, Lampiran C). Urutan prioritas jika bertentangan: Bagian 0.1 |
@@ -35,10 +35,10 @@ Diagram arsitektur saat ini berbeda dari DBML dan laporan pada hal berikut. Yang
 | Hal | Diagram arsitektur | Yang berlaku |
 | --- | --- | --- |
 | Jumlah tabel | 8 tabel, termasuk `settings` | 7 tabel (DBML dan laporan). Tidak ada tabel `settings`; nilai awal nominal iuran di file konfigurasi (BR-06) |
-| Nominal iuran | Dibaca dari `settings`, contoh 50000 | Rp 75.000 di file konfigurasi hanya untuk baris pertama; selanjutnya disalin dari baris terbaru di tabel `iuran` (BR-06). Komentar DBML sudah disesuaikan ke Rp 75.000 |
+| Nominal iuran | Dibaca dari settings, contoh 50000 | Rp 75.000 di file konfigurasi untuk baris pertama; selanjutnya disalin dari baris terbaru di tabel iuran (BR-06) (meskipun default level DB di DB_WAR.dbml tertulis 50000.00) |
 | Lazy generation iuran | Tagihan bulan berjalan saja | 12 bulan tahun berjalan, mulai bulan awal tagih KK (BR-06) |
 | `keluarga.status_ekonomi` | default `mampu` di DB | Tanpa default di DB; aplikasi mengisi `mampu` (BR-11) |
-| Penghapusan akun | `warga.user_id` di-NULL-kan oleh FK (`ON DELETE SET NULL`) | DBML tidak memakai `ON DELETE SET NULL`; aplikasi mengosongkan `user_id` lebih dulu dalam satu transaksi (BR-03) |
+| Penghapusan akun | `warga.user_id` di-NULL-kan oleh FK (nullOnDelete) | Sesuai DB_WAR.dbml (nullOnDelete), saat users dihapus pada BR-03, `warga.user_id` otomatis menjadi NULL (tetap dijalankan dalam satu transaksi database) |
 | Password saat registrasi | Warga memilih password sendiri (asumsi di diagram bagian 12) | Tidak ada input password; password awal = NIK (BR-04) |
 
 ---
@@ -75,7 +75,7 @@ Diagram arsitektur saat ini berbeda dari DBML dan laporan pada hal berikut. Yang
 - JavaScript boleh dipakai seperlunya untuk interaksi (modal, tab, konfirmasi, pratinjau berkas). Gunakan Alpine.js bawaan Breeze atau JS vanilla di `resources/js/`, dimuat lewat Vite. Library JS tambahan (mis. SweetAlert2 untuk pop-up) hanya boleh dipakai jika tampilannya dapat disesuaikan dengan PNG desain (Lampiran C.5).
 - Basis data MySQL; ID Laravel `id()` bertipe BIGINT UNSIGNED.
 - Penyimpanan berkas: disk **privat** untuk `bukti_path`, disk **publik** untuk thumbnail pengumuman.
-- Surat PDF dirender saat diunduh dari data snapshot.
+- Surat PDF dirender saat diunduh dengan mengambil biodata warga melalui relasi Eloquent warga_tujuan_id (tanpa kolom snapshot).
 
 **Penyesuaian Breeze yang diperlukan (konsekuensi langsung dari skema).** Tabel `users` hanya berisi `id`, `username`, `password`, `no_telp`, `role`, dan timestamp, sehingga bawaan Breeze berikut harus disesuaikan pada tahap Backend:
 - Login memakai `username` (NIK atau `adminrt`), bukan email.
@@ -128,14 +128,14 @@ Warga hanya mengakses data KK miliknya. Warga tidak dapat mengubah NIK dan No. K
 | F005 | Simpan dan tampilkan data warga dan keluarga per No. KK | UC-07, UC-08 | 2.2.8, 2.2.21 | Daftar anggota hanya berstatus hidup (BR-13) |
 | F006 | Pengajuan perubahan data, termasuk Pindah/Pecah KK, + bukti | UC-07, UC-11 | 2.2.24, 2.2.21 | Bukti wajib; disetujui pindah_kk, meninggal, atau pindah_rumah membuat warga tidak tampil di daftar anggota KK |
 | F007 | Pengajuan tambah anggota keluarga + bukti | UC-07, UC-11 | 2.2.22, 2.2.21 | Bukti wajib; disetujui menambah anggota ke KK |
-| F008 | Admin RT: tampil/koreksi data keluarga (termasuk status ekonomi), tab verifikasi, tambah anggota ke KK (NIK baru atau warga pindah_kk), reset password akun KK | UC-08, UC-11 | 2.2.7–2.2.12 | Sesuai BR-02, BR-04, BR-08, BR-14 |
+| F008 | Admin RT: tampil/koreksi data keluarga (termasuk status ekonomi dan status tinggal), tab verifikasi, tambah anggota ke KK (NIK baru atau warga pindah_kk), reset password akun KK | UC-08, UC-11 | 2.2.7–2.2.12 | Sesuai BR-02, BR-04, BR-08, BR-14 |
 | F009 | Admin RT mengelola iuran per No. KK: pelunasan (termasuk bulan mendatang dan tunggakan), nominal bulanan, tampil status ekonomi | UC-10 | 2.2.16–2.2.18 | Sesuai BR-06 |
 | F010 | Riwayat iuran pada halaman kelola iuran | UC-10 | 2.2.16 (tab Riwayat) | Menampilkan seluruh baris iuran termasuk yang lunas |
 | F011 | Pengajuan surat pengantar oleh Warga, tampil di Kelola Surat Admin | UC-09, UC-12 | 2.2.25, 2.2.13 | Tersimpan dengan status menunggu; muncul di daftar Admin |
 | F012 | Tabel status iuran 12 bulan untuk KK milik Warga | UC-05 | 2.2.26 | 12 card Januari–Desember sesuai BR-06; bulan sebelum KK terdaftar tampil N/A |
 | F013 | Halaman Preview Surat; Admin setujui atau tolak (alasan opsional) | UC-12 | X5, 2.2.14, 2.2.15 | Setujui menghasilkan nomor surat; tolak menyimpan alasan |
 | F014 | Status pengajuan surat dan alasan bila ada, untuk Warga | UC-09 | 2.2.25 | Status dan alasan penolakan tampil di riwayat |
-| F015 | PDF surat setelah disetujui; Warga preview dan unduh | UC-09, UC-12 | 2.2.25, X7 | PDF memuat nomor surat dan data snapshot, bertanda tangan RT|
+| F015 | PDF surat setelah disetujui; Warga preview dan unduh | UC-09, UC-12 | 2.2.25, X7 | PDF memuat nomor surat dan biodata warga via relasi warga_tujuan_id, bertanda tangan RT |
 | F016 | Ubah no. telepon, ganti password, logout untuk semua pengguna | UC-02, UC-03 | X3, X4 | Password lama salah, konfirmasi beda, atau tidak memenuhi ketentuan menampilkan error |
 | F017 | Badge pembaruan status pengajuan (surat dan perubahan data) bagi Warga | UC-07, UC-09 | Sidebar, 2.2.19 | Badge muncul saat status berubah; lihat O-04 |
 
@@ -154,7 +154,7 @@ Nomor dan nama mengikuti laporan. Skenario lengkap ada pada laporan bagian 1.3.3
 | UC-05 | Memantau Iuran | Warga | Ringkasan iuran di beranda, lalu 12 card bulan dengan status Lunas, Belum Lunas, atau N/A (BR-06) | Gagal memuat: pesan "Gagal memuat informasi iuran, silakan muat ulang halaman." |
 | UC-06 | Mengelola Pengumuman | Admin RT | Menu Kelola Pengumuman, tabel, aksi Tambah/Edit/Hapus/Ubah Status, judul, isi, thumbnail opsional | Form tidak lengkap: error |
 | UC-07 | Mengelola Data Keluarga | Warga | Profil Keluarga: tab 1 tabel anggota (No. KK, kepala keluarga, anggota), tab 2 riwayat perubahan. Edit atau Tambah Anggota + bukti foto, Kirim. Dapat membatalkan selama belum diproses | Ditolak: status dan alasan tampil, dapat ajukan ulang. Meninggal/Pindah/Pecah KK disetujui: tidak tampil di daftar KK ini |
-| UC-08 | Mengelola Data Warga | Admin RT | Daftar keluarga per No. KK + jumlah anggota, filter/pilih, Lihat. Tambah Anggota dengan NIK + status hubungan (BR-14). Reset akun ke default (NIK) | NIK pindah_kk: tarik data lama, No. KK baru, status hidup. NIK sudah terdaftar di KK lain: ditolak (BR-14). No. KK tidak ada: info data tidak tersedia |
+| UC-08 | Mengelola Data Warga | Admin RT | Daftar keluarga per No. KK + jumlah anggota, filter/pilih, Lihat Detail, atau ubah status ekonomi & status tinggal lewat pop-up Edit Data Keluarga. Tambah Anggota dengan NIK + status hubungan (BR-14). Reset akun ke default (NIK) | NIK pindah_kk: tarik data lama, No. KK baru, status hidup. NIK sudah terdaftar di KK lain: ditolak (BR-14). No. KK tidak ada: info data tidak tersedia |
 | UC-09 | Mengajukan Surat | Warga | Menu Ajukan Surat, pilih anggota keluarga untuk surat, isi keperluan, Ajukan, status menunggu | Batal selama menunggu. Ditolak: alasan tampil |
 | UC-10 | Mengelola Iuran dan Riwayat | Admin RT | Menu Kelola Iuran dengan 2 tab (Kelola Status Iuran, Riwayat Pembayaran). Daftar per No. KK dengan label Status Ekonomi, 12 bulan per KK, cari/filter, tombol Pelunasan, atur nominal | KK tidak ditemukan: info data tidak tersedia |
 | UC-11 | Verifikasi Data Warga | Admin RT | Tab Verifikasi Data Warga, pilih pengajuan, periksa bukti, Setujui, data diperbarui dan status disetujui | Bukti tidak valid: Tolak + alasan |
@@ -174,11 +174,11 @@ Nomor dan nama mengikuti laporan. Skenario lengkap ada pada laporan bagian 1.3.3
 Dipicu setiap kali `status_warga` seorang warga berubah dari `hidup` menjadi `pindah_kk`, `meninggal`, atau `pindah_rumah`, baik lewat pengajuan yang disetujui (UC-11) maupun koreksi langsung Admin RT (layar 2.2.10). Ini business rule backend pada F008; tidak ada fitur atau UC baru.
 1. Baca `user_id` warga tersebut lebih dulu (disebut `akun_lama`), lalu set `status_warga` baru dan `warga.user_id` menjadi NULL. Langkah 2 sampai 4 memakai `akun_lama`.
 2. Cek pemilik: `akun_lama.username = warga.nik`. Jika bukan pemilik akun: selesai, akun KK tetap aktif.
-3. Jika pemilik akun dan masih ada anggota berstatus `hidup`: pilih pemilik baru berurutan: Kepala Keluarga, Istri/Suami, Anak Tertua usia 17+, Anggota Tertua. `users.username` diperbarui ke NIK pemilik baru. Password tidak berubah.
+3. Jika pemilik akun dan masih ada anggota berstatus `hidup` pada keluarga yang sama (`keluarga_id` yang sama): pilih pemilik baru berurutan: Kepala Keluarga, Istri/Suami, Anak Tertua usia 17+, Anggota Tertua. `users.username` diperbarui ke NIK pemilik baru. Password tidak berubah.
 4. Jika tidak ada anggota hidup tersisa: lihat BR-03.
 
 ### BR-03 Pembersihan Akun
-Jika seluruh anggota KK habis, record `users` langsung dihapus dari basis data (tabel `users` hanya 5 kolom tanpa flag `is_active`). Karena FK `warga.user_id` tidak memakai `ON DELETE SET NULL`, aplikasi mengosongkan `warga.user_id` terlebih dahulu lalu menghapus `users` dalam satu transaksi.
+Jika seluruh anggota KK habis, record `users` langsung dihapus dari basis data (tabel `users` hanya 5 kolom tanpa flag `is_active`). Karena FK warga.user_id pada DB_WAR.dbml memakai nullOnDelete, saat record users dihapus dalam satu transaksi, warga.user_id yang menunjuk ke akun tersebut otomatis menjadi NULL
 
 ### BR-04 Ketentuan Password Akun (Default NIK & Pengubahan Opsional)
 
@@ -196,7 +196,7 @@ Jika seluruh anggota KK habis, record `users` langsung dihapus dari basis data (
 Format `NNN/SP/RT04/RW08/{bulan_romawi}/{tahun}`. `NNN` sekuensial dan reset otomatis setiap pergantian tahun kalender. `nomor_surat` unik dan diisi saat disetujui.
 
 ### BR-06 Iuran
-- **Lazy generation 12 bulan.** Saat menu Iuran dibuka (oleh Warga maupun Admin RT), sistem memeriksa setiap KK aktif (minimal satu anggota `hidup`). Untuk KK yang belum punya baris iuran bulan tertentu di tahun berjalan, sistem menyisipkan baris `belum_lunas` dari bulan awal tagih sampai Desember. Unique `(no_kk, bulan, tahun)` membuat proses ini aman diulang dan otomatis mencakup KK yang terdaftar setelah pembuatan pertama di tahun itu. Tidak ada cron. "Bulan berjalan" memakai zona waktu Asia/Jakarta.
+- **Lazy generation 12 bulan.** Saat menu Iuran dibuka (oleh Warga maupun Admin RT), sistem memeriksa setiap KK aktif (minimal satu anggota `hidup`). Untuk KK yang belum punya baris iuran bulan tertentu di tahun berjalan, sistem menyisipkan baris `belum_lunas` dari bulan awal tagih sampai Desember. Unique (`keluarga_id`, `bulan`, `tahun`) membuat proses ini aman diulang dan otomatis mencakup KK yang terdaftar setelah pembuatan pertama di tahun itu. Tidak ada cron. "Bulan berjalan" memakai zona waktu Asia/Jakarta.
 - **Bulan awal tagih.** Jika tahun `keluarga.created_at` lebih kecil dari tahun berjalan: Januari. Jika sama: bulan `keluarga.created_at`.
 - **Bulan sebelum bulan awal tagih tidak memiliki baris.** UI menampilkannya sebagai card **N/A** (sub-teks "Dikecualikan"). Tidak ada nilai enum baru karena skema tidak boleh diubah; N/A, Berjalan, dan Menunggak adalah tampilan turunan, bukan data.
 - **Sumber nominal baris baru.** Nominal disalin dari baris iuran terbaru di database (urutan `tahun` lalu `bulan` terbesar), dengan prioritas: (1) baris terbaru berstatus `belum_lunas`; (2) jika tidak ada, baris terbaru berstatus apa pun; (3) jika tabel `iuran` masih kosong, nilai awal Rp 75.000 dari file konfigurasi (contoh `config/wargaku.php`). Prioritas (1) dipakai karena baris `lunas` (terutama yang dibayar di muka) bisa masih bernominal lama. Tidak ada tabel `settings`.
@@ -216,11 +216,11 @@ Format `NNN/SP/RT04/RW08/{bulan_romawi}/{tahun}`. `NNN` sekuensial dan reset oto
 Mockup tim memakai Mei sebagai bulan berjalan dan Januari–April lunas; itu data contoh, bukan nilai tetap.
 
 ### BR-07 Status Pengajuan
-- Status `menunggu`, `disetujui`, `ditolak`, `dibatalkan` untuk `pengajuan_perubahan_data` dan `pengajuan_surat`.
+- Status `menunggu`, `disetujui`, `ditolak`, `dibatalkan` untuk `riwayat_perubahan` dan `surat`.
 - Warga hanya dapat membatalkan saat `menunggu`.
 - Surat `disetujui` tidak boleh dihapus atau dibatalkan.
 - Penolakan menyimpan `alasan` (opsional untuk surat); Warga melihat alasan dan dapat mengajukan ulang.
-- `admin_id` dicatat saat diproses.
+- `admin_id` dicatat pada `riwayat_perubahan` saat diproses (tabel `surat` tidak memiliki kolom `admin_id` karena verifikasi surat bersifat kolektif oleh Admin RT).
 
 ### BR-08 Pengajuan Perubahan Data
 - Bukti wajib, disimpan di disk privat.
@@ -229,18 +229,18 @@ Mockup tim memakai Mei sebagai bulan berjalan dan Januari–April lunas; itu dat
 - Disetujui: `tambah_anggota` menyisipkan warga baru (`user_id` akun KK, status hidup); `ubah_data` menerapkan `data_baru`. Perubahan keluar dari `hidup` memicu BR-02.
 - Ditolak: data warga tidak berubah.
 - Tambah anggota oleh Warga: NIK diisi pada form (No. KK otomatis dari sesi). Jika NIK sudah ada di tabel `warga` dengan status apa pun, pengajuan ditolak validasi dengan arahan menghubungi Admin RT; warga `pindah_kk` ditambahkan oleh Admin RT (UC-08).
-- Warga `pindah_kk` dapat didaftarkan lewat F001 (KK baru) atau ditambahkan Admin RT ke KK yang sudah ada (UC-08): sistem menarik data lama, menetapkan No. KK baru, status `hidup`, dan `user_id` akun KK tujuan. Aturan validasi lengkap pada BR-14.
+- Warga `pindah_kk` dapat didaftarkan lewat F001 (KK baru) atau ditambahkan Admin RT ke KK yang sudah ada (UC-08): sistem menarik data lama dan memperbarui pada tabel `warga`: `keluarga_id` (mengacu ke `keluarga.id` dari No. KK tujuan), `status_warga = hidup`, dan `user_id` akun KK tujuan. Aturan validasi lengkap pada BR-14.
 
 ### BR-09 Registrasi (F001 / UC-01)
 - NIK belum ada: jika No. KK sudah punya akun, ditolak dan diarahkan ke Login atau pengajuan tambah anggota; jika belum, `keluarga` dibuat bila belum ada (`status_ekonomi = mampu`), lalu warga, akun, dan `user_id` dibuat.
 - NIK ada, status `hidup`: ditolak, arahkan ke Login.
 - NIK ada, status `meninggal` atau `pindah_rumah`: ditolak, hubungi Admin RT.
-- NIK ada, status `pindah_kk`: jika No. KK tujuan baru, dibuat KK baru dan akun; jika No. KK sudah ada, arahkan meminta Admin RT.
+- NIK ada, status `pindah_kk`: jika No. KK tujuan baru, dibuat KK baru (record `keluarga` baru) dan akun, lalu pada tabel `warga` diperbarui `keluarga_id` (mengacu ke `keluarga.id` KK baru), `status_warga = hidup`, dan `user_id` akun baru; jika No. KK sudah ada, arahkan meminta Admin RT.
 
 ### BR-10 Pengajuan Surat
-- `pemohon_id` wajib, otomatis dari sesi login (warga pemilik akun, `nik` = `users.username`); tidak dipilih.
-- `warga_tujuan_id` wajib diisi aplikasi: anggota hidup pada KK sesi login, dipilih dari dropdown (data auto-fill dan terkunci). Tidak ada mode isi manual.
-- Data identitas disalin ke kolom snapshot (`nama_lengkap`, `tempat_tanggal_lahir`, `jenis_kelamin`, `agama`, `alamat`). PDF dirender dari snapshot saat diunduh.
+- `pemohon_id` wajib (NOT NULL), otomatis dari sesi login (warga pemilik akun, `nik` = `users.username`); tidak dipilih.
+- `warga_tujuan_id` wajib diisi (NOT NULL): anggota hidup pada KK sesi login (`keluarga_id` yang sama), dipilih dari dropdown (biodata auto-fill di layar dan terkunci). Tidak ada mode isi manual.
+- Tabel `surat` tidak menyimpan kolom snapshot biodata; biodata diambil langsung melalui relasi Eloquent `warga_tujuan_id` saat pratinjau maupun saat PDF dirender dan diunduh.
 
 ### BR-11 Keluarga & Pengumuman
 - `keluarga.status_ekonomi` diisi `mampu` oleh aplikasi saat keluarga dibuat (kolom NOT NULL tanpa default di DB), dikoreksi Admin RT; `status_tinggal` default `tetap`.
@@ -254,7 +254,7 @@ Mockup tim memakai Mei sebagai bulan berjalan dan Januari–April lunas; itu dat
 Daftar anggota KK (Warga dan Admin) hanya menampilkan `status_warga = hidup`.
 
 ### BR-14 Tambah Anggota oleh Admin RT (UC-08, layar 2.2.12)
-- Aksi langsung Admin RT, tidak melalui tabel `pengajuan_perubahan_data`. `warga.no_kk` diisi dari KK yang sedang dibuka; `status_warga = hidup`; `user_id` = akun KK tersebut.
+- Aksi langsung Admin RT, tidak melalui tabel `riwayat_perubahan`. `warga.keluarga_id` diisi dari `keluarga.id` milik KK yang sedang dibuka; `status_warga = hidup`; `user_id` = akun KK tersebut.
 - Form NIK baru: NIK, nama, jenis_kelamin, status_hubungan wajib (kolom NOT NULL di DBML); kolom lain opsional.
 - Validasi NIK:
   1. NIK belum ada di tabel `warga`: simpan record `warga` baru pada KK tersebut.
@@ -270,15 +270,15 @@ Daftar anggota KK (Warga dan Admin) hanya menampilkan `status_warga = hidup`.
 
 | Tabel | Kolom | Catatan |
 | --- | --- | --- |
-| users | id, username (unik, 50), password (255), no_telp (20, null), role (admin/warga, default warga), timestamps | username = NIK atau adminrt |
-| keluarga | no_kk (PK, 16), status_ekonomi (mampu/kurang_mampu, NOT NULL, tanpa default di DB), status_tinggal (tetap/kontrak/kos/menumpang, default tetap), timestamps | |
-| warga | id, user_id (FK users, null), no_kk (FK), nik (unik, 16), nama (100), tempat_lahir (null), tanggal_lahir (null), jenis_kelamin, agama (null), pendidikan_terakhir (null), pekerjaan (null), alamat (null), status_hubungan, status_warga (default hidup), timestamps | Index: no_kk, status_warga |
-| pengajuan_perubahan_data | id, warga_id (FK, null), no_kk (FK), jenis_pengajuan, data_lama (json, null), data_baru (json), bukti_path (255), status (default menunggu), alasan (null), admin_id (FK, null), timestamps | |
-| pengajuan_surat | id, pemohon_id (FK warga), warga_tujuan_id (FK warga, null), nama_lengkap, tempat_tanggal_lahir, jenis_kelamin, agama, alamat, keperluan, nomor_surat (unik, null), status (default menunggu), alasan (null), admin_id (FK, null), timestamps | Kolom snapshot nullable |
-| iuran | id, no_kk (FK), nominal (decimal 10,2), catatan (null), bulan (tinyint), tahun (smallint), status (default belum_lunas), tanggal_bayar (datetime, null), timestamps | Unik (no_kk, bulan, tahun) |
-| pengumuman | id, judul (150), isi, gambar (255, null), status_publikasi (default draft), admin_id (FK), timestamps | |
+| users | id, username (unik, 50), password (255), no_telp (20, null), role (admin/warga, default warga), timestamps | username = NIK pemilik akun atau adminrt |
+| keluarga | id (PK), no_kk (unik, 16, NOT NULL), status_ekonomi (mampu/kurang_mampu, NOT NULL, tanpa default di DB), status_tinggal (tetap/kontrak/kos/menumpang, default tetap), timestamps | Index: no_kk. Semua relasi ke keluarga memakai keluarga.id (keluarga_id) |
+| warga | id, user_id (FK users.id, null, nullOnDelete), keluarga_id (FK keluarga.id, NOT NULL, cascadeOnDelete), nik (unik, 16), nama (100), tempat_lahir (100, null), tanggal_lahir (date, null), jenis_kelamin, agama (null), pendidikan_terakhir (null), pekerjaan (100, null), alamat (text, null), status_hubungan, status_warga (default hidup), timestamps | Index: keluarga_id, status_warga |
+| riwayat_perubahan | id, warga_id (FK warga.id, null, nullOnDelete), keluarga_id (FK keluarga.id, NOT NULL, cascadeOnDelete), jenis_pengajuan (ubah_data/tambah_anggota), data_lama (json, null), data_baru (json, NOT NULL), bukti_path (255, NOT NULL), status (default menunggu), alasan (text, null), admin_id (FK users.id, null, nullOnDelete), timestamps | warga_id dan data_lama bernilai null jika tambah_anggota |
+| surat | id, pemohon_id (FK warga.id, NOT NULL), warga_tujuan_id (FK warga.id, NOT NULL), keperluan (text, NOT NULL), nomor_surat (50, unik, null), status (default menunggu), alasan (text, null), timestamps | Tanpa kolom snapshot & tanpa admin_id; biodata diambil via relasi warga_tujuan_id |
+| iuran | id, keluarga_id (FK keluarga.id, NOT NULL, cascadeOnDelete), nominal (decimal 10,2, default DB 50000.00), catatan (text, null), bulan (tinyint), tahun (smallint), status (default belum_lunas), tanggal_bayar (datetime, null), timestamps | Unik (keluarga_id, bulan, tahun). Nominal baris pertama dari config Rp 75.000 (BR-06) |
+| pengumuman | id, judul (150), isi (text), gambar (255, null), status_publikasi (default draft), admin_id (FK users.id, null, nullOnDelete), timestamps | |
 
-**Relasi.** keluarga 1:N warga, iuran, pengajuan_perubahan_data. users 1:N warga (opsional), 1:N pengajuan_perubahan_data.admin_id, pengajuan_surat.admin_id, pengumuman.admin_id. warga 1:N pengajuan_perubahan_data (opsional), 1:N pengajuan_surat sebagai pemohon (wajib) dan sebagai tujuan (opsional).
+**Relasi.** keluarga 1:N warga, iuran, riwayat_perubahan (via keluarga_id, cascadeOnDelete). users 1:N warga (opsional, nullOnDelete), 1:N riwayat_perubahan.admin_id (opsional, nullOnDelete), 1:N pengumuman.admin_id (opsional, nullOnDelete). warga 1:N riwayat_perubahan (opsional, nullOnDelete), 1:N surat sebagai pemohon (pemohon_id, wajib) dan sebagai warga tujuan (warga_tujuan_id, wajib).
 
 **Seeder.** Akun `adminrt` (role admin), password awal `adminrt` sesuai laporan UC-02. Password dapat diganti lewat Pengaturan (F016).
 
@@ -292,7 +292,7 @@ Nomor 2.2.x mengikuti laporan. Layar X1–X7 dibutuhkan oleh UC/F tetapi belum p
 
 | ID | Layar | Rute (usulan) | Elemen utama |
 | --- | --- | --- | --- |
-| 2.2.1 | Landing Page | `/` | Pengantar aplikasi, daftar pengumuman publish (thumbnail opsional, judul, ringkasan), tautan Login dan Daftar, informasi layanan publik. State: kosong "belum ada pengumuman" |
+| 2.2.1 | Landing Page | `/` | Pengantar aplikasi, daftar pengumuman publish (thumbnail opsional, judul, ringkasan), tautan Login dan Daftar, informasi layanan publik, bagian keunggulan utama & cara kerja aplikasi. Terdapat juga halaman khusus daftar seluruh pengumuman publik (`/pengumuman`, sesuai Laporan 2.2.2 `Landing_Page_Pengumuman(Landing-page).png`) selain bagian Pengumuman Terkini di Landing Page. State: kosong "belum ada pengumuman" |
 | X2 | Detail Pengumuman | `/pengumuman/{id}` | Judul, tanggal, gambar opsional, isi |
 | 2.2.2 | Login | `/login` | Username (NIK atau adminrt), password, tombol Masuk, pesan error kredensial salah. Peran terdeteksi otomatis |
 | X1 | Registrasi | `/daftar` | NIK pendaftar pertama, No. KK, data identitas (kolom wajib: nama, jenis_kelamin, status_hubungan), no. telepon, tanpa input password (BR-04); pesan penolakan sesuai BR-09; data keluarga (status ekonomi diisi mampu oleh aplikasi, status tinggal) |
@@ -301,10 +301,10 @@ Nomor 2.2.x mengikuti laporan. Layar X1–X7 dibutuhkan oleh UC/F tetapi belum p
 
 | ID | Layar | Rute (usulan) | Elemen utama |
 | --- | --- | --- | --- |
-| 2.2.19 | Beranda Warga | `/warga` | Ringkasan iuran keluarga, badge status pengajuan. State: gagal memuat iuran |
+| 2.2.19 | Beranda Warga | `/warga` | Sambutan kepala keluarga (nama, No. KK, alamat, tombol Detail Profil KK), 2 kartu metrik (Iuran Warga Bulan Ini & Status Surat), dan 3 kartu pintasan layanan (Ajukan Surat Baru, Lihat Iuran, Perbarui Data Keluarga). State: gagal memuat iuran (sesuai Laporan 2.2.22 & 3.1.15) |
 | 2.2.20 | Sidebar Warga | semua halaman Warga | Menu sesuai 4.2, ikon dan identitas profil, badge |
-| 2.2.21 | Kelola Data Keluarga | `/warga/keluarga` | Tab 1: tabel anggota (No. KK, kepala keluarga, anggota hidup), tombol Edit per anggota, tombol Tambah Anggota Keluarga |
-| 2.2.21 | Pemantauan status pengajuan data | `/warga/keluarga` tab 2 | Tabel riwayat perubahan: jenis, tanggal, status (badge), alasan penolakan, tombol Batalkan hanya saat menunggu |
+| 2.2.21 | Kelola Data Keluarga | `/warga/keluarga` | Tab 1: kartu ringkasan (Total Jiwa Terdaftar & Menunggu Verifikasi RT), Informasi KK (No. KK, Kepala Keluarga, Alamat, badge `status_tinggal` & `status_ekonomi`), tabel anggota hidup, tombol Detail (membuka pop-up Detail Biodata Kependudukan Warga, sesuai Laporan 3.1.18) dan tombol Ubah per anggota, tombol Tambah Anggota Keluarga |
+| 2.2.21 | Pemantauan status pengajuan data | `/warga/keluarga` tab 2 | Tab 2: tabel riwayat perubahan: tanggal, jenis pengajuan, target warga, bukti pendukung, status (badge), alasan/catatan RT, tombol Lihat Perubahan (membuka pop-up Lihat Pengajuan berisi komparasi `data_lama` vs `data_baru` & pratinjau dokumen pendukung, sesuai Laporan 2.2.24), tombol Batalkan hanya saat menunggu |
 | 2.2.22 | Form Tambah Anggota Baru | `/warga/keluarga/anggota/tambah` | Field data warga termasuk NIK (kolom wajib: nik, nama, jenis_kelamin, status_hubungan; No. KK otomatis dari sesi), upload bukti (wajib), Kirim |
 | 2.2.24 | Form Pengajuan Perubahan Data | `/warga/keluarga/warga/{id}/ubah` | Field yang dapat diubah (NIK dan No. KK tidak tampil), opsi perubahan status warga (`meninggal`, `pindah_rumah`, `pindah_kk` untuk pindah/pecah KK), upload bukti (wajib), Kirim |
 | 2.2.25 | Pengajuan Surat | `/warga/surat` | Form: dropdown anggota KK (auto-fill terkunci), keperluan, Ajukan. Riwayat: status badge, alasan penolakan, Batalkan (hanya menunggu), Preview dan Unduh PDF (hanya disetujui) |
@@ -316,12 +316,12 @@ Nomor 2.2.x mengikuti laporan. Layar X1–X7 dibutuhkan oleh UC/F tetapi belum p
 
 | ID | Layar | Rute (usulan) | Elemen utama |
 | --- | --- | --- | --- |
-| 2.2.3 | Beranda Admin | `/admin` | Isi beranda belum ditentukan (O-06) |
+| 2.2.3 | Beranda Admin | `/admin` | 4 kartu metrik (Total KK, Total Warga Terdaftar Hidup, Pengajuan Menunggu Verifikasi, Iuran Terkumpul Bulan Ini), daftar Pengumuman RT Terbaru (+ tombol Buat Pengumuman Baru), dan panel Rekap & Progress Iuran Bulan Ini (sesuai Laporan 2.2.6 & 3.1.4) |
 | 2.2.4 | Sidebar Admin | semua halaman Admin | Menu sesuai 4.2 |
 | 2.2.5 | Kelola Pengumuman | `/admin/pengumuman` | Tabel, aksi Tambah/Edit/Hapus/Ubah Status Publikasi |
 | 2.2.6 | Form Tambah/Edit Pengumuman | `/admin/pengumuman/create`, `/{id}/edit` | Judul, isi, thumbnail opsional, status draft/publish |
-| 2.2.7 | Kelola Data Warga & Verifikasi | `/admin/data-warga` | Tab Daftar Keluarga (No. KK, jumlah anggota, filter, Lihat) dan Tab Verifikasi Data Warga (daftar pengajuan menunggu) |
-| X6 | Detail Verifikasi | `/admin/verifikasi/{id}` | Perbandingan data_lama dan data_baru, tampilan bukti, Setujui, Tolak + alasan |
+| 2.2.7 | Kelola Data Warga & Verifikasi | `/admin/data-warga` | 3 kartu metrik (Total KK Aktif, Warga Hidup, Pengajuan Menunggu), Tab Daftar Warga & Kartu Keluarga (No. KK, kepala keluarga & alamat, jumlah anggota, badge `status_tinggal` & `status_ekonomi`, kontak, filter/cari, tombol Lihat Detail/Anggota KK, serta tombol Edit Data/Ubah Status yang membuka pop-up Ubah Status Keluarga untuk mengubah `status_tinggal` & `status_ekonomi`, sesuai UC-08 & Laporan 2.2.10) dan Tab Verifikasi Pengajuan Perubahan Data (daftar pengajuan menunggu beserta tombol Setujui & Review Perubahan) |
+| X6 | Detail Verifikasi | modal di 2.2.7 | Pop-up Review Verifikasi Pengajuan (sesuai Laporan 3.1.9): menampilkan target warga, tabel komparasi Data Eksisting (`data_lama`) vs Usulan Baru Warga (`data_baru`) berdampingan dengan Pratinjau Dokumen Pendukung (`bukti_path`), tombol Setujui & Perbarui Database, serta tombol Tolak / Tutup |
 | 2.2.8 | Detail Kartu Keluarga | `/admin/data-warga/{no_kk}` | Alamat, telepon, status ekonomi, anggota (nama, hubungan, JK, agama, pendidikan, pekerjaan, status warga), aksi. Alamat diambil dari `warga.alamat` milik anggota berstatus `kepala_keluarga` dan `hidup` pada No. KK tersebut; tampil "-" bila kosong. Telepon diambil dari `users.no_telp` akun KK |
 | 2.2.9 | Reset Password Akun | modal di 2.2.8 | Konfirmasi reset ke default (NIK) |
 | 2.2.10 | Edit Data Warga | `/admin/warga/{id}/edit` | Form koreksi data kependudukan, status_warga |
@@ -386,7 +386,7 @@ Nomor 2.2.x mengikuti laporan. Layar X1–X7 dibutuhkan oleh UC/F tetapi belum p
 | Confidentiality | Autentikasi dan hak akses sesuai peran; warga hanya melihat data keluarganya |
 | Data Integrity | Transaksi iuran dan pengajuan tercatat rapi, tanpa data hilang atau duplikat |
 
-Konsekuensi teknis: persetujuan pengajuan dan transfer akun dijalankan dalam satu transaksi database; constraint unik pada `nik`, `username`, `nomor_surat`, dan `(no_kk, bulan, tahun)`; berkas bukti di disk privat. Target performa dan kapasitas belum ditentukan.
+Konsekuensi teknis: persetujuan pengajuan dan transfer akun dijalankan dalam satu transaksi database; constraint unik pada `nik`, `no_kk`, `username`, `nomor_surat`, dan `(keluarga_id, bulan, tahun)`; berkas bukti di disk privat. Target performa dan kapasitas belum ditentukan.
 
 ---
 
@@ -412,7 +412,7 @@ Konsekuensi teknis: persetujuan pengajuan dan transfer akun dijalankan dalam sat
 | B1 | Penyesuaian Breeze, login username, registrasi (BR-09), profil, reset password, timeout sesi, middleware role | F001, F002, F016 |
 | B2 | Pengumuman dan upload thumbnail, landing page data nyata | F003, F004 |
 | B3 | Data keluarga/warga, pengajuan perubahan data dan tambah anggota, verifikasi, transfer akun (BR-02, BR-03), tambah anggota oleh Admin, badge | F005–F008, F017 |
-| B4 | Pengajuan surat, snapshot, preview, nomor surat (BR-05), PDF, batal | F011, F013–F015 |
+| B4 | Pengajuan surat, relasi `warga_tujuan_id`, preview, nomor surat (BR-05), PDF, batal | F011, F013–F015 |
 | B5 | Iuran, lazy generation 12 bulan, nominal awal dari konfigurasi (Rp 75.000) lalu disalin dari baris terbaru, pelunasan (termasuk bulan mendatang), ubah nominal, riwayat | F009, F010, F012 |
 | B6 | Otorisasi data per KK, validasi, penyimpanan berkas privat, HTTPS, pengujian | Semua |
 
@@ -436,7 +436,7 @@ Konsekuensi teknis: persetujuan pengajuan dan transfer akun dijalankan dalam sat
 | F012 | 12 card iuran milik KK sendiri read-only; bulan lampau belum lunas tampil MENUNGGAK; KK terdaftar tengah tahun: bulan sebelumnya N/A, tanpa baris tunggakan; buka menu berulang tidak membuat baris ganda |
 | F013 | Setujui menghasilkan nomor; tolak tanpa alasan diperbolehkan |
 | F014 | Status dan alasan tampil |
-| F015 | PDF memuat nomor dan data snapshot; hanya surat disetujui dapat diunduh |
+| F015 | PDF memuat nomor surat dan biodata warga tujuan via relasi warga_tujuan_id; hanya surat disetujui dapat diunduh |
 | F016 | Ubah no. telepon; ganti password dengan lama salah dan konfirmasi beda |
 | F017 | Badge muncul saat status berubah |
 
@@ -450,14 +450,12 @@ Aturan bisnis tambahan: BR-05 (nomor 001 pada tahun baru, tanpa duplikat), BR-06
 | --- | --- | --- |
 | O-04 | Kapan badge F017 hilang (dianggap sudah dibaca) | F017 |
 | O-05 | Aturan password baru ("ketentuan" di UC-03), durasi timeout sesi, batas ukuran dan tipe berkas bukti dan thumbnail | Validasi dan BR-12 |
-| O-06 | Isi Beranda Admin dan Warga selain ringkasan iuran, isi "informasi layanan publik" di landing page | Layar 2.2.1, 2.2.3 |
 | O-07 | Tata letak dan isi PDF surat; nama dan penyimpanan data pejabat RT untuk tanda tangan | F015 |
 | O-08 | Apakah Admin dapat mengoreksi NIK dan No. KK saat koreksi data (batasan hanya untuk Warga). PNG "Pop up Ganti No KK" sudah dihapus dari desain, sehingga PRD tidak memuat fitur ubah No. KK | 2.2.10 |
 | O-09 | Laporan RPL-102 perlu disamakan dengan BR-04: UC-01 masih menyebut warga mengisi kata sandi saat mendaftar (UC-02 sudah menyebut default NIK). Jumlah tabel di laporan (7) sudah sesuai DBML | Dokumentasi |
 | O-11 | Judul UC-04 di laporan sama dengan UC-06 ("Mengelola Pengumuman") padahal isinya melihat pengumuman; dipertahankan | Dokumentasi |
 | O-15 | Nominal baris baru disalin dari baris terbaru (BR-06). Jika Admin pernah mengubah nominal satu baris secara khusus (mis. keringanan satu KK) dan baris itu kebetulan yang terbaru, nominal tersebut ikut tersalin ke KK atau tahun baru. Alternatif: pakai nominal yang paling banyak muncul (modus) pada baris `belum_lunas` terbaru | BR-06 |
 | O-16 | Belum ditentukan: warna card N/A; isi tab Riwayat Pembayaran setelah tab Kelola Status Iuran menampilkan 12 bulan; tunggakan tahun sebelumnya tidak tampil pada 12 bulan tahun berjalan (usulan: tab Riwayat menampilkan semua tahun dengan filter tahun) | 2.2.16, 2.2.26 |
-| O-18 | Fungsi PNG "Detail Kelola Warga (warga)" belum jelas (detail anggota keluarga di sisi Warga?) dan tidak ada PNG untuk X6 Detail Verifikasi (kemungkinan menyatu di tab 2 Kelola Data Warga & Verifikasi) | Lampiran C.3, C.4 |
 
 ---
 
@@ -502,7 +500,7 @@ Total 42 file PNG. Nama file ketiga folder dicatat dari tangkapan layar terbaru 
 | File | ID layar | Catatan |
 | --- | --- | --- |
 | `Landing Page(Landing-Page).png` | 2.2.1 | Landing page |
-| `Landing_Page_Pengumuman(Landing-page).png` | 2.2.1 | Dugaan: tampilan daftar pengumuman; thumbnail menyerupai halaman tersendiri, bukan hanya bagian landing page |
+| `Landing_Page_Pengumuman(Landing-page).png` | 2.2.1 | Halaman daftar seluruh pengumuman publik (Laporan 2.2.2) |
 | `Detail Pengumuman (Landing Page).png` | X2 | Detail pengumuman |
 | `Halaman Login.png` | 2.2.2 | Login |
 | `Halaman Register.png` | X1 | Registrasi |
@@ -524,7 +522,7 @@ Total 42 file PNG. Nama file ketiga folder dicatat dari tangkapan layar terbaru 
 | `Halaman Iuran Warga (Warga).png` | 2.2.26 | Grid 12 card iuran (BR-06) |
 | `Profil & Keamanan Akun Warga ( Warga).png` | X3 | Profil dan keamanan. Pada tangkapan layar ada spasi di dalam kurung; cocokkan dengan nama file asli |
 | `Pop up Yakin Ganti password Akun Warga (Warga).png` | X3 | Pop-up konfirmasi ganti password |
-| `Detail Kelola Warga (warga).png` | belum dipetakan | Lihat C.4 dan O-18 |
+| `Detail Kelola Warga (warga).png` | 2.2.21 | Pop-up Detail Biodata Kependudukan Warga pada Tab 1 Data Keluarga (Laporan 3.1.18) |
 
 **`ui-wargaku/AdminRT/`**
 
@@ -557,14 +555,12 @@ Total 42 file PNG. Nama file ketiga folder dicatat dari tangkapan layar terbaru 
 ### C.3 Layar di PRD yang tidak punya file PNG
 
 - **2.2.4 Sidebar Admin dan 2.2.20 Sidebar Warga:** tidak ada file terpisah; diasumsikan tampil pada setiap halaman. Ikuti sidebar pada PNG beranda masing-masing.
-- **X6 Detail Verifikasi:** tidak ada PNG; kemungkinan menyatu pada tab 2 Kelola Data Warga & Verifikasi (O-18). Bangun sebagai "menunggu desain" hanya jika tab 2 tidak mencukupi untuk membandingkan `data_lama` dan `data_baru`.
+- **X6 Detail Verifikasi:** tidak ada file PNG terpisah di folder `ui-wargaku/AdminRT/`, namun desain resminya sudah ada di Laporan RPL-102 Bab 2.2.24 dan Bab 3.1.9 berupa pop-up/modal "Review Verifikasi Pengajuan" pada Tab 2 Kelola Data Warga & Verifikasi.
 - **State kosong, error muat, dan error validasi (Bagian 10):** tidak ada PNG. Bangun dengan komponen yang sama dan tandai "menunggu desain".
 
 ### C.4 PNG yang tidak punya padanan di PRD
 
-| File | Masalah | Tindakan |
-| --- | --- | --- |
-| `Detail Kelola Warga (warga).png` | Tidak ada layar detail anggota di sisi Warga pada katalog Bagian 9 | Jangan dibangun sampai O-18 diputuskan |
+Tidak ada. Saat ini seluruh 42 file PNG di folder `ui-wargaku/` sudah terpetakan ke layar di Bagian 9.
 
 ### C.5 Aturan CSS vanilla
 

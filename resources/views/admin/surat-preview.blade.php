@@ -151,13 +151,13 @@
             align-items: center;
             justify-content: space-between;
             font-size: 13px;
-            color: #312e81;
+            color: #3730a3;
         }
 
         .preview-alert-left {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
 
         .preview-alert-left i {
@@ -167,84 +167,75 @@
 
         .badge-format-a4 {
             background: #e0e7ff;
-            color: #3730a3;
-            padding: 3px 10px;
+            color: #4338ca;
+            padding: 3px 9px;
             border-radius: 4px;
-            font-size: 11.5px;
-            font-weight: 600;
-            white-space: nowrap;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        /* ── Paper Document (A4 Container) ── */
+        /* ── Paper Simulation A4 ── */
         .preview-main-content {
             flex: 1;
-            padding: 0 16px 40px 16px;
             display: flex;
             justify-content: center;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
+            padding: 10px 16px 40px 16px;
         }
 
         .surat-a4-paper {
-            width: 210mm; /* Standard A4 */
-            min-width: 210mm;
-            max-width: 210mm;
-            min-height: 297mm;
             background: #ffffff;
-            box-shadow: 0 4px 25px rgba(0, 0, 0, 0.08);
+            width: 210mm;
+            min-height: 297mm;
+            padding: 25mm 25mm 25mm 30mm; /* Atas 2.5cm, Bawah 2.5cm, Kanan 2.5cm, Kiri 3.0cm */
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
             border-radius: 2px;
-            padding-top: 2.5cm;
-            padding-bottom: 2.5cm;
-            padding-left: 3cm;
-            padding-right: 2.5cm;
-            font-family: 'Times New Roman', Times, serif;
-            color: #000000;
-            line-height: 1.5;
             position: relative;
-            box-sizing: border-box;
+            color: #000000;
+            font-family: 'Times New Roman', Times, serif;
         }
 
         /* Kop Surat */
         .kop-surat-header {
             text-align: center;
-            line-height: 1.35;
-            margin-bottom: 8px;
+            line-height: 1.3;
+            margin-bottom: 2px;
         }
 
         .kop-rt-title {
             font-size: 16px;
             font-weight: bold;
             letter-spacing: 0.5px;
-            text-transform: uppercase;
         }
 
         .kop-kel-title {
             font-size: 15px;
             font-weight: bold;
-            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .kop-kota-title {
-            font-size: 14.5px;
-            font-weight: bold;
-            text-transform: uppercase;
+            font-size: 13px;
+            margin-top: 1px;
         }
 
         .kop-divider-double {
             border-top: 3px solid #000000;
             border-bottom: 1px solid #000000;
-            height: 2px;
-            margin: 10px 0 24px 0;
+            height: 4px;
+            margin-top: 6px;
+            margin-bottom: 20px;
         }
 
-        /* Title Surat */
+        /* Document Title & Number */
         .doc-title-block {
             text-align: center;
             margin-bottom: 24px;
         }
 
         .doc-main-title {
-            font-size: 16.5px;
+            font-size: 16px;
             font-weight: bold;
             text-decoration: underline;
             letter-spacing: 1px;
@@ -337,11 +328,6 @@
             text-decoration: underline;
         }
 
-        .doc-sig-center {
-            text-align: center;
-            font-size: 14px;
-        }
-
         /* Print CSS (Atas 2.5cm, Bawah 2.5cm, Kiri 3cm, Kanan 2.5cm) */
         @page {
             size: A4 portrait;
@@ -379,15 +365,36 @@
 <body>
 
 @php
-    $id = $id ?? 1;
-    $status = $surat['status'] ?? 'Menunggu';
-    $nomorSurat = $surat['nomor_surat'] ?? null;
-    $pemohon = $surat['pemohon_nama'] ?? 'Bambang Santoso, S.T.';
-    $tujuan = $surat['warga_tujuan'] ?? $pemohon;
-    $nik = $surat['pemohon_nik'] ?? '3275012304780001';
-    $alamat = $surat['pemohon_alamat'] ?? 'Blok B4 No. 12';
-    $keperluan = $surat['keperluan'] ?? 'Pengantar permohonan Surat Keterangan Catatan Kepolisian (SKCK) untuk persyaratan rekrutmen BUMN';
-    $isDisetujui = ($status === 'Disetujui' || (!empty($nomorSurat) && $nomorSurat !== '-' && $nomorSurat !== 'Dibatalkan'));
+    $statusStr = is_object($surat->status) ? $surat->status->value : $surat->status;
+    $isDisetujui = ($statusStr === 'disetujui');
+    $isDitolak = ($statusStr === 'ditolak');
+    $isMenunggu = ($statusStr === 'menunggu');
+    $nomorSurat = $surat->nomor_surat ?? $rekomendasiNomorSurat;
+
+    $pemohon = $surat->pemohon?->nama ?? 'Warga RT';
+    $tujuan = $surat->wargaTujuan?->nama ?? $pemohon;
+    $nik = $surat->wargaTujuan?->nik ?? ($surat->pemohon?->nik ?? '-');
+    $tempatLahir = $surat->wargaTujuan?->tempat_lahir ?? 'Batam';
+    $rawTglLahir = $surat->wargaTujuan?->tanggal_lahir;
+    $tglLahir = $rawTglLahir
+        ? (\Illuminate\Support\Carbon::parse($rawTglLahir)->translatedFormat('d F Y'))
+        : '-';
+    $ttl = ($tempatLahir ?: '-') . ', ' . $tglLahir;
+
+    $jk = is_object($surat->wargaTujuan?->jenis_kelamin)
+        ? $surat->wargaTujuan->jenis_kelamin->label()
+        : ($surat->wargaTujuan?->jenis_kelamin === 'laki_laki' ? 'Laki-laki' : ($surat->wargaTujuan?->jenis_kelamin === 'perempuan' ? 'Perempuan' : '-'));
+
+    $agama = is_object($surat->wargaTujuan?->agama)
+        ? $surat->wargaTujuan->agama->label()
+        : ucfirst($surat->wargaTujuan?->agama ?? '-');
+
+    $alamat = $surat->wargaTujuan?->alamat ?? ($surat->pemohon?->alamat ?? 'RT 04 / RW 08');
+    $keperluan = $surat->keperluan;
+    $rawCreatedAt = $surat->created_at;
+    $tglSurat = $rawCreatedAt
+        ? (\Illuminate\Support\Carbon::parse($rawCreatedAt)->translatedFormat('d F Y'))
+        : now()->translatedFormat('d F Y');
 @endphp
 
 {{-- ═══ TOP NAVBAR ═══ --}}
@@ -399,32 +406,50 @@
         <h1 class="preview-topbar-title">Pratinjau Surat Pengantar RT (Admin RT)</h1>
     </div>
     <div class="preview-topbar-right">
-        {{-- Button Cetak / Unduh PDF selalu tampil --}}
+        {{-- Button Cetak / Unduh PDF --}}
         <button type="button" class="btn-preview-action btn-preview-cetak" onclick="window.print()" title="Cetak atau Unduh sebagai PDF">
             <i class='bx bx-printer'></i> Cetak / Unduh PDF
         </button>
 
-        {{-- Tombol Tolak & Setujui hanya jika status belum Disetujui --}}
-        <div id="wrap-action-pending" style="{{ $isDisetujui ? 'display: none;' : 'display: flex; gap: 10px;' }}">
+        {{-- Tombol Tolak & Setujui hanya jika status masih Menunggu --}}
+        @if($isMenunggu)
             <button type="button" class="btn-preview-action btn-preview-tolak" onclick="bukaModalTolakPreview()">
                 <i class='bx bx-x-circle'></i> Tolak Permohonan
             </button>
             <button type="button" class="btn-preview-action btn-preview-setuju" onclick="bukaModalSetujuiPreview()">
                 <i class='bx bx-check-circle'></i> Setujui &amp; Terbitkan
             </button>
-        </div>
+        @elseif($isDisetujui)
+            <span style="background: #ecfdf5; color: #047857; font-weight: 700; font-size: 12px; padding: 6px 12px; border-radius: 4px; border: 1px solid #a7f3d0; display: inline-flex; align-items: center; gap: 5px;">
+                <i class='bx bx-check-circle'></i> Disetujui
+            </span>
+        @else
+            <span style="background: #fef2f2; color: #b91c1c; font-weight: 700; font-size: 12px; padding: 6px 12px; border-radius: 4px; border: 1px solid #fecaca; display: inline-flex; align-items: center; gap: 5px;">
+                <i class='bx bx-x-circle'></i> Ditolak
+            </span>
+        @endif
     </div>
 </header>
 
 {{-- ═══ ALERT INFO ═══ --}}
 <div class="preview-alert-wrap no-print">
-    <div class="preview-alert-banner">
-        <div class="preview-alert-left">
-            <i class='bx bx-info-circle'></i>
-            <span>Periksa kesesuaian data NIK &amp; domisili warga sebelum memberikan persetujuan penerbitan surat resmi.</span>
+    @if($isDitolak)
+        <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 6px; padding: 10px 18px; display: flex; align-items: center; justify-content: space-between; font-size: 13px; color: #991b1b;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <i class='bx bx-error-circle' style="font-size: 20px; color: #ef4444;"></i>
+                <span><strong>Permohonan Ditolak:</strong> {{ $surat->alasan ?? 'Berkas permohonan belum memenuhi syarat.' }}</span>
+            </div>
+            <span class="badge-format-a4" style="background: #fee2e2; color: #b91c1c;">Ditolak</span>
         </div>
-        <span class="badge-format-a4">Format A4 Resmi</span>
-    </div>
+    @else
+        <div class="preview-alert-banner">
+            <div class="preview-alert-left">
+                <i class='bx bx-info-circle'></i>
+                <span>Periksa kesesuaian data NIK &amp; domisili warga sebelum mencetak atau memberikan persetujuan penerbitan surat resmi.</span>
+            </div>
+            <span class="badge-format-a4">Format A4 Resmi</span>
+        </div>
+    @endif
 </div>
 
 {{-- ═══ A4 PAPER DOCUMENT ═══ --}}
@@ -434,7 +459,7 @@
         <div class="kop-surat-header">
             <div class="kop-rt-title">RUKUN TETANGGA 04 PERUMAHAN SUKAMAJU INDAH</div>
             <div class="kop-kel-title">KELURAHAN SUKAMAJU, KECAMATAN CILODONG</div>
-            <div class="kop-kota-title">KOTA MUHAR – 16415</div>
+            <div class="kop-kota-title">KOTA BATAM – 29461</div>
         </div>
         <div class="kop-divider-double"></div>
 
@@ -442,16 +467,16 @@
         <div class="doc-title-block">
             <div class="doc-main-title">SURAT PENGANTAR</div>
             <div class="doc-nomor-title">
-                NO. <span id="label-doc-nomor">{{ $nomorSurat ?? '..... / SP / RT04 / II / ' . date('Y') }}</span>
+                NO. <span id="label-doc-nomor">{{ $surat->nomor_surat ?? ($isDisetujui ? $nomorSurat : '..... / SP / RT04 / RW08 / ' . now()->format('Y')) }}</span>
             </div>
         </div>
 
         {{-- Paragraf Pembuka --}}
         <p class="doc-paragraph">
-            Yang bertanda tangan di bawah ini Ketua RT. 04 Kelurahan Sukamaju Kecamatan Cilodong, Menerangkan bahwa :
+            Yang bertanda tangan di bawah ini Ketua RT. 04 / RW 08 Kelurahan Sukamaju, Kecamatan Cilodong, menerangkan bahwa:
         </p>
 
-        {{-- Tabel Rincian Data Warga --}}
+        {{-- Tabel Rincian Data Warga (diambil via relasi warga_tujuan_id sesuai PRD BR-10) --}}
         <table class="doc-data-table">
             <tr>
                 <td class="doc-label-col">1. Nama Lengkap</td>
@@ -464,24 +489,24 @@
                 <td class="doc-val-col" id="label-doc-nik">{{ $nik }}</td>
             </tr>
             <tr>
-                <td class="doc-label-col">3. Tempat/Tgl Lahir</td>
+                <td class="doc-label-col">3. Tempat / Tgl Lahir</td>
                 <td class="doc-sep-col">:</td>
-                <td class="doc-val-col">Depok, 14 Februari 1988</td>
+                <td class="doc-val-col">{{ $ttl }}</td>
             </tr>
             <tr>
                 <td class="doc-label-col">4. Jenis Kelamin</td>
                 <td class="doc-sep-col">:</td>
-                <td class="doc-val-col">Laki-laki / Perempuan</td>
+                <td class="doc-val-col">{{ $jk }}</td>
             </tr>
             <tr>
                 <td class="doc-label-col">5. Agama</td>
                 <td class="doc-sep-col">:</td>
-                <td class="doc-val-col">Islam</td>
+                <td class="doc-val-col">{{ $agama }}</td>
             </tr>
             <tr>
                 <td class="doc-label-col">6. Alamat Domisili</td>
                 <td class="doc-sep-col">:</td>
-                <td class="doc-val-col" id="label-doc-alamat">Perumahan Sukamaju Indah {{ $alamat }}, RT. 04 Kelurahan Sukamaju, Kecamatan Cilodong.</td>
+                <td class="doc-val-col" id="label-doc-alamat">{{ $alamat }}</td>
             </tr>
             <tr>
                 <td class="doc-label-col">7. Keperluan</td>
@@ -492,7 +517,7 @@
 
         {{-- Paragraf Penutup --}}
         <p class="doc-closing-paragraph">
-            Demikian Surat keterangan ini dibuat untuk dapat dipergunakan sesuai dengan keperluannya.
+            Demikian Surat Keterangan Pengantar ini dibuat dengan sebenarnya untuk dapat dipergunakan sebagaimana mestinya.
         </p>
 
         {{-- Blok Tanda Tangan --}}
@@ -504,17 +529,23 @@
                 <div class="doc-sig-name" id="label-doc-pemohon">{{ $pemohon }}</div>
             </div>
             <div class="doc-sig-box">
-                <div style="margin-bottom: 6px;" id="label-doc-tanggal">Depok, {{ date('d F Y') }}</div>
+                <div style="margin-bottom: 6px;" id="label-doc-tanggal">Batam, {{ $tglSurat }}</div>
                 <div style="margin-bottom: 6px;">Ketua RT. 04</div>
                 <div class="doc-sig-space" id="box-ttd-rt" style="height: 85px;">
-                    <img src="{{ asset('tanda_tangan_rt.png') }}" 
-                         alt="Tanda Tangan Ketua RT 04" 
-                         class="doc-sig-img" 
-                         id="img-ttd-rt"
-                         style="{{ $isDisetujui ? 'display: block;' : 'display: none;' }}">
-                    <div id="empty-ttd-rt" class="no-print" style="{{ $isDisetujui ? 'display: none;' : 'display: block; font-size: 11px; color: #94a3b8; font-style: italic; border: 1px dashed #cbd5e1; border-radius: 4px; padding: 6px 8px; background: #f8fafc;' }}">
-                        (Menunggu Persetujuan RT)
-                    </div>
+                    @if($isDisetujui)
+                        <img src="{{ asset('tanda_tangan_rt.png') }}" 
+                             alt="Tanda Tangan Ketua RT 04" 
+                             class="doc-sig-img" 
+                             id="img-ttd-rt"
+                             onerror="this.style.display='none'; document.getElementById('alt-ttd-rt').style.display='block';">
+                        <div id="alt-ttd-rt" style="display: none; font-size: 12px; font-weight: 700; color: #15803d; border: 1px dashed #86efac; padding: 4px 8px; border-radius: 4px;">
+                            (Telah Ditandatangani)
+                        </div>
+                    @else
+                        <div id="empty-ttd-rt" class="no-print" style="font-size: 11px; color: #94a3b8; font-style: italic; border: 1px dashed #cbd5e1; border-radius: 4px; padding: 6px 8px; background: #f8fafc;">
+                            (Menunggu Persetujuan RT)
+                        </div>
+                    @endif
                 </div>
                 <div class="doc-sig-name">Supriyadi</div>
             </div>
@@ -522,171 +553,134 @@
     </div>
 </main>
 
-{{-- ═══ MODAL PERSETUJUAN SURAT ═══ --}}
+{{-- ═══ MODAL PERSETUJUAN SURAT (2.2.14) ═══ --}}
+@if($isMenunggu)
 <div class="surat-modal-overlay" id="modal-persetujuan-preview" onclick="if(event.target===this) tutupModalSetujuiPreview()">
     <div class="surat-modal-dialog">
-        <div class="surat-modal-header surat-modal-header--green">
-            <h3 class="surat-modal-title">
-                <i class='bx bx-check-shield' style="font-size: 19px;"></i>
-                Persetujuan &amp; Penerbitan Surat Pengantar
-            </h3>
-            <button type="button" class="surat-modal-close-btn" onclick="tutupModalSetujuiPreview()">&times;</button>
-        </div>
-        <div class="surat-modal-body">
-            <div class="surat-modal-info-block">
-                <div class="surat-modal-info-row">
-                    <span class="surat-modal-info-label">Pemohon:</span>
-                    <span class="surat-modal-info-val surat-modal-info-val--blue">{{ $pemohon }}</span>
-                </div>
-                <div class="surat-modal-info-row">
-                    <span class="surat-modal-info-label">Warga Tujuan:</span>
-                    <span class="surat-modal-info-val surat-modal-info-val--dark">{{ $tujuan }}</span>
-                </div>
+        <form method="POST" action="{{ route('admin.surat.setujui', $surat->id) }}">
+            @csrf
+            <div class="surat-modal-header surat-modal-header--green">
+                <h3 class="surat-modal-title">
+                    <i class='bx bx-check-shield' style="font-size: 19px;"></i>
+                    Persetujuan &amp; Penerbitan Surat Pengantar
+                </h3>
+                <button type="button" class="surat-modal-close-btn" onclick="tutupModalSetujuiPreview()">&times;</button>
             </div>
-
-            <div class="surat-modal-grid-2">
-                <div class="surat-modal-field">
-                    <label class="surat-modal-label" for="modal-input-nomor-prev">
-                        <i class='bx bx-id-card'></i> Nomor Surat Resmi RT <span class="req">*</span>
-                    </label>
-                    <input type="text" id="modal-input-nomor-prev" class="surat-modal-input" value="05/SP/RT04/II/2026">
-                    <div class="surat-modal-subtext">Format: [No]/SP/RT04/[Bulan]/[Tahun]</div>
+            <div class="surat-modal-body">
+                <div class="surat-modal-info-block">
+                    <div class="surat-modal-info-row">
+                        <span class="surat-modal-info-label">Pemohon:</span>
+                        <span class="surat-modal-info-val surat-modal-info-val--blue">{{ $pemohon }}</span>
+                    </div>
+                    <div class="surat-modal-info-row">
+                        <span class="surat-modal-info-label">Warga Tujuan:</span>
+                        <span class="surat-modal-info-val surat-modal-info-val--dark">{{ $tujuan }}</span>
+                    </div>
                 </div>
 
-                <div class="surat-modal-field">
-                    <label class="surat-modal-label" for="modal-input-tanggal-prev">
-                        <i class='bx bx-calendar'></i> Tanggal Penerbitan <span class="req">*</span>
-                    </label>
-                    <input type="text" id="modal-input-tanggal-prev" class="surat-modal-input" readonly value="{{ date('m/d/Y') }}">
-                    <div class="surat-modal-subtext">Tanggal tertera pada surat pengantar</div>
+                <div class="surat-modal-grid-2">
+                    <div class="surat-modal-field">
+                        <label class="surat-modal-label" for="modal-input-nomor-prev">
+                            <i class='bx bx-id-card'></i> Nomor Surat Resmi RT
+                            <span style="font-size: 10.5px; background: #e0f2fe; color: #0369a1; padding: 2px 7px; border-radius: 4px; font-weight: 600; margin-left: 6px;">
+                                <i class='bx bx-bot'></i> Otomatis Sistem
+                            </span>
+                        </label>
+                        <input type="text" name="nomor_surat" id="modal-input-nomor-prev" class="surat-modal-input" readonly style="background: #f8fafc; font-weight: 700; color: #0f172a; cursor: not-allowed;" value="{{ $rekomendasiNomorSurat }}">
+                        <div class="surat-modal-subtext">Dibuat otomatis berurutan sesuai aturan BR-05 (reset tiap tahun)</div>
+                    </div>
+
+                    <div class="surat-modal-field">
+                        <label class="surat-modal-label" for="modal-input-tanggal-prev">
+                            <i class='bx bx-calendar'></i> Tanggal Penerbitan <span class="req">*</span>
+                        </label>
+                        <input type="text" id="modal-input-tanggal-prev" class="surat-modal-input" readonly value="{{ now()->translatedFormat('d F Y') }}">
+                        <div class="surat-modal-subtext">Tanggal tertera pada surat pengantar</div>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="surat-modal-footer">
-            <button type="button" class="btn-modal-batal" onclick="tutupModalSetujuiPreview()">Batal</button>
-            <button type="button" class="btn-modal-simpan" onclick="simpanPersetujuanDariPreview()">
-                <i class='bx bx-check'></i> Simpan &amp; Terbitkan Surat
-            </button>
-        </div>
+            <div class="surat-modal-footer">
+                <button type="button" class="btn-modal-batal" onclick="tutupModalSetujuiPreview()">Batal</button>
+                <button type="submit" class="btn-modal-simpan">
+                    <i class='bx bx-check'></i> Simpan &amp; Terbitkan Surat
+                </button>
+            </div>
+        </form>
     </div>
 </div>
 
-{{-- ═══ MODAL PENOLAKAN SURAT ═══ --}}
+{{-- ═══ MODAL PENOLAKAN SURAT (2.2.15) ═══ --}}
 <div class="surat-modal-overlay" id="modal-tolak-preview" onclick="if(event.target===this) tutupModalTolakPreview()">
     <div class="surat-modal-dialog">
-        <div class="surat-modal-header surat-modal-header--red">
-            <h3 class="surat-modal-title">
-                <i class='bx bx-x-circle' style="font-size: 19px;"></i>
-                Penolakan Permohonan Surat Pengantar
-            </h3>
-            <button type="button" class="surat-modal-close-btn" onclick="tutupModalTolakPreview()">&times;</button>
-        </div>
-        <div class="surat-modal-body">
-            <div class="surat-modal-info-block">
-                <div class="surat-modal-info-row">
-                    <span class="surat-modal-info-label">Pemohon:</span>
-                    <span class="surat-modal-info-val surat-modal-info-val--blue">{{ $pemohon }}</span>
-                </div>
-                <div class="surat-modal-info-row">
-                    <span class="surat-modal-info-label">Warga Tujuan:</span>
-                    <span class="surat-modal-info-val surat-modal-info-val--dark">{{ $tujuan }}</span>
-                </div>
+        <form method="POST" action="{{ route('admin.surat.tolak', $surat->id) }}">
+            @csrf
+            <div class="surat-modal-header surat-modal-header--red">
+                <h3 class="surat-modal-title">
+                    <i class='bx bx-x-circle' style="font-size: 19px;"></i>
+                    Penolakan Permohonan Surat Pengantar
+                </h3>
+                <button type="button" class="surat-modal-close-btn" onclick="tutupModalTolakPreview()">&times;</button>
             </div>
-
-            <div class="surat-modal-grid-2">
-                <div class="surat-modal-field">
-                    <label class="surat-modal-label" for="modal-input-alasan-prev">
-                        <i class='bx bx-message-error' style="color: #dc3545;"></i> Alasan Penolakan RT <span class="req">*</span>
-                    </label>
-                    <input type="text" id="modal-input-alasan-prev" class="surat-modal-input" value="Lokasi tenda melewati batas jalan utama dan belum melampirkan persetujuan tertulis dari tetangga kanan kiri Blok D3.">
-                    <div class="surat-modal-subtext">Catatan ini akan tersimpan pada detail penolakan</div>
+            <div class="surat-modal-body">
+                <div class="surat-modal-info-block">
+                    <div class="surat-modal-info-row">
+                        <span class="surat-modal-info-label">Pemohon:</span>
+                        <span class="surat-modal-info-val surat-modal-info-val--blue">{{ $pemohon }}</span>
+                    </div>
+                    <div class="surat-modal-info-row">
+                        <span class="surat-modal-info-label">Warga Tujuan:</span>
+                        <span class="surat-modal-info-val surat-modal-info-val--dark">{{ $tujuan }}</span>
+                    </div>
                 </div>
 
-                <div class="surat-modal-field">
-                    <label class="surat-modal-label" for="modal-input-tanggal-tolak-prev">
-                        <i class='bx bx-calendar'></i> Tanggal Penolakan <span class="req">*</span>
-                    </label>
-                    <input type="text" id="modal-input-tanggal-tolak-prev" class="surat-modal-input" readonly value="{{ date('m/d/Y') }}">
-                    <div class="surat-modal-subtext">Tanggal tercatat dalam sistem administrasi</div>
+                <div class="surat-modal-grid-2">
+                    <div class="surat-modal-field">
+                        <label class="surat-modal-label" for="modal-input-alasan-prev">
+                            <i class='bx bx-message-error' style="color: #dc3545;"></i> Alasan Penolakan RT
+                        </label>
+                        <input type="text" name="alasan" id="modal-input-alasan-prev" class="surat-modal-input" placeholder="Masukkan alasan penolakan..." value="">
+                        <div class="surat-modal-subtext">Catatan ini akan tersimpan pada detail penolakan</div>
+                    </div>
+
+                    <div class="surat-modal-field">
+                        <label class="surat-modal-label" for="modal-input-tanggal-tolak-prev">
+                            <i class='bx bx-calendar'></i> Tanggal Penolakan
+                        </label>
+                        <input type="text" id="modal-input-tanggal-tolak-prev" class="surat-modal-input" readonly value="{{ now()->translatedFormat('d F Y') }}">
+                        <div class="surat-modal-subtext">Tanggal tercatat dalam sistem administrasi</div>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="surat-modal-footer">
-            <button type="button" class="btn-modal-batal" onclick="tutupModalTolakPreview()">Batal</button>
-            <button type="button" class="btn-modal-tolak" onclick="simpanPenolakanDariPreview()">
-                <i class='bx bx-x'></i> Tolak Permohonan Surat
-            </button>
-        </div>
+            <div class="surat-modal-footer">
+                <button type="button" class="btn-modal-batal" onclick="tutupModalTolakPreview()">Batal</button>
+                <button type="submit" class="btn-modal-tolak">
+                    <i class='bx bx-x'></i> Tolak Permohonan Surat
+                </button>
+            </div>
+        </form>
     </div>
 </div>
+@endif
 
 <script>
-    const SURAT_ID = {{ $id }};
-
-    // Sinkronisasi status dari localStorage jika ada
-    document.addEventListener('DOMContentLoaded', function() {
-        var savedStatus = localStorage.getItem('surat_status_' + SURAT_ID);
-        var savedNomor = localStorage.getItem('surat_nomor_' + SURAT_ID);
-
-        if (savedStatus === 'disetujui' || '{{ $status }}' === 'Disetujui' || ('{{ $nomorSurat }}' && '{{ $nomorSurat }}' !== '-' && '{{ $nomorSurat }}' !== 'Dibatalkan')) {
-            tampilkanModeDisetujui(savedNomor || '{{ $nomorSurat ?? "05/SP/RT04/II/2026" }}');
-        }
-    });
-
-    function tampilkanModeDisetujui(noSurat) {
-        var wrapPending = document.getElementById('wrap-action-pending');
-        if (wrapPending) wrapPending.style.display = 'none';
-
-        var labelNomor = document.getElementById('label-doc-nomor');
-        if (labelNomor) labelNomor.textContent = noSurat;
-
-        var imgTtd = document.getElementById('img-ttd-rt');
-        if (imgTtd) imgTtd.style.display = 'block';
-
-        var emptyTtd = document.getElementById('empty-ttd-rt');
-        if (emptyTtd) emptyTtd.style.display = 'none';
-    }
-
-    // Modal Persetujuan Handlers
     function bukaModalSetujuiPreview() {
-        document.getElementById('modal-persetujuan-preview').style.display = 'flex';
+        var el = document.getElementById('modal-persetujuan-preview');
+        if (el) el.style.display = 'flex';
     }
 
     function tutupModalSetujuiPreview() {
-        document.getElementById('modal-persetujuan-preview').style.display = 'none';
+        var el = document.getElementById('modal-persetujuan-preview');
+        if (el) el.style.display = 'none';
     }
 
-    function simpanPersetujuanDariPreview() {
-        var noSurat = (document.getElementById('modal-input-nomor-prev').value || '05/SP/RT04/II/2026').trim();
-
-        // Simpan ke localStorage agar tabel utama di /admin/surat otomatis update
-        localStorage.setItem('surat_status_' + SURAT_ID, 'disetujui');
-        localStorage.setItem('surat_nomor_' + SURAT_ID, noSurat);
-
-        tampilkanModeDisetujui(noSurat);
-        tutupModalSetujuiPreview();
-    }
-
-    // Modal Penolakan Handlers
     function bukaModalTolakPreview() {
-        document.getElementById('modal-tolak-preview').style.display = 'flex';
+        var el = document.getElementById('modal-tolak-preview');
+        if (el) el.style.display = 'flex';
     }
 
     function tutupModalTolakPreview() {
-        document.getElementById('modal-tolak-preview').style.display = 'none';
-    }
-
-    function simpanPenolakanDariPreview() {
-        var alasan = (document.getElementById('modal-input-alasan-prev').value || 'Lokasi tenda melewati batas jalan utama dan belum melampirkan persetujuan tertulis dari tetangga kanan kiri Blok D3.').trim();
-
-        // Simpan status ditolak ke localStorage
-        localStorage.setItem('surat_status_' + SURAT_ID, 'ditolak');
-        localStorage.setItem('surat_alasan_' + SURAT_ID, alasan);
-
-        tutupModalTolakPreview();
-
-        // Kembali ke halaman daftar surat
-        window.location.href = "{{ route('admin.surat') }}";
+        var el = document.getElementById('modal-tolak-preview');
+        if (el) el.style.display = 'none';
     }
 </script>
 

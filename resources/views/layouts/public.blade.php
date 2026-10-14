@@ -43,8 +43,20 @@
 
         {{-- Tombol kanan (Desktop) --}}
         <div class="navbar-public__actions">
-            <a href="{{ route('login') }}" class="btn btn--nav-login btn--sm">Masuk</a>
-            <a href="{{ route('register') }}" class="btn btn--nav-register btn--sm">Daftar penguna baru</a>
+            @auth
+                @if(auth()->user()->isAdmin())
+                    <a href="{{ route('admin.beranda') }}" class="btn btn--nav-login btn--sm">Portal Admin RT</a>
+                @else
+                    <a href="{{ route('warga.beranda') }}" class="btn btn--nav-login btn--sm">Portal Warga</a>
+                @endif
+                <form action="{{ route('logout') }}" method="POST" style="display:inline;margin:0;">
+                    @csrf
+                    <button type="submit" class="btn btn--nav-register btn--sm" style="background:#fee2e2;border-color:#fca5a5;color:#b91c1c;cursor:pointer;">Keluar</button>
+                </form>
+            @else
+                <a href="{{ route('login') }}" class="btn btn--nav-login btn--sm">Masuk</a>
+                <a href="{{ route('register') }}" class="btn btn--nav-register btn--sm">Daftar pengguna baru</a>
+            @endauth
         </div>
 
         {{-- Tombol Toggle Hamburger (Mobile & Tablet) --}}
@@ -74,8 +86,20 @@
             </a>
         </nav>
         <div class="navbar-public__mobile-actions">
-            <a href="{{ route('login') }}" class="btn btn--nav-login" style="width:100%;">Masuk</a>
-            <a href="{{ route('register') }}" class="btn btn--nav-register" style="width:100%;">Daftar pengguna baru</a>
+            @auth
+                @if(auth()->user()->isAdmin())
+                    <a href="{{ route('admin.beranda') }}" class="btn btn--nav-login" style="width:100%;">Portal Admin RT</a>
+                @else
+                    <a href="{{ route('warga.beranda') }}" class="btn btn--nav-login" style="width:100%;">Portal Warga</a>
+                @endif
+                <form action="{{ route('logout') }}" method="POST" style="width:100%;margin-top:8px;">
+                    @csrf
+                    <button type="submit" class="btn btn--nav-register" style="width:100%;background:#fee2e2;border-color:#fca5a5;color:#b91c1c;cursor:pointer;">Keluar</button>
+                </form>
+            @else
+                <a href="{{ route('login') }}" class="btn btn--nav-login" style="width:100%;">Masuk</a>
+                <a href="{{ route('register') }}" class="btn btn--nav-register" style="width:100%;">Daftar pengguna baru</a>
+            @endauth
         </div>
     </div>
 </header>
@@ -110,8 +134,16 @@
             <div>
                 <p class="footer-public__nav-title">Akun</p>
                 <ul class="footer-public__nav-links">
-                    <li><a href="{{ route('login') }}" class="footer-public__nav-link">Login</a></li>
-                    <li><a href="{{ route('register') }}" class="footer-public__nav-link">Daftar</a></li>
+                    @auth
+                        @if(auth()->user()->isAdmin())
+                            <li><a href="{{ route('admin.beranda') }}" class="footer-public__nav-link">Portal Admin RT</a></li>
+                        @else
+                            <li><a href="{{ route('warga.beranda') }}" class="footer-public__nav-link">Portal Warga</a></li>
+                        @endif
+                    @else
+                        <li><a href="{{ route('login') }}" class="footer-public__nav-link">Login</a></li>
+                        <li><a href="{{ route('register') }}" class="footer-public__nav-link">Daftar</a></li>
+                    @endauth
                 </ul>
             </div>
         </div>
@@ -121,9 +153,17 @@
         <div class="footer-public__bottom-inner">
             <span class="footer-public__copy">© {{ date('Y') }} WargaKu. All rights reserved.</span>
             <div class="footer-public__auth-links">
-                <a href="{{ route('login') }}">Login</a>
-                <span>|</span>
-                <a href="{{ route('register') }}">Register</a>
+                @auth
+                    @if(auth()->user()->isAdmin())
+                        <a href="{{ route('admin.beranda') }}">Portal Admin RT</a>
+                    @else
+                        <a href="{{ route('warga.beranda') }}">Portal Warga</a>
+                    @endif
+                @else
+                    <a href="{{ route('login') }}">Login</a>
+                    <span>|</span>
+                    <a href="{{ route('register') }}">Register</a>
+                @endauth
             </div>
         </div>
     </div>

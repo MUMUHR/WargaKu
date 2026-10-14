@@ -190,6 +190,9 @@
     text-decoration: none;
     transition: background var(--transition-fast);
     white-space: nowrap;
+    border: none;
+    cursor: pointer;
+    display: inline-block;
 }
 
 .admin-sidebar__logout-btn:hover {

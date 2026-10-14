@@ -169,9 +169,13 @@
             </div>
         </div>
         <div class="logout-banner-right">
-            <a href="{{ route('login') }}" class="btn-logout-banner" onclick="return confirm('Apakah Anda yakin ingin keluar dari sesi kerja Portal Admin RT?')">
-                <i class='bx bx-power-off'></i> Logout / Keluar
-            </a>
+            <form method="POST" action="{{ route('logout') }}" style="margin:0;"
+                  onsubmit="return confirm('Apakah Anda yakin ingin keluar dari sesi kerja Portal Admin RT?')">
+                @csrf
+                <button type="submit" class="btn-logout-banner">
+                    <i class='bx bx-power-off'></i> Logout / Keluar
+                </button>
+            </form>
         </div>
     </div>
 

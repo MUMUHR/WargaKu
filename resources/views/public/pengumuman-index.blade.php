@@ -28,8 +28,17 @@
         <p class="page-header__subtitle">Informasi terbaru dari RT untuk seluruh warga.</p>
     </header>
 
+    @php
+        $isPaginated = isset($pengumuman) && $pengumuman instanceof \Illuminate\Pagination\LengthAwarePaginator;
+        $total = $isPaginated ? $pengumuman->total() : (isset($pengumuman) ? count($pengumuman) : 0);
+        $halaman = $isPaginated ? $pengumuman->currentPage() : 1;
+        $totalHalaman = $isPaginated ? $pengumuman->lastPage() : 1;
+        $perHalaman = $isPaginated ? $pengumuman->perPage() : 6;
+        $offset = ($halaman - 1) * $perHalaman;
+    @endphp
+
     {{-- Daftar pengumuman --}}
-    @if(count($pengumuman) > 0)
+    @if($total > 0)
         <div class="announcement-list" role="list">
             @foreach($pengumuman as $p)
                 <article class="announcement-row" role="listitem">
@@ -62,7 +71,7 @@
                                 <line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/>
                                 <line x1="3" y1="10" x2="21" y2="10"/>
                             </svg>
-                            {{ \App\Data\DummyData::formatTanggal($p['created_at']) }}
+                            {{ date('d F Y', strtotime($p['created_at'])) }}
                         </p>
                         <h2 class="announcement-row__title">{{ $p['judul'] }}</h2>
                         <p class="announcement-row__excerpt">
@@ -83,6 +92,7 @@
         </div>
 
         {{-- Pagination --}}
+        @if($totalHalaman > 1)
         <div class="pagination-wrap" aria-label="Navigasi halaman">
             <p class="pagination-info">
                 Menampilkan {{ $offset + 1 }}–{{ min($offset + $perHalaman, $total) }} dari {{ $total }} pengumuman
@@ -91,7 +101,7 @@
             <nav class="pagination">
                 {{-- Sebelumnya --}}
                 @if($halaman > 1)
-                    <a href="{{ route('pengumuman.index', ['halaman' => $halaman - 1]) }}"
+                    <a href="{{ $isPaginated ? $pengumuman->previousPageUrl() : route('pengumuman.index', ['page' => $halaman - 1]) }}"
                        class="pagination__btn"
                        aria-label="Halaman sebelumnya">&laquo; Sebelumnya</a>
                 @else
@@ -100,7 +110,7 @@
 
                 {{-- Nomor halaman --}}
                 @for($i = 1; $i <= $totalHalaman; $i++)
-                    <a href="{{ route('pengumuman.index', ['halaman' => $i]) }}"
+                    <a href="{{ $isPaginated ? $pengumuman->url($i) : route('pengumuman.index', ['page' => $i]) }}"
                        class="pagination__btn {{ $i === $halaman ? 'pagination__btn--active' : '' }}"
                        aria-label="Halaman {{ $i }}"
                        @if($i === $halaman) aria-current="page" @endif>
@@ -110,7 +120,7 @@
 
                 {{-- Selanjutnya --}}
                 @if($halaman < $totalHalaman)
-                    <a href="{{ route('pengumuman.index', ['halaman' => $halaman + 1]) }}"
+                    <a href="{{ $isPaginated ? $pengumuman->nextPageUrl() : route('pengumuman.index', ['page' => $halaman + 1]) }}"
                        class="pagination__btn"
                        aria-label="Halaman selanjutnya">Selanjutnya &raquo;</a>
                 @else
@@ -118,6 +128,7 @@
                 @endif
             </nav>
         </div>
+        @endif
 
     @else
         {{-- State kosong --}}

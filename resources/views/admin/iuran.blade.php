@@ -14,9 +14,33 @@
 @section('content')
 
 @php
-    use App\Data\DummyData;
-    $listTunggakan = DummyData::listTunggakanIuranAdmin();
-    $listRiwayat = DummyData::listRiwayatIuranAdmin();
+    $listTunggakan = $listTunggakan ?? [
+        ['id' => 1, 'no_kk' => '3276021204850001', 'status_ekonomi' => 'EKONOMI: MAMPU', 'nama_kepala' => 'Agus Supriyanto', 'blok' => 'Blok C1 No. 04', 'periode' => 'Feb 2026', 'nominal' => 'Rp 50.000', 'status' => 'Belum Lunas'],
+        ['id' => 2, 'no_kk' => '3276022808920005', 'status_ekonomi' => 'EKONOMI: MAMPU', 'nama_kepala' => 'Dewi Anggraeni', 'blok' => 'Blok C3 No. 01', 'periode' => 'Feb 2026', 'nominal' => 'Rp 50.000', 'status' => 'Belum Lunas'],
+        ['id' => 3, 'no_kk' => '3276020509890014', 'status_ekonomi' => 'EKONOMI: KURANG MAMPU', 'nama_kepala' => 'Rahmat Hidayat', 'blok' => 'Blok A1 No. 02', 'periode' => 'Feb 2026', 'nominal' => 'Rp 50.000', 'status' => 'Belum Lunas'],
+        ['id' => 4, 'no_kk' => '3276021102830002', 'status_ekonomi' => 'EKONOMI: MAMPU', 'nama_kepala' => 'Bambang Santoso', 'blok' => 'Blok B4 No. 12', 'periode' => 'Feb 2026', 'nominal' => 'Rp 50.000', 'status' => 'Belum Lunas'],
+        ['id' => 5, 'no_kk' => '3276021908840003', 'status_ekonomi' => 'EKONOMI: KURANG MAMPU', 'nama_kepala' => 'Bambang Wicaksono', 'blok' => 'Blok B3 No. 12', 'periode' => 'Feb 2026', 'nominal' => 'Rp 50.000', 'status' => 'Belum Lunas'],
+        ['id' => 6, 'no_kk' => '3276020703810017', 'status_ekonomi' => 'EKONOMI: MAMPU', 'nama_kepala' => 'Surya Darmawan', 'blok' => 'Blok C2 No. 07', 'periode' => 'Feb 2026', 'nominal' => 'Rp 50.000', 'status' => 'Belum Lunas'],
+        ['id' => 7, 'no_kk' => '3276021610750009', 'status_ekonomi' => 'EKONOMI: MAMPU', 'nama_kepala' => 'Eko Prasetyo', 'blok' => 'Blok A3 No. 11', 'periode' => 'Feb 2026', 'nominal' => 'Rp 50.000', 'status' => 'Belum Lunas'],
+        ['id' => 8, 'no_kk' => '3276022204840003', 'status_ekonomi' => 'EKONOMI: KURANG MAMPU', 'nama_kepala' => 'Faisal Akbar', 'blok' => 'Blok B1 No. 09', 'periode' => 'Feb 2026', 'nominal' => 'Rp 50.000', 'status' => 'Belum Lunas'],
+        ['id' => 9, 'no_kk' => '3276021109780005', 'status_ekonomi' => 'EKONOMI: MAMPU', 'nama_kepala' => 'Nurul Huda', 'blok' => 'Blok C4 No. 02', 'periode' => 'Feb 2026', 'nominal' => 'Rp 50.000', 'status' => 'Belum Lunas'],
+        ['id' => 10, 'no_kk' => '3276021812890014', 'status_ekonomi' => 'EKONOMI: MAMPU', 'nama_kepala' => 'Dian Permata', 'blok' => 'Blok A2 No. 07', 'periode' => 'Feb 2026', 'nominal' => 'Rp 50.000', 'status' => 'Belum Lunas'],
+        ['id' => 11, 'no_kk' => '3276020501830022', 'status_ekonomi' => 'EKONOMI: KURANG MAMPU', 'nama_kepala' => 'Wahyu Hidayat', 'blok' => 'Blok D1 No. 05', 'periode' => 'Feb 2026', 'nominal' => 'Rp 50.000', 'status' => 'Belum Lunas'],
+    ];
+
+    $listRiwayat = $listRiwayat ?? [
+        ['id' => 101, 'no_kk' => '3275012010150012', 'nama_kepala' => 'Hendro Gunawan', 'blok' => 'Blok A1 No. 05', 'periode' => 'Feb 2026', 'bulan' => 'Februari', 'tahun' => '2026', 'nominal' => 'Rp 50.000', 'tanggal_bayar' => '02 Feb 2026 10:15 WIB', 'metode' => 'Cash', 'status' => 'Lunas'],
+        ['id' => 102, 'no_kk' => '3275011802110003', 'nama_kepala' => 'Achmad Fauzi, S.Pd.', 'blok' => 'Blok C2 No. 01', 'periode' => 'Feb 2026', 'bulan' => 'Februari', 'tahun' => '2026', 'nominal' => 'Rp 50.000', 'tanggal_bayar' => '03 Feb 2026 14:20 WIB', 'metode' => 'Cash', 'status' => 'Lunas'],
+        ['id' => 103, 'no_kk' => '3275012408190021', 'nama_kepala' => 'Ibu Sumarti', 'blok' => 'Blok D3 No. 02', 'periode' => 'Feb 2026', 'bulan' => 'Februari', 'tahun' => '2026', 'nominal' => 'Rp 50.000', 'tanggal_bayar' => '04 Feb 2026 09:00 WIB', 'metode' => 'Cash', 'status' => 'Lunas'],
+        ['id' => 104, 'no_kk' => '3275010503220035', 'nama_kepala' => 'Raden Dimas Arya', 'blok' => 'Blok B1 No. 17', 'periode' => 'Feb 2026', 'bulan' => 'Februari', 'tahun' => '2026', 'nominal' => 'Rp 50.000', 'tanggal_bayar' => '05 Feb 2026 11:30 WIB', 'metode' => 'Cash', 'status' => 'Lunas'],
+        ['id' => 105, 'no_kk' => '3275010912180044', 'nama_kepala' => 'Rahmat Kurniawan', 'blok' => 'Blok B2 No. 08', 'periode' => 'Feb 2026', 'bulan' => 'Februari', 'tahun' => '2026', 'nominal' => 'Rp 50.000', 'tanggal_bayar' => '05 Feb 2026 15:45 WIB', 'metode' => 'Cash', 'status' => 'Lunas'],
+        ['id' => 106, 'no_kk' => '3275011406200055', 'nama_kepala' => 'Siti Aisyah', 'blok' => 'Blok C1 No. 12', 'periode' => 'Feb 2026', 'bulan' => 'Februari', 'tahun' => '2026', 'nominal' => 'Rp 50.000', 'tanggal_bayar' => '06 Feb 2026 08:30 WIB', 'metode' => 'Cash', 'status' => 'Lunas'],
+        ['id' => 107, 'no_kk' => '3275012209170066', 'nama_kepala' => 'Budi Santoso', 'blok' => 'Blok A4 No. 03', 'periode' => 'Feb 2026', 'bulan' => 'Februari', 'tahun' => '2026', 'nominal' => 'Rp 50.000', 'tanggal_bayar' => '06 Feb 2026 13:10 WIB', 'metode' => 'Cash', 'status' => 'Lunas'],
+        ['id' => 108, 'no_kk' => '3275013001190077', 'nama_kepala' => 'H. Muhammad Yusuf', 'blok' => 'Blok D2 No. 15', 'periode' => 'Feb 2026', 'bulan' => 'Februari', 'tahun' => '2026', 'nominal' => 'Rp 50.000', 'tanggal_bayar' => '07 Feb 2026 16:00 WIB', 'metode' => 'Cash', 'status' => 'Lunas'],
+        ['id' => 201, 'no_kk' => '3276021204850001', 'nama_kepala' => 'Agus Supriyanto', 'blok' => 'Blok C1 No. 04', 'periode' => 'Jan 2026', 'bulan' => 'Januari', 'tahun' => '2026', 'nominal' => 'Rp 50.000', 'tanggal_bayar' => '05 Jan 2026 09:30 WIB', 'metode' => 'Cash', 'status' => 'Lunas'],
+        ['id' => 202, 'no_kk' => '3276022808920005', 'nama_kepala' => 'Dewi Anggraeni', 'blok' => 'Blok C3 No. 01', 'periode' => 'Jan 2026', 'bulan' => 'Januari', 'tahun' => '2026', 'nominal' => 'Rp 50.000', 'tanggal_bayar' => '06 Jan 2026 11:00 WIB', 'metode' => 'Cash', 'status' => 'Lunas'],
+        ['id' => 203, 'no_kk' => '3276020509890014', 'nama_kepala' => 'Rahmat Hidayat', 'blok' => 'Blok A1 No. 02', 'periode' => 'Jan 2026', 'bulan' => 'Januari', 'tahun' => '2026', 'nominal' => 'Rp 50.000', 'tanggal_bayar' => '07 Jan 2026 14:15 WIB', 'metode' => 'Cash', 'status' => 'Lunas'],
+    ];
 @endphp
 
 {{-- ========================================================

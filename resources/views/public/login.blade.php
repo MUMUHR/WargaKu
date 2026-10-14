@@ -16,19 +16,7 @@
 </head>
 <body>
 
-<div class="auth-wrapper" x-data="{ 
-    username: '', 
-    password: '', 
-    showPassword: false,
-    fillWarga() {
-        this.username = '3271048809920001';
-        this.password = 'warga123';
-    },
-    fillAdmin() {
-        this.username = 'adminrt';
-        this.password = 'admin123';
-    }
-}">
+<div class="auth-wrapper" x-data="{ showPassword: false }">
 
     {{-- ═══════════════════════════════════════════
          KOLOM KIRI: HERO BANNER
@@ -67,6 +55,27 @@
                 <p class="auth-subtitle">Gunakan Nomor Induk Kependudukan (NIK) atau Username Anda</p>
             </header>
 
+            {{-- Pesan Error / Session --}}
+            @if ($errors->any() || session('error'))
+                <div class="auth-alert auth-alert--error">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                    <span>
+                        @if (session('error'))
+                            {{ session('error') }}
+                        @else
+                            {{ $errors->first() }}
+                        @endif
+                    </span>
+                </div>
+            @endif
+
+            @if (session('success'))
+                <div class="auth-alert auth-alert--success">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                    <span>{{ session('success') }}</span>
+                </div>
+            @endif
+
             {{-- Form Login --}}
             <form action="{{ route('login.post') }}" method="POST" class="auth-form">
                 @csrf
@@ -78,11 +87,11 @@
                         <input type="text"
                                name="username"
                                id="username"
-                                 class="form-input"
+                               class="form-input {{ $errors->has('username') ? 'is-invalid' : '' }}"
                                placeholder="Contoh: 3271048809920001 atau username"
                                autocomplete="username"
-                               required
-                               x-model="username">
+                               value="{{ old('username') }}"
+                               required>
                         <span class="input-icon" aria-hidden="true">
                             <svg viewBox="0 0 24 24">
                                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
@@ -90,6 +99,9 @@
                             </svg>
                         </span>
                     </div>
+                    @error('username')
+                        <p class="form-error">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 {{-- Field Kata Sandi --}}
@@ -99,11 +111,10 @@
                         <input :type="showPassword ? 'text' : 'password'"
                                name="password"
                                id="password"
-                               class="form-input"
+                               class="form-input {{ $errors->has('password') ? 'is-invalid' : '' }}"
                                placeholder="Masukkan kata sandi akun"
                                autocomplete="current-password"
-                               required
-                               x-model="password">
+                               required>
                         <button type="button"
                                 class="input-icon-btn"
                                 @click="showPassword = !showPassword"
@@ -121,6 +132,18 @@
                             </svg>
                         </button>
                     </div>
+                    {{-- Tulisan kecil panduan login warga menggunakan NIK --}}
+                    <p class="auth-helper-text">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <circle cx="12" cy="12" r="10"/>
+                            <line x1="12" y1="16" x2="12" y2="12"/>
+                            <line x1="12" y1="8" x2="12.01" y2="8"/>
+                        </svg>
+                        <span>* Untuk warga: login menggunakan NIK sebagai username dan kata sandi default.</span>
+                    </p>
+                    @error('password')
+                        <p class="form-error">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 {{-- Tombol Submit --}}
@@ -142,15 +165,6 @@
             <div class="auth-register-box">
                 Belum punya akun warga?
                 <a href="{{ route('register') }}">Registrasi Akun Warga Baru</a>
-            </div>
-
-            {{-- Quick Fill (Memudahkan Uji Coba Prototipe Frontend) --}}
-            <div class="auth-demo-hint">
-                <p class="auth-demo-hint-title">Pintasan Uji Coba Prototipe:</p>
-                <div class="auth-demo-buttons">
-                    <button type="button" class="auth-demo-btn" @click="fillWarga()">Isi Akun Warga</button>
-                    <button type="button" class="auth-demo-btn" @click="fillAdmin()">Isi Akun Admin RT</button>
-                </div>
             </div>
 
         </div>

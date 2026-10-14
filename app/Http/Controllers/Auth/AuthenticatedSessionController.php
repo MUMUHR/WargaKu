@@ -12,15 +12,22 @@ use Illuminate\View\View;
 class AuthenticatedSessionController extends Controller
 {
     /**
-     * Display the login view.
+     * Display the login view (menggunakan view kustom WargaKu).
      */
-    public function create(): View
+    public function create(): View|RedirectResponse
     {
-        return view('auth.login');
+        if (Auth::check()) {
+            return Auth::user()->isAdmin()
+                ? redirect()->route('admin.beranda')
+                : redirect()->route('warga.beranda');
+        }
+
+        return view('public.login');
     }
 
     /**
      * Handle an incoming authentication request.
+     * Redirect berdasarkan role: admin → /admin, warga → /warga
      */
     public function store(LoginRequest $request): RedirectResponse
     {
@@ -28,11 +35,17 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        $user = Auth::user();
+
+        if ($user->isAdmin()) {
+            return redirect()->route('admin.beranda');
+        }
+
+        return redirect()->route('warga.beranda');
     }
 
     /**
-     * Destroy an authenticated session.
+     * Destroy an authenticated session (Logout).
      */
     public function destroy(Request $request): RedirectResponse
     {
@@ -42,6 +55,6 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        return redirect()->route('home');
     }
 }

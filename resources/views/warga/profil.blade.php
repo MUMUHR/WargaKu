@@ -196,9 +196,12 @@
         </div>
     </div>
     <div>
-        <a href="{{ route('login') }}" class="btn-profil-logout-outline" id="btn-logout-card">
-            <i class='bx bx-log-out'></i> Logout / Keluar
-        </a>
+        <form method="POST" action="{{ route('logout') }}" style="margin:0;">
+            @csrf
+            <button type="submit" class="btn-profil-logout-outline" id="btn-logout-card">
+                <i class='bx bx-log-out'></i> Logout / Keluar
+            </button>
+        </form>
     </div>
 </div>
 

@@ -343,6 +343,16 @@
     color: #ffffff;
 }
 
+.month-badge--menunggak {
+    background: #b91c1c;
+    color: #ffffff;
+}
+
+.month-badge--na {
+    background: #cbd5e1;
+    color: #475569;
+}
+
 .month-badge--berjalan {
     background: #fee2e2;
     color: #dc2626;
@@ -350,6 +360,25 @@
     font-size: 10px;
     font-weight: 800;
     padding: 2px 7px;
+}
+
+.month-card--na {
+    background: #f8fafc !important;
+    border-color: #e2e8f0 !important;
+    opacity: 0.88;
+}
+
+.month-card--na .month-card-nominal {
+    color: #94a3b8 !important;
+}
+
+.month-card--menunggak {
+    border-color: #fca5a5 !important;
+    background: #fffdfd !important;
+}
+
+.month-card--menunggak .month-card-nominal {
+    color: #b91c1c !important;
 }
 
 .month-card-body {

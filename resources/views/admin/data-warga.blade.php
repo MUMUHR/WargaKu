@@ -9,169 +9,138 @@
 
 @push('styles')
     <link rel="stylesheet" href="{{ asset('css/admin-warga.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/warga-keluarga.css') }}">
 @endpush
 
 @section('content')
 
 @php
-    $listKk = $listKk ?? [
-        [
-            'no_kk' => '3275010905120008',
-            'nama_kepala' => 'Bambang Santoso, S.T.',
-            'nik_kepala' => '3275012304800001',
-            'alamat' => 'Blok B4 No. 12, RT 04 / RW 08',
-            'blok' => 'Blok B',
-            'jumlah_anggota' => 3,
-            'laki_laki' => 1,
-            'perempuan' => 2,
-            'status_tinggal' => 'Tetap (Milik Sendiri)',
-            'status_tinggal_badge' => 'Tetap',
-            'status_ekonomi' => 'Kurang Mampu',
-            'ekonomi_kategori' => 'Mampu',
-            'kontak' => '0812-8901-2345',
-        ],
-        [
-            'no_kk' => '3275012010150012',
-            'nama_kepala' => 'Hendro Gunawan',
-            'nik_kepala' => '3275011005820002',
-            'alamat' => 'Blok A1 No. 05, RT 04 / RW 08',
-            'blok' => 'Blok A',
-            'jumlah_anggota' => 4,
-            'laki_laki' => 2,
-            'perempuan' => 2,
-            'status_tinggal' => 'Tetap (Milik Sendiri)',
-            'status_tinggal_badge' => 'Tetap',
-            'status_ekonomi' => 'Mampu',
-            'ekonomi_kategori' => 'Mampu',
-            'kontak' => '0813-5678-9012',
-        ],
-        [
-            'no_kk' => '3275011802110003',
-            'nama_kepala' => 'Achmad Fauzi, S.Pd.',
-            'nik_kepala' => '3275011802790003',
-            'alamat' => 'Blok C2 No. 08, RT 04 / RW 08',
-            'blok' => 'Blok C',
-            'jumlah_anggota' => 5,
-            'laki_laki' => 2,
-            'perempuan' => 3,
-            'status_tinggal' => 'Kontrak / Sewa',
-            'status_tinggal_badge' => 'Kontrak / Sewa',
-            'status_ekonomi' => 'Kurang Mampu',
-            'ekonomi_kategori' => 'Kurang Mampu',
-            'kontak' => '0856-7788-9901',
-        ],
-        [
-            'no_kk' => '3275012408190021',
-            'nama_kepala' => 'Ibu Sumarti',
-            'nik_kepala' => '3275016408650005',
-            'alamat' => 'Blok D3 No. 02, RT 04 / RW 08',
-            'blok' => 'Blok D',
-            'jumlah_anggota' => 2,
-            'laki_laki' => 0,
-            'perempuan' => 2,
-            'status_tinggal' => 'Tetap (Milik Sendiri)',
-            'status_tinggal_badge' => 'Tetap',
-            'status_ekonomi' => 'Mampu',
-            'ekonomi_kategori' => 'Mampu',
-            'kontak' => '0878-1122-3344',
-        ],
-        [
-            'no_kk' => '3275010503220035',
-            'nama_kepala' => 'Raden Dimas Arya',
-            'nik_kepala' => '3275010503900004',
-            'alamat' => 'Blok B1 No. 17, RT 04 / RW 08',
-            'blok' => 'Blok B',
-            'jumlah_anggota' => 3,
-            'laki_laki' => 2,
-            'perempuan' => 1,
-            'status_tinggal' => 'Tetap (Milik Sendiri)',
-            'status_tinggal_badge' => 'Tetap',
-            'status_ekonomi' => 'Mampu',
-            'ekonomi_kategori' => 'Mampu',
-            'kontak' => '0811-2233-4455',
-        ],
-    ];
+    if (isset($keluargas) && $keluargas->count() > 0) {
+        $listKk = [];
+        foreach ($keluargas as $k) {
+            $kepala = $k->kepalaKeluarga;
+            $wargasHidup = $k->wargas->where('status_warga', 'hidup');
+            $laki = $wargasHidup->where('jenis_kelamin', 'laki_laki')->count();
+            $perempuan = $wargasHidup->where('jenis_kelamin', 'perempuan')->count();
+            $alamat = $kepala?->alamat ?? $wargasHidup->first(fn($w) => !empty($w->alamat))?->alamat ?? 'RT 04 / RW 08';
 
-    $listVerifikasi = $listVerifikasi ?? [
-        [
-            'id' => 1,
-            'pemohon' => 'Bambang Santoso',
-            'no_kk' => '3275010905120008',
-            'waktu' => '18 Feb 2025 • 09:15 WIB',
-            'aksi_warga' => 'Ubah Data',
-            'aksi_badge' => 'info',
-            'warga_terdampak' => 'Siti Rahmawati',
-            'bukti' => '2 Berkas',
-            'bukti_icon' => 'bx bxs-file-pdf',
-            'bukti_color' => '#dc3545',
-            'status_validasi' => 'Menunggu Verifikasi RT',
-        ],
-        [
-            'id' => 2,
-            'pemohon' => 'Dedi Kusnadi',
-            'no_kk' => '3275011406180002',
-            'waktu' => '17 Feb 2025 • 14:20 WIB',
-            'aksi_warga' => 'Tambah Anggota',
-            'aksi_badge' => 'success',
-            'warga_terdampak' => 'Ahmad Rayyan Kusnadi',
-            'bukti' => 'Surat Lahir RS',
-            'bukti_icon' => 'bx bxs-file-doc',
-            'bukti_color' => '#20c997',
-            'status_validasi' => 'Menunggu Verifikasi RT',
-        ],
-        [
-            'id' => 3,
-            'pemohon' => 'Agus Wicaksono',
-            'no_kk' => '3275010203100010',
-            'waktu' => '15 Feb 2025 • 11:04 WIB',
-            'aksi_warga' => 'Pindah',
-            'aksi_badge' => 'warning',
-            'warga_terdampak' => 'Agus Wicaksono',
-            'bukti' => 'SKPWNI Kelurahan',
-            'bukti_icon' => 'bx bxs-file-pdf',
-            'bukti_color' => '#dc3545',
-            'status_validasi' => 'Menunggu Verifikasi RT',
-        ],
-    ];
+            preg_match('/Blok\s+[A-Za-z0-9]+/i', $alamat, $mBlok);
+            $blok = $mBlok[0] ?? 'RT 04';
 
-    $anggotaKk = $anggotaKk ?? [
-        [
-            'no' => 1,
-            'nama' => 'Bambang Santoso, S.T.',
-            'nik' => '3275012304800001',
-            'hubungan' => 'Kepala Keluarga',
-            'hubungan_badge' => 'primary',
-            'jk' => 'Laki-laki',
-            'agama' => 'Islam',
-            'pendidikan_terakhir' => 'D4/S1',
-            'pekerjaan' => 'Pegawai BUMN (PT PLN)',
-            'status_warga' => 'Hidup (Aktif)',
-        ],
-        [
-            'no' => 2,
-            'nama' => 'Ratna Dewi Puspita, M.Pd.',
-            'nik' => '3275016508910004',
-            'hubungan' => 'Istri',
-            'hubungan_badge' => 'teal',
-            'jk' => 'Perempuan',
-            'agama' => 'Islam',
-            'pendidikan_terakhir' => 'S2',
-            'pekerjaan' => 'Guru SMA Negeri 4',
-            'status_warga' => 'Hidup (Aktif)',
-        ],
-        [
-            'no' => 3,
-            'nama' => 'Siti Rahmawati, S.Ak.',
-            'nik' => '3275015509010003',
-            'hubungan' => 'Anak (ke-1)',
-            'hubungan_badge' => 'secondary',
-            'jk' => 'Perempuan',
-            'agama' => 'Islam',
-            'pendidikan_terakhir' => 'D4/S1',
-            'pekerjaan' => 'Karyawan Swasta (Auditor)',
-            'status_warga' => 'Hidup (Aktif)',
-        ],
-    ];
+            $kontak = $k->kepalaKeluarga?->user?->no_telp 
+                ?? $wargasHidup->first(fn($w) => $w->user && $w->user->no_telp)?->user?->no_telp 
+                ?? '-';
+
+            $tinggalBadge = match($k->status_tinggal) {
+                'tetap' => 'Tetap',
+                'kontrak' => 'Kontrak / Sewa',
+                'kos' => 'Kos',
+                'menumpang' => 'Menumpang',
+                default => ucfirst($k->status_tinggal)
+            };
+
+            $ekonomiBadge = match($k->status_ekonomi) {
+                'kurang_mampu' => 'Kurang Mampu',
+                default => 'Mampu'
+            };
+
+            $listKk[] = [
+                'id' => $k->id,
+                'no_kk' => $k->no_kk,
+                'nama_kepala' => $kepala?->nama ?? 'Belum ditentukan',
+                'nik_kepala' => $kepala?->nik ?? '-',
+                'alamat' => $alamat,
+                'blok' => $blok,
+                'jumlah_anggota' => $wargasHidup->count(),
+                'laki_laki' => $laki,
+                'perempuan' => $perempuan,
+                'status_tinggal' => $tinggalBadge,
+                'status_tinggal_badge' => $tinggalBadge,
+                'status_ekonomi' => $ekonomiBadge,
+                'ekonomi_kategori' => $ekonomiBadge,
+                'kontak' => $kontak,
+            ];
+        }
+    } else {
+        $listKk = $listKk ?? [
+            [
+                'no_kk' => '3275010905120008',
+                'nama_kepala' => 'Bambang Santoso, S.T.',
+                'nik_kepala' => '3275012304800001',
+                'alamat' => 'Blok B4 No. 12, RT 04 / RW 08',
+                'blok' => 'Blok B',
+                'jumlah_anggota' => 3,
+                'laki_laki' => 1,
+                'perempuan' => 2,
+                'status_tinggal' => 'Tetap (Milik Sendiri)',
+                'status_tinggal_badge' => 'Tetap',
+                'status_ekonomi' => 'Kurang Mampu',
+                'ekonomi_kategori' => 'Mampu',
+                'kontak' => '0812-8901-2345',
+            ],
+            [
+                'no_kk' => '3275012010150012',
+                'nama_kepala' => 'Hendro Gunawan',
+                'nik_kepala' => '3275011005820002',
+                'alamat' => 'Blok A1 No. 05, RT 04 / RW 08',
+                'blok' => 'Blok A',
+                'jumlah_anggota' => 4,
+                'laki_laki' => 2,
+                'perempuan' => 2,
+                'status_tinggal' => 'Tetap (Milik Sendiri)',
+                'status_tinggal_badge' => 'Tetap',
+                'status_ekonomi' => 'Mampu',
+                'ekonomi_kategori' => 'Mampu',
+                'kontak' => '0813-5678-9012',
+            ],
+            [
+                'no_kk' => '3275011802110003',
+                'nama_kepala' => 'Achmad Fauzi, S.Pd.',
+                'nik_kepala' => '3275011802790003',
+                'alamat' => 'Blok C2 No. 08, RT 04 / RW 08',
+                'blok' => 'Blok C',
+                'jumlah_anggota' => 5,
+                'laki_laki' => 2,
+                'perempuan' => 3,
+                'status_tinggal' => 'Kontrak / Sewa',
+                'status_tinggal_badge' => 'Kontrak / Sewa',
+                'status_ekonomi' => 'Kurang Mampu',
+                'ekonomi_kategori' => 'Kurang Mampu',
+                'kontak' => '0856-7788-9901',
+            ],
+            [
+                'no_kk' => '3275012408190021',
+                'nama_kepala' => 'Ibu Sumarti',
+                'nik_kepala' => '3275016408650005',
+                'alamat' => 'Blok D3 No. 02, RT 04 / RW 08',
+                'blok' => 'Blok D',
+                'jumlah_anggota' => 2,
+                'laki_laki' => 0,
+                'perempuan' => 2,
+                'status_tinggal' => 'Tetap (Milik Sendiri)',
+                'status_tinggal_badge' => 'Tetap',
+                'status_ekonomi' => 'Mampu',
+                'ekonomi_kategori' => 'Mampu',
+                'kontak' => '0878-1122-3344',
+            ],
+            [
+                'no_kk' => '3275010503220035',
+                'nama_kepala' => 'Raden Dimas Arya',
+                'nik_kepala' => '3275010503900004',
+                'alamat' => 'Blok B1 No. 17, RT 04 / RW 08',
+                'blok' => 'Blok B',
+                'jumlah_anggota' => 3,
+                'laki_laki' => 2,
+                'perempuan' => 1,
+                'status_tinggal' => 'Tetap (Milik Sendiri)',
+                'status_tinggal_badge' => 'Tetap',
+                'status_ekonomi' => 'Mampu',
+                'ekonomi_kategori' => 'Mampu',
+                'kontak' => '0811-2233-4455',
+            ],
+        ];
+    }
+
 @endphp
 
 @if(session('success'))
@@ -184,24 +153,28 @@
     </div>
 @endif
 
+@if(session('error'))
+    <div style="background:#f8d7da;border:1px solid #f5c6cb;color:#721c24;padding:12px 18px;border-radius:6px;margin-bottom:18px;display:flex;align-items:center;justify-content:space-between;font-size:13px;font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,0.05);">
+        <div style="display:flex;align-items:center;gap:8px;">
+            <i class='bx bx-error-circle' style="font-size:20px;color:#dc3545;"></i>
+            <span>{{ session('error') }}</span>
+        </div>
+        <button type="button" onclick="this.parentElement.remove()" style="background:none;border:none;font-size:20px;cursor:pointer;color:#721c24;line-height:1;">&times;</button>
+    </div>
+@endif
+
 {{-- ========================================================
-     HEADER HALAMAN (DINAMIS SESUAI VIEW)
+     HEADER HALAMAN DAFTAR WARGA
      ======================================================== --}}
 <div class="admin-page-header">
     <div>
         <nav style="font-size:12px;color:#6c757d;margin-bottom:4px;display:flex;align-items:center;gap:4px;" id="header-breadcrumb">
             <i class='bx bx-home-alt'></i> <span>Portal RT 04</span>
+            <span style="margin: 0 2px;">/</span>
+            <span style="color:#007bff;font-weight:600">Kelola Data Warga</span>
         </nav>
-        <h1 class="admin-page-header__title" id="page-title">Kelola Data Warga & Verifikasi Kependudukan</h1>
+        <h1 class="admin-page-header__title" id="page-title">Kelola Data Warga &amp; Verifikasi Kependudukan</h1>
         <p class="admin-page-header__sub" id="page-subtitle">Kelola data master kependudukan warga RT 04, status mutasi, dan validasi permohonan perubahan data dari warga.</p>
-    </div>
-    <div id="header-actions">
-        <button type="button" class="btn-kembali-kk" onclick="tutupDetailKK()" id="btn-kembali-kk" style="display:none;">
-            <i class='bx bx-arrow-back'></i> Kembali ke Daftar KK
-        </button>
-        <button type="button" class="btn-kembali-kk" onclick="kembaliKeDetailKK()" id="btn-kembali-ke-detail" style="display:none;">
-            <i class='bx bx-arrow-back'></i> Kembali ke Detail KK
-        </button>
     </div>
 </div>
 
@@ -210,42 +183,20 @@
      ======================================================== --}}
 <div class="warga-stats-grid" id="stats-main">
     <div class="warga-stat-box warga-stat-box--cyan">
-        <div class="warga-stat-box__val">78 <small>KK</small></div>
+        <div class="warga-stat-box__val">{{ $totalKkAktif ?? count($listKk) }} <small>KK</small></div>
         <div class="warga-stat-box__label">Total Kartu Keluarga Aktif</div>
         <i class='bx bx-home-alt warga-stat-box__icon'></i>
     </div>
     <div class="warga-stat-box warga-stat-box--green">
-        <div class="warga-stat-box__val">312 <small>Jiwa</small></div>
+        <div class="warga-stat-box__val">{{ $totalWargaHidup ?? 312 }} <small>Jiwa</small></div>
         <div class="warga-stat-box__label">Warga Terdaftar (Hidup)</div>
-        <div class="warga-stat-box__sub">158 Laki-laki • 154 Perempuan</div>
+        <div class="warga-stat-box__sub">{{ $totalLakiLaki ?? 158 }} Laki-laki • {{ $totalPerempuan ?? 154 }} Perempuan</div>
         <i class='bx bx-group warga-stat-box__icon'></i>
     </div>
     <div class="warga-stat-box warga-stat-box--amber">
-        <div class="warga-stat-box__val">5 <small>Pengajuan</small></div>
+        <div class="warga-stat-box__val">{{ $totalMenungguVerifikasi ?? (isset($daftarPengajuan) ? $daftarPengajuan->total() : 5) }} <small>Pengajuan</small></div>
         <div class="warga-stat-box__label">Menunggu Verifikasi RT</div>
         <i class='bx bx-clipboard warga-stat-box__icon'></i>
-    </div>
-</div>
-
-{{-- ========================================================
-     TOP STAT CARDS: VIEW DETAIL KK (3 BOXES)
-     ======================================================== --}}
-<div class="warga-stats-grid" id="stats-detail" style="display:none;">
-    <div class="warga-stat-box warga-stat-box--blue">
-        <div class="warga-stat-box__label">NOMOR KARTU KELUARGA</div>
-        <div class="warga-stat-box__val" id="detail-stat-no-kk" style="font-size:22px;margin-top:6px;">3275010905120008</div>
-        <i class='bx bx-id-card warga-stat-box__icon'></i>
-    </div>
-    <div class="warga-stat-box warga-stat-box--green">
-        <div class="warga-stat-box__label">TOTAL JIWA TERDAFTAR</div>
-        <div class="warga-stat-box__val" id="detail-stat-jiwa" style="font-size:24px;margin-top:4px;">3 <small>Jiwa Aktif</small></div>
-        <div class="warga-stat-box__sub" id="detail-stat-gender">1 Laki-laki • 2 Perempuan</div>
-        <i class='bx bx-group warga-stat-box__icon'></i>
-    </div>
-    <div class="warga-stat-box warga-stat-box--cyan">
-        <div class="warga-stat-box__label">STATUS HUNIAN</div>
-        <div class="warga-stat-box__val" id="detail-stat-hunian" style="font-size:22px;margin-top:6px;">Tetap (Milik Sendiri)</div>
-        <i class='bx bx-building-house warga-stat-box__icon'></i>
     </div>
 </div>
 
@@ -264,8 +215,8 @@
             <button type="button" class="warga-tab-btn" id="tab-btn-verifikasi" onclick="switchWargaTab('verifikasi')" style="position: relative;">
                 <i class='bx bx-slider-alt'></i>
                 Verifikasi Pengajuan Perubahan Data
-                @if(count($listVerifikasi) > 0)
-                    <span class="badge-tab-dot" id="badge-tab-dot" title="{{ count($listVerifikasi) }} Pengajuan Menunggu"></span>
+                @if(($totalMenungguVerifikasi ?? 0) > 0)
+                    <span class="badge-tab-dot" id="badge-tab-dot" title="{{ $totalMenungguVerifikasi }} Pengajuan Menunggu"></span>
                 @endif
             </button>
         </div>
@@ -302,7 +253,7 @@
                 <select id="filter-ekonomi" class="warga-filter-input">
                     <option value="">Semua Ekonomi</option>
                     <option value="mampu">Mampu</option>
-                    <option value="kurang">Kurang Mampu</option>
+                    <option value="kurang_mampu">Kurang Mampu</option>
                 </select>
             </div>
             <div class="warga-filter-col warga-filter-col--actions">
@@ -346,8 +297,7 @@
                         data-blok="{{ strtolower($k['blok']) }}">
                         <td style="text-align: center; color: #495057; font-weight: 500;">{{ $idx + 1 }}</td>
                         <td>
-                            <a href="javascript:void(0)" class="link-kk"
-                               onclick="bukaDetailKK('{{ $k['no_kk'] }}', '{{ addslashes($k['nama_kepala']) }}', '{{ $k['nik_kepala'] }}', '{{ addslashes($k['alamat']) }}', '{{ $k['kontak'] }}', '{{ $k['ekonomi_kategori'] }}', '{{ $k['status_tinggal'] }}', {{ $k['jumlah_anggota'] }}, {{ $k['laki_laki'] }}, {{ $k['perempuan'] }})">
+                            <a href="{{ route('admin.data-warga.detail', $k['no_kk']) }}" class="link-kk">
                                 {{ $k['no_kk'] }}
                             </a>
                         </td>
@@ -380,11 +330,9 @@
                         </td>
                         <td>
                             <div class="warga-row-actions">
-                                <button type="button" class="btn-act-detail"
-                                        onclick="bukaDetailKK('{{ $k['no_kk'] }}', '{{ addslashes($k['nama_kepala']) }}', '{{ $k['nik_kepala'] }}', '{{ addslashes($k['alamat']) }}', '{{ $k['kontak'] }}', '{{ $k['ekonomi_kategori'] }}', '{{ $k['status_tinggal'] }}', {{ $k['jumlah_anggota'] }}, {{ $k['laki_laki'] }}, {{ $k['perempuan'] }})"
-                                        title="Lihat Detail Kartu Keluarga & Anggota">
+                                <a href="{{ route('admin.data-warga.detail', $k['no_kk']) }}" class="btn-act-detail" style="text-decoration:none;" title="Lihat Detail Kartu Keluarga & Anggota">
                                     <i class='bx bx-id-card'></i> Detail KK
-                                </button>
+                                </a>
                                 <button type="button" class="btn-act-edit" onclick="bukaModalEditStatus('{{ $k['no_kk'] }}', '{{ addslashes($k['nama_kepala']) }}', '{{ $k['status_tinggal_badge'] }}', '{{ $k['status_ekonomi'] }}', this)" title="Edit Status KK">
                                     <i class='bx bx-edit'></i> Edit Data
                                 </button>
@@ -401,7 +349,7 @@
 
         {{-- Pagination Bar --}}
         <div class="warga-pagination-bar">
-            <div id="info-kk-count">Menampilkan <strong>1 - 5</strong> dari <strong>10</strong> Kepala Keluarga (Kartu Keluarga Aktif RT 04)</div>
+            <div id="info-kk-count">Menampilkan <strong>1 - {{ min(10, count($listKk)) }}</strong> dari <strong>{{ count($listKk) }}</strong> Kepala Keluarga (Kartu Keluarga Aktif RT 04)</div>
             <div class="warga-page-buttons" id="pagination-kk"></div>
         </div>
     </div>
@@ -415,281 +363,249 @@
                     <col style="width: 14%;">
                     <col style="width: 10%;">
                     <col style="width: 15%;">
+                    <col style="width: 8%;">
                     <col style="width: 12%;">
-                    <col style="width: 14%;">
-                    <col style="width: 18%;">
+                    <col style="width: 19%;">
                 </colgroup>
                 <thead>
                     <tr>
                         <th style="padding-left: 18px;">PEMOHON / KEPALA KK</th>
                         <th>WAKTU</th>
-                        <th>AKSI WARGA</th>
+                        <th>JENIS PENGAJUAN</th>
                         <th>WARGA TERDAMPAK</th>
-                        <th>BUKTI LAMPIRAN</th>
-                        <th>STATUS VALIDASI</th>
+                        <th>BERKAS</th>
+                        <th>STATUS</th>
                         <th style="padding-right: 18px;">TINDAKAN PETUGAS</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($listVerifikasi as $v)
-                    <tr id="row-verif-{{ $v['id'] }}">
+                    @forelse($daftarPengajuan ?? [] as $v)
+                    @php
+                        $jenisLabel = match($v->jenis_pengajuan ?? '') {
+                            'ubah_data'      => ['label' => 'Ubah Data',     'cls' => 'badge-aksi-ubah'],
+                            'tambah_anggota' => ['label' => 'Tambah Anggota','cls' => 'badge-aksi-tambah'],
+                            'pindah'         => ['label' => 'Pindah',         'cls' => 'badge-aksi-pindah'],
+                            default          => ['label' => ucfirst(str_replace('_',' ', $v->jenis_pengajuan ?? 'Pengajuan')), 'cls' => 'badge-aksi-ubah']
+                        };
+                        $pemohonNama = $v->keluarga?->kepalaKeluarga?->nama ?? ($v->warga?->nama ?? 'Pemohon');
+                        $noKkPemohon = $v->keluarga?->no_kk ?? '-';
+                        $wargaTerdampak = $v->warga?->nama ?? ($v->data_baru['nama'] ?? '-');
+                        $hasBukti = !empty($v->bukti_path);
+                        $statusVerif = match($v->status) {
+                            'menunggu'  => ['label' => 'Menunggu RT',  'cls' => 'badge-status-menunggu',   'icon' => 'bx bx-hourglass'],
+                            'disetujui' => ['label' => 'Disetujui',    'cls' => 'badge-status-disetujui',  'icon' => 'bx bx-check-double'],
+                            'ditolak'   => ['label' => 'Ditolak',      'cls' => 'badge-status-kos',        'icon' => 'bx bx-x-circle'],
+                            default     => ['label' => ucfirst($v->status ?? '-'), 'cls' => 'badge-status-menunggu', 'icon' => 'bx bx-question-mark']
+                        };
+                    @endphp
+                    <tr id="row-verif-{{ $v->id }}">
                         <td style="padding-left: 18px;">
-                            <div class="nama-kepala-text">{{ $v['pemohon'] }}</div>
-                            <div class="alamat-sub-text">KK : {{ $v['no_kk'] }}</div>
+                            <div class="nama-kepala-text">{{ $pemohonNama }}</div>
+                            <div class="alamat-sub-text">KK : {{ $noKkPemohon }}</div>
                         </td>
                         <td style="color: #495057; font-size: 12px; white-space: nowrap;">
-                            {{ $v['waktu'] }}
+                            {{ $v->created_at ? \Carbon\Carbon::parse($v->created_at)->isoFormat('D MMM YYYY • HH:mm') . ' WIB' : '-' }}
                         </td>
                         <td>
-                            @if($v['aksi_badge'] === 'info')
-                                <span class="badge-aksi-ubah">{{ $v['aksi_warga'] }}</span>
-                            @elseif($v['aksi_badge'] === 'success')
-                                <span class="badge-aksi-tambah">{{ $v['aksi_warga'] }}</span>
+                            <span class="{{ $jenisLabel['cls'] }}">{{ $jenisLabel['label'] }}</span>
+                        </td>
+                        <td>
+                            <div style="font-weight: 700; color: #212529; font-size: 13px;">{{ $wargaTerdampak }}</div>
+                        </td>
+                        <td>
+                            @if($hasBukti)
+                                <span class="badge-lampiran-file">
+                                    <i class='bx bxs-file-pdf' style="color: #dc3545; font-size: 14px;"></i>
+                                    <span>Ada Berkas</span>
+                                </span>
                             @else
-                                <span class="badge-aksi-pindah">{{ $v['aksi_warga'] }}</span>
+                                <span style="color: #adb5bd; font-size: 12px;">—</span>
                             @endif
                         </td>
-                        <td>
-                            <div style="font-weight: 700; color: #212529; font-size: 13px;">{{ $v['warga_terdampak'] }}</div>
-                        </td>
-                        <td>
-                            <span class="badge-lampiran-file">
-                                <i class='{{ $v['bukti_icon'] ?? 'bx bx-file' }}' style="color: {{ $v['bukti_color'] ?? '#dc3545' }}; font-size: 14px;"></i>
-                                <span>{{ $v['bukti'] }}</span>
+                        <td id="status-cell-verif-{{ $v->id }}">
+                            <span class="{{ $statusVerif['cls'] }}">
+                                <i class='{{ $statusVerif['icon'] }}'></i>
+                                <span>{{ $statusVerif['label'] }}</span>
                             </span>
                         </td>
-                        <td id="status-cell-verif-{{ $v['id'] }}">
-                            <span class="badge-status-menunggu">
-                                <i class='bx bx-hourglass'></i>
-                                <span>{{ $v['status_validasi'] }}</span>
-                            </span>
-                        </td>
+                        @php
+                            $docsListAdmin = [];
+                            $buktiList = $v->bukti_list;
+                            foreach ($buktiList as $bIdx => $bPath) {
+                                $bUrl = '';
+                                if (str_starts_with($bPath, 'http://') || str_starts_with($bPath, 'https://')) {
+                                    $bUrl = $bPath;
+                                } elseif (file_exists(public_path($bPath))) {
+                                    $bUrl = asset($bPath);
+                                } elseif (file_exists(public_path('storage/' . $bPath))) {
+                                    $bUrl = asset('storage/' . $bPath);
+                                } else {
+                                    $bUrl = asset($bPath);
+                                }
+                                $bName = basename($bPath);
+                                $isPdf = str_ends_with(strtolower($bName), '.pdf');
+                                $docsListAdmin[] = [
+                                    'label' => ($bIdx + 1) . '. ' . $bName,
+                                    'filename' => $bName,
+                                    'url' => $bUrl,
+                                    'isPdf' => $isPdf,
+                                ];
+                            }
+                            $hasBukti = !empty($docsListAdmin);
+                            $buktiUrl = $docsListAdmin[0]['url'] ?? '';
+                            $buktiNama = $docsListAdmin[0]['filename'] ?? '';
+                        @endphp
+                        @php
+                            $targetWarga = $v->warga;
+                            $targetNama = $targetWarga?->nama ?? ($v->data_baru['nama'] ?? $wargaTerdampak);
+                            $targetHub = $targetWarga ? ucwords(str_replace('_', ' ', $targetWarga->status_hubungan ?? '')) : (ucwords(str_replace('_', ' ', $v->data_baru['hubungan_keluarga'] ?? 'Anggota Keluarga')));
+                            $targetJk = $targetWarga ? ($targetWarga->jenis_kelamin === 'laki_laki' ? 'Laki-Laki' : 'Perempuan') : (isset($v->data_baru['jenis_kelamin']) ? ($v->data_baru['jenis_kelamin'] === 'laki_laki' ? 'Laki-Laki' : 'Perempuan') : '-');
+                            $targetTempatLahir = $targetWarga?->tempat_lahir ?? ($v->data_baru['tempat_lahir'] ?? '-');
+                            $targetTglLahir = $targetWarga?->tanggal_lahir ? \Carbon\Carbon::parse($targetWarga->tanggal_lahir)->format('d-m-Y') : (isset($v->data_baru['tanggal_lahir']) ? \Carbon\Carbon::parse($v->data_baru['tanggal_lahir'])->format('d-m-Y') : '-');
+                            $targetSub = 'NIK: ' . ($targetWarga?->nik ?? $v->data_baru['nik'] ?? $noKkPemohon) . ' • ' . $targetJk . ' • Lahir: ' . $targetTempatLahir . ', ' . $targetTglLahir;
+                            $tglDiajukan = $v->created_at ? \Carbon\Carbon::parse($v->created_at)->isoFormat('D MMM YYYY, HH:mm') . ' WIB' : '-';
+                            $alamatLengkap = $v->keluarga?->alamat ?? $targetWarga?->alamat ?? 'RT 04 / RW 08';
+                            $alasanTeks = $v->alasan ?? 'Pengajuan perubahan data kependudukan oleh warga.';
+                        @endphp
                         <td style="padding-right: 18px;">
-                            <div class="warga-row-actions" id="row-actions-verif-{{ $v['id'] }}">
-                                <button type="button" class="btn-tindakan-setujui" onclick="bukaModalKonfirmasiSetujui('{{ $v['id'] }}', '{{ addslashes($v['pemohon']) }}', this)">
+                            @if($v->status === 'menunggu')
+                            <div class="warga-row-actions" id="row-actions-verif-{{ $v->id }}">
+                                {{-- Form Setujui --}}
+                                <form method="POST" action="{{ route('admin.data-warga.verifikasi', $v->id) }}" id="form-setujui-{{ $v->id }}" style="display:none;">
+                                    @csrf
+                                    <input type="hidden" name="tindakan" value="setujui">
+                                    <input type="hidden" name="alasan" value="Disetujui oleh Pengurus RT.">
+                                </form>
+                                {{-- Form Tolak --}}
+                                <form method="POST" action="{{ route('admin.data-warga.verifikasi', $v->id) }}" id="form-tolak-{{ $v->id }}" style="display:none;">
+                                    @csrf
+                                    <input type="hidden" name="tindakan" value="tolak">
+                                    <input type="hidden" name="alasan" id="alasan-tolak-{{ $v->id }}" value="Pengajuan ditolak oleh Pengurus RT.">
+                                </form>
+                                <button type="button" class="btn-tindakan-review"
+                                    onclick='bukaModalReviewVerifikasi({
+                                        id: {{ $v->id }},
+                                        pemohon: "{{ addslashes($pemohonNama) }}",
+                                        noKk: "{{ addslashes($noKkPemohon) }}",
+                                        alamat: "{{ addslashes($alamatLengkap) }}",
+                                        warga: "{{ addslashes($targetNama) }}",
+                                        targetTitle: "Target Data: {{ addslashes($targetNama) }} ({{ addslashes($targetHub) }})",
+                                        targetSub: "{{ addslashes($targetSub) }}",
+                                        tglDiajukan: "Diajukan pada: {{ addslashes($tglDiajukan) }}",
+                                        status: "{{ $v->status }}",
+                                        statusLabel: "{{ $statusVerif['label'] }}",
+                                        alasan: "{{ addslashes($alasanTeks) }}",
+                                        jenis: "{{ $v->jenis_pengajuan }}",
+                                        jenisLabel: "{{ $jenisLabel['label'] }}",
+                                        dataLama: @json($v->data_lama ?? []),
+                                        dataBaru: @json($v->data_baru ?? []),
+                                        docs: @json($docsListAdmin),
+                                        buktiUrl: "{{ $buktiUrl }}",
+                                        buktiNama: "{{ addslashes($buktiNama) }}",
+                                        hasBukti: {{ $hasBukti ? 'true' : 'false' }}
+                                    })'>
+                                    <i class='bx bx-show'></i> Review
+                                </button>
+                                <button type="button" class="btn-tindakan-setujui"
+                                    onclick="konfirmasiSetujuiPengajuan({{ $v->id }}, '{{ addslashes($pemohonNama) }}')">
                                     <i class='bx bx-check'></i> Setujui
                                 </button>
-                                <button type="button" class="btn-tindakan-review" onclick="bukaModalReviewVerifikasi('{{ $v['id'] }}')">
-                                    <i class='bx bx-show'></i> Review Perubahan
+                                <button type="button" class="btn-act-delete" style="height:33px;padding:6px 10px;"
+                                    onclick="bukaModalTolakPengajuan({{ $v->id }}, '{{ addslashes($pemohonNama) }}')">
+                                    <i class='bx bx-x'></i> Tolak
                                 </button>
                             </div>
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-</div>
-
-{{-- ========================================================
-     CONTAINER VIEW DETAIL KK (SCREENSHOT 2)
-     ======================================================== --}}
-<div class="detail-kk-wrapper" id="view-detail-kk" style="display:none;">
-
-    {{-- Card 1: Profil Keluarga & Domisili Rumah --}}
-    <div class="detail-section-card">
-        <div class="detail-section-head" onclick="toggleCollapse('detail-profil-content', 'chevron-profil')">
-            <h3 class="detail-section-title">
-                <i class='bx bx-home'></i>
-                Profil Keluarga & Domisili Rumah
-            </h3>
-            <i class='bx bx-chevron-up' id="chevron-profil" style="font-size:20px;color:#6c757d;"></i>
-        </div>
-        <div id="detail-profil-content">
-            <div class="detail-profil-grid">
-                <div>
-                    <div class="detail-profil-item__label">KEPALA KELUARGA</div>
-                    <div class="detail-profil-item__value" id="detail-kepala-nama">Bambang Santoso, S.T.</div>
-                    <div class="detail-profil-item__sub">NIK : <span id="detail-kepala-nik">3275012304800001</span></div>
-                </div>
-                <div>
-                    <div class="detail-profil-item__label">ALAMAT RUMAH LENGKAP</div>
-                    <div class="detail-profil-item__value" id="detail-alamat">Blok B4 No. 12, RT 04 / RW 08</div>
-                </div>
-                <div>
-                    <div class="detail-profil-item__label">KONTAK TELEPON / WHATSAPP</div>
-                    <div class="detail-profil-item__value" style="display:flex;align-items:center;gap:6px;">
-                        <i class='bx bxl-whatsapp' style="color:#25d366;font-size:16px;"></i>
-                        <span id="detail-kontak" style="color:#007bff;font-weight:700;">0812-8901-2345</span>
-                    </div>
-                </div>
-                <div>
-                    <div class="detail-profil-item__label">STATUS EKONOMI</div>
-                    <div style="margin-top:4px;">
-                        <span class="badge-ekonomi-detail" id="detail-ekonomi">Ekonomi: Mampu</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    {{-- Card 2: Susunan Anggota Keluarga --}}
-    <div class="detail-section-card">
-        <div class="detail-section-head" style="cursor:default;">
-            <h3 class="detail-section-title">
-                <i class='bx bx-group'></i>
-                Susunan Anggota Keluarga
-                <span class="badge-tab-kk" id="detail-badge-count">3 Orang</span>
-            </h3>
-            <div class="detail-anggota-actions">
-                <button type="button" class="btn-reset-password" onclick="konfirmasiResetPassword(document.getElementById('detail-kepala-nama').textContent)">
-                    <i class='bx bx-shield-quarter'></i> Reset Password Akun
-                </button>
-                <a href="{{ route('admin.data-warga.tambah-anggota') }}" class="btn-tambah-anggota">
-                    <i class='bx bx-user-plus'></i> Tambah Anggota
-                </a>
-            </div>
-        </div>
-
-        <div class="warga-table-wrap">
-            <table class="warga-table" id="table-anggota">
-                <colgroup>
-                    <col style="width: 3.5%;">
-                    <col style="width: 21%;">
-                    <col style="width: 14%;">
-                    <col style="width: 13.5%;">
-                    <col style="width: 19%;">
-                    <col style="width: 11%;">
-                    <col style="width: 18%;">
-                </colgroup>
-                <thead>
-                    <tr>
-                        <th style="text-align: center;">NO</th>
-                        <th>NIK &amp; NAMA LENGKAP</th>
-                        <th>HUBUNGAN KK</th>
-                        <th>JK &amp; AGAMA</th>
-                        <th>PENDIDIKAN TERAKHIR &amp; PEKERJAAN</th>
-                        <th>STATUS WARGA</th>
-                        <th>AKSI</th>
-                    </tr>
-                </thead>
-                <tbody id="detail-anggota-tbody">
-                    @foreach($anggotaKk as $m)
-                    <tr>
-                        <td style="text-align: center; color: #495057; font-weight: 500;">{{ $m['no'] }}</td>
-                        <td>
-                            <div style="font-weight: 700; color: #212529; font-size: 13px;">{{ $m['nama'] }}</div>
-                            <div style="font-size: 11.5px; color: #6c757d; margin-top: 2px;">NIK : {{ $m['nik'] }}</div>
-                        </td>
-                        <td>
-                            @if($m['hubungan_badge'] === 'primary')
-                                <span class="badge-hub-kepala">{{ $m['hubungan'] }}</span>
-                            @elseif($m['hubungan_badge'] === 'teal')
-                                <span class="badge-hub-istri">{{ $m['hubungan'] }}</span>
                             @else
-                                <span class="badge-hub-anak">{{ $m['hubungan'] }}</span>
+                            <div class="warga-row-actions" id="row-actions-verif-{{ $v->id }}">
+                                <button type="button" class="btn-tindakan-review" style="margin-right: 6px;"
+                                    onclick='bukaModalReviewVerifikasi({
+                                        id: {{ $v->id }},
+                                        pemohon: "{{ addslashes($pemohonNama) }}",
+                                        noKk: "{{ addslashes($noKkPemohon) }}",
+                                        alamat: "{{ addslashes($alamatLengkap) }}",
+                                        warga: "{{ addslashes($targetNama) }}",
+                                        targetTitle: "Target Data: {{ addslashes($targetNama) }} ({{ addslashes($targetHub) }})",
+                                        targetSub: "{{ addslashes($targetSub) }}",
+                                        tglDiajukan: "Diajukan pada: {{ addslashes($tglDiajukan) }}",
+                                        status: "{{ $v->status }}",
+                                        statusLabel: "{{ $statusVerif['label'] }}",
+                                        alasan: "{{ addslashes($alasanTeks) }}",
+                                        jenis: "{{ $v->jenis_pengajuan }}",
+                                        jenisLabel: "{{ $jenisLabel['label'] }}",
+                                        dataLama: @json($v->data_lama ?? []),
+                                        dataBaru: @json($v->data_baru ?? []),
+                                        docs: @json($docsListAdmin),
+                                        buktiUrl: "{{ $buktiUrl }}",
+                                        buktiNama: "{{ addslashes($buktiNama) }}",
+                                        hasBukti: {{ $hasBukti ? 'true' : 'false' }}
+                                    })'>
+                                    <i class='bx bx-show'></i> Review
+                                </button>
+                                @if($v->status === 'disetujui')
+                                    <span class="btn-tindakan-disetujui-label"><i class='bx bx-check-circle'></i> Telah Disetujui</span>
+                                @else
+                                    <span style="color:#dc3545;font-size:12px;font-weight:600;"><i class='bx bx-x-circle'></i> Ditolak</span>
+                                @endif
+                            </div>
                             @endif
                         </td>
-                        <td>
-                            <div style="color: #212529; font-weight: 600; font-size: 13px;">{{ $m['jk'] }}</div>
-                            <div style="font-size: 11.5px; color: #6c757d; margin-top: 2px;">{{ $m['agama'] }}</div>
-                        </td>
-                        <td>
-                            <div style="color: #212529; font-weight: 600; font-size: 13px;">{{ $m['pendidikan_terakhir'] }}</div>
-                            <div style="font-size: 11.5px; color: #6c757d; margin-top: 2px;">{{ $m['pekerjaan'] }}</div>
-                        </td>
-                        <td>
-                            <span class="badge-warga-hidup">{{ $m['status_warga'] }}</span>
-                        </td>
-                        <td>
-                            <div class="warga-row-actions">
-                                <button type="button" class="btn-act-detail-blue" onclick="bukaModalDetailWarga('{{ $m['nik'] }}')" title="Lihat Detail Profil Warga">
-                                    <i class='bx bx-show'></i> Detail
-                                </button>
-                                <a href="{{ url('/admin/data-warga/edit-anggota/' . $m['nik']) }}" class="btn-act-edit-green" title="Edit Data Warga">
-                                    <i class='bx bx-edit'></i> Edit
-                                </a>
-                                <button type="button" class="btn-act-delete" onclick="konfirmasiHapusAnggota('{{ $m['nik'] }}', '{{ addslashes($m['nama']) }}', this)" title="Hapus Warga dari KK">
-                                    <i class='bx bx-trash'></i> Hapus
-                                </button>
-                            </div>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="7" style="text-align:center;padding:36px;color:#6c757d;font-size:13px;">
+                            <i class='bx bx-info-circle' style="font-size:28px;display:block;margin-bottom:8px;color:#ced4da;"></i>
+                            Tidak ada pengajuan perubahan data kependudukan saat ini.
                         </td>
                     </tr>
-                    @endforeach
+                    @endforelse
                 </tbody>
             </table>
         </div>
-
-        <div class="detail-footer-sync">
-            <div class="detail-footer-sync__left">
-                <i class='bx bx-info-circle'></i>
-                <span>Semua data anggota keluarga di atas telah disinkronkan dengan basis data RT 04 / RW 08.</span>
-            </div>
-            <div>
-                Terakhir diupdate: 18 Feb 2025 • 09:42 WIB
-            </div>
+        {{-- Pagination Verifikasi --}}
+        @if(isset($daftarPengajuan) && $daftarPengajuan->hasPages())
+        <div class="warga-pagination-bar" style="margin-top:12px;">
+            <div>{{ $daftarPengajuan->withQueryString()->links() }}</div>
         </div>
+        @endif
     </div>
 
 </div>
 
 {{-- ========================================================
-     MODAL POPUP KONFIRMASI HAPUS DATA (KK / WARGA)
+     MODAL POPUP KONFIRMASI HAPUS DATA KARTU KELUARGA
      ======================================================== --}}
 <div class="warga-modal-overlay" id="modal-hapus-warga" onclick="if(event.target === this) tutupModalHapus()">
     <div class="warga-modal-dialog">
-        <div class="warga-modal-header warga-modal-header--red">
-            <div class="warga-modal-header-left">
-                <div class="warga-modal-icon-circle">
-                    <i class='bx bx-trash'></i>
+        <form id="form-hapus-kk" method="POST" action="">
+            @csrf
+            @method('DELETE')
+            <div class="warga-modal-header warga-modal-header--red">
+                <div class="warga-modal-header-left">
+                    <div class="warga-modal-icon-circle">
+                        <i class='bx bx-trash'></i>
+                    </div>
+                    <h4 class="warga-modal-title" id="modal-hapus-title">Konfirmasi Hapus Data Kartu Keluarga</h4>
                 </div>
-                <h4 class="warga-modal-title" id="modal-hapus-title">Konfirmasi Hapus Data Kartu Keluarga</h4>
+                <button type="button" class="warga-modal-close" onclick="tutupModalHapus()">&times;</button>
             </div>
-            <button type="button" class="warga-modal-close" onclick="tutupModalHapus()">&times;</button>
-        </div>
-        <div class="warga-modal-body">
-            <p class="warga-modal-question" id="modal-hapus-question">
-                Apakah Anda yakin ingin menghapus data kartu keluarga ini?
-            </p>
-            <div class="warga-modal-alert-box warga-modal-alert-box--danger">
-                <i class='bx bx-info-circle warga-modal-alert-icon'></i>
-                <div class="warga-modal-alert-text">
-                    <strong>Perhatian:</strong> Data kependudukan, anggota keluarga, serta riwayat iuran dan permohonan surat terkait akan ikut terhapus dari sistem WargaKu. Tindakan ini tidak dapat dibatalkan.
-                </div>
-            </div>
-        </div>
-        <div class="warga-modal-footer">
-            <button type="button" class="btn-warga-modal-batal" onclick="tutupModalHapus()">Batal</button>
-            <button type="button" class="btn-warga-modal-action-red" id="btn-confirm-hapus" onclick="eksekusiHapusData()">
-                <i class='bx bx-trash'></i> Ya, Hapus Data
-            </button>
-        </div>
-    </div>
-</div>
-
-{{-- ========================================================
-     MODAL POPUP KONFIRMASI RESET PASSWORD AKUN
-     ======================================================== --}}
-<div class="warga-modal-overlay" id="modal-reset-password-warga" onclick="if(event.target === this) tutupModalReset()">
-    <div class="warga-modal-dialog">
-        <div class="warga-modal-header warga-modal-header--green">
-            <div class="warga-modal-header-left">
-                <div class="warga-modal-icon-circle">
-                    <i class='bx bx-shield-quarter'></i>
-                </div>
-                <h4 class="warga-modal-title">Konfirmasi Reset Password Akun</h4>
-            </div>
-            <button type="button" class="warga-modal-close" onclick="tutupModalReset()">&times;</button>
-        </div>
-        <div class="warga-modal-body">
-            <p class="warga-modal-question" id="modal-reset-question">
-                Apakah Anda yakin ingin me-reset kata sandi akun kepala keluarga / warga ini?
-            </p>
-            <div class="warga-modal-alert-box">
-                <i class='bx bx-info-circle warga-modal-alert-icon'></i>
-                <div class="warga-modal-alert-text">
-                    <strong>Perhatian:</strong> Warga harus menggunakan NIK sebagai password saat login berikutnya di aplikasi WargaKu.
+            <div class="warga-modal-body">
+                <p class="warga-modal-question" id="modal-hapus-question">
+                    Apakah Anda yakin ingin menghapus data kartu keluarga ini?
+                </p>
+                <div class="warga-modal-alert-box warga-modal-alert-box--danger">
+                    <i class='bx bx-info-circle warga-modal-alert-icon'></i>
+                    <div class="warga-modal-alert-text">
+                        <strong>Perhatian:</strong> Data kependudukan, anggota keluarga, serta riwayat iuran dan permohonan surat terkait akan ikut terhapus dari sistem WargaKu. Tindakan ini tidak dapat dibatalkan.
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="warga-modal-footer">
-            <button type="button" class="btn-warga-modal-batal" onclick="tutupModalReset()">Batal</button>
-            <button type="button" class="btn-warga-modal-action-green" onclick="eksekusiResetPassword()">
-                <i class='bx bx-check-circle'></i> Ya, Reset Password
-            </button>
-        </div>
+            <div class="warga-modal-footer">
+                <button type="button" class="btn-warga-modal-batal" onclick="tutupModalHapus()">Batal</button>
+                <button type="submit" class="btn-warga-modal-action-red" id="btn-confirm-hapus">
+                    <i class='bx bx-trash'></i> Ya, Hapus Data
+                </button>
+            </div>
+        </form>
     </div>
 </div>
 
@@ -698,174 +614,162 @@
      ======================================================== --}}
 <div class="warga-modal-overlay" id="modal-edit-status-kk" onclick="if(event.target === this) tutupModalEditStatus()">
     <div class="warga-modal-dialog">
+        <form id="form-edit-status-kk" method="POST" action="">
+            @csrf
+            <div class="warga-modal-header warga-modal-header--green">
+                <h4 class="warga-modal-title">Ubah Status Keluarga</h4>
+                <button type="button" class="warga-modal-close" onclick="tutupModalEditStatus()">&times;</button>
+            </div>
+            <div class="warga-modal-body">
+                <div class="edit-status-target-card">
+                    <span class="edit-status-target-label">KK Tujuan:</span>
+                    <span class="edit-status-target-val" id="edit-status-nokk">3275010905120008</span>
+                </div>
+
+                <div class="edit-status-grid">
+                    <div class="edit-status-field">
+                        <label class="edit-status-label" for="edit-input-tinggal">Status Tinggal</label>
+                        <select class="edit-status-select" id="edit-input-tinggal" name="status_tinggal">
+                            <option value="tetap">Tetap</option>
+                            <option value="kontrak">Kontrak / Sewa</option>
+                            <option value="kos">Kos</option>
+                            <option value="menumpang">Menumpang</option>
+                        </select>
+                    </div>
+                    <div class="edit-status-field">
+                        <label class="edit-status-label" for="edit-input-ekonomi">Status Ekonomi</label>
+                        <select class="edit-status-select" id="edit-input-ekonomi" name="status_ekonomi">
+                            <option value="mampu">Mampu</option>
+                            <option value="kurang_mampu">Kurang Mampu</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="warga-modal-footer">
+                <button type="button" class="btn-warga-modal-batal" onclick="tutupModalEditStatus()">Batal</button>
+                <button type="submit" class="btn-warga-modal-action-green">
+                    <i class='bx bx-check-double'></i> Simpan Perubahan
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{{-- ========================================================
+     MODAL KONFIRMASI SETUJUI VERIFIKASI
+     ======================================================== --}}
+<div class="warga-modal-overlay" id="modal-konfirmasi-setujui" onclick="if(event.target===this) tutupKonfirmasiSetujui()">
+    <div class="warga-modal-dialog">
         <div class="warga-modal-header warga-modal-header--green">
-            <h4 class="warga-modal-title">Ubah status keluarga</h4>
-            <button type="button" class="warga-modal-close" onclick="tutupModalEditStatus()">&times;</button>
+            <div class="warga-modal-header-left">
+                <div class="warga-modal-icon-circle"><i class='bx bx-check-double'></i></div>
+                <h4 class="warga-modal-title">Konfirmasi Setujui Pengajuan</h4>
+            </div>
+            <button type="button" class="warga-modal-close" onclick="tutupKonfirmasiSetujui()">&times;</button>
         </div>
         <div class="warga-modal-body">
-            <div class="edit-status-target-card">
-                <span class="edit-status-target-label">KK Tujuan:</span>
-                <span class="edit-status-target-val" id="edit-status-nokk">3275010905120008</span>
-            </div>
-
-            <div class="edit-status-grid">
-                <div class="edit-status-field">
-                    <label class="edit-status-label" for="edit-input-tinggal">Status Tinggal</label>
-                    <select class="edit-status-select" id="edit-input-tinggal">
-                        <option value="Tetap">Tetap</option>
-                        <option value="Kontrak / Sewa">Kontrak / Sewa</option>
-                        <option value="Kos">Kos</option>
-                        <option value="Menumpang">Menumpang</option>
-                    </select>
-                </div>
-                <div class="edit-status-field">
-                    <label class="edit-status-label" for="edit-input-ekonomi">Status Ekonomi</label>
-                    <select class="edit-status-select" id="edit-input-ekonomi">
-                        <option value="Mampu">Mampu</option>
-                        <option value="Kurang Mampu">Kurang Mampu</option>
-                    </select>
+            <p class="warga-modal-question" id="modal-setujui-question">
+                Apakah Anda yakin ingin menyetujui pengajuan ini?
+            </p>
+            <div class="warga-modal-alert-box">
+                <i class='bx bx-info-circle warga-modal-alert-icon'></i>
+                <div class="warga-modal-alert-text">
+                    <strong>Perhatian:</strong> Menyetujui pengajuan akan otomatis memperbarui data kependudukan warga di sistem.
                 </div>
             </div>
         </div>
         <div class="warga-modal-footer">
-            <button type="button" class="btn-warga-modal-batal" onclick="tutupModalEditStatus()">Batal</button>
-            <button type="button" class="btn-warga-modal-action-green" onclick="simpanEditStatusKK()">
-                <i class='bx bx-check-double'></i> Simpan Data
+            <button type="button" class="btn-warga-modal-batal" onclick="tutupKonfirmasiSetujui()">Batal</button>
+            <button type="button" class="btn-warga-modal-action-green" id="btn-eksekusi-setujui"
+                onclick="eksekusiSetujuiPengajuan()">
+                <i class='bx bx-check-double'></i> Ya, Setujui
             </button>
         </div>
     </div>
 </div>
 
 {{-- ========================================================
-     MODAL POPUP DETAIL BIODATA WARGA (SCREENSHOT 1)
+     MODAL TOLAK PENGAJUAN VERIFIKASI
      ======================================================== --}}
-<div class="warga-modal-overlay" id="modal-detail-warga" onclick="if(event.target === this) tutupModalDetailWarga()">
-    <div class="warga-modal-dialog" style="max-width: 820px; width: 92%;">
-        <div class="warga-modal-header warga-modal-header--blue">
-            <h4 class="warga-modal-title">Detail Biodata Kependudukan Warga</h4>
-            <button type="button" class="warga-modal-close" onclick="tutupModalDetailWarga()">&times;</button>
-        </div>
-        <div class="warga-modal-body" style="padding: 20px 22px;">
-            <div class="detail-warga-banner">
-                <h3 class="detail-warga-banner-name" id="modal-dw-nama">Siti Rahmawati, S.Ak.</h3>
-                <span class="badge-warga-hidup" id="modal-dw-status">● Hidup (Aktif)</span>
+<div class="warga-modal-overlay" id="modal-tolak-pengajuan" onclick="if(event.target===this) tutupModalTolak()">
+    <div class="warga-modal-dialog">
+        <div class="warga-modal-header warga-modal-header--red">
+            <div class="warga-modal-header-left">
+                <div class="warga-modal-icon-circle"><i class='bx bx-x-circle'></i></div>
+                <h4 class="warga-modal-title">Tolak Pengajuan Verifikasi</h4>
             </div>
-
-            <div class="detail-warga-grid">
-                <div class="detail-warga-subcard">
-                    <h5 class="detail-warga-subcard-title">IDENTITAS UTAMA & BIODATA</h5>
-                    <div class="detail-warga-kv">
-                        <span class="detail-warga-k">NIK:</span>
-                        <span class="detail-warga-v" id="modal-dw-nik" style="font-weight:700;">3275015509010003</span>
-                    </div>
-                    <div class="detail-warga-kv">
-                        <span class="detail-warga-k">Nama Lengkap:</span>
-                        <span class="detail-warga-v" id="modal-dw-namalengkap">Siti Rahmawati, S.Ak.</span>
-                    </div>
-                    <div class="detail-warga-kv">
-                        <span class="detail-warga-k">Tempat, Tanggal Lahir:</span>
-                        <span class="detail-warga-v" id="modal-dw-ttl">Depok, 15 September 2001</span>
-                    </div>
-                    <div class="detail-warga-kv">
-                        <span class="detail-warga-k">Jenis Kelamin:</span>
-                        <span class="detail-warga-v" id="modal-dw-jk">Perempuan</span>
-                    </div>
-                    <div class="detail-warga-kv">
-                        <span class="detail-warga-k">Agama:</span>
-                        <span class="detail-warga-v" id="modal-dw-agama">Islam</span>
-                    </div>
-                </div>
-
-                <div class="detail-warga-subcard">
-                    <h5 class="detail-warga-subcard-title">HUBUNGAN & SOSIAL</h5>
-                    <div class="detail-warga-kv">
-                        <span class="detail-warga-k">No. Kartu Keluarga:</span>
-                        <span class="detail-warga-v" id="modal-dw-nokk" style="font-weight:700;">3275010905120008</span>
-                    </div>
-                    <div class="detail-warga-kv">
-                        <span class="detail-warga-k">Hubungan Keluarga:</span>
-                        <span class="detail-warga-v" id="modal-dw-hubungan">Anak Kandung</span>
-                    </div>
-                    <div class="detail-warga-kv">
-                        <span class="detail-warga-k">Pendidikan Terakhir:</span>
-                        <span class="detail-warga-v" id="modal-dw-pendidikan">S1 Akuntansi</span>
-                    </div>
-                    <div class="detail-warga-kv">
-                        <span class="detail-warga-k">Pekerjaan:</span>
-                        <span class="detail-warga-v" id="modal-dw-pekerjaan">Karyawan Swasta (Auditor)</span>
-                    </div>
-                    <div class="detail-warga-kv">
-                        <span class="detail-warga-k">Status Warga:</span>
-                        <span class="detail-warga-v">
-                            <span class="badge-warga-hidup" id="modal-dw-status-badge">Hidup (Aktif)</span>
-                        </span>
-                    </div>
-                    <div class="detail-warga-kv">
-                        <span class="detail-warga-k">Alamat Lengkap:</span>
-                        <span class="detail-warga-v" id="modal-dw-alamat">Blok B4 No. 12, RT 04 / RW 08</span>
-                    </div>
-                </div>
+            <button type="button" class="warga-modal-close" onclick="tutupModalTolak()">&times;</button>
+        </div>
+        <div class="warga-modal-body">
+            <p class="warga-modal-question" id="modal-tolak-question">
+                Tolak pengajuan ini?
+            </p>
+            <div style="margin-top:12px;">
+                <label style="font-size:12px;font-weight:600;color:#495057;display:block;margin-bottom:4px;"
+                    for="input-alasan-tolak">Catatan Alasan Penolakan (opsional):</label>
+                <textarea id="input-alasan-tolak" name="alasan" rows="3"
+                    style="width:100%;padding:8px 10px;border:1px solid #dee2e6;border-radius:6px;font-size:13px;resize:vertical;box-sizing:border-box;"
+                    placeholder="Tulis alasan penolakan untuk warga..."></textarea>
             </div>
         </div>
-        <div class="warga-modal-footer" style="padding-top:0;">
-            <button type="button" class="btn-warga-modal-batal" onclick="tutupModalDetailWarga()">
-                <i class='bx bx-x'></i> Tutup
-            </button>
-            <button type="button" class="btn-warga-modal-action-orange" id="btn-modal-edit-warga-action" onclick="editDariModalDetail()">
-                <i class='bx bx-edit'></i> Edit Data Warga Ini
+        <div class="warga-modal-footer">
+            <button type="button" class="btn-warga-modal-batal" onclick="tutupModalTolak()">Batal</button>
+            <button type="button" class="btn-warga-modal-action-red" id="btn-eksekusi-tolak"
+                onclick="eksekusiTolakPengajuan()">
+                <i class='bx bx-x-circle'></i> Ya, Tolak Pengajuan
             </button>
         </div>
     </div>
 </div>
 
 {{-- ========================================================
-     MODAL REVIEW VERIFIKASI PENGAJUAN (FOTO 1)
+     MODAL POPUP REVIEW VERIFIKASI PENGAJUAN (IDENTIK DENGAN SISI WARGA + 2 TOMBOL ADMIN)
      ======================================================== --}}
-<div class="modal-review-verifikasi-overlay" id="modal-review-verifikasi" style="display: none;">
-    <div class="modal-review-verifikasi-dialog">
-        {{-- Header Dark --}}
-        <div class="rev-modal-header">
+<div class="kk-modal-overlay" id="modal-review-verifikasi" onclick="tutupReviewViaOverlay(event)">
+    <div class="kk-pengajuan-modal" id="modal-admin-pengajuan-container" role="dialog" aria-modal="true" aria-labelledby="review-modal-title">
+        <!-- Header -->
+        <div class="kk-pengajuan-modal__header">
             <div>
-                <div class="rev-modal-header__title-row">
-                    <h4 class="rev-modal-header__title">Review Verifikasi Pengajuan</h4>
-                    <span class="rev-modal-header__badge-status" id="rev-badge-status">Menunggu Persetujuan RT</span>
+                <div class="kk-pengajuan-modal__title-row">
+                    <h2 class="kk-pengajuan-modal__title" id="review-modal-title">Review Verifikasi Pengajuan</h2>
+                    <span class="kk-pengajuan-modal__status-badge kk-pengajuan-modal__status-badge--menunggu" id="review-status-badge">Menunggu Persetujuan RT</span>
                 </div>
-                <div class="rev-modal-header__subtitle">
-                    Pemohon: <strong id="rev-pemohon-nama">Bambang Santoso</strong> • No. KK: <span id="rev-pemohon-nokk">3275010905120008</span> • <span id="rev-pemohon-blok">Blok B4 No. 12</span>
+                <div class="kk-pengajuan-modal__subtitle">
+                    Pemohon: <strong id="review-header-pemohon">-</strong> &bull; No. KK: <strong id="review-header-nokk">-</strong> &bull; <span id="review-header-alamat">-</span>
                 </div>
             </div>
-            <button type="button" class="rev-modal-header__close" onclick="tutupModalReviewVerifikasi()" title="Tutup">
-                ✕
+            <button type="button" class="kk-pengajuan-modal__close" onclick="tutupModalReviewVerifikasi()" aria-label="Tutup">
+                <i class='bx bx-x'></i>
             </button>
         </div>
 
-        {{-- Body --}}
-        <div class="rev-modal-body">
-            {{-- Target Data Banner --}}
-            <div class="rev-target-banner">
-                <div>
-                    <div class="rev-target-title">Target Data: <strong id="rev-target-nama">Siti Rahmawati (Anak)</strong></div>
-                    <div class="rev-target-sub" id="rev-target-desc">NIK: 3275015509010003 • Perempuan • Lahir: Bekasi, 06-09-2001</div>
+        <!-- Body -->
+        <div class="kk-pengajuan-modal__body">
+            <!-- Strip Target Data -->
+            <div class="kk-target-strip">
+                <div class="kk-target-strip__left">
+                    <div class="kk-target-strip__title" id="review-target-title">Target Data: -</div>
+                    <div class="kk-target-strip__sub" id="review-target-sub">-</div>
                 </div>
-                <div class="rev-target-date">
-                    Diajukan pada: <span id="rev-target-waktu">18 Feb 2025, 09:15 WIB</span>
+                <div class="kk-target-strip__date" id="review-target-date">
+                    Diajukan pada: -
                 </div>
             </div>
 
-            {{-- 2 Columns Grid --}}
-            <div class="rev-columns-grid">
-                {{-- Kolom Kiri: Komparasi Data --}}
-                <div class="rev-col-left">
-                    <div class="rev-col-title-bar">
-                        <h5 class="rev-col-heading">
-                            <i class='bx bx-git-compare' style="color: #0284c7; font-size: 16px;"></i>
-                            Komparasi Data Lama vs Usulan Baru
-                        </h5>
-                        <span class="rev-badge-count" id="rev-compare-count">3 Atribut Diperbarui</span>
+            <!-- 2-Columns Grid: Komparasi vs Pratinjau Dokumen -->
+            <div class="kk-pengajuan-grid">
+                <!-- Kolom Kiri: Komparasi Data -->
+                <div class="kk-pengajuan-card">
+                    <div class="kk-pengajuan-card__header">
+                        <div class="kk-pengajuan-card__title">
+                            <i class='bx bx-git-compare' style="color:#0284c7; font-size:16px;"></i>
+                            <span>Komparasi Data Lama vs Usulan Baru</span>
+                        </div>
+                        <span class="kk-pengajuan-card__badge-green" id="review-attr-count">0 Atribut Diperbarui</span>
                     </div>
 
-                    <div class="rev-compare-table-wrap">
-                        <table class="rev-compare-table">
+                    <div class="kk-ptable-wrap">
+                        <table class="kk-ptable">
                             <thead>
                                 <tr>
                                     <th style="width: 32%;">FIELD / ATRIBUT</th>
@@ -873,78 +777,58 @@
                                     <th style="width: 34%;">USULAN BARU WARGA</th>
                                 </tr>
                             </thead>
-                            <tbody id="rev-compare-tbody">
-                                <tr>
-                                    <td class="rev-field-label">Pekerjaan Utama</td>
-                                    <td class="rev-val-old">Pelajar/Mahasiswa</td>
-                                    <td>
-                                        <div class="rev-val-new">
-                                            <span>Karyawan Swasta</span>
-                                            <span class="rev-badge-diubah">Diubah</span>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="rev-field-label">Pendidikan Terakhir</td>
-                                    <td class="rev-val-old">SLTA / Sederajat</td>
-                                    <td>
-                                        <div class="rev-val-new">
-                                            <span>D4/S1</span>
-                                            <span class="rev-badge-diubah">Diubah</span>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="rev-field-label">Status Perkawinan</td>
-                                    <td class="rev-val-old">Belum Kawin</td>
-                                    <td>
-                                        <div class="rev-val-new">
-                                            <span>Kawin Tercatat</span>
-                                            <span class="rev-badge-diubah">Diubah</span>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="rev-field-label">Agama</td>
-                                    <td class="rev-val-old">Islam</td>
-                                    <td class="rev-val-old">Islam (Tetap)</td>
-                                </tr>
+                            <tbody id="review-komparasi-tbody">
+                                <!-- Dynamic rows -->
                             </tbody>
                         </table>
                     </div>
+
+                    <!-- Alasan Pengajuan -->
+                    <div class="kk-alasan-box">
+                        <div class="kk-alasan-box__label">Alasan Pengajuan Perubahan:</div>
+                        <div class="kk-alasan-box__val" id="review-alasan-val">-</div>
+                    </div>
                 </div>
 
-                {{-- Kolom Kanan: Pratinjau Dokumen Pendukung --}}
-                <div class="rev-col-right">
-                    <div class="rev-col-title-bar">
-                        <h5 class="rev-col-heading">
-                            <i class='bx bx-check-shield' style="color: #16a34a; font-size: 16px;"></i>
-                            Pratinjau Dokumen Pendukung
-                        </h5>
-                        <span class="rev-badge-count" id="rev-doc-count">2 Dokumen</span>
+                <!-- Kolom Kanan: Pratinjau Dokumen Pendukung -->
+                <div class="kk-pengajuan-card">
+                    <div class="kk-pengajuan-card__header">
+                        <div class="kk-pengajuan-card__title">
+                            <i class='bx bx-check-shield' style="color:#16a34a; font-size:16px;"></i>
+                            <span>Pratinjau Dokumen Pendukung</span>
+                        </div>
+                        <span class="kk-pengajuan-card__badge-green" id="review-doc-count">0 Dokumen</span>
                     </div>
 
-                    {{-- Tab List Dokumen (Dibuat Dinamis Berdasarkan Upload Warga) --}}
-                    <div class="rev-doc-tabs" id="rev-doc-tabs-container">
-                        {{-- Diisi secara dinamis oleh JavaScript --}}
+                    <!-- Tabs Dokumen -->
+                    <div class="kk-doc-tabs" id="review-doc-tabs">
+                        <!-- Dynamic tabs -->
                     </div>
 
-                    {{-- Preview Container Canvas Gambar Dokumen --}}
-                    <div class="rev-doc-preview-box">
-                        <div class="rev-doc-display-container">
-                            <img id="rev-doc-preview-img" src="{{ asset('contoh_Ijazah.png') }}" alt="Dokumen Pratinjau" class="rev-doc-display-img" onclick="perbesarDokumenAktif()" title="Klik untuk memperbesar gambar">
-                        </div>
-                        <div class="rev-doc-info-bar">
-                            <span id="rev-doc-caption" style="font-size: 12px; color: #475569; font-weight: 600;">1. Ijazah_S1_Siti.png</span>
-                            <span style="font-size: 11.5px; color: #16a34a; font-weight: 600;"><i class='bx bx-check-circle'></i> Dokumen Asli Terverifikasi</span>
+                    <!-- Visual Document Box Serupa Warga -->
+                    <div class="kk-doc-preview-box">
+                        <div class="kk-doc-display-container">
+                            <img id="review-doc-img" src="" alt="Pratinjau Dokumen" class="kk-doc-preview-img" onclick="bukaZoomDokumenAdmin()" title="Klik untuk memperbesar berkas" style="display:none;">
+                            <div id="review-doc-fallback" style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:36px 16px;color:#94a3b8;width:100%;">
+                                <i class='bx bxs-file-pdf' id="review-doc-pdf-icon" style="font-size:52px;color:#dc2626;margin-bottom:8px;display:none;"></i>
+                                <i class='bx bx-file' id="review-doc-none-icon" style="font-size:52px;color:#cbd5e1;margin-bottom:8px;"></i>
+                                <span id="review-doc-fallback-text" style="font-size:13px;font-weight:600;">Tidak ada berkas yang diunggah</span>
+                            </div>
                         </div>
 
-                        {{-- Action Buttons below preview --}}
-                        <div class="rev-doc-actions">
-                            <button type="button" class="rev-btn-action" id="rev-btn-perbesar" onclick="perbesarDokumenAktif()">
+                        <div class="kk-doc-info-bar">
+                            <span id="review-doc-filename" style="font-size: 12px; color: #475569; font-weight: 600;">Dokumen</span>
+                            <span id="review-doc-verified" style="font-size: 11.5px; color: #16a34a; font-weight: 600;">
+                                <i class='bx bx-check-circle'></i> Dokumen Terlampir
+                            </span>
+                        </div>
+
+                        <!-- Action buttons for document -->
+                        <div class="kk-doc-actions">
+                            <button type="button" class="kk-doc-btn" onclick="bukaZoomDokumenAdmin()" id="btn-admin-perbesar-berkas">
                                 <i class='bx bx-zoom-in'></i> Perbesar Berkas
                             </button>
-                            <a id="rev-btn-download" href="{{ asset('contoh_Ijazah.png') }}" download="contoh_Ijazah.png" class="rev-btn-action" style="text-decoration: none;">
+                            <a id="btn-admin-unduh-berkas" href="#" download class="kk-doc-btn">
                                 <i class='bx bx-download'></i> Unduh File Asli
                             </a>
                         </div>
@@ -953,36 +837,23 @@
             </div>
         </div>
 
-        {{-- Footer --}}
-        <div class="rev-modal-footer">
-            <button type="button" class="btn-rev-footer-cancel" onclick="tutupModalReviewVerifikasi()">
+        <!-- Footer: Sisi Admin dengan Tombol Sejajar Rapi 1 Baris -->
+        <div class="kk-pengajuan-modal__footer" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:nowrap; gap:16px; padding:14px 26px;">
+            <button type="button" class="kk-pbtn-close" onclick="tutupModalReviewVerifikasi()" style="height:38px; display:inline-flex; align-items:center; justify-content:center; padding:0 18px; border-radius:6px; font-size:13px; font-weight:600; background:#ffffff; border:1px solid #cbd5e1; color:#475569; cursor:pointer; flex-shrink:0;">
                 Tutup / Batal
             </button>
-            <div class="rev-modal-footer__right">
-                <button type="button" class="btn-rev-footer-reject" onclick="tutupModalReviewVerifikasi()">
-                    Tutup / Batal
+            <div class="kk-pengajuan-modal__footer-status" id="review-footer-status" style="flex:1; min-width:0; display:flex; align-items:center; gap:6px; font-size:12.5px; color:#64748b; margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                <i class='bx bx-time-five' style="color:#d97706; font-size:16px; flex-shrink:0;"></i>
+                <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">Pengajuan ini sedang dalam antrean verifikasi oleh Pengurus RT 04.</span>
+            </div>
+            <div class="kk-pengajuan-modal__footer-btns" id="review-admin-actions" style="display:flex; align-items:center; gap:10px; flex-shrink:0;">
+                <button type="button" class="btn-warga-modal-action-red" onclick="alihkanKeTolakDariReview()" style="height:38px; display:inline-flex; align-items:center; gap:6px; padding:0 18px; border-radius:6px; font-size:13px; font-weight:600; background:#dc2626; color:#ffffff; border:none; cursor:pointer; box-shadow:none;">
+                    <i class='bx bx-x' style="font-size:16px;"></i> Tolak Pengajuan
                 </button>
-                <button type="button" class="btn-rev-footer-approve" onclick="konfirmasiDariModalReview()">
-                    <i class='bx bx-check-circle'></i> Setujui &amp; Perbarui Database
+                <button type="button" class="btn-warga-modal-action-green" onclick="alihkanKeSetujuiDariReview()" style="height:38px; display:inline-flex; align-items:center; gap:6px; padding:0 18px; border-radius:6px; font-size:13px; font-weight:600; background:#16a34a; color:#ffffff; border:none; cursor:pointer; box-shadow:none;">
+                    <i class='bx bx-check-double' style="font-size:16px;"></i> Setujui &amp; Perbarui Database
                 </button>
             </div>
-        </div>
-    </div>
-</div>
-
-{{-- ========================================================
-     MODAL KONFIRMASI SETUJUI VERIFIKASI (FOTO 2)
-     ======================================================== --}}
-<div class="modal-konfirmasi-overlay" id="modal-konfirmasi-setujui" style="display: none;">
-    <div class="modal-konfirmasi-setujui-dialog">
-        <h4 class="modal-konfirmasi-setujui-title">Apakah Kamu yakin Menyetujuinya</h4>
-        <div class="modal-konfirmasi-setujui-actions">
-            <button type="button" class="btn-konfirm-batal" onclick="tutupKonfirmasiSetujui()">
-                Batal
-            </button>
-            <button type="button" class="btn-konfirm-setuju" id="btn-eksekusi-konfirmasi" onclick="eksekusiKonfirmasiSetujui()">
-                Konfirmasi
-            </button>
         </div>
     </div>
 </div>
@@ -1011,89 +882,8 @@
         }
     }
 
-    // Buka tampilan Detail KK
-    function bukaDetailKK(noKk, namaKepala, nikKepala, alamat, kontak, ekonomi, tinggal, jmlAnggota, jmlLaki, jmlPerempuan) {
-        // Sembunyikan main view & tampilkan detail view
-        document.getElementById('stats-main').style.display = 'none';
-        document.getElementById('view-main').style.display = 'none';
-        document.getElementById('stats-detail').style.display = 'grid';
-        document.getElementById('view-detail-kk').style.display = 'flex';
-
-        // Update header & tombol
-        document.getElementById('page-title').innerHTML = 'Detail Kartu Keluarga (KK): <span style="color:#007bff;font-weight:700">' + noKk + '</span>';
-        document.getElementById('page-subtitle').textContent = 'Informasi lengkap kepala keluarga, susunan seluruh anggota keluarga terdaftar, dokumen KK, dan status kependudukan.';
-        var btnCetak = document.getElementById('btn-cetak');
-        if (btnCetak) btnCetak.style.display = 'none';
-        var btnKembaliKk = document.getElementById('btn-kembali-kk');
-        if (btnKembaliKk) btnKembaliKk.style.display = 'inline-flex';
-        var btnKembaliDetail = document.getElementById('btn-kembali-ke-detail');
-        if (btnKembaliDetail) btnKembaliDetail.style.display = 'none';
-        document.getElementById('header-breadcrumb').innerHTML = '<i class=\'bx bx-home-alt\'></i> Portal RT 04 / Kelola Data Warga / <span style="color:#007bff;font-weight:600">Detail Kartu Keluarga</span>';
-        document.getElementById('topbar-breadcrumb-label').textContent = 'Detail Kartu Keluarga';
-
-        // Update Stat boxes detail
-        document.getElementById('detail-stat-no-kk').textContent = noKk;
-        document.getElementById('detail-stat-jiwa').innerHTML = jmlAnggota + ' <small>Jiwa Aktif</small>';
-        document.getElementById('detail-stat-gender').textContent = jmlLaki + ' Laki-laki • ' + jmlPerempuan + ' Perempuan';
-        document.getElementById('detail-stat-hunian').textContent = tinggal || 'Tetap (Milik Sendiri)';
-
-        // Update Card Profil Keluarga
-        document.getElementById('detail-kepala-nama').textContent = namaKepala;
-        document.getElementById('detail-kepala-nik').textContent = nikKepala || '3275012304800001';
-        document.getElementById('detail-alamat').textContent = alamat;
-        document.getElementById('detail-kontak').textContent = kontak;
-        document.getElementById('detail-ekonomi').textContent = 'Ekonomi: ' + (ekonomi || 'Mampu');
-        document.getElementById('detail-badge-count').textContent = jmlAnggota + ' Orang';
-
-        // Sinkronisasi URL agar jika di-refresh tetap di Detail KK
-        if (window.history && window.history.pushState) {
-            history.pushState(null, '', '{{ route('admin.data-warga') }}?view=detail');
-        }
-
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    // Tutup tampilan Detail KK & kembali ke Daftar KK
-    function tutupDetailKK() {
-        document.getElementById('stats-detail').style.display = 'none';
-        document.getElementById('view-detail-kk').style.display = 'none';
-        document.getElementById('stats-main').style.display = 'grid';
-        document.getElementById('view-main').style.display = 'block';
-
-        document.getElementById('page-title').textContent = 'Kelola Data Warga & Verifikasi Kependudukan';
-        document.getElementById('page-subtitle').textContent = 'Kelola data master kependudukan warga RT 04, status mutasi, dan validasi permohonan perubahan data dari warga.';
-        var btnCetak = document.getElementById('btn-cetak');
-        if (btnCetak) btnCetak.style.display = 'inline-flex';
-        var btnKembaliKk = document.getElementById('btn-kembali-kk');
-        if (btnKembaliKk) btnKembaliKk.style.display = 'none';
-        var btnKembaliDetail = document.getElementById('btn-kembali-ke-detail');
-        if (btnKembaliDetail) btnKembaliDetail.style.display = 'none';
-        document.getElementById('header-breadcrumb').innerHTML = '<i class=\'bx bx-home-alt\'></i> <span>Portal RT 04</span>';
-        document.getElementById('topbar-breadcrumb-label').textContent = 'Kelola Data Warga';
-
-        // Kembalikan URL ke rute utama
-        if (window.history && window.history.pushState) {
-            history.pushState(null, '', '{{ route('admin.data-warga') }}');
-        }
-
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    // Toggle collapse profil rumah
-    function toggleCollapse(contentId, chevronId) {
-        var el = document.getElementById(contentId);
-        var ch = document.getElementById(chevronId);
-        if (el.style.display === 'none') {
-            el.style.display = 'block';
-            ch.className = 'bx bx-chevron-up';
-        } else {
-            el.style.display = 'none';
-            ch.className = 'bx bx-chevron-down';
-        }
-    }
-
     // ── Pagination KK ──
-    const KK_PAGE_SIZE = 5;
+    const KK_PAGE_SIZE = 10;
     let currentKkPage = 1;
 
     function renderKkPagination() {
@@ -1158,10 +948,7 @@
         // Prev
         var prevDisabled = (currentKkPage <= 1);
         var btnPrev = createWargaPageBtn('« Sebelumnya', prevDisabled, false, function() {
-            if (currentKkPage > 1) {
-                currentKkPage--;
-                renderKkPagination();
-            }
+            if (currentKkPage > 1) { currentKkPage--; renderKkPagination(); }
         });
         container.appendChild(btnPrev);
 
@@ -1180,10 +967,7 @@
         // Next
         var nextDisabled = (currentKkPage >= totalPages);
         var btnNext = createWargaPageBtn('Berikutnya »', nextDisabled, false, function() {
-            if (currentKkPage < totalPages) {
-                currentKkPage++;
-                renderKkPagination();
-            }
+            if (currentKkPage < totalPages) { currentKkPage++; renderKkPagination(); }
         });
         container.appendChild(btnNext);
     }
@@ -1194,19 +978,12 @@
         btn.className = 'warga-page-btn' + (isActive ? ' warga-page-btn--active' : '') + (isDisabled ? ' warga-page-btn--disabled' : '');
         btn.innerHTML = label;
         btn.disabled = !!isDisabled;
-        if (!isDisabled && !isActive) {
-            btn.onclick = onClickHandler;
-        }
+        if (!isDisabled && !isActive) { btn.onclick = onClickHandler; }
         return btn;
     }
 
-    // Filter KK pencarian
-    function terapkanFilterKK() {
-        currentKkPage = 1;
-        renderKkPagination();
-    }
+    function terapkanFilterKK() { currentKkPage = 1; renderKkPagination(); }
 
-    // Reset filter KK
     function resetFilterKK() {
         document.getElementById('search-kk').value = '';
         document.getElementById('filter-tinggal').value = '';
@@ -1214,133 +991,50 @@
         terapkanFilterKK();
     }
 
-    // Event listener input search langsung realtime
     document.getElementById('search-kk').addEventListener('input', terapkanFilterKK);
     document.getElementById('filter-tinggal').addEventListener('change', terapkanFilterKK);
     document.getElementById('filter-ekonomi').addEventListener('change', terapkanFilterKK);
 
-    // Initial render
     document.addEventListener('DOMContentLoaded', renderKkPagination);
     renderKkPagination();
 
-    // Cek parameter URL untuk tab aktif atau view detail
+    // Cek parameter URL untuk tab aktif
     var urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('tab') === 'verifikasi' || window.location.hash === '#verifikasi') {
         switchWargaTab('verifikasi');
-    } else if (urlParams.get('view') === 'detail') {
-        bukaDetailKK('3275010905120008', 'Bambang Santoso, S.T.', '3275012304800001', 'Blok B4 No. 12, RT 04 / RW 08', '0812-8901-2345', 'Mampu', 'Tetap (Milik Sendiri)', 3, 1, 2);
     }
 
-    // ── Logic Modal Hapus Data (KK & Anggota Warga) ──
-    var hapusState = {
-        tipe: 'kk',
-        id: '',
-        nama: '',
-        rowElement: null
-    };
-
-    function konfirmasiHapusKK(noKk, namaKepala, btnElement) {
-        hapusState.tipe = 'kk';
-        hapusState.id = noKk;
-        hapusState.nama = namaKepala;
-        hapusState.rowElement = btnElement ? btnElement.closest('tr') : null;
-
+    // ── Modal Hapus Data Kartu Keluarga ──
+    function konfirmasiHapusKK(noKk, namaKepala) {
+        var form = document.getElementById('form-hapus-kk');
+        if (form) form.action = "{{ url('/admin/data-warga') }}/" + noKk;
         document.getElementById('modal-hapus-title').textContent = 'Konfirmasi Hapus Data Kartu Keluarga';
         document.getElementById('modal-hapus-question').innerHTML = 'Apakah Anda yakin ingin menghapus data kartu keluarga atas nama <strong>' + namaKepala + '</strong> (No. KK: ' + noKk + ')?';
         document.getElementById('modal-hapus-warga').style.display = 'flex';
     }
 
-    function konfirmasiHapusAnggota(nik, namaWarga, btnElement) {
-        hapusState.tipe = 'anggota';
-        hapusState.id = nik;
-        hapusState.nama = namaWarga;
-        hapusState.rowElement = btnElement ? btnElement.closest('tr') : null;
-
-        document.getElementById('modal-hapus-title').textContent = 'Konfirmasi Hapus Data Warga';
-        document.getElementById('modal-hapus-question').innerHTML = 'Apakah Anda yakin ingin menghapus anggota keluarga <strong>' + namaWarga + '</strong> (NIK: ' + nik + ') dari Kartu Keluarga ini?';
-        document.getElementById('modal-hapus-warga').style.display = 'flex';
-    }
-
     function tutupModalHapus() {
         document.getElementById('modal-hapus-warga').style.display = 'none';
-        hapusState = { tipe: 'kk', id: '', nama: '', rowElement: null };
     }
 
-    function eksekusiHapusData() {
-        var targetRow = hapusState.rowElement;
-        var namaTarget = hapusState.nama;
-        var tipeTarget = hapusState.tipe;
-
-        tutupModalHapus();
-
-        if (targetRow) {
-            targetRow.style.transition = 'all 0.3s ease';
-            targetRow.style.opacity = '0';
-            targetRow.style.transform = 'scale(0.96)';
-            setTimeout(function() {
-                targetRow.remove();
-                if (tipeTarget === 'kk') {
-                    renderKkPagination();
-                } else if (tipeTarget === 'anggota') {
-                    var remainingAnggota = document.querySelectorAll('#detail-anggota-tbody tr').length;
-                    var badgeEl = document.getElementById('detail-badge-count');
-                    var statJiwaEl = document.getElementById('detail-stat-jiwa');
-                    if (badgeEl) badgeEl.textContent = remainingAnggota + ' Orang';
-                    if (statJiwaEl) statJiwaEl.innerHTML = remainingAnggota + ' <small>Jiwa Aktif</small>';
-                }
-            }, 250);
-        }
-    }
-
-    // ── Logic Modal Reset Password ──
-    var resetTargetNama = '';
-
-    function konfirmasiResetPassword(nama) {
-        resetTargetNama = nama || 'Bambang Santoso, S.T.';
-        document.getElementById('modal-reset-question').innerHTML = 'Apakah Anda yakin ingin me-reset kata sandi akun kepala keluarga / warga <strong>' + resetTargetNama + '</strong> ini?';
-        document.getElementById('modal-reset-password-warga').style.display = 'flex';
-    }
-
-    function tutupModalReset() {
-        document.getElementById('modal-reset-password-warga').style.display = 'none';
-    }
-
-    function eksekusiResetPassword() {
-        tutupModalReset();
-        alert('Kata sandi akun ' + resetTargetNama + ' berhasil di-reset. Warga dapat login kembali menggunakan NIK sebagai password.');
-    }
-
-    // ── Logic Modal Ubah Status Keluarga ──
-    var editStatusState = {
-        noKk: '',
-        namaKepala: '',
-        rowElement: null
-    };
-
-    function bukaModalEditStatus(noKk, namaKepala, statusTinggal, statusEkonomi, btnElement) {
-        editStatusState.noKk = noKk;
-        editStatusState.namaKepala = namaKepala;
-        editStatusState.rowElement = btnElement ? btnElement.closest('tr') : null;
-
+    // ── Modal Ubah Status Keluarga ──
+    function bukaModalEditStatus(noKk, namaKepala, statusTinggal, statusEkonomi) {
         document.getElementById('edit-status-nokk').textContent = noKk;
-        
+        var form = document.getElementById('form-edit-status-kk');
+        if (form) form.action = "{{ url('/admin/data-warga') }}/" + noKk + "/status";
+
         var selectTinggal = document.getElementById('edit-input-tinggal');
         var selectEkonomi = document.getElementById('edit-input-ekonomi');
-        
+
         if (selectTinggal) {
             var stLower = (statusTinggal || '').toLowerCase();
-            if (stLower.includes('kontrak') || stLower.includes('sewa')) {
-                selectTinggal.value = 'Kontrak / Sewa';
-            } else if (stLower.includes('kos')) {
-                selectTinggal.value = 'Kos';
-            } else if (stLower.includes('menumpang') || stLower.includes('tumpang')) {
-                selectTinggal.value = 'Menumpang';
-            } else {
-                selectTinggal.value = 'Tetap';
-            }
+            if (stLower.includes('kontrak') || stLower.includes('sewa')) selectTinggal.value = 'kontrak';
+            else if (stLower.includes('kos')) selectTinggal.value = 'kos';
+            else if (stLower.includes('menumpang') || stLower.includes('tumpang')) selectTinggal.value = 'menumpang';
+            else selectTinggal.value = 'tetap';
         }
         if (selectEkonomi) {
-            selectEkonomi.value = (statusEkonomi && statusEkonomi.toLowerCase().includes('kurang')) ? 'Kurang Mampu' : 'Mampu';
+            selectEkonomi.value = (statusEkonomi && statusEkonomi.toLowerCase().includes('kurang')) ? 'kurang_mampu' : 'mampu';
         }
 
         document.getElementById('modal-edit-status-kk').style.display = 'flex';
@@ -1348,419 +1042,385 @@
 
     function tutupModalEditStatus() {
         document.getElementById('modal-edit-status-kk').style.display = 'none';
-        editStatusState = { noKk: '', namaKepala: '', rowElement: null };
     }
 
-    function simpanEditStatusKK() {
-        var row = editStatusState.rowElement;
-        var tinggalVal = document.getElementById('edit-input-tinggal').value;
-        var ekonomiVal = document.getElementById('edit-input-ekonomi').value;
-        var noKk = editStatusState.noKk;
-        var namaKepala = editStatusState.namaKepala;
+    // ── Modal Konfirmasi Setujui Verifikasi ──
+    var activeSetujuiId = null;
 
-        if (row) {
-            // Update data attributes pada tr agar live search/filter cocok
-            row.dataset.tinggal = tinggalVal.toLowerCase();
-            row.dataset.ekonomi = ekonomiVal.toLowerCase();
-
-            // Update badge di dalam baris
-            var tagsWrap = row.querySelector('.status-tags-wrap');
-            if (tagsWrap) {
-                var badgeTinggalClass = (tinggalVal === 'Tetap') ? 'badge-status-tetap' : 'badge-status-sewa';
-                tagsWrap.innerHTML = '<span class="' + badgeTinggalClass + '">' + tinggalVal + '</span> ' +
-                                     '<span class="badge-ekonomi-gray">' + ekonomiVal + '</span>';
-            }
-
-            // Update onclick tombol edit agar menyimpan state terbaru
-            var btnEdit = row.querySelector('.btn-act-edit');
-            if (btnEdit) {
-                btnEdit.onclick = function() {
-                    bukaModalEditStatus(noKk, namaKepala, tinggalVal, ekonomiVal, btnEdit);
-                };
-            }
-        }
-
-        tutupModalEditStatus();
-    }
-
-    // ── DATA STORE ANGGOTA KELUARGA ──
-    var anggotaData = {
-        '3275012304800001': {
-            no: 1,
-            nik: '3275012304800001',
-            nama: 'Bambang Santoso, S.T.',
-            tempat_lahir: 'Surabaya',
-            tanggal_lahir: '23 April 1980',
-            tanggal_lahir_raw: '1980-04-23',
-            jk: 'Laki-laki',
-            agama: 'Islam',
-            no_kk: '3275010905120008',
-            hubungan: 'Kepala Keluarga',
-            shdk: 'Kepala Keluarga',
-            pendidikan: 'Sarjana (S1)',
-            pekerjaan: 'Pegawai BUMN (PT PLN)',
-            status_kawin: 'Kawin',
-            status_warga: 'Hidup (Aktif)',
-            alamat: 'Blok B4 No. 12, RT 04 / RW 08'
-        },
-        '3275016508910004': {
-            no: 2,
-            nik: '3275016508910004',
-            nama: 'Ratna Dewi Puspita, M.Pd.',
-            tempat_lahir: 'Bandung',
-            tanggal_lahir: '15 Agustus 1982',
-            tanggal_lahir_raw: '1982-08-15',
-            jk: 'Perempuan',
-            agama: 'Islam',
-            no_kk: '3275010905120008',
-            hubungan: 'Istri',
-            shdk: 'Istri',
-            pendidikan: 'Magister (S2)',
-            pekerjaan: 'Guru SMA Negeri 4',
-            status_kawin: 'Kawin',
-            status_warga: 'Hidup (Aktif)',
-            alamat: 'Blok B4 No. 12, RT 04 / RW 08'
-        },
-        '3275015509010003': {
-            no: 3,
-            nik: '3275015509010003',
-            nama: 'Siti Rahmawati, S.Ak.',
-            tempat_lahir: 'Depok',
-            tanggal_lahir: '15 September 2001',
-            tanggal_lahir_raw: '2001-09-15',
-            jk: 'Perempuan',
-            agama: 'Islam',
-            no_kk: '3275010905120008',
-            hubungan: 'Anak Kandung',
-            shdk: 'Anak',
-            pendidikan: 'Sarjana (S1)',
-            pekerjaan: 'Karyawan Swasta (Auditor)',
-            status_kawin: 'Belum Kawin',
-            status_warga: 'Hidup (Aktif)',
-            alamat: 'Blok B4 No. 12, RT 04 / RW 08'
-        }
-    };
-
-    function formatTglIndo(dateStr) {
-        if (!dateStr) return '';
-        var parts = dateStr.split('-');
-        if (parts.length !== 3) return dateStr;
-        var bulan = ['', 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
-        var day = parseInt(parts[2], 10);
-        var month = parseInt(parts[1], 10);
-        var year = parts[0];
-        return day + ' ' + (bulan[month] || '') + ' ' + year;
-    }
-
-    // ── MODAL DETAIL BIODATA WARGA (SCREENSHOT 1) ──
-    var activeDetailNik = '';
-
-    function bukaModalDetailWarga(nik) {
-        var w = anggotaData[nik];
-        if (!w) {
-            // Fallback cari di baris tabel jika data baru
-            var rows = document.querySelectorAll('#detail-anggota-tbody tr');
-            rows.forEach(function(r) {
-                var text = r.textContent;
-                if (text.includes(nik)) {
-                    w = {
-                        nik: nik,
-                        nama: r.querySelector('div[style*="font-weight: 700"]')?.textContent || 'Warga RT 04',
-                        tempat_lahir: 'Depok',
-                        tanggal_lahir: '15 September 2001',
-                        jk: 'Perempuan',
-                        agama: 'Islam',
-                        no_kk: document.getElementById('detail-stat-no-kk').textContent || '3275010905120008',
-                        hubungan: 'Anak Kandung',
-                        pendidikan: 'Sarjana (S1)',
-                        pekerjaan: 'Karyawan Swasta',
-                        status_warga: 'Hidup (Aktif)',
-                        alamat: document.getElementById('detail-alamat').textContent || 'Blok B4 No. 12, RT 04 / RW 08'
-                    };
-                }
-            });
-        }
-        if (!w) return;
-        activeDetailNik = nik;
-
-        document.getElementById('modal-dw-nama').textContent = w.nama;
-        document.getElementById('modal-dw-nik').textContent = w.nik;
-        document.getElementById('modal-dw-namalengkap').textContent = w.nama;
-        document.getElementById('modal-dw-ttl').textContent = (w.tempat_lahir || 'Depok') + ', ' + (w.tanggal_lahir || '15 September 2001');
-        document.getElementById('modal-dw-jk').textContent = w.jk;
-        document.getElementById('modal-dw-agama').textContent = w.agama;
-        document.getElementById('modal-dw-nokk').textContent = w.no_kk || document.getElementById('detail-stat-no-kk').textContent;
-        document.getElementById('modal-dw-hubungan').textContent = w.hubungan || w.shdk || 'Anak Kandung';
-        document.getElementById('modal-dw-pendidikan').textContent = w.pendidikan || 'Sarjana (S1)';
-        document.getElementById('modal-dw-pekerjaan').textContent = w.pekerjaan || 'Karyawan Swasta (Auditor)';
-        document.getElementById('modal-dw-status').innerHTML = '● ' + (w.status_warga || 'Hidup (Aktif)');
-        document.getElementById('modal-dw-status-badge').textContent = w.status_warga || 'Hidup (Aktif)';
-        document.getElementById('modal-dw-alamat').textContent = w.alamat || document.getElementById('detail-alamat').textContent;
-
-        document.getElementById('modal-detail-warga').style.display = 'flex';
-    }
-
-    function tutupModalDetailWarga() {
-        document.getElementById('modal-detail-warga').style.display = 'none';
-        activeDetailNik = '';
-    }
-
-    function editDariModalDetail() {
-        var nik = activeDetailNik || '3275015509010003';
-        tutupModalDetailWarga();
-        window.location.href = "{{ url('/admin/data-warga/edit-anggota') }}/" + nik;
-    }
-
-    // ── DATA & LOGIC VERIFIKASI PENGAJUAN (FOTO 1 & FOTO 2) ──
-    var verifikasiDataMap = {
-        1: {
-            id: 1,
-            pemohon: 'Bambang Santoso',
-            no_kk: '3275010905120008',
-            blok: 'Blok B4 No. 12',
-            target_nama: 'Siti Rahmawati (Anak)',
-            target_sub: 'NIK: 3275015509010003 • Perempuan • Lahir: Bekasi, 06-09-2001',
-            waktu: '18 Feb 2025, 09:15 WIB',
-            count_attr: '3 Atribut Diperbarui',
-            komparasi: [
-                { field: 'Pekerjaan Utama', lama: 'Pelajar/Mahasiswa', baru: 'Karyawan Swasta', diubah: true },
-                { field: 'Pendidikan Terakhir', lama: 'SLTA / Sederajat', baru: 'D4/S1', diubah: true },
-                { field: 'Status Perkawinan', lama: 'Belum Kawin', baru: 'Kawin Tercatat', diubah: true },
-                { field: 'Agama', lama: 'Islam', baru: 'Islam (Tetap)', diubah: false }
-            ],
-            dokumen: [
-                { id: 1, nama: '1. Ijazah_S1_Siti.png', file_name: 'contoh_Ijazah.png', url: "{{ asset('contoh_Ijazah.png') }}", icon: 'bx bxs-file-image' },
-                { id: 2, nama: '2. Buku_Nikah_Hal1.png', file_name: 'contoh_buku_nikah.png', url: "{{ asset('contoh_buku_nikah.png') }}", icon: 'bx bxs-file-image' }
-            ]
-        },
-        2: {
-            id: 2,
-            pemohon: 'Dedi Kusnadi',
-            no_kk: '3275011406180002',
-            blok: 'Blok A2 No. 05',
-            target_nama: 'Ahmad Rayyan Kusnadi (Anak)',
-            target_sub: 'NIK: 3275011202250001 • Laki-laki • Lahir: Depok, 12-02-2025',
-            waktu: '17 Feb 2025, 14:20 WIB',
-            count_attr: '3 Atribut Diperbarui',
-            komparasi: [
-                { field: 'Nama Lengkap', lama: '-', baru: 'Ahmad Rayyan Kusnadi', diubah: true },
-                { field: 'Hubungan Keluarga', lama: '-', baru: 'Anak Kandung', diubah: true },
-                { field: 'Status Warga', lama: '-', baru: 'Hidup (Baru Lahir)', diubah: true }
-            ],
-            dokumen: [
-                { id: 1, nama: '1. Surat_Keterangan_Lahir_RS.png', file_name: 'contoh_Ijazah.png', url: "{{ asset('contoh_Ijazah.png') }}", icon: 'bx bxs-file-image' }
-            ]
-        },
-        3: {
-            id: 3,
-            pemohon: 'Agus Wicaksono',
-            no_kk: '3275010203100010',
-            blok: 'Blok C1 No. 08',
-            target_nama: 'Agus Wicaksono (Kepala Keluarga)',
-            target_sub: 'NIK: 3275010203810019 • Laki-laki • Lahir: Solo, 02-03-1981',
-            waktu: '15 Feb 2025, 11:04 WIB',
-            count_attr: '2 Atribut Diperbarui',
-            komparasi: [
-                { field: 'Status Kependudukan', lama: 'Warga Tetap RT 04', baru: 'Pindah Keluar Kota', diubah: true },
-                { field: 'Alamat Tujuan', lama: 'Blok C1 No. 08 RT 04', baru: 'Jl. Kenari No. 14, Solo, Jateng', diubah: true }
-            ],
-            dokumen: [
-                { id: 1, nama: '1. SKPWNI_Kelurahan.png', file_name: 'contoh_buku_nikah.png', url: "{{ asset('contoh_buku_nikah.png') }}", icon: 'bx bxs-file-image' }
-            ]
-        }
-    };
-
-    var activeVerifikasiId = 1;
-    var currentVerifDocs = [];
-    var currentActiveDocIdx = 0;
-
-    function bukaModalReviewVerifikasi(id) {
-        var data = verifikasiDataMap[id] || verifikasiDataMap[1];
-        activeVerifikasiId = data.id;
-        currentVerifDocs = data.dokumen || [];
-
-        document.getElementById('rev-pemohon-nama').textContent = data.pemohon;
-        document.getElementById('rev-pemohon-nokk').textContent = data.no_kk;
-        document.getElementById('rev-pemohon-blok').textContent = data.blok;
-        document.getElementById('rev-target-nama').textContent = data.target_nama;
-        document.getElementById('rev-target-desc').textContent = data.target_sub;
-        document.getElementById('rev-target-waktu').textContent = data.waktu;
-        document.getElementById('rev-compare-count').textContent = data.count_attr;
-
-        // Render tabel komparasi
-        var tbody = document.getElementById('rev-compare-tbody');
-        tbody.innerHTML = '';
-        data.komparasi.forEach(function(k) {
-            var tr = document.createElement('tr');
-            var tdField = document.createElement('td');
-            tdField.className = 'rev-field-label';
-            tdField.textContent = k.field;
-
-            var tdOld = document.createElement('td');
-            tdOld.className = 'rev-val-old';
-            tdOld.textContent = k.lama;
-
-            var tdNew = document.createElement('td');
-            if (k.diubah) {
-                tdNew.innerHTML = '<div class="rev-val-new"><span>' + k.baru + '</span> <span class="rev-badge-diubah">Diubah</span></div>';
-            } else {
-                tdNew.className = 'rev-val-old';
-                tdNew.textContent = k.baru;
-            }
-
-            tr.appendChild(tdField);
-            tr.appendChild(tdOld);
-            tr.appendChild(tdNew);
-            tbody.appendChild(tr);
-        });
-
-        // Render tab dokumen secara dinamis berdasarkan data upload warga
-        var tabContainer = document.getElementById('rev-doc-tabs-container');
-        tabContainer.innerHTML = '';
-        document.getElementById('rev-doc-count').textContent = currentVerifDocs.length + ' Dokumen';
-
-        currentVerifDocs.forEach(function(doc, idx) {
-            var btn = document.createElement('button');
-            btn.type = 'button';
-            btn.className = 'rev-doc-tab-btn' + (idx === 0 ? ' rev-doc-tab-btn--active' : ' rev-doc-tab-btn--inactive');
-            btn.id = 'rev-tab-btn-' + idx;
-            btn.onclick = function() { switchRevDocIndex(idx); };
-            btn.innerHTML = '<i class=\'' + (doc.icon || 'bx bxs-file-image') + '\' style="color: ' + (idx === 0 ? '#ef4444' : '#0284c7') + ';"></i> <span>' + doc.nama + '</span>';
-            tabContainer.appendChild(btn);
-        });
-
-        // Tampilkan dokumen pertama
-        switchRevDocIndex(0);
-
-        document.getElementById('modal-review-verifikasi').style.display = 'flex';
-    }
-
-    function tutupModalReviewVerifikasi() {
-        document.getElementById('modal-review-verifikasi').style.display = 'none';
-    }
-
-    function switchRevDocIndex(idx) {
-        if (!currentVerifDocs || currentVerifDocs.length === 0) return;
-        currentActiveDocIdx = idx;
-        var doc = currentVerifDocs[idx];
-
-        // Update active class pada tab buttons
-        currentVerifDocs.forEach(function(_, i) {
-            var btn = document.getElementById('rev-tab-btn-' + i);
-            if (btn) {
-                btn.className = 'rev-doc-tab-btn' + (i === idx ? ' rev-doc-tab-btn--active' : ' rev-doc-tab-btn--inactive');
-            }
-        });
-
-        // Update gambar pratinjau
-        var imgEl = document.getElementById('rev-doc-preview-img');
-        if (imgEl) {
-            imgEl.src = doc.url;
-            imgEl.alt = doc.nama;
-        }
-
-        // Update caption nama berkas
-        var captionEl = document.getElementById('rev-doc-caption');
-        if (captionEl) {
-            captionEl.textContent = doc.nama;
-        }
-
-        // Update link download asli
-        var downloadEl = document.getElementById('rev-btn-download');
-        if (downloadEl) {
-            downloadEl.href = doc.url;
-            downloadEl.setAttribute('download', doc.file_name || 'dokumen.png');
-        }
-    }
-
-    function perbesarDokumenAktif() {
-        if (currentVerifDocs && currentVerifDocs[currentActiveDocIdx]) {
-            var url = currentVerifDocs[currentActiveDocIdx].url;
-            window.open(url, '_blank');
-        }
-    }
-
-    // ── MODAL KONFIRMASI SETUJUI (FOTO 2) ──
-    var verifikasiToApprove = null;
-
-    function bukaModalKonfirmasiSetujui(id, pemohon, btnElement) {
-        verifikasiToApprove = {
-            id: id || activeVerifikasiId || 1,
-            pemohon: pemohon || (verifikasiDataMap[id] ? verifikasiDataMap[id].pemohon : 'Pemohon')
-        };
-        document.getElementById('modal-konfirmasi-setujui').style.display = 'flex';
-    }
-
-    function konfirmasiDariModalReview() {
-        verifikasiToApprove = {
-            id: activeVerifikasiId || 1,
-            pemohon: verifikasiDataMap[activeVerifikasiId] ? verifikasiDataMap[activeVerifikasiId].pemohon : 'Pemohon'
-        };
+    function konfirmasiSetujuiPengajuan(id, pemohon) {
+        activeSetujuiId = id;
+        document.getElementById('modal-setujui-question').innerHTML =
+            'Apakah Anda yakin ingin menyetujui pengajuan dari <strong>' + pemohon + '</strong>? Data kependudukan warga akan diperbarui secara otomatis.';
         document.getElementById('modal-konfirmasi-setujui').style.display = 'flex';
     }
 
     function tutupKonfirmasiSetujui() {
         document.getElementById('modal-konfirmasi-setujui').style.display = 'none';
+        activeSetujuiId = null;
     }
 
-    function eksekusiKonfirmasiSetujui() {
-        tutupKonfirmasiSetujui();
-        tutupModalReviewVerifikasi();
-
-        var targetId = verifikasiToApprove ? verifikasiToApprove.id : 1;
-        var targetPemohon = verifikasiToApprove ? verifikasiToApprove.pemohon : 'Warga';
-
-        // Update status cell di baris tabel
-        var statusCell = document.getElementById('status-cell-verif-' + targetId);
-        if (statusCell) {
-            statusCell.innerHTML = '<span class="badge-status-disetujui"><i class=\'bx bx-check-double\'></i> Disetujui RT</span>';
+    function eksekusiSetujuiPengajuan() {
+        if (!activeSetujuiId) return;
+        var form = document.getElementById('form-setujui-' + activeSetujuiId);
+        if (form) {
+            tutupKonfirmasiSetujui();
+            form.submit();
         }
-
-        // Update tombol aksi di baris tabel
-        var actionsContainer = document.getElementById('row-actions-verif-' + targetId);
-        if (actionsContainer) {
-            actionsContainer.innerHTML = '<span class="btn-tindakan-disetujui-label"><i class=\'bx bx-check-circle\'></i> Telah Disetujui</span>';
-        }
-
-        // Tandai baris data yang disetujui
-        var rowEl = document.getElementById('row-verif-' + targetId);
-        if (rowEl) {
-            rowEl.setAttribute('data-disetujui', '1');
-        }
-
-        // Cek sisa pengajuan yang belum disetujui untuk indikator bulatan
-        var remainingPending = Array.from(document.querySelectorAll('#table-verifikasi tbody tr')).filter(function(r) {
-            return r.getAttribute('data-disetujui') !== '1';
-        }).length;
-
-        var dotBadge = document.getElementById('badge-tab-dot');
-        if (dotBadge && remainingPending <= 0) {
-            dotBadge.style.display = 'none';
-        }
-
-        alert('Pengajuan dari ' + targetPemohon + ' telah disetujui.');
     }
 
-    // Listener klik overlay luar untuk menutup modal
-    window.addEventListener('click', function(e) {
-        var modalReview = document.getElementById('modal-review-verifikasi');
-        var modalKonfirm = document.getElementById('modal-konfirmasi-setujui');
-        if (e.target === modalReview) {
+    // ── Modal Tolak Pengajuan Verifikasi ──
+    var activeTolakId = null;
+
+    function bukaModalTolakPengajuan(id, pemohon) {
+        activeTolakId = id;
+        document.getElementById('modal-tolak-question').innerHTML =
+            'Tolak pengajuan dari <strong>' + pemohon + '</strong>? Silakan isi catatan alasan penolakan di bawah.';
+        document.getElementById('input-alasan-tolak').value = '';
+        document.getElementById('modal-tolak-pengajuan').style.display = 'flex';
+    }
+
+    function tutupModalTolak() {
+        document.getElementById('modal-tolak-pengajuan').style.display = 'none';
+        activeTolakId = null;
+    }
+
+    function eksekusiTolakPengajuan() {
+        if (!activeTolakId) return;
+        var alasan = (document.getElementById('input-alasan-tolak').value || '').trim();
+        var hiddenAlasan = document.getElementById('alasan-tolak-' + activeTolakId);
+        if (hiddenAlasan && alasan) hiddenAlasan.value = alasan;
+        var form = document.getElementById('form-tolak-' + activeTolakId);
+        if (form) {
+            tutupModalTolak();
+            form.submit();
+        }
+    }
+
+    // ── Modal Review Verifikasi Pengajuan (Identik Sisi Warga + 2 Tombol Admin) ──
+    var activeReviewItem = null;
+
+    var mapPendidikanReview = {
+        'tidak_sekolah': 'Tidak / Belum Sekolah',
+        'sd': 'SD / Sederajat',
+        'smp': 'SMP / Sederajat',
+        'sma': 'SMA / SMK / Sederajat',
+        'diploma': 'Diploma (D1 - D3)',
+        'd4_s1': 'Diploma IV / Strata 1 (S1)',
+        's2': 'Strata 2 (S2)',
+        's3': 'Strata 3 (S3)'
+    };
+
+    var fieldLabelsReview = {
+        'nik': 'NIK',
+        'nama': 'Nama Lengkap',
+        'tempat_lahir': 'Tempat Lahir',
+        'tanggal_lahir': 'Tanggal Lahir',
+        'jenis_kelamin': 'Jenis Kelamin',
+        'agama': 'Agama',
+        'pendidikan': 'Pendidikan Terakhir',
+        'pendidikan_terakhir': 'Pendidikan Terakhir',
+        'pekerjaan': 'Pekerjaan Utama',
+        'alamat': 'Alamat Domisili',
+        'hubungan_keluarga': 'Hubungan Keluarga',
+        'status_hubungan': 'Hubungan Keluarga',
+        'status_warga': 'Status Warga',
+        'golongan_darah': 'Golongan Darah',
+        'status_perkawinan': 'Status Perkawinan'
+    };
+
+    function bersihkanDanFormatVal(k, val) {
+        if (val === undefined || val === null || val === '') return '—';
+        if (typeof val === 'string') {
+            // Bersihkan format ISO datetime jika ada (misal 1992-09-08T00:00:00.000000Z -> 1992-09-08)
+            if (/^\d{4}-\d{2}-\d{2}T/.test(val)) {
+                val = val.substring(0, 10);
+            }
+            if (k === 'jenis_kelamin') {
+                return val === 'laki_laki' ? 'Laki-Laki' : (val === 'perempuan' ? 'Perempuan' : val);
+            }
+            if (k === 'status_warga') {
+                return val === 'hidup' ? 'Hidup (Aktif)' : (val === 'meninggal' ? 'Meninggal' : val);
+            }
+            if (k === 'pendidikan' || k === 'pendidikan_terakhir') {
+                return mapPendidikanReview[val] || val;
+            }
+            if (k === 'hubungan_keluarga' || k === 'status_hubungan') {
+                return val.replace(/_/g, ' ').replace(/\b\w/g, function(l){ return l.toUpperCase(); });
+            }
+            if (k === 'agama') {
+                return val.replace(/\b\w/g, function(l){ return l.toUpperCase(); });
+            }
+        }
+        return val;
+    }
+
+    function bukaModalReviewVerifikasi(data) {
+        activeReviewItem = data;
+
+        // Header
+        var badgeStatusEl = document.getElementById('review-status-badge');
+        if (badgeStatusEl) {
+            badgeStatusEl.className = 'kk-pengajuan-modal__status-badge kk-pengajuan-modal__status-badge--' + data.status;
+            badgeStatusEl.textContent = data.statusLabel || (data.status === 'menunggu' ? 'Menunggu Persetujuan RT' : (data.status === 'disetujui' ? 'Telah Disetujui RT' : 'Ditolak oleh RT'));
+        }
+
+        document.getElementById('review-header-pemohon').textContent = data.pemohon || '-';
+        document.getElementById('review-header-nokk').textContent = data.noKk || '-';
+        document.getElementById('review-header-alamat').textContent = data.alamat || 'RT 04 / RW 08';
+
+        // Strip Target Data
+        document.getElementById('review-target-title').textContent = data.targetTitle || ('Target Data: ' + data.warga);
+        document.getElementById('review-target-sub').textContent = data.targetSub || ('NIK: ' + data.noKk);
+        document.getElementById('review-target-date').textContent = data.tglDiajukan || 'Diajukan pada: -';
+
+        // Komparasi Table
+        var tbody = document.getElementById('review-komparasi-tbody');
+        tbody.innerHTML = '';
+
+        var dataBaru = data.dataBaru || {};
+        var dataLama = data.dataLama || {};
+
+        // Urutan standar field yang biasa ditampilkan
+        var orderedKeys = [
+            'nik', 'nama', 'tempat_lahir', 'tanggal_lahir', 'jenis_kelamin',
+            'agama', 'pendidikan_terakhir', 'pendidikan', 'pekerjaan', 'alamat',
+            'hubungan_keluarga', 'status_hubungan', 'status_warga'
+        ];
+
+        var rawKeys = Array.from(new Set(Object.keys(dataBaru).concat(Object.keys(dataLama))));
+        var ignoredKeys = ['id', 'warga_id', 'keluarga_id', 'created_at', 'updated_at', 'deleted_at'];
+        rawKeys = rawKeys.filter(function(k) { return !ignoredKeys.includes(k); });
+
+        // Urutkan key berdasarkan orderedKeys terlebih dahulu
+        var sortedKeys = [];
+        orderedKeys.forEach(function(ok) {
+            if (rawKeys.includes(ok)) {
+                sortedKeys.push(ok);
+            }
+        });
+        rawKeys.forEach(function(rk) {
+            if (!sortedKeys.includes(rk)) {
+                sortedKeys.push(rk);
+            }
+        });
+
+        var changedRows = [];
+
+        sortedKeys.forEach(function(k) {
+            var rawOld = dataLama[k];
+            var rawNew = dataBaru[k];
+
+            var valLama = bersihkanDanFormatVal(k, rawOld);
+            var valBaru = bersihkanDanFormatVal(k, rawNew);
+
+            // Cek apakah berbeda
+            var isChanged = false;
+            if (rawNew !== undefined && rawNew !== null && rawNew !== '') {
+                if (rawOld === undefined || rawOld === null || rawOld === '' || rawOld === '—') {
+                    isChanged = true;
+                } else if (String(valLama).trim().toLowerCase() !== String(valBaru).trim().toLowerCase()) {
+                    isChanged = true;
+                }
+            }
+
+            // HANYA MASUKKAN JIKA BERUBAH ATAU JIKA PENGAJUAN TAMBAH ANGGOTA
+            if (isChanged || data.jenis === 'tambah_anggota') {
+                changedRows.push({
+                    key: k,
+                    field: fieldLabelsReview[k] || k.replace(/_/g, ' ').replace(/\b\w/g, function(l){ return l.toUpperCase(); }),
+                    old: valLama,
+                    new: valBaru,
+                    isChanged: isChanged
+                });
+            }
+        });
+
+        if (changedRows.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="3" style="padding:18px;text-align:center;color:#64748b;font-style:italic;">Tidak ada atribut yang mengalami perubahan.</td></tr>';
+            document.getElementById('review-attr-count').textContent = '0 Atribut Diperbarui';
+        } else {
+            changedRows.forEach(function(item) {
+                var tr = document.createElement('tr');
+                tr.innerHTML =
+                    '<td class="kk-ptable-field">' + item.field + '</td>' +
+                    '<td class="kk-ptable-old">' +
+                        '<span class="kk-mobile-row-label">Data Lama:</span>' +
+                        '<span>' + item.old + '</span>' +
+                    '</td>' +
+                    '<td class="kk-ptable-new">' +
+                        '<span class="kk-mobile-row-label">Usulan Baru:</span>' +
+                        (item.isChanged ?
+                            ('<div class="kk-val-new"><span>' + item.new + '</span><span class="kk-badge-diubah">Diubah</span></div>') :
+                            ('<span class="kk-ptable-old">' + item.new + '</span>')
+                        ) +
+                    '</td>';
+                tbody.appendChild(tr);
+            });
+            document.getElementById('review-attr-count').textContent = changedRows.length + ' Atribut Diperbarui';
+        }
+
+        // Alasan pengajuan
+        document.getElementById('review-alasan-val').textContent = data.alasan || 'Pengajuan perubahan data kependudukan oleh warga.';
+
+        // Dokumen & Tabs (Mendukung Multi Dokumen)
+        currentAdminDocs = (data.docs && data.docs.length > 0) ? data.docs : [];
+        if (currentAdminDocs.length === 0 && data.hasBukti && data.buktiUrl) {
+            currentAdminDocs = [{
+                label: '1. ' + (data.buktiNama || 'Berkas Bukti'),
+                filename: data.buktiNama || 'Berkas Bukti',
+                url: data.buktiUrl,
+                isPdf: /\.(pdf)$/i.test(data.buktiUrl)
+            }];
+        }
+
+        var tabsContainer = document.getElementById('review-doc-tabs');
+        var docCountBadge = document.getElementById('review-doc-count');
+
+        if (currentAdminDocs.length > 0) {
+            docCountBadge.textContent = currentAdminDocs.length + ' Dokumen';
+            var tabsHtml = '';
+            currentAdminDocs.forEach(function(doc, idx) {
+                var activeClass = idx === 0 ? 'kk-doc-tab-btn--active' : '';
+                var icon = doc.isPdf ? 'bxs-file-pdf' : 'bxs-file-png';
+                var color = doc.isPdf ? '#dc2626' : '#0284c7';
+                tabsHtml += '<button type="button" class="kk-doc-tab-btn ' + activeClass + '" onclick="switchAdminDocPreview(' + idx + ')">' +
+                    "<i class='bx " + icon + "' style='color:" + color + ";'></i> " + doc.label +
+                '</button>';
+            });
+            tabsContainer.innerHTML = tabsHtml;
+            switchAdminDocPreview(0);
+        } else {
+            docCountBadge.textContent = '0 Dokumen';
+            tabsContainer.innerHTML = '';
+            var imgEl = document.getElementById('review-doc-img');
+            var fallbackEl = document.getElementById('review-doc-fallback');
+            var pdfIcon = document.getElementById('review-doc-pdf-icon');
+            var noneIcon = document.getElementById('review-doc-none-icon');
+            var fallbackText = document.getElementById('review-doc-fallback-text');
+            var filenameEl = document.getElementById('review-doc-filename');
+            var verifiedEl = document.getElementById('review-doc-verified');
+            var btnPerbesar = document.getElementById('btn-admin-perbesar-berkas');
+            var btnUnduh = document.getElementById('btn-admin-unduh-berkas');
+
+            imgEl.style.display = 'none';
+            fallbackEl.style.display = 'flex';
+            pdfIcon.style.display = 'none';
+            noneIcon.style.display = 'block';
+            fallbackText.textContent = 'Tidak ada berkas bukti yang diunggah.';
+            filenameEl.textContent = 'Tidak ada dokumen';
+            verifiedEl.style.color = '#dc2626';
+            verifiedEl.innerHTML = "<i class='bx bx-error-circle'></i> Belum Terlampir";
+            btnPerbesar.style.display = 'none';
+            btnUnduh.style.display = 'none';
+        }
+
+        // Footer status text & action buttons
+        var footerStatusEl = document.getElementById('review-footer-status');
+        var adminActionsEl = document.getElementById('review-admin-actions');
+
+        if (data.status === 'disetujui') {
+            footerStatusEl.innerHTML = "<i class='bx bx-check-circle' style='color:#16a34a; font-size:16px;'></i> <span>Pengajuan ini telah disetujui. Database warga telah resmi diperbarui.</span>";
+            adminActionsEl.style.display = 'none';
+        } else if (data.status === 'ditolak') {
+            footerStatusEl.innerHTML = "<i class='bx bx-error-circle' style='color:#dc2626; font-size:16px;'></i> <span>Pengajuan ini telah ditolak oleh Pengurus RT.</span>";
+            adminActionsEl.style.display = 'none';
+        } else {
+            footerStatusEl.innerHTML = "<i class='bx bx-time-five' style='color:#d97706; font-size:16px;'></i> <span>Pengajuan ini sedang dalam antrean verifikasi oleh Pengurus RT 04. Mohon periksa komparasi data di atas.</span>";
+            adminActionsEl.style.display = 'flex';
+        }
+
+        // Tampilkan modal
+        var modalEl = document.getElementById('modal-review-verifikasi');
+        modalEl.classList.add('kk-modal-overlay--open');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function tutupModalReviewVerifikasi() {
+        var modalEl = document.getElementById('modal-review-verifikasi');
+        if (modalEl) modalEl.classList.remove('kk-modal-overlay--open');
+        document.body.style.overflow = '';
+        activeReviewItem = null;
+    }
+
+    function tutupReviewViaOverlay(e) {
+        if (e.target.id === 'modal-review-verifikasi') {
             tutupModalReviewVerifikasi();
         }
-        if (e.target === modalKonfirm) {
-            tutupKonfirmasiSetujui();
-        }
-    });
+    }
 
-    // Escape listener untuk menutup modal
+    function switchAdminDocPreview(idx) {
+        if (!currentAdminDocs || !currentAdminDocs[idx]) return;
+        var doc = currentAdminDocs[idx];
+
+        var tabBtns = document.querySelectorAll('#review-doc-tabs .kk-doc-tab-btn');
+        tabBtns.forEach(function(btn, bIdx) {
+            btn.classList.toggle('kk-doc-tab-btn--active', bIdx === idx);
+        });
+
+        var imgEl = document.getElementById('review-doc-img');
+        var fallbackEl = document.getElementById('review-doc-fallback');
+        var pdfIcon = document.getElementById('review-doc-pdf-icon');
+        var noneIcon = document.getElementById('review-doc-none-icon');
+        var fallbackText = document.getElementById('review-doc-fallback-text');
+        var filenameEl = document.getElementById('review-doc-filename');
+        var verifiedEl = document.getElementById('review-doc-verified');
+        var btnPerbesar = document.getElementById('btn-admin-perbesar-berkas');
+        var btnUnduh = document.getElementById('btn-admin-unduh-berkas');
+
+        filenameEl.textContent = doc.filename || doc.label;
+        verifiedEl.style.color = '#16a34a';
+        verifiedEl.innerHTML = "<i class='bx bx-check-circle'></i> Dokumen Terlampir";
+
+        btnPerbesar.style.display = 'inline-flex';
+        btnUnduh.style.display = 'inline-flex';
+        btnUnduh.href = doc.url;
+        btnUnduh.setAttribute('download', doc.filename || 'berkas');
+
+        if (activeReviewItem) {
+            activeReviewItem.currentDocUrl = doc.url;
+        }
+
+        var isImg = /\.(jpg|jpeg|png|webp|gif)$/i.test(doc.url) && !doc.isPdf;
+        if (isImg) {
+            imgEl.src = doc.url;
+            imgEl.style.display = 'block';
+            fallbackEl.style.display = 'none';
+        } else {
+            imgEl.style.display = 'none';
+            fallbackEl.style.display = 'flex';
+            pdfIcon.style.display = 'block';
+            noneIcon.style.display = 'none';
+            fallbackText.textContent = doc.filename || 'Dokumen Terlampir (PDF/Berkas)';
+        }
+    }
+
+    function bukaZoomDokumenAdmin() {
+        if (activeReviewItem && (activeReviewItem.currentDocUrl || activeReviewItem.buktiUrl)) {
+            window.open(activeReviewItem.currentDocUrl || activeReviewItem.buktiUrl, '_blank');
+        }
+    }
+
+    function alihkanKeSetujuiDariReview() {
+        if (!activeReviewItem) return;
+        var item = activeReviewItem;
+        tutupModalReviewVerifikasi();
+        konfirmasiSetujuiPengajuan(item.id, item.pemohon);
+    }
+
+    function alihkanKeTolakDariReview() {
+        if (!activeReviewItem) return;
+        var item = activeReviewItem;
+        tutupModalReviewVerifikasi();
+        bukaModalTolakPengajuan(item.id, item.pemohon);
+    }
+
+    // Keyboard ESC listener
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') {
             tutupModalHapus();
-            tutupModalReset();
             tutupModalEditStatus();
-            tutupModalDetailWarga();
             tutupKonfirmasiSetujui();
+            tutupModalTolak();
             tutupModalReviewVerifikasi();
         }
     });

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Surat Pengantar RT 04 - 470/882/RT04/X/2025</title>
+    <title>Surat Pengantar RT 04 - {{ $surat->nomor_surat ?? 'DRAFT' }}</title>
     
     {{-- Design Tokens & Boxicons --}}
     <link rel="stylesheet" href="{{ asset('css/tokens.css') }}">
@@ -12,6 +12,19 @@
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
 </head>
 <body class="ws-cetak-body">
+
+    @php
+        $targetWarga = $surat->wargaTujuan ?? $surat->pemohon;
+        $namaWarga = $targetWarga?->nama ?? '-';
+        $tempatLahir = $targetWarga?->tempat_lahir ?? 'Bogor';
+        $tglLahir = $targetWarga?->tanggal_lahir ? $targetWarga->tanggal_lahir->translatedFormat('d F Y') : '-';
+        $ttl = ($targetWarga?->tempat_lahir ? $targetWarga->tempat_lahir . ', ' : '') . $tglLahir;
+        $jk = $targetWarga?->jenis_kelamin === 'laki_laki' ? 'Laki-Laki' : ($targetWarga?->jenis_kelamin === 'perempuan' ? 'Perempuan' : '-');
+        $agama = ucfirst($targetWarga?->agama ?? 'Islam');
+        $alamat = $targetWarga?->alamat ?? ($surat->pemohon?->alamat ?? 'RT 04 / RW 08');
+        $nomorSurat = $surat->nomor_surat ?? '-';
+        $tglSurat = $surat->updated_at ? $surat->updated_at->translatedFormat('d F Y') : now()->translatedFormat('d F Y');
+    @endphp
 
     {{-- Top Action Bar --}}
     <div class="ws-cetak-topbar">
@@ -36,22 +49,22 @@
         
         {{-- Kop Surat --}}
         <div class="ws-kop">
-            <p class="ws-kop-instansi">RUKUN TETANGGA 04 KELURAHAN BARANANGSIANG</p>
+            <p class="ws-kop-instansi">RUKUN TETANGGA 04 KELURAHAN SUKAMAJU</p>
             <p class="ws-kop-sub">KECAMATAN BOGOR TIMUR – KOTA BOGOR</p>
-            <p class="ws-kop-kota">Sekretariat: Jl. Melati Blok B No. 14, RT 04 Kode Pos: 16143</p>
+            <p class="ws-kop-kota">Sekretariat: Jl. Melati Blok A No. 1, RT 04 Kode Pos: 16143</p>
         </div>
         <div class="ws-kop-line"></div>
 
         {{-- Judul Surat --}}
         <div class="ws-judul-surat-box">
             <h1 class="ws-judul-surat">SURAT PENGANTAR</h1>
-            <p class="ws-nomor-surat">NO. 470 / 882 / RT04 / X / 2025</p>
+            <p class="ws-nomor-surat">NO. {{ $nomorSurat }}</p>
         </div>
 
         {{-- Isi Surat --}}
         <div class="ws-surat-content">
             <p>
-                Yang bertanda tangan di bawah ini Ketua RT. 04 Kelurahan Baranangsiang Kecamatan Bogor Timur Kota Bogor, menerangkan bahwa:
+                Yang bertanda tangan di bawah ini Ketua RT. 04 Kelurahan Sukamaju Kecamatan Bogor Timur Kota Bogor, menerangkan bahwa:
             </p>
 
             <table class="ws-surat-table-data">
@@ -59,44 +72,44 @@
                     <td class="ws-surat-num">1.</td>
                     <td class="ws-surat-lbl">Nama Lengkap</td>
                     <td class="ws-surat-sep">:</td>
-                    <td class="ws-surat-val">Dimas Arya Pratama</td>
+                    <td class="ws-surat-val">{{ $namaWarga }}</td>
                 </tr>
                 <tr>
                     <td class="ws-surat-num">2.</td>
                     <td class="ws-surat-lbl">Tempat/Tgl Lahir</td>
                     <td class="ws-surat-sep">:</td>
-                    <td class="ws-surat-val">Bogor, 08 Agustus 2005</td>
+                    <td class="ws-surat-val">{{ $ttl }}</td>
                 </tr>
                 <tr>
                     <td class="ws-surat-num">3.</td>
                     <td class="ws-surat-lbl">Jenis Kelamin</td>
                     <td class="ws-surat-sep">:</td>
-                    <td class="ws-surat-val">Laki-Laki</td>
+                    <td class="ws-surat-val">{{ $jk }}</td>
                 </tr>
                 <tr>
                     <td class="ws-surat-num">4.</td>
                     <td class="ws-surat-lbl">Agama</td>
                     <td class="ws-surat-sep">:</td>
-                    <td class="ws-surat-val">Islam</td>
+                    <td class="ws-surat-val">{{ $agama }}</td>
                 </tr>
                 <tr>
                     <td class="ws-surat-num">5.</td>
-                    <td class="ws-surat-lbl">Alamat</td>
+                    <td class="ws-surat-lbl">Alamat Domisili</td>
                     <td class="ws-surat-sep">:</td>
-                    <td class="ws-surat-val">Jl. Melati Blok B No. 14, RT 04 Kel. Baranangsiang Kec. Bogor Timur Kota Bogor</td>
+                    <td class="ws-surat-val">{{ $alamat }}</td>
                 </tr>
                 <tr>
                     <td class="ws-surat-num">6.</td>
                     <td class="ws-surat-lbl">Keperluan</td>
                     <td class="ws-surat-sep">:</td>
                     <td class="ws-surat-val">
-                        Pengantar permohonan Surat Keterangan Catatan Kepolisian (SKCK) untuk persyaratan rekrutmen BUMN
+                        {{ $surat->keperluan }}
                     </td>
                 </tr>
             </table>
 
             <p style="margin-top: 24px;">
-                Demikian Surat keterangan ini dibuat untuk dapat dipergunakan sesuai dengan keperluannya.
+                Demikian Surat keterangan pengantar ini dibuat dengan sebenarnya untuk dapat dipergunakan sesuai dengan keperluannya.
             </p>
         </div>
 
@@ -106,11 +119,11 @@
                 <p style="margin: 0;">&nbsp;</p>
                 <p style="margin: 0; font-weight: bold;">Pemohon,</p>
                 <div class="ws-ttd-space"></div>
-                <span class="ws-ttd-nama">Dimas Arya Pratama</span>
+                <span class="ws-ttd-nama">{{ $namaWarga }}</span>
             </div>
 
             <div class="ws-ttd-box">
-                <p style="margin: 0;">Bogor, 24 Oktober 2025</p>
+                <p style="margin: 0;">Bogor, {{ $tglSurat }}</p>
                 <p style="margin: 0; font-weight: bold;">Ketua RT. 04,</p>
                 <div class="ws-ttd-space">
                     <img src="{{ asset('tanda_tangan_rt.png') }}" alt="Tanda Tangan Ketua RT 04" class="ws-ttd-img-rt">
@@ -125,7 +138,7 @@
     <div class="ws-cetak-footer-bar">
         <div style="display: flex; align-items: center; gap: 8px;">
             <i class='bx bx-info-circle' style="color: #0284c7; font-size: 16px;"></i>
-            <span>Dokumen ini diterbitkan secara elektronik oleh Pengurus RT 04 Kelurahan Baranangsiang.</span>
+            <span>Dokumen ini diterbitkan secara elektronik oleh Pengurus RT 04 Kelurahan Sukamaju.</span>
         </div>
         <button type="button" class="ws-btn-salin-validasi" onclick="salinValidasi(this)">
             <i class='bx bx-link-alt'></i>

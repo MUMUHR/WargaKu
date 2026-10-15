@@ -37,14 +37,14 @@
 <div class="kk-stat-grid">
     <div class="kk-stat-card kk-stat-card--teal">
         <div class="kk-stat-card__body">
-            <div class="kk-stat-card__number">4</div>
+            <div class="kk-stat-card__number">{{ $totalJiwa }}</div>
             <div class="kk-stat-card__label">Total Jiwa Terdaftar</div>
             <i class='bx bxs-group kk-stat-card__watermark'></i>
         </div>
     </div>
     <div class="kk-stat-card kk-stat-card--gray">
         <div class="kk-stat-card__body">
-            <div class="kk-stat-card__number">1</div>
+            <div class="kk-stat-card__number">{{ $totalMenunggu }}</div>
             <div class="kk-stat-card__label">Menunggu Verifikasi RT</div>
             <i class='bx bx-file kk-stat-card__watermark'></i>
         </div>
@@ -61,10 +61,12 @@
         <div class="kk-info-item">
             <div class="kk-info-item__label">NOMOR KARTU KELUARGA</div>
             <div class="kk-info-item__value">
-                3271048809920001
-                <button type="button" class="kk-copy-btn" onclick="copyNoKK()" title="Salin Nomor KK" id="btn-copy-nkk">
+                {{ $keluarga?->no_kk ?? '-' }}
+                @if($keluarga?->no_kk)
+                <button type="button" class="kk-copy-btn" onclick="copyNoKK('{{ $keluarga->no_kk }}')" title="Salin Nomor KK" id="btn-copy-nkk">
                     <i class='bx bx-copy'></i>
                 </button>
+                @endif
             </div>
         </div>
         <div class="kk-info-divider"></div>
@@ -72,16 +74,16 @@
             <div class="kk-info-item__label">KEPALA KELUARGA</div>
             <div class="kk-info-item__value">
                 <i class='bx bxs-user-check' style="color:#007bff; font-size:15px;"></i>
-                Bpk. Bambang Pamungkas
+                {{ $kepala?->nama ?? '-' }}
             </div>
         </div>
         <div class="kk-info-divider"></div>
         <div class="kk-info-item">
             <div class="kk-info-item__label">ALAMAT &amp; DOMISILI</div>
             <div class="kk-info-item__value">
-                Jl. Melati Blok B No. 14, RT 04 / RW 08
-                <span class="kk-badge kk-badge--tetap">TETAP</span>
-                <span class="kk-badge kk-badge--mampu">MAMPU</span>
+                {{ $alamatKeluarga }}
+                <span class="kk-badge kk-badge--tetap">{{ strtoupper(str_replace('_', ' ', $keluarga?->status_tinggal ?? 'TETAP')) }}</span>
+                <span class="kk-badge kk-badge--mampu">{{ strtoupper(str_replace('_', ' ', $keluarga?->status_ekonomi ?? 'MAMPU')) }}</span>
             </div>
         </div>
     </div>
@@ -99,7 +101,9 @@
             <i class='bx bx-history'></i>
             <span class="kk-tab-btn-text-desktop">Riwayat Pengajuan Perubahan Data</span>
             <span class="kk-tab-btn-text-mobile">Riwayat Pengajuan</span>
-            <span class="kk-tab-dot" title="Ada pengajuan status menunggu"></span>
+            @if($totalMenunggu > 0)
+            <span class="kk-tab-dot" title="Ada {{ $totalMenunggu }} pengajuan status menunggu"></span>
+            @endif
         </button>
     </div>
 
@@ -118,6 +122,8 @@
                     <option value="kepala_keluarga">Kepala Keluarga</option>
                     <option value="istri">Istri</option>
                     <option value="anak">Anak</option>
+                    <option value="orang_tua">Orang Tua</option>
+                    <option value="famili_lain">Famili Lain</option>
                 </select>
             </div>
             <a href="{{ route('warga.keluarga.tambah') }}" class="kk-btn-tambah" id="btn-tambah-anggota" style="display:inline-flex;align-items:center;gap:6px;text-decoration:none;">
@@ -141,94 +147,61 @@
                     </tr>
                 </thead>
                 <tbody id="tbody-anggota">
-                    <tr class="anggota-row" data-hubungan="kepala_keluarga" data-nama="bambang pamungkas" data-nik="3271048809920001">
-                        <td style="text-align:center; color:#495057; font-weight:600;">1</td>
+                    @forelse($anggotaKeluarga as $idx => $warga)
+                    <tr class="anggota-row" data-hubungan="{{ $warga->status_hubungan }}" data-nama="{{ strtolower($warga->nama) }}" data-nik="{{ $warga->nik }}">
+                        <td style="text-align:center; color:#495057; font-weight:600;">{{ $loop->iteration }}</td>
                         <td>
-                            <div class="kk-name">Bambang Pamungkas</div>
-                            <div class="kk-nik">NIK: <a href="javascript:void(0)" class="kk-nik-link" onclick="bukaDetailWarga('bambang')">3271048809920001</a></div>
+                            <div class="kk-name">{{ $warga->nama }}</div>
+                            <div class="kk-nik">NIK: <a href="javascript:void(0)" class="kk-nik-link" onclick="bukaDetailWarga('{{ $warga->nik }}')">{{ $warga->nik }}</a></div>
                         </td>
-                        <td><span class="kk-gender-m">Laki-Laki</span></td>
-                        <td><span class="kk-badge-hub kk-badge-hub--kk">Kepala Keluarga</span></td>
-                        <td style="color:#495057;">15 Ags 1988</td>
-                        <td style="color:#495057;">Karyawan Swasta</td>
-                        <td><span class="kk-badge-status kk-badge-status--aktif">&#9679; Tetap / Aktif</span></td>
+                        <td>
+                            @if($warga->jenis_kelamin === 'laki_laki')
+                                <span class="kk-gender-m">Laki-Laki</span>
+                            @else
+                                <span class="kk-gender-f">Perempuan</span>
+                            @endif
+                        </td>
+                        <td>
+                            @php
+                                $hubClass = match($warga->status_hubungan) {
+                                    'kepala_keluarga' => 'kk-badge-hub--kk',
+                                    'istri' => 'kk-badge-hub--istri',
+                                    'anak' => 'kk-badge-hub--anak',
+                                    default => 'kk-badge-hub--anak'
+                                };
+                            @endphp
+                            <span class="kk-badge-hub {{ $hubClass }}">
+                                {{ ucwords(str_replace('_', ' ', $warga->status_hubungan)) }}
+                            </span>
+                        </td>
+                        <td style="color:#495057;">
+                            {{ $warga->tanggal_lahir ? \Carbon\Carbon::parse($warga->tanggal_lahir)->translatedFormat('d M Y') : '-' }}
+                        </td>
+                        <td style="color:#495057;">
+                            {{ $warga->pekerjaan ?? '-' }}
+                        </td>
+                        <td>
+                            <span class="kk-badge-status kk-badge-status--aktif">&#9679; {{ $warga->status_warga == 'hidup' ? 'Tetap / Aktif' : ucfirst($warga->status_warga) }}</span>
+                        </td>
                         <td>
                             <div class="kk-aksi-wrap">
-                                <button type="button" class="kk-btn-detail" onclick="bukaDetailWarga('bambang')" id="btn-detail-bambang">
+                                <button type="button" class="kk-btn-detail" onclick="bukaDetailWarga('{{ $warga->nik }}')" id="btn-detail-{{ $warga->nik }}">
                                     <i class='bx bx-show'></i> Detail
                                 </button>
-                                <a href="{{ route('warga.keluarga.edit', ['nik' => '3271041203780002']) }}" class="kk-btn-ubah" id="btn-ubah-bambang" style="display:inline-flex;align-items:center;gap:4px;text-decoration:none;">
+                                <a href="{{ route('warga.keluarga.edit', ['nik' => $warga->nik]) }}" class="kk-btn-ubah" id="btn-ubah-{{ $warga->nik }}" style="display:inline-flex;align-items:center;gap:4px;text-decoration:none;">
                                     <i class='bx bx-edit'></i> Ubah
                                 </a>
                             </div>
                         </td>
                     </tr>
-                    <tr class="anggota-row" data-hubungan="istri" data-nama="siti aminah" data-nik="3271046204830002">
-                        <td style="text-align:center; color:#495057; font-weight:600;">2</td>
-                        <td>
-                            <div class="kk-name">Siti Aminah</div>
-                            <div class="kk-nik">NIK: <a href="javascript:void(0)" class="kk-nik-link" onclick="bukaDetailWarga('siti')">3271046204830002</a></div>
-                        </td>
-                        <td><span class="kk-gender-f">Perempuan</span></td>
-                        <td><span class="kk-badge-hub kk-badge-hub--istri">Istri</span></td>
-                        <td style="color:#495057;">12 Apr 1983</td>
-                        <td style="color:#495057;">Ibu Rumah Tangga</td>
-                        <td><span class="kk-badge-status kk-badge-status--aktif">&#9679; Tetap / Aktif</span></td>
-                        <td>
-                            <div class="kk-aksi-wrap">
-                                <button type="button" class="kk-btn-detail" onclick="bukaDetailWarga('siti')" id="btn-detail-siti">
-                                    <i class='bx bx-show'></i> Detail
-                                </button>
-                                <a href="{{ route('warga.keluarga.edit', ['nik' => '3271046204830002']) }}" class="kk-btn-ubah" id="btn-ubah-siti" style="display:inline-flex;align-items:center;gap:4px;text-decoration:none;">
-                                    <i class='bx bx-edit'></i> Ubah
-                                </a>
-                            </div>
+                    @empty
+                    <tr>
+                        <td colspan="8" style="text-align:center; padding:36px 18px; color:#6c757d; font-size:13px;">
+                            <i class='bx bxs-group' style="font-size:30px; display:block; margin-bottom:8px; opacity:0.35;"></i>
+                            Belum ada data anggota keluarga terdaftar.
                         </td>
                     </tr>
-                    <tr class="anggota-row" data-hubungan="anak" data-nama="dimas arya pratama" data-nik="3271042006060003">
-                        <td style="text-align:center; color:#495057; font-weight:600;">3</td>
-                        <td>
-                            <div class="kk-name">Dimas Arya Pratama</div>
-                            <div class="kk-nik">NIK: <a href="javascript:void(0)" class="kk-nik-link" onclick="bukaDetailWarga('dimas')">3271042006060003</a></div>
-                        </td>
-                        <td><span class="kk-gender-m">Laki-Laki</span></td>
-                        <td><span class="kk-badge-hub kk-badge-hub--anak">Anak</span></td>
-                        <td style="color:#495057;">20 Jun 2006</td>
-                        <td style="color:#495057;">Mahasiswa / Pelajar</td>
-                        <td><span class="kk-badge-status kk-badge-status--aktif">&#9679; Tetap / Aktif</span></td>
-                        <td>
-                            <div class="kk-aksi-wrap">
-                                <button type="button" class="kk-btn-detail" onclick="bukaDetailWarga('dimas')" id="btn-detail-dimas">
-                                    <i class='bx bx-show'></i> Detail
-                                </button>
-                                <a href="{{ route('warga.keluarga.edit', ['nik' => '3271048809920003']) }}" class="kk-btn-ubah" id="btn-ubah-dimas" style="display:inline-flex;align-items:center;gap:4px;text-decoration:none;">
-                                    <i class='bx bx-edit'></i> Ubah
-                                </a>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr class="anggota-row" data-hubungan="anak" data-nama="nabila putri kirani" data-nik="3271045011120004">
-                        <td style="text-align:center; color:#495057; font-weight:600;">4</td>
-                        <td>
-                            <div class="kk-name">Nabila Putri Kirani</div>
-                            <div class="kk-nik">NIK: <a href="javascript:void(0)" class="kk-nik-link" onclick="bukaDetailWarga('nabila')">3271045011120004</a></div>
-                        </td>
-                        <td><span class="kk-gender-f">Perempuan</span></td>
-                        <td><span class="kk-badge-hub kk-badge-hub--anak">Anak</span></td>
-                        <td style="color:#495057;">10 Nov 2012</td>
-                        <td style="color:#495057;">Pelajar</td>
-                        <td><span class="kk-badge-status kk-badge-status--aktif">&#9679; Tetap / Aktif</span></td>
-                        <td>
-                            <div class="kk-aksi-wrap">
-                                <button type="button" class="kk-btn-detail" onclick="bukaDetailWarga('nabila')" id="btn-detail-nabila">
-                                    <i class='bx bx-show'></i> Detail
-                                </button>
-                                <a href="{{ route('warga.keluarga.edit', ['nik' => '3271045011120004']) }}" class="kk-btn-ubah" id="btn-ubah-nabila" style="display:inline-flex;align-items:center;gap:4px;text-decoration:none;">
-                                    <i class='bx bx-edit'></i> Ubah
-                                </a>
-                            </div>
-                        </td>
-                    </tr>
+                    @endforelse
                     <tr id="row-empty-anggota" style="display:none;">
                         <td colspan="8" style="text-align:center; padding:36px 18px; color:#6c757d; font-size:13px;">
                             <i class='bx bx-search' style="font-size:30px; display:block; margin-bottom:8px; opacity:0.35;"></i>
@@ -242,7 +215,7 @@
         <div class="kk-table-footer">
             <span><i class='bx bx-info-circle' style="font-size:13px; vertical-align:middle;"></i>
                 &nbsp;*) Perubahan data memerlukan verifikasi Ketua RT dengan melampirkan berkas KTP/Akta/Buku Nikah resmi.</span>
-            <span>Menampilkan 4 dari 4 anggota keluarga terdaftar &nbsp;<span class="kk-pagination"><span class="kk-page-btn kk-page-btn--active">1</span></span></span>
+            <span>Menampilkan {{ $anggotaKeluarga->count() }} dari {{ $anggotaKeluarga->count() }} anggota keluarga terdaftar &nbsp;<span class="kk-pagination"><span class="kk-page-btn kk-page-btn--active">1</span></span></span>
         </div>
     </div>
 
@@ -252,18 +225,18 @@
             <div class="kk-toolbar__left">
                 <div class="kk-search-wrap">
                     <i class='bx bx-search kk-search-wrap__icon'></i>
-                    <input type="text" class="kk-search-input" placeholder="Cari nomor tiket, target warga...">
+                    <input type="text" id="search-riwayat" class="kk-search-input" placeholder="Cari target warga..." oninput="filterRiwayat()">
                 </div>
-                <select class="kk-filter-select">
+                <select class="kk-filter-select" id="filter-jenis-riwayat" onchange="filterRiwayat()">
                     <option value="">Semua Jenis Pengajuan</option>
-                    <option>Ubah Data</option>
-                    <option>Tambah Anggota</option>
+                    <option value="ubah_data">Ubah Data</option>
+                    <option value="tambah_anggota">Tambah Anggota</option>
                 </select>
-                <select class="kk-filter-select">
+                <select class="kk-filter-select" id="filter-status-riwayat" onchange="filterRiwayat()">
                     <option value="">Semua Status</option>
-                    <option>Menunggu</option>
-                    <option>Disetujui</option>
-                    <option>Ditolak</option>
+                    <option value="menunggu">Menunggu</option>
+                    <option value="disetujui">Disetujui</option>
+                    <option value="ditolak">Ditolak</option>
                 </select>
             </div>
             <a href="{{ route('warga.keluarga.edit') }}" class="kk-btn-tambah" id="btn-ajukan-perubahan" style="display:inline-flex;align-items:center;gap:6px;text-decoration:none;">
@@ -286,68 +259,64 @@
                         <th style="width:155px; text-align:center;">AKSI</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <td style="text-align:center; color:#495057; font-weight:600;">1</td>
+                <tbody id="tbody-riwayat">
+                    @forelse($riwayatPengajuan as $idx => $r)
+                    @php
+                        $targetNama = $r->warga?->nama ?? ($r->data_baru['nama'] ?? 'Anggota Baru');
+                        $jenisLabel = $r->jenis_pengajuan === 'tambah_anggota' ? 'Tambah Anggota' : 'Ubah Data';
+                        $jenisClass = $r->jenis_pengajuan === 'tambah_anggota' ? 'kk-badge-jenis--tambah' : 'kk-badge-jenis--ubah';
+                        $statusDotClass = match($r->status) {
+                            'disetujui' => 'kk-badge-rstatus--disetujui',
+                            'ditolak' => 'kk-badge-rstatus--ditolak',
+                            default => 'kk-badge-rstatus--menunggu'
+                        };
+                        $statusLabel = match($r->status) {
+                            'disetujui' => 'Disetujui',
+                            'ditolak' => 'Ditolak',
+                            default => 'Menunggu'
+                        };
+                    @endphp
+                    <tr class="riwayat-row" data-jenis="{{ $r->jenis_pengajuan }}" data-status="{{ $r->status }}" data-nama="{{ strtolower($targetNama) }}">
+                        <td style="text-align:center; color:#495057; font-weight:600;">{{ $loop->iteration }}</td>
                         <td>
-                            <div style="font-weight:700; color:#212529; font-size:12.5px;">14 Mei 2025</div>
-                            <div style="font-size:11.5px; color:#6c757d; margin-top:2px;">14:20 WIB</div>
+                            <div style="font-weight:700; color:#212529; font-size:12.5px;">{{ $r->created_at->translatedFormat('d M Y') }}</div>
+                            <div style="font-size:11.5px; color:#6c757d; margin-top:2px;">{{ $r->created_at->format('H:i') }} WIB</div>
                         </td>
-                        <td><span class="kk-badge-jenis kk-badge-jenis--ubah">Ubah Data</span></td>
-                        <td style="font-weight:600; color:#212529;">Dimas Arya Pratama</td>
+                        <td><span class="kk-badge-jenis {{ $jenisClass }}">{{ $jenisLabel }}</span></td>
+                        <td style="font-weight:600; color:#212529;">{{ $targetNama }}</td>
                         <td>
-                            <a href="javascript:void(0)" class="kk-file-link" onclick="bukaModalLihatPengajuan(1)" title="Klik untuk pratinjau berkas">
-                                <i class='bx bx-file-blank'></i> KTP_Dimas.pdf
+                            <a href="javascript:void(0)" class="kk-file-link" onclick="bukaModalLihatPengajuan({{ $r->id }})" title="Klik untuk pratinjau berkas">
+                                <i class='bx bx-file-blank'></i> {{ basename($r->bukti_path ?: 'Dokumen.pdf') }}
                             </a>
                         </td>
-                        <td><span class="kk-badge-rstatus kk-badge-rstatus--menunggu"><span class="kk-status-dot">●</span> Menunggu</span></td>
-                        <td style="color:#6c757d; font-size:12.5px;">-</td>
+                        <td><span class="kk-badge-rstatus {{ $statusDotClass }}"><span class="kk-status-dot">●</span> {{ $statusLabel }}</span></td>
+                        <td style="color:{{ $r->status === 'ditolak' ? '#dc3545' : '#6c757d' }}; font-size:12.5px; font-weight:{{ $r->status === 'ditolak' ? '500' : 'normal' }};">
+                            {{ $r->catatan_admin ?? ($r->status === 'ditolak' ? $r->alasan : ($r->alasan ?? '-')) }}
+                        </td>
                         <td style="text-align:center;">
-                            <button type="button" class="kk-btn-lihat" id="btn-lihat-1" onclick="bukaModalLihatPengajuan(1)">
-                                <i class='bx bx-show'></i> Lihat Perubahan
+                            <button type="button" class="kk-btn-lihat {{ $r->status === 'disetujui' ? 'kk-btn-lihat--green' : '' }}" id="btn-lihat-{{ $r->id }}" onclick="bukaModalLihatPengajuan({{ $r->id }})">
+                                @if($r->status === 'disetujui')
+                                    <i class='bx bx-check-circle'></i> Selesai
+                                @elseif($r->status === 'ditolak')
+                                    <i class='bx bx-info-circle'></i> Lihat Catatan
+                                @else
+                                    <i class='bx bx-show'></i> Lihat Perubahan
+                                @endif
                             </button>
                         </td>
                     </tr>
+                    @empty
                     <tr>
-                        <td style="text-align:center; color:#495057; font-weight:600;">2</td>
-                        <td>
-                            <div style="font-weight:700; color:#212529; font-size:12.5px;">28 Apr 2025</div>
-                            <div style="font-size:11.5px; color:#6c757d; margin-top:2px;">09:15 WIB</div>
-                        </td>
-                        <td><span class="kk-badge-jenis kk-badge-jenis--tambah">Tambah Anggota</span></td>
-                        <td style="font-weight:600; color:#212529;">Nabila Putri Kirani</td>
-                        <td>
-                            <a href="javascript:void(0)" class="kk-file-link" onclick="bukaModalLihatPengajuan(2)" title="Klik untuk pratinjau berkas">
-                                <i class='bx bx-file-blank'></i> Akta_Kelahiran.pdf
-                            </a>
-                        </td>
-                        <td><span class="kk-badge-rstatus kk-badge-rstatus--disetujui"><span class="kk-status-dot">●</span> Disetujui</span></td>
-                        <td style="color:#6c757d; font-size:12.5px;">Data telah diverifikasi oleh RT</td>
-                        <td style="text-align:center;">
-                            <button type="button" class="kk-btn-lihat kk-btn-lihat--green" id="btn-lihat-2" onclick="bukaModalLihatPengajuan(2)">
-                                <i class='bx bx-check-circle'></i> Selesai
-                            </button>
+                        <td colspan="8" style="text-align:center; padding:36px 18px; color:#6c757d; font-size:13px;">
+                            <i class='bx bx-history' style="font-size:30px; display:block; margin-bottom:8px; opacity:0.35;"></i>
+                            Belum ada riwayat pengajuan perubahan data keluarga.
                         </td>
                     </tr>
-                    <tr>
-                        <td style="text-align:center; color:#495057; font-weight:600;">3</td>
-                        <td>
-                            <div style="font-weight:700; color:#212529; font-size:12.5px;">10 Jan 2025</div>
-                            <div style="font-size:11.5px; color:#6c757d; margin-top:2px;">11:05 WIB</div>
-                        </td>
-                        <td><span class="kk-badge-jenis kk-badge-jenis--ubah">Ubah Data</span></td>
-                        <td style="font-weight:600; color:#212529;">Siti Aminah</td>
-                        <td>
-                            <a href="javascript:void(0)" class="kk-file-link" onclick="bukaModalLihatPengajuan(3)" title="Klik untuk pratinjau berkas">
-                                <i class='bx bx-file-blank'></i> Ijazah_Siti.pdf
-                            </a>
-                        </td>
-                        <td><span class="kk-badge-rstatus kk-badge-rstatus--ditolak"><span class="kk-status-dot">●</span> Ditolak</span></td>
-                        <td style="color:#dc3545; font-size:12.5px; font-weight:500;">Scan dokumen buram dan tidak terbaca jelas</td>
-                        <td style="text-align:center;">
-                            <button type="button" class="kk-btn-lihat kk-btn-lihat--green" id="btn-lihat-3" onclick="bukaModalLihatPengajuan(3)">
-                                <i class='bx bx-info-circle'></i> Lihat Catatan
-                            </button>
+                    @endforelse
+                    <tr id="row-empty-riwayat" style="display:none;">
+                        <td colspan="8" style="text-align:center; padding:36px 18px; color:#6c757d; font-size:13px;">
+                            <i class='bx bx-search' style="font-size:30px; display:block; margin-bottom:8px; opacity:0.35;"></i>
+                            Tidak ada riwayat yang sesuai pencarian.
                         </td>
                     </tr>
                 </tbody>
@@ -356,7 +325,7 @@
 
         <div class="kk-table-footer">
             <span></span>
-            <span>Menampilkan 3 dari 3 entri &nbsp;<span class="kk-pagination"><span class="kk-page-btn kk-page-btn--active">1</span></span></span>
+            <span>Menampilkan {{ $riwayatPengajuan->count() }} dari {{ $riwayatPengajuan->count() }} entri &nbsp;<span class="kk-pagination"><span class="kk-page-btn kk-page-btn--active">1</span></span></span>
         </div>
     </div>
 </div>
@@ -470,7 +439,7 @@
                     <span class="kk-pengajuan-modal__status-badge kk-pengajuan-modal__status-badge--menunggu" id="modal-p-status-badge">Menunggu Persetujuan RT</span>
                 </div>
                 <div class="kk-pengajuan-modal__subtitle">
-                    Pemohon: <strong>Bpk. Bambang Pamungkas</strong> &bull; No. KK: <strong>3271048809920001</strong> &bull; Blok B No. 14, RT 04 / RW 08
+                    Pemohon: <strong>{{ $kepala?->nama ?? '-' }}</strong> &bull; No. KK: <strong>{{ $keluarga?->no_kk ?? '-' }}</strong> &bull; {{ $alamatKeluarga }}
                 </div>
             </div>
             <button type="button" class="kk-pengajuan-modal__close" onclick="tutupModalLihatPengajuan()" aria-label="Tutup" id="btn-pengajuan-close">
@@ -483,11 +452,11 @@
             <!-- Strip Target Data -->
             <div class="kk-target-strip">
                 <div class="kk-target-strip__left">
-                    <div class="kk-target-strip__title" id="modal-p-target-title">Target Data: Dimas Arya Pratama (Anak)</div>
-                    <div class="kk-target-strip__sub" id="modal-p-target-sub">NIK: 3271042006060003 &bull; Laki-Laki &bull; Lahir: Depok, 20-06-2006</div>
+                    <div class="kk-target-strip__title" id="modal-p-target-title">Target Data: -</div>
+                    <div class="kk-target-strip__sub" id="modal-p-target-sub">-</div>
                 </div>
                 <div class="kk-target-strip__date" id="modal-p-tgl">
-                    Diajukan pada: 14 Mei 2025, 14:20 WIB
+                    Diajukan pada: -
                 </div>
             </div>
 
@@ -500,7 +469,7 @@
                             <i class='bx bx-git-compare' style="color:#0284c7; font-size:16px;"></i>
                             <span>Komparasi Data Lama vs Usulan Baru</span>
                         </div>
-                        <span class="kk-pengajuan-card__badge-green" id="modal-p-attr-count">3 Atribut Diperbarui</span>
+                        <span class="kk-pengajuan-card__badge-green" id="modal-p-attr-count">0 Atribut Diperbarui</span>
                     </div>
 
                     <div class="kk-ptable-wrap">
@@ -538,7 +507,7 @@
                             <i class='bx bx-check-shield' style="color:#16a34a; font-size:16px;"></i>
                             <span>Pratinjau Dokumen Pendukung</span>
                         </div>
-                        <span class="kk-pengajuan-card__badge-green" id="modal-p-doc-count">2 Dokumen</span>
+                        <span class="kk-pengajuan-card__badge-green" id="modal-p-doc-count">0 Dokumen</span>
                     </div>
 
                     <!-- Tabs Dokumen -->
@@ -553,7 +522,7 @@
                         </div>
 
                         <div class="kk-doc-info-bar">
-                            <span id="modal-p-doc-filename" style="font-size: 12px; color: #475569; font-weight: 600;">1. Ijazah_S1_Siti.png</span>
+                            <span id="modal-p-doc-filename" style="font-size: 12px; color: #475569; font-weight: 600;">Dokumen</span>
                             <span id="modal-p-doc-verified" style="font-size: 11.5px; color: #16a34a; font-weight: 600;">
                                 <i class='bx bx-check-circle'></i> Dokumen Asli Terverifikasi
                             </span>
@@ -595,18 +564,16 @@
 
 @push('scripts')
 <script>
-var dataWarga = {
-    bambang: { nama: 'Bpk. Bambang Pamungkas', namalengkap: 'Bambang Pamungkas', nik: '3271048809920001', ttl: 'Depok, 15 Agustus 1988', jk: 'Laki-Laki', agama: 'Islam', nokk: '3271048809920001', hubungan: 'Kepala Keluarga', pendidikan: 'S1 Teknik Informatika', pekerjaan: 'Karyawan Swasta', alamat: 'Blok B No. 14, RT 04 / RW 08' },
-    siti: { nama: 'Ibu Siti Aminah', namalengkap: 'Siti Aminah', nik: '3271046204830002', ttl: 'Jakarta, 12 April 1983', jk: 'Perempuan', agama: 'Islam', nokk: '3271048809920001', hubungan: 'Istri', pendidikan: 'SMA / Sederajat', pekerjaan: 'Ibu Rumah Tangga', alamat: 'Blok B No. 14, RT 04 / RW 08' },
-    dimas: { nama: 'Dimas Arya Pratama', namalengkap: 'Dimas Arya Pratama', nik: '3271042006060003', ttl: 'Depok, 20 Juni 2006', jk: 'Laki-Laki', agama: 'Islam', nokk: '3271048809920001', hubungan: 'Anak', pendidikan: 'SMA / Sederajat', pekerjaan: 'Mahasiswa / Pelajar', alamat: 'Blok B No. 14, RT 04 / RW 08' },
-    nabila: { nama: 'Nabila Putri Kirani', namalengkap: 'Nabila Putri Kirani', nik: '3271045011120004', ttl: 'Depok, 10 November 2012', jk: 'Perempuan', agama: 'Islam', nokk: '3271048809920001', hubungan: 'Anak', pendidikan: 'SMP / Sederajat', pekerjaan: 'Pelajar', alamat: 'Blok B No. 14, RT 04 / RW 08' }
-};
-
-var currentDetailKey = 'bambang';
+var dataWarga = @json($dataWargaMap);
+var dataPengajuan = @json($dataPengajuanMap);
+var currentDetailKey = Object.keys(dataWarga)[0] || '';
+var currentPengajuanId = Object.keys(dataPengajuan)[0] || null;
+var currentDocIdx = 0;
 
 function bukaDetailWarga(key) {
     currentDetailKey = key;
-    var d = dataWarga[key]; if (!d) return;
+    var d = dataWarga[key]; 
+    if (!d) return;
     document.getElementById('modal-nama').textContent = d.nama;
     document.getElementById('modal-namalengkap').textContent = d.namalengkap;
     document.getElementById('modal-nik').textContent = d.nik;
@@ -621,21 +588,32 @@ function bukaDetailWarga(key) {
     document.getElementById('modal-detail-overlay').classList.add('kk-modal-overlay--open');
     document.body.style.overflow = 'hidden';
 }
+
 function tutupDetailWarga() {
     document.getElementById('modal-detail-overlay').classList.remove('kk-modal-overlay--open');
     document.body.style.overflow = '';
 }
-function tutupModal(e) { if (e.target.id === 'modal-detail-overlay') tutupDetailWarga(); }
+
+function tutupModal(e) { 
+    if (e.target.id === 'modal-detail-overlay') tutupDetailWarga(); 
+}
+
 function bukaModeEdit() {
     tutupDetailWarga();
-    window.location.href = "{{ route('warga.keluarga.edit') }}?target=" + encodeURIComponent(currentDetailKey);
+    if (currentDetailKey) {
+        window.location.href = "{{ route('warga.keluarga.edit') }}?nik=" + encodeURIComponent(currentDetailKey);
+    } else {
+        window.location.href = "{{ route('warga.keluarga.edit') }}";
+    }
 }
+
 function switchTab(tab) {
     document.getElementById('panel-daftar').style.display = tab === 'daftar' ? 'block' : 'none';
     document.getElementById('panel-riwayat').style.display = tab === 'riwayat' ? 'block' : 'none';
     document.getElementById('tab-daftar').classList.toggle('kk-tab-btn--active', tab === 'daftar');
     document.getElementById('tab-riwayat').classList.toggle('kk-tab-btn--active', tab === 'riwayat');
 }
+
 function filterAnggota(q) {
     q = (q||'').toLowerCase().trim();
     var hub = document.getElementById('filter-hubungan').value;
@@ -643,112 +621,49 @@ function filterAnggota(q) {
     var count = 0;
     rows.forEach(function(r){
         var ok = (!q || r.dataset.nama.includes(q) || r.dataset.nik.includes(q)) && (!hub || r.dataset.hubungan === hub);
-        r.style.display = ok ? '' : 'none'; if (ok) count++;
+        r.style.display = ok ? '' : 'none'; 
+        if (ok) count++;
     });
-    document.getElementById('row-empty-anggota').style.display = count===0 ? '' : 'none';
-}
-function copyNoKK() {
-    navigator.clipboard.writeText('3271048809920001').then(function() {
-        var btn = document.getElementById('btn-copy-nkk');
-        btn.innerHTML = "<i class='bx bx-check'></i>"; btn.style.color='#28a745';
-        setTimeout(function(){ btn.innerHTML="<i class='bx bx-copy'></i>"; btn.style.color=''; }, 1800);
-    });
-}
-
-/* ══════════════════════════════════════════════════════════
-   DATA & HANDLER LIHAT PENGAJUAN PERUBAHAN DATA (POV WARGA)
-   ══════════════════════════════════════════════════════════ */
-var urlIjazah = "{{ asset('contoh_Ijazah.png') }}";
-var urlBukuNikah = "{{ asset('contoh_buku_nikah.png') }}";
-
-var dataPengajuan = {
-    1: {
-        status: 'menunggu',
-        statusLabel: 'Menunggu Persetujuan RT',
-        targetTitle: 'Target Data: Siti Rahmawati (Anak)',
-        targetSub: 'NIK: 3275015509010003 • Perempuan • Lahir: Bekasi, 06-09-2001',
-        tgl: 'Diajukan pada: 18 Feb 2025, 09:15 WIB',
-        attrCount: '3 Atribut Diperbarui',
-        komparasi: [
-            { field: 'Pekerjaan Utama', old: 'Pelajar/Mahasiswa', new: 'Karyawan Swasta', changed: true },
-            { field: 'Pendidikan Terakhir', old: 'SLTA / Sederajat', new: 'D4/S1', changed: true },
-            { field: 'Status Perkawinan', old: 'Belum Kawin', new: 'Kawin Tercatat', changed: true },
-            { field: 'Agama', old: 'Islam', new: 'Islam (Tetap)', changed: false }
-        ],
-        alasan: 'Siti telah menyelesaikan perkuliahan S1 dan bekerja sebagai Karyawan Swasta serta melangsungkan pernikahan.',
-        catatanRT: '',
-        footerText: 'Pengajuan ini sedang dalam antrean verifikasi oleh Pengurus RT 04. Mohon menunggu konfirmasi.',
-        docs: [
-            {
-                label: '1. Ijazah_S1_Siti.png',
-                icon: 'bx-file-blank',
-                iconColor: '#dc2626',
-                src: urlIjazah,
-                verified: 'Dokumen Asli Terverifikasi'
-            },
-            {
-                label: '2. Buku_Nikah_Hal1.png',
-                icon: 'bx-book-open',
-                iconColor: '#0284c7',
-                src: urlBukuNikah,
-                verified: 'Dokumen Asli Terverifikasi'
-            }
-        ]
-    },
-    2: {
-        status: 'disetujui',
-        statusLabel: 'Telah Disetujui RT',
-        targetTitle: 'Target Data: Nabila Putri Kirani (Tambah Anggota Baru)',
-        targetSub: 'NIK: 3271045011120004 • Perempuan • Lahir: Depok, 10-11-2012',
-        tgl: 'Diajukan pada: 28 Apr 2025, 09:15 WIB',
-        attrCount: 'Pendaftaran Anggota Baru',
-        komparasi: [
-            { field: 'Nama Anggota', old: '(Belum Terdaftar)', new: 'Nabila Putri Kirani', changed: true },
-            { field: 'Hubungan Keluarga', old: '-', new: 'Anak Kandung', changed: true },
-            { field: 'Tempat, Tgl Lahir', old: '-', new: 'Depok, 10 November 2012', changed: true },
-            { field: 'Pendidikan', old: '-', new: 'SMP / Sederajat', changed: true }
-        ],
-        alasan: 'Pembaruan kartu keluarga dengan mendaftarkan anak kedua.',
-        catatanRT: 'Data telah diverifikasi dan disinkronkan dengan database kependudukan RT 04.',
-        footerText: 'Pengajuan telah disetujui oleh RT 04. Data keluarga Anda telah resmi diperbarui.',
-        docs: [
-            {
-                label: '1. Akta_Kelahiran_Nabila.png',
-                icon: 'bx-file-blank',
-                iconColor: '#0284c7',
-                src: urlIjazah,
-                verified: 'Dokumen Asli Terverifikasi'
-            }
-        ]
-    },
-    3: {
-        status: 'ditolak',
-        statusLabel: 'Ditolak oleh RT',
-        targetTitle: 'Target Data: Ibu Siti Aminah (Istri)',
-        targetSub: 'NIK: 3271046204830002 • Perempuan • Lahir: Jakarta, 12-04-1983',
-        tgl: 'Diajukan pada: 10 Jan 2025, 11:05 WIB',
-        attrCount: 'Perubahan Pendidikan Terakhir',
-        komparasi: [
-            { field: 'Pendidikan Terakhir', old: 'SMA / Sederajat', new: 'D3 Akuntansi', changed: true },
-            { field: 'Pekerjaan Utama', old: 'Ibu Rumah Tangga', new: 'Wiraswasta', changed: true }
-        ],
-        alasan: 'Memperbarui data ijazah D3 dan status pekerjaan mandiri.',
-        catatanRT: 'Scan dokumen ijazah buram dan nomor seri tidak terbaca dengan jelas. Mohon unggah ulang dengan foto/scan beresolusi tinggi.',
-        footerText: 'Pengajuan ditolak oleh Ketua RT 04. Silakan ajukan ulang perubahan berkas.',
-        docs: [
-            {
-                label: '1. Ijazah_Siti.png',
-                icon: 'bx-file-blank',
-                iconColor: '#dc2626',
-                src: urlIjazah,
-                verified: 'Perlu Unggah Ulang Berkas Asli'
-            }
-        ]
+    var emptyRow = document.getElementById('row-empty-anggota');
+    if (emptyRow) {
+        emptyRow.style.display = (rows.length > 0 && count === 0) ? '' : 'none';
     }
-};
+}
 
-var currentPengajuanId = 1;
-var currentDocIdx = 0;
+function filterRiwayat() {
+    var q = (document.getElementById('search-riwayat')?.value || '').toLowerCase().trim();
+    var jenis = document.getElementById('filter-jenis-riwayat')?.value || '';
+    var status = document.getElementById('filter-status-riwayat')?.value || '';
+    var rows = document.querySelectorAll('#tbody-riwayat .riwayat-row');
+    var count = 0;
+    rows.forEach(function(r){
+        var ok = (!q || r.dataset.nama.includes(q)) && 
+                 (!jenis || r.dataset.jenis === jenis) && 
+                 (!status || r.dataset.status === status);
+        r.style.display = ok ? '' : 'none'; 
+        if (ok) count++;
+    });
+    var emptyRow = document.getElementById('row-empty-riwayat');
+    if (emptyRow) {
+        emptyRow.style.display = (rows.length > 0 && count === 0) ? '' : 'none';
+    }
+}
+
+function copyNoKK(noKk) {
+    if (!noKk) noKk = '{{ $keluarga?->no_kk ?? "" }}';
+    if (!noKk) return;
+    navigator.clipboard.writeText(noKk).then(function() {
+        var btn = document.getElementById('btn-copy-nkk');
+        if (btn) {
+            btn.innerHTML = "<i class='bx bx-check'></i>"; 
+            btn.style.color = '#28a745';
+            setTimeout(function(){ 
+                btn.innerHTML = "<i class='bx bx-copy'></i>"; 
+                btn.style.color = ''; 
+            }, 1800);
+        }
+    });
+}
 
 function bukaModalLihatPengajuan(id) {
     var p = dataPengajuan[id];
@@ -805,7 +720,9 @@ function bukaModalLihatPengajuan(id) {
     // Dokumen Tabs & Content
     document.getElementById('modal-p-doc-count').textContent = p.docs.length + ' Dokumen';
     renderDocTabs(p.docs, 0);
-    renderDocPreview(p.docs[0]);
+    if (p.docs.length > 0) {
+        renderDocPreview(p.docs[0]);
+    }
 
     // Footer Status & Tombol Reapply
     var footerStatusEl = document.getElementById('modal-p-footer-status');

@@ -66,11 +66,11 @@
                         <div class="wf-kk-bar">
                             <div class="wf-kk-bar__item">
                                 <span class="wf-kk-bar__label">No. Kartu Keluarga (KK)</span>
-                                <span class="wf-kk-bar__chip">3271048809920001</span>
+                                <span class="wf-kk-bar__chip">{{ $keluarga?->no_kk ?? '-' }}</span>
                             </div>
                             <div class="wf-kk-bar__item">
                                 <span class="wf-kk-bar__label">Kepala Keluarga</span>
-                                <strong class="wf-kk-bar__val">Bpk. Bambang Pamungkas</strong>
+                                <strong class="wf-kk-bar__val">{{ $kepala?->nama ?? '-' }}</strong>
                             </div>
                             <div class="wf-kk-bar__item">
                                 <span class="wf-kk-bar__label">Wilayah Domisili</span>
@@ -84,10 +84,13 @@
                                 <span class="wf-label-hint">Data tabel otomatis dimuat sesuai pilihan</span>
                             </label>
                             <select id="select-target-anggota" name="target_anggota" class="wf-select" onchange="gantiAnggota(this.value)" required>
-                                <option value="dimas" selected>Dimas Arya Pratama — (Anak Kandung | NIK: 3271048809920003)</option>
-                                <option value="bambang">Bpk. Bambang Pamungkas — (Kepala Keluarga | NIK: 3271041203780002)</option>
-                                <option value="siti">Siti Aminah — (Istri | NIK: 3271046204830002)</option>
-                                <option value="nabila">Nabila Putri Kirani — (Anak Kandung | NIK: 3271045011120004)</option>
+                                @forelse($anggotaKeluarga as $ang)
+                                    <option value="{{ $ang->nik }}" {{ (isset($targetNik) && $targetNik == $ang->nik) ? 'selected' : '' }}>
+                                        {{ $ang->nama }} — ({{ ucwords(str_replace('_', ' ', $ang->status_hubungan)) }} | NIK: {{ $ang->nik }})
+                                    </option>
+                                @empty
+                                    <option value="" disabled>Tidak ada anggota keluarga terdaftar</option>
+                                @endforelse
                             </select>
                         </div>
 
@@ -330,20 +333,7 @@
                                     </td>
                                     <td>
                                         <div class="wf-input-editable-wrap">
-                                            <select id="new-pekerjaan" name="new_pekerjaan" class="wf-select">
-                                                <option value="Pelajar / Mahasiswa" selected>Pelajar / Mahasiswa</option>
-                                                <option value="Belum / Tidak Bekerja">Belum / Tidak Bekerja</option>
-                                                <option value="Karyawan Swasta">Karyawan Swasta</option>
-                                                <option value="Pegawai Negeri Sipil (PNS)">Pegawai Negeri Sipil (PNS) / ASN</option>
-                                                <option value="Wiraswasta / Pedagang">Wiraswasta / Pedagang / Pengusaha</option>
-                                                <option value="Buruh Harian Lepas">Buruh Harian Lepas / Pabrik</option>
-                                                <option value="Ibu Rumah Tangga">Ibu Rumah Tangga</option>
-                                                <option value="Pensiunan">Pensiunan</option>
-                                                <option value="Guru / Dosen">Guru / Dosen</option>
-                                                <option value="Tenaga Medis">Tenaga Medis</option>
-                                                <option value="TNI / POLRI">TNI / POLRI</option>
-                                                <option value="Lainnya">Lainnya</option>
-                                            </select>
+                                            <input type="text" id="new-pekerjaan" name="new_pekerjaan" class="wf-input" value="Pelajar / Mahasiswa" placeholder="Contoh: Karyawan Swasta, Wiraswasta, PNS, Pelajar, dll.">
                                         </div>
                                     </td>
                                 </tr>
@@ -478,7 +468,7 @@
                         
                         {{-- Dropzone --}}
                         <div class="wf-upload-dropzone" onclick="document.getElementById('file-input-edit').click()">
-                            <input type="file" id="file-input-edit" name="bukti" style="display:none;" multiple accept=".pdf,.jpg,.jpeg,.png">
+                            <input type="file" id="file-input-edit" name="bukti[]" style="display:none;" multiple accept=".pdf,.jpg,.jpeg,.png">
                             <div class="wf-upload-icon-circle">
                                 <i class='bx bx-cloud-upload' style="font-size:26px;color:#0284c7;"></i>
                             </div>
@@ -677,9 +667,24 @@ document.addEventListener('DOMContentLoaded', function () {
     // Setup Realtime Dynamic Difference Evaluation for All 11 Rows
     initComparisonListeners();
 
+    function syncFileInput() {
+        if (!fileInputEdit) return;
+        try {
+            const dt = new DataTransfer();
+            selectedFiles.forEach(f => dt.items.add(f));
+            fileInputEdit.files = dt.files;
+        } catch(e) {}
+    }
+
+    const origRenderFileList = renderFileList;
+    renderFileList = function() {
+        origRenderFileList();
+        syncFileInput();
+    };
+
     // Auto-select target from query param if available
     const urlParams = new URLSearchParams(window.location.search);
-    const targetParam = urlParams.get('target');
+    const targetParam = urlParams.get('nik') || urlParams.get('target') || "{{ $targetNik ?? '' }}";
     if (targetParam && anggotaData[targetParam]) {
         const selectEl = document.getElementById('select-target-anggota');
         if (selectEl) {
@@ -687,85 +692,17 @@ document.addEventListener('DOMContentLoaded', function () {
             gantiAnggota(targetParam);
         }
     } else {
-        evaluateAllRows();
+        const firstKey = Object.keys(anggotaData)[0];
+        if (firstKey) {
+            gantiAnggota(firstKey);
+        } else {
+            evaluateAllRows();
+        }
     }
 });
 
 // Dynamic Data Loading when switching members
-const anggotaData = {
-    dimas: {
-        avatar: 'DA',
-        nik: '3271048809920003',
-        nama: 'Dimas Arya Pratama',
-        tempatLahir: 'Bogor',
-        tglLahir: '08-08-2005',
-        tglLahirNew: '2005-08-08',
-        jk: 'Laki-Laki',
-        agama: 'Islam',
-        pendidikanOld: 'SLTA / Sederajat',
-        pendidikanNew: 'SLTA / SMA / SMK / Sederajat',
-        pekerjaanOld: 'Pelajar / Mahasiswa',
-        pekerjaanNew: 'Pelajar / Mahasiswa',
-        alamat: 'Jl. Melati Blok B No. 14, RT 04 / RW 08',
-        shdk: 'Anak Kandung',
-        statusWarga: 'Hidup (Aktif)',
-        alasan: ''
-    },
-    bambang: {
-        avatar: 'BP',
-        nik: '3271041203780002',
-        nama: 'Bambang Pamungkas',
-        tempatLahir: 'Bogor',
-        tglLahir: '15-08-1988',
-        tglLahirNew: '1988-08-15',
-        jk: 'Laki-Laki',
-        agama: 'Islam',
-        pendidikanOld: 'Diploma IV / Strata 1 (S1)',
-        pendidikanNew: 'Diploma IV / Strata 1 (S1)',
-        pekerjaanOld: 'Karyawan Swasta',
-        pekerjaanNew: 'Karyawan Swasta',
-        alamat: 'Jl. Melati Blok B No. 14, RT 04 / RW 08',
-        shdk: 'Kepala Keluarga',
-        statusWarga: 'Hidup (Aktif)',
-        alasan: ''
-    },
-    siti: {
-        avatar: 'SA',
-        nik: '3271046204830002',
-        nama: 'Siti Aminah',
-        tempatLahir: 'Bandung',
-        tglLahir: '12-04-1983',
-        tglLahirNew: '1983-04-12',
-        jk: 'Perempuan',
-        agama: 'Islam',
-        pendidikanOld: 'SLTA / Sederajat',
-        pendidikanNew: 'SLTA / SMA / SMK / Sederajat',
-        pekerjaanOld: 'Ibu Rumah Tangga',
-        pekerjaanNew: 'Ibu Rumah Tangga',
-        alamat: 'Jl. Melati Blok B No. 14, RT 04 / RW 08',
-        shdk: 'Istri',
-        statusWarga: 'Hidup (Aktif)',
-        alasan: ''
-    },
-    nabila: {
-        avatar: 'NK',
-        nik: '3271045011120004',
-        nama: 'Nabila Putri Kirani',
-        tempatLahir: 'Bogor',
-        tglLahir: '10-11-2012',
-        tglLahirNew: '2012-11-10',
-        jk: 'Perempuan',
-        agama: 'Islam',
-        pendidikanOld: 'SD / Sederajat',
-        pendidikanNew: 'SD / Sederajat',
-        pekerjaanOld: 'Pelajar / Mahasiswa',
-        pekerjaanNew: 'Pelajar / Mahasiswa',
-        alamat: 'Jl. Melati Blok B No. 14, RT 04 / RW 08',
-        shdk: 'Anak Kandung',
-        statusWarga: 'Hidup (Aktif)',
-        alasan: ''
-    }
-};
+const anggotaData = @json($anggotaDataEdit);
 
 const comparisonFields = [
     { rowId: 'row-nik', oldId: 'old-nik', newId: 'new-nik' },

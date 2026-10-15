@@ -6,7 +6,7 @@
 @section('breadcrumb')
     <a href="{{ route('admin.data-warga') }}" class="admin-topbar__breadcrumb-link">Kelola Data Warga</a>
     <span class="admin-topbar__breadcrumb-sep" aria-hidden="true">/</span>
-    <a href="{{ route('admin.data-warga', ['view' => 'detail']) }}" class="admin-topbar__breadcrumb-link">Detail Kartu Keluarga</a>
+    <a href="{{ isset($keluarga) ? route('admin.data-warga.detail', $keluarga->no_kk) : route('admin.data-warga') }}" class="admin-topbar__breadcrumb-link">Detail Kartu Keluarga</a>
     <span class="admin-topbar__breadcrumb-sep" aria-hidden="true">/</span>
     <span class="admin-topbar__breadcrumb-current">Edit Data Warga</span>
 @endsection
@@ -18,51 +18,51 @@
 @section('content')
 
 @php
-    // Mapping default data warga berdasarkan NIK jika ada
-    $dataWarga = [
-        '3275012304800001' => [
-            'nik' => '3275012304800001',
-            'nama' => 'Bambang Santoso, S.T.',
-            'tempat_lahir' => 'Surabaya',
-            'tanggal_lahir' => '1980-04-23',
-            'jk' => 'Laki-laki',
-            'agama' => 'Islam',
-            'pendidikan' => 'Sarjana (S1)',
-            'pekerjaan' => 'Pegawai BUMN (PT PLN)',
-            'status_kawin' => 'Kawin',
-            'shdk' => 'Kepala Keluarga',
-            'status_keberadaan' => 'Hidup (Aktif)',
-        ],
-        '3275016508910004' => [
-            'nik' => '3275016508910004',
-            'nama' => 'Ratna Dewi Puspita, M.Pd.',
-            'tempat_lahir' => 'Bandung',
-            'tanggal_lahir' => '1982-08-15',
-            'jk' => 'Perempuan',
-            'agama' => 'Islam',
-            'pendidikan' => 'Magister (S2)',
-            'pekerjaan' => 'Guru SMA Negeri 4',
-            'status_kawin' => 'Kawin',
-            'shdk' => 'Istri',
-            'status_keberadaan' => 'Hidup (Aktif)',
-        ],
-        '3275015509010003' => [
-            'nik' => '3275015509010003',
-            'nama' => 'Siti Rahmawati, S.Ak.',
-            'tempat_lahir' => 'Depok',
-            'tanggal_lahir' => '2001-09-15',
-            'jk' => 'Perempuan',
-            'agama' => 'Islam',
-            'pendidikan' => 'Sarjana (S1)',
-            'pekerjaan' => 'Karyawan Swasta (Auditor)',
-            'status_kawin' => 'Belum Kawin',
-            'shdk' => 'Anak',
-            'status_keberadaan' => 'Hidup (Aktif)',
-        ],
+    $curNik = $warga->nik ?? ($nik ?? '3275015509010003');
+    $w = [
+        'nik' => $warga->nik ?? $curNik,
+        'nama' => $warga->nama ?? 'Nama Warga',
+        'tempat_lahir' => $warga->tempat_lahir ?? '',
+        'tanggal_lahir' => $warga?->tanggal_lahir ? $warga->tanggal_lahir->format('Y-m-d') : '',
+        'jk' => (($warga->jenis_kelamin ?? 'laki_laki') === 'perempuan') ? 'Perempuan' : 'Laki-laki',
+        'agama' => ucfirst($warga->agama ?? 'Islam'),
+        'pendidikan' => match($warga->pendidikan_terakhir ?? '') {
+            'tidak_belum_sekolah' => 'Tidak/Belum Sekolah',
+            'belum_tamat_sd' => 'Tidak/Belum Sekolah',
+            'sd_sederajat' => 'SD/Sederajat',
+            'smp_sederajat' => 'SMP/Sederajat',
+            'sma_sederajat' => 'SMA/SMK/Sederajat',
+            'd1_d2', 'd3' => 'Diploma (D3)',
+            'd4_s1' => 'Sarjana (S1)',
+            's2' => 'Magister (S2)',
+            's3' => 'Doktor (S3)',
+            default => 'Sarjana (S1)'
+        },
+        'pekerjaan' => $warga->pekerjaan ?? '',
+        'status_kawin' => 'Kawin',
+        'shdk' => match($warga->status_hubungan ?? '') {
+            'kepala_keluarga' => 'Kepala Keluarga',
+            'istri' => 'Istri',
+            'suami' => 'Suami',
+            'anak' => 'Anak',
+            'menantu' => 'Menantu',
+            'cucu' => 'Cucu',
+            'orang_tua' => 'Orang Tua',
+            'mertua' => 'Mertua',
+            'famili_lain' => 'Famili Lain',
+            default => 'Anak'
+        },
+        'status_keberadaan' => match($warga->status_warga ?? 'hidup') {
+            'pindah_rumah' => 'Pindah Rumah',
+            'pindah_kk' => 'Pindah KK',
+            'meninggal' => 'Meninggal',
+            default => 'Hidup (Aktif)'
+        },
     ];
 
-    $curNik = $nik ?? '3275015509010003';
-    $w = $dataWarga[$curNik] ?? $dataWarga['3275015509010003'];
+    $noKkDisplay = $keluarga->no_kk ?? '3275010905120008';
+    $kepalaNamaDisplay = $kepalaKeluarga->nama ?? 'Kepala Keluarga';
+    $alamatDisplay = $alamatKeluarga ?? 'RT 04 / RW 08';
 @endphp
 
 {{-- ========================================================
@@ -76,7 +76,7 @@
             <span>/</span>
             <a href="{{ route('admin.data-warga') }}" style="color:#6c757d;text-decoration:none;">Kelola Data Warga</a>
             <span>/</span>
-            <a href="{{ route('admin.data-warga', ['view' => 'detail']) }}" style="color:#6c757d;text-decoration:none;">Detail Kartu Keluarga</a>
+            <a href="{{ route('admin.data-warga.detail', $noKkDisplay) }}" style="color:#6c757d;text-decoration:none;">Detail Kartu Keluarga</a>
             <span>/</span>
             <span style="color:#007bff;font-weight:600;">Edit Data Warga</span>
         </nav>
@@ -87,7 +87,21 @@
     </div>
 </div>
 
-<form action="{{ route('admin.data-warga.edit-anggota.store') }}" method="POST" id="form-edit-anggota">
+@if(session('success'))
+<div style="background:#d4edda;color:#155724;border:1px solid #c3e6cb;padding:12px 16px;border-radius:6px;margin-bottom:16px;font-size:13px;display:flex;align-items:center;gap:8px;">
+    <i class='bx bx-check-circle' style="font-size:18px;"></i>
+    <span>{{ session('success') }}</span>
+</div>
+@endif
+
+@if(session('error'))
+<div style="background:#f8d7da;color:#721c24;border:1px solid #f5c6cb;padding:12px 16px;border-radius:6px;margin-bottom:16px;font-size:13px;display:flex;align-items:center;gap:8px;">
+    <i class='bx bx-error-circle' style="font-size:18px;"></i>
+    <span>{{ session('error') }}</span>
+</div>
+@endif
+
+<form action="{{ route('admin.data-warga.edit-anggota.store', $w['nik']) }}" method="POST" id="form-edit-anggota">
     @csrf
 
     {{-- Top Summary Card (Screenshot 3) --}}
@@ -98,7 +112,7 @@
                 <span>Identitas Warga &amp; Kartu Keluarga</span>
             </h3>
             <div class="form-summary-meta">
-                {{ $w['nama'] }} • NIK: <strong>{{ $w['nik'] }}</strong> • No. KK: <strong>3275010905120008</strong>
+                {{ $w['nama'] }} • NIK: <strong>{{ $w['nik'] }}</strong> • No. KK: <strong>{{ $noKkDisplay }}</strong>
             </div>
         </div>
 
@@ -107,14 +121,14 @@
                 <div class="form-summary-box__label">KEPALA KELUARGA</div>
                 <div class="form-summary-box__val">
                     <i class='bx bx-user' style="color:#007bff;"></i>
-                    <span>Bambang Santoso, S.T.</span>
+                    <span>{{ $kepalaNamaDisplay }}</span>
                 </div>
             </div>
             <div class="form-summary-box">
                 <div class="form-summary-box__label">DOMISILI RUMAH</div>
                 <div class="form-summary-box__val">
                     <i class='bx bx-map-pin' style="color:#28a745;"></i>
-                    <span>Blok B4 No. 12 (RT 04 / RW 08)</span>
+                    <span>{{ $alamatDisplay }}</span>
                 </div>
             </div>
         </div>
@@ -148,10 +162,15 @@
                             Nomor Induk Kependudukan (NIK) <span class="req">*</span>
                         </label>
                         <div class="input-with-badge">
-                            <input type="text" name="nik" class="form-control-warga" id="input-nik" value="{{ $w['nik'] }}" maxlength="16" required>
+                            <input type="text" name="nik" class="form-control-warga" id="input-nik"
+                                   value="{{ old('nik', $w['nik']) }}"
+                                   maxlength="16" inputmode="numeric" pattern="[0-9]{16}"
+                                   oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 16)"
+                                   onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                                   required>
                             <span class="badge-input-right">16 Digit</span>
                         </div>
-                        <span class="form-field-help">Pastikan NIK valid dan belum terdaftar pada KK lain di RT 04.</span>
+                        <span class="form-field-help">16 digit angka sesuai e-KTP. Hanya angka tanpa huruf atau simbol.</span>
                     </div>
                     <div class="form-field">
                         <label class="form-field-label" for="input-nama">
@@ -265,20 +284,20 @@
             <div class="form-section-body">
                 <label class="form-field-label">Status Keberadaan Kependudukan <span class="req">*</span></label>
                 <div class="status-radio-grid">
-                    <label class="status-radio-card active" id="radio-hidup" onclick="pilihRadio('hidup')">
-                        <input type="radio" name="status_keberadaan" value="Hidup (Aktif)" checked>
+                    <label class="status-radio-card {{ $w['status_keberadaan'] === 'Hidup (Aktif)' ? 'active' : '' }}" id="radio-hidup" onclick="pilihRadio('hidup')">
+                        <input type="radio" name="status_keberadaan" value="Hidup (Aktif)" {{ $w['status_keberadaan'] === 'Hidup (Aktif)' ? 'checked' : '' }}>
                         <span>Hidup (Aktif)</span>
                     </label>
-                    <label class="status-radio-card" id="radio-pindah-rumah" onclick="pilihRadio('pindah-rumah')">
-                        <input type="radio" name="status_keberadaan" value="Pindah Rumah">
+                    <label class="status-radio-card {{ $w['status_keberadaan'] === 'Pindah Rumah' ? 'active' : '' }}" id="radio-pindah-rumah" onclick="pilihRadio('pindah-rumah')">
+                        <input type="radio" name="status_keberadaan" value="Pindah Rumah" {{ $w['status_keberadaan'] === 'Pindah Rumah' ? 'checked' : '' }}>
                         <span>Pindah Rumah</span>
                     </label>
-                    <label class="status-radio-card" id="radio-pindah-kk" onclick="pilihRadio('pindah-kk')">
-                        <input type="radio" name="status_keberadaan" value="Pindah KK">
+                    <label class="status-radio-card {{ $w['status_keberadaan'] === 'Pindah KK' ? 'active' : '' }}" id="radio-pindah-kk" onclick="pilihRadio('pindah-kk')">
+                        <input type="radio" name="status_keberadaan" value="Pindah KK" {{ $w['status_keberadaan'] === 'Pindah KK' ? 'checked' : '' }}>
                         <span>Pindah KK</span>
                     </label>
-                    <label class="status-radio-card" id="radio-meninggal" onclick="pilihRadio('meninggal')">
-                        <input type="radio" name="status_keberadaan" value="Meninggal">
+                    <label class="status-radio-card {{ $w['status_keberadaan'] === 'Meninggal' ? 'active' : '' }}" id="radio-meninggal" onclick="pilihRadio('meninggal')">
+                        <input type="radio" name="status_keberadaan" value="Meninggal" {{ $w['status_keberadaan'] === 'Meninggal' ? 'checked' : '' }}>
                         <span>Meninggal</span>
                     </label>
                 </div>
@@ -303,7 +322,7 @@
                     <i class='bx bx-save'></i> Simpan Perubahan Data
                 </button>
 
-                <a href="{{ route('admin.data-warga', ['view' => 'detail']) }}" class="btn-sidebar-cancel" style="text-decoration:none;">
+                <a href="{{ route('admin.data-warga.detail', $noKkDisplay) }}" class="btn-sidebar-cancel" style="text-decoration:none;">
                     <i class='bx bx-x'></i> Batal &amp; Kembali ke Detail KK
                 </a>
 

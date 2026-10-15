@@ -11,13 +11,25 @@
         <h1 class="warga-page-header__title">Dashboard Warga</h1>
         <p class="warga-page-header__sub">Sistem Administrasi Rukun Tetangga 04 Mandiri Terpadu</p>
     </div>
+    <div class="warga-page-header__breadcrumb">
+        <a href="{{ route('warga.beranda') }}">Home</a>
+        <span class="sep">/</span>
+        <span class="current">Dashboard</span>
+    </div>
 </div>
 
-{{-- ── Card Selamat Datang ── --}}
+{{-- ── Card Selamat Datang (Data Riil Warga / KK) ── --}}
 <div class="warga-greeting-card">
-    <div>
-        <h2 class="warga-greeting-card__title">Selamat Datang, Bpk. Bambang Pamungkas</h2>
-        <p class="warga-greeting-card__sub">No. KK: 3273010908840001 | Alamat: RT 04 / RW 08, Blok B No. 14</p>
+    <div style="display:flex;align-items:center;gap:16px;">
+        <div style="background:#e0f2fe;color:#0284c7;width:48px;height:48px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;">
+            <i class='bx bx-id-card'></i>
+        </div>
+        <div>
+            <h2 class="warga-greeting-card__title">Selamat Datang, {{ $kepala?->nama ?? 'Warga RT 04' }}</h2>
+            <p class="warga-greeting-card__sub">
+                No. KK: <strong>{{ $keluarga?->no_kk ?? '-' }}</strong> | Alamat: {{ $kepala?->alamat ?? 'RT 04 / RW 08 Sukamaju' }}
+            </p>
+        </div>
     </div>
     <div>
         <a href="{{ route('warga.keluarga') }}" class="btn-detail-kk">
@@ -32,8 +44,15 @@
     {{-- Card 1: Iuran --}}
     <div class="warga-summary-card warga-summary-card--teal">
         <div class="warga-summary-card__body">
-            <div class="warga-summary-card__val">Rp 50.000</div>
-            <div class="warga-summary-card__label">Iuran Warga Bulan Ini</div>
+            <div class="warga-summary-card__val">Rp {{ number_format($nominalIuran, 0, ',', '.') }}</div>
+            <div class="warga-summary-card__label" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+                <span>Iuran Warga {{ $namaBulan }} {{ $tahunBerjalan }}</span>
+                @if($isIuranLunas)
+                    <span style="background:#28a745;color:#fff;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700;">LUNAS</span>
+                @else
+                    <span style="background:#dc3545;color:#fff;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700;">BELUM LUNAS</span>
+                @endif
+            </div>
             <i class='bx bx-wallet warga-summary-card__watermark'></i>
         </div>
         <a href="{{ route('warga.iuran') }}" class="warga-summary-card__footer">
@@ -45,8 +64,10 @@
     {{-- Card 2: Pengajuan Surat --}}
     <div class="warga-summary-card warga-summary-card--amber">
         <div class="warga-summary-card__body">
-            <div class="warga-summary-card__val">1 Menunggu</div>
-            <div class="warga-summary-card__label">Status Surat: 3 Selesai, 1 Sedang Diproses RT</div>
+            <div class="warga-summary-card__val">{{ $totalSuratMenunggu }} Menunggu</div>
+            <div class="warga-summary-card__label">
+                Status Surat: {{ $totalSuratSelesai }} Selesai, {{ $totalSuratMenunggu }} Sedang Diproses RT
+            </div>
             <i class='bx bx-envelope warga-summary-card__watermark'></i>
         </div>
         <a href="{{ route('warga.surat') }}" class="warga-summary-card__footer">
@@ -93,7 +114,7 @@
                 </div>
             </div>
             <p class="warga-action-card__desc">
-                Cek status pembayaran iuran bulanan kebersihan, keamanan, dan dana kas sosial RT 04 untuk seluruh periode tahun berjalan 2025.
+                Cek status pembayaran iuran bulanan kebersihan, keamanan, dan dana kas sosial RT 04 untuk seluruh periode tahun berjalan {{ $tahunBerjalan }}.
             </p>
         </div>
         <a href="{{ route('warga.iuran') }}" class="btn-warga-action-btn">
@@ -122,6 +143,100 @@
             <i class='bx bx-user-pin'></i>
             <span>Kelola Data KK</span>
         </a>
+    </div>
+</div>
+
+{{-- ── Riwayat Pengajuan Surat Terakhir (Mockup Sesuai Desain) ── --}}
+<div class="warga-table-card">
+    <div class="warga-table-card__header">
+        <h3 class="warga-table-card__title" style="display:flex;align-items:center;gap:8px;">
+            <i class='bx bx-history' style="color:#007bff;font-size:20px;"></i>
+            Riwayat Pengajuan Surat Terakhir
+        </h3>
+        <a href="{{ route('warga.surat') }}" class="warga-table-link-more">
+            Semua Berkas <i class='bx bx-right-arrow-alt'></i>
+        </a>
+    </div>
+
+    <div class="warga-table-wrap">
+        <table class="warga-dashboard-table">
+            <thead>
+                <tr>
+                    <th style="width: 5%; text-align: center;">NO</th>
+                    <th style="width: 45%;">JENIS SURAT KETERANGAN</th>
+                    <th style="width: 20%;">TGL PERMOHONAN</th>
+                    <th style="width: 15%;">STATUS</th>
+                    <th style="width: 15%; text-align: center;">AKSI</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse($riwayatSuratTerakhir as $idx => $s)
+                @php
+                    $wargaTujuanNama = $s->wargaTujuan?->nama ?? $s->pemohon?->nama ?? 'Warga';
+                    $statusVal = is_object($s->status) ? $s->status->value : $s->status;
+                @endphp
+                <tr>
+                    <td style="text-align: center; color: #6c757d; font-weight: 500;">{{ $idx + 1 }}</td>
+                    <td>
+                        <div class="warga-surat-title">Surat Pengantar RT</div>
+                        <div style="font-size: 12px; color: #6c757d; margin-top: 2px;">
+                            Keperluan: {{ $s->keperluan }} 
+                            <span style="color:#0284c7;">({{ $wargaTujuanNama }})</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div style="font-size: 13px; font-weight: 500;">
+                            {{ $s->created_at->isoFormat('D MMM Y') }}
+                        </div>
+                        <div style="font-size: 11px; color: #6c757d;">
+                            {{ $s->created_at->isoFormat('HH:mm') }} WIB
+                        </div>
+                    </td>
+                    <td>
+                        @if($statusVal === 'menunggu')
+                            <span class="badge-warga-diproses">
+                                <span style="font-size: 8px;">●</span> Diproses RT
+                            </span>
+                        @elseif($statusVal === 'disetujui')
+                            <span class="badge-warga-selesai">
+                                <i class='bx bx-check-circle'></i> Selesai / Terbit
+                            </span>
+                        @elseif($statusVal === 'ditolak')
+                            <span style="background:#fee2e2;color:#b91c1c;border-radius:12px;padding:4px 12px;font-size:11.5px;font-weight:600;display:inline-flex;align-items:center;gap:5px;white-space:nowrap;">
+                                <i class='bx bx-x-circle'></i> Ditolak
+                            </span>
+                        @else
+                            <span style="background:#f1f5f9;color:#475569;border-radius:12px;padding:4px 12px;font-size:11.5px;font-weight:600;">
+                                {{ ucfirst($statusVal) }}
+                            </span>
+                        @endif
+                    </td>
+                    <td style="text-align: center;">
+                        @if($statusVal === 'disetujui')
+                            <a href="{{ route('warga.surat.cetak', $s->id) }}" class="btn-warga-table-download">
+                                <i class='bx bx-download'></i> Unduh PDF
+                            </a>
+                        @else
+                            <a href="{{ route('warga.surat') }}" class="btn-warga-table-detail">
+                                <i class='bx bx-show'></i> Detail
+                            </a>
+                        @endif
+                    </td>
+                </tr>
+                @empty
+                <tr>
+                    <td colspan="5" style="text-align: center; padding: 32px; color: #6c757d; font-size: 13px;">
+                        <i class='bx bx-file-blank' style="font-size: 32px; display: block; margin-bottom: 8px; color: #cbd5e1;"></i>
+                        Belum ada riwayat permohonan surat pengantar dari keluarga Anda.
+                    </td>
+                </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
+
+    <div class="warga-table-card__footer">
+        Update Realtime
     </div>
 </div>
 

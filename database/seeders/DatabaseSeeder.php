@@ -4,38 +4,35 @@ namespace Database\Seeders;
 
 use App\Enums\StatusPublikasi;
 use App\Enums\StatusSurat;
+use App\Models\Iuran;
 use App\Models\Keluarga;
 use App\Models\Pengumuman;
+use App\Models\Riwayat_Perubahan;
 use App\Models\Surat;
 use App\Models\User;
 use App\Models\Warga;
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Schema;
 
 class DatabaseSeeder extends Seeder
 {
     /**
-     * Seed data dummy untuk testing WargaKu.
-     *
-     * Akun yang tersedia:
-     * ┌─────────────────────┬──────────────────┬────────────────┬────────┐
-     * │ Username            │ Password         │ Nama           │ Role   │
-     * ├─────────────────────┼──────────────────┼────────────────┼────────┤
-     * │ adminrt             │ admin123         │ Admin RT 04    │ admin  │
-     * │ 3271048809920001    │ 3271048809920001 │ Budi Santoso   │ warga  │
-     * │ 3271050106850002    │ 3271050106850002 │ Dewi Rahayu    │ warga  │
-     * └─────────────────────┴──────────────────┴────────────────┴────────┘
+     * Seed data realistis untuk pengujian sistem WargaKu RT 04 / RW 08 Sukamaju.
      */
     public function run(): void
     {
         // Bersihkan data lama terlebih dahulu agar `db:seed` aman dijalankan berulang kali
-        \Illuminate\Support\Facades\Schema::disableForeignKeyConstraints();
-        User::truncate();
-        Keluarga::truncate();
-        Warga::truncate();
-        Pengumuman::truncate();
+        Schema::disableForeignKeyConstraints();
+        Iuran::truncate();
+        Riwayat_Perubahan::truncate();
         Surat::truncate();
-        \Illuminate\Support\Facades\Schema::enableForeignKeyConstraints();
+        Pengumuman::truncate();
+        Warga::truncate();
+        Keluarga::truncate();
+        User::truncate();
+        Schema::enableForeignKeyConstraints();
 
         // ═══════════════════════════════════════════
         // 1. ADMIN RT
@@ -48,120 +45,300 @@ class DatabaseSeeder extends Seeder
         ]);
 
         // ═══════════════════════════════════════════
-        // 2. KELUARGA 1 — Budi Santoso (Kepala KK)
+        // 2. DAFTAR KELUARGA & WARGA RT 04
         // ═══════════════════════════════════════════
-        $keluarga1 = Keluarga::create([
-            'no_kk'          => '3271048809920001',
-            'status_ekonomi' => 'mampu',
-            'status_tinggal' => 'tetap',
-        ]);
+        $dataKeluarga = [
+            [
+                'no_kk'          => '3271048809920001',
+                'status_ekonomi' => 'mampu',
+                'status_tinggal' => 'tetap',
+                'kepala' => [
+                    'nik'                 => '3271048809920001',
+                    'nama'                => 'Budi Santoso',
+                    'tempat_lahir'        => 'Bandung',
+                    'tanggal_lahir'       => '1992-09-08',
+                    'jenis_kelamin'       => 'laki_laki',
+                    'agama'               => 'islam',
+                    'pendidikan_terakhir' => 'd4_s1',
+                    'pekerjaan'           => 'Karyawan Swasta',
+                    'alamat'              => 'Jl. Melati Blok A No. 1, RT 04/RW 08',
+                    'no_telp'             => '081234567891',
+                ],
+                'anggota' => [
+                    [
+                        'nik'                 => '3271044502950002',
+                        'nama'                => 'Siti Aminah',
+                        'tempat_lahir'        => 'Jakarta',
+                        'tanggal_lahir'       => '1995-02-05',
+                        'jenis_kelamin'       => 'perempuan',
+                        'agama'               => 'islam',
+                        'pendidikan_terakhir' => 'd4_s1',
+                        'pekerjaan'           => 'Ibu Rumah Tangga',
+                        'alamat'              => 'Jl. Melati Blok A No. 1, RT 04/RW 08',
+                        'status_hubungan'     => 'istri',
+                    ],
+                    [
+                        'nik'                 => '3271041807180003',
+                        'nama'                => 'Raka Santoso',
+                        'tempat_lahir'        => 'Jakarta',
+                        'tanggal_lahir'       => '2018-07-18',
+                        'jenis_kelamin'       => 'laki_laki',
+                        'agama'               => 'islam',
+                        'pendidikan_terakhir' => 'tidak_belum_sekolah',
+                        'pekerjaan'           => null,
+                        'alamat'              => 'Jl. Melati Blok A No. 1, RT 04/RW 08',
+                        'status_hubungan'     => 'anak',
+                    ],
+                ],
+            ],
+            [
+                'no_kk'          => '3271050106850002',
+                'status_ekonomi' => 'kurang_mampu',
+                'status_tinggal' => 'kontrak',
+                'kepala' => [
+                    'nik'                 => '3271050106850002',
+                    'nama'                => 'Dewi Rahayu',
+                    'tempat_lahir'        => 'Bogor',
+                    'tanggal_lahir'       => '1985-06-01',
+                    'jenis_kelamin'       => 'perempuan',
+                    'agama'               => 'islam',
+                    'pendidikan_terakhir' => 'sma_sederajat',
+                    'pekerjaan'           => 'Wiraswasta',
+                    'alamat'              => 'Jl. Mawar Blok B No. 5, RT 04/RW 08',
+                    'no_telp'             => '082198765432',
+                ],
+                'anggota' => [
+                    [
+                        'nik'                 => '3271052005100001',
+                        'nama'                => 'Laila Rahayu',
+                        'tempat_lahir'        => 'Jakarta',
+                        'tanggal_lahir'       => '2010-05-20',
+                        'jenis_kelamin'       => 'perempuan',
+                        'agama'               => 'islam',
+                        'pendidikan_terakhir' => 'smp_sederajat',
+                        'pekerjaan'           => 'Pelajar',
+                        'alamat'              => 'Jl. Mawar Blok B No. 5, RT 04/RW 08',
+                        'status_hubungan'     => 'anak',
+                    ],
+                ],
+            ],
+            [
+                'no_kk'          => '3276021405820001',
+                'status_ekonomi' => 'mampu',
+                'status_tinggal' => 'tetap',
+                'kepala' => [
+                    'nik'                 => '3276021405820001',
+                    'nama'                => 'Hendra Setiawan',
+                    'tempat_lahir'        => 'Surabaya',
+                    'tanggal_lahir'       => '1982-05-14',
+                    'jenis_kelamin'       => 'laki_laki',
+                    'agama'               => 'islam',
+                    'pendidikan_terakhir' => 'd4_s1',
+                    'pekerjaan'           => 'Arsitek Konsultan',
+                    'alamat'              => 'Jl. Melati Blok A No. 4, RT 04/RW 08',
+                    'no_telp'             => '081345678901',
+                ],
+                'anggota' => [
+                    [
+                        'nik'                 => '3276025208850002',
+                        'nama'                => 'Ratna Sari',
+                        'tempat_lahir'        => 'Malang',
+                        'tanggal_lahir'       => '1985-08-12',
+                        'jenis_kelamin'       => 'perempuan',
+                        'agama'               => 'islam',
+                        'pendidikan_terakhir' => 'd4_s1',
+                        'pekerjaan'           => 'Dokter Gigi',
+                        'alamat'              => 'Jl. Melati Blok A No. 4, RT 04/RW 08',
+                        'status_hubungan'     => 'istri',
+                    ],
+                    [
+                        'nik'                 => '3276021203120003',
+                        'nama'                => 'Dimas Setiawan',
+                        'tempat_lahir'        => 'Depok',
+                        'tanggal_lahir'       => '2012-03-12',
+                        'jenis_kelamin'       => 'laki_laki',
+                        'agama'               => 'islam',
+                        'pendidikan_terakhir' => 'sd_sederajat',
+                        'pekerjaan'           => 'Pelajar',
+                        'alamat'              => 'Jl. Melati Blok A No. 4, RT 04/RW 08',
+                        'status_hubungan'     => 'anak',
+                    ],
+                ],
+            ],
+            [
+                'no_kk'          => '3276021204850001',
+                'status_ekonomi' => 'mampu',
+                'status_tinggal' => 'tetap',
+                'kepala' => [
+                    'nik'                 => '3276021204850001',
+                    'nama'                => 'Agus Supriyanto',
+                    
+                    'tempat_lahir'        => 'Semarang',
+                    'tanggal_lahir'       => '1985-04-12',
+                    'jenis_kelamin'       => 'laki_laki',
+                    'agama'               => 'islam',
+                    'pendidikan_terakhir' => 'd4_s1',
+                    'pekerjaan'           => 'Manajer Operasional',
+                    'alamat'              => 'Jl. Cempaka Blok C No. 4, RT 04/RW 08',
+                    'no_telp'             => '081356789012',
+                ],
+                'anggota' => [
+                    [
+                        'nik'                 => '3276024806880002',
+                        'nama'                => 'Endang Lestari',
+                        'tempat_lahir'        => 'Solo',
+                        'tanggal_lahir'       => '1988-06-08',
+                        'jenis_kelamin'       => 'perempuan',
+                        'agama'               => 'islam',
+                        'pendidikan_terakhir' => 'd4_s1',
+                        'pekerjaan'           => 'Guru SMA',
+                        'alamat'              => 'Jl. Cempaka Blok C No. 4, RT 04/RW 08',
+                        'status_hubungan'     => 'istri',
+                    ],
+                ],
+            ],
+            [
+                'no_kk'          => '3276021811860004',
+                'status_ekonomi' => 'mampu',
+                'status_tinggal' => 'tetap',
+                'kepala' => [
+                    'nik'                 => '3276021811860004',
+                    'nama'                => 'Ahmad Fauzi',
+                    'tempat_lahir'        => 'Cirebon',
+                    'tanggal_lahir'       => '1986-11-18',
+                    'jenis_kelamin'       => 'laki_laki',
+                    'agama'               => 'islam',
+                    'pendidikan_terakhir' => 'd4_s1',
+                    'pekerjaan'           => 'Pegawai BUMN',
+                    'alamat'              => 'Jl. Melati Blok A No. 2, RT 04/RW 08',
+                    'no_telp'             => '081367890123',
+                ],
+                'anggota' => [
+                    [
+                        'nik'                 => '3276025512890005',
+                        'nama'                => 'Nurul Hidayah',
+                        'tempat_lahir'        => 'Bandung',
+                        'tanggal_lahir'       => '1989-12-15',
+                        'jenis_kelamin'       => 'perempuan',
+                        'agama'               => 'islam',
+                        'pendidikan_terakhir' => 'd4_s1',
+                        'pekerjaan'           => 'Dosen',
+                        'alamat'              => 'Jl. Melati Blok A No. 2, RT 04/RW 08',
+                        'status_hubungan'     => 'istri',
+                    ],
+                ],
+            ],
+        ];
 
-        $userWarga1 = User::create([
-            'username' => '3271048809920001',
-            'password' => Hash::make('3271048809920001'), // Default password = NIK
-            'no_telp'  => '081234567891',
-            'role'     => 'warga',
-        ]);
+        $keluargasCreated = [];
+        $wargasCreated = [];
 
-        // Kepala Keluarga
-        $wargaBudi = Warga::create([
-            'user_id'             => $userWarga1->id,
-            'keluarga_id'         => $keluarga1->id,
-            'nik'                 => '3271048809920001',
-            'nama'                => 'Budi Santoso',
-            'tempat_lahir'        => 'Bandung',
-            'tanggal_lahir'       => '1992-09-08',
-            'jenis_kelamin'       => 'laki_laki',
-            'agama'               => 'islam',
-            'pendidikan_terakhir' => 'd4_s1',
-            'pekerjaan'           => 'Karyawan Swasta',
-            'alamat'              => 'Jl. Melati Blok A No. 1, RT 04/RW 08',
-            'status_hubungan'     => 'kepala_keluarga',
-            'status_warga'        => 'hidup',
-        ]);
+        foreach ($dataKeluarga as $kData) {
+            $keluarga = Keluarga::create([
+                'no_kk'          => $kData['no_kk'],
+                'status_ekonomi' => $kData['status_ekonomi'],
+                'status_tinggal' => $kData['status_tinggal'],
+            ]);
+            // Set tanggal pendaftaran sejak 2025 agar tagihan 12 bulan 2026 ter-cover penuh
+            $keluarga->created_at = Carbon::create(2025, 1, 10, 8, 0, 0);
+            $keluarga->save();
 
-        // Anggota KK 1 — Istri
-        $wargaSiti = Warga::create([
-            'user_id'             => $userWarga1->id,
-            'keluarga_id'         => $keluarga1->id,
-            'nik'                 => '3271044502950002',
-            'nama'                => 'Siti Aminah',
-            'tempat_lahir'        => 'Jakarta',
-            'tanggal_lahir'       => '1995-02-05',
-            'jenis_kelamin'       => 'perempuan',
-            'agama'               => 'islam',
-            'pendidikan_terakhir' => 'd4_s1',
-            'pekerjaan'           => 'Ibu Rumah Tangga',
-            'alamat'              => 'Jl. Melati Blok A No. 1, RT 04/RW 08',
-            'status_hubungan'     => 'istri',
-            'status_warga'        => 'hidup',
-        ]);
+            // Buat akun user untuk Kepala Keluarga (Username & Default Password = NIK)
+            $userKK = User::create([
+                'username' => $kData['kepala']['nik'],
+                'password' => Hash::make($kData['kepala']['nik']),
+                'no_telp'  => $kData['kepala']['no_telp'],
+                'role'     => 'warga',
+            ]);
 
-        // Anggota KK 1 — Anak
-        Warga::create([
-            'user_id'             => $userWarga1->id,
-            'keluarga_id'         => $keluarga1->id,
-            'nik'                 => '3271041807180003',
-            'nama'                => 'Raka Santoso',
-            'tempat_lahir'        => 'Jakarta',
-            'tanggal_lahir'       => '2018-07-18',
-            'jenis_kelamin'       => 'laki_laki',
-            'agama'               => 'islam',
-            'pendidikan_terakhir' => 'tidak_belum_sekolah',
-            'pekerjaan'           => null,
-            'alamat'              => 'Jl. Melati Blok A No. 1, RT 04/RW 08',
-            'status_hubungan'     => 'anak',
-            'status_warga'        => 'hidup',
-        ]);
+            // Buat Warga Kepala Keluarga
+            $kepalaWarga = Warga::create([
+                'user_id'             => $userKK->id,
+                'keluarga_id'         => $keluarga->id,
+                'nik'                 => $kData['kepala']['nik'],
+                'nama'                => $kData['kepala']['nama'],
+                'tempat_lahir'        => $kData['kepala']['tempat_lahir'],
+                'tanggal_lahir'       => $kData['kepala']['tanggal_lahir'],
+                'jenis_kelamin'       => $kData['kepala']['jenis_kelamin'],
+                'agama'               => $kData['kepala']['agama'],
+                'pendidikan_terakhir' => $kData['kepala']['pendidikan_terakhir'],
+                'pekerjaan'           => $kData['kepala']['pekerjaan'],
+                'alamat'              => $kData['kepala']['alamat'],
+                'status_hubungan'     => 'kepala_keluarga',
+                'status_warga'        => 'hidup',
+            ]);
+
+            $wargasCreated[$kData['kepala']['nik']] = $kepalaWarga;
+
+            // Buat Anggota Keluarga jika ada
+            foreach ($kData['anggota'] as $aData) {
+                $anggotaWarga = Warga::create([
+                    'user_id'             => $userKK->id,
+                    'keluarga_id'         => $keluarga->id,
+                    'nik'                 => $aData['nik'],
+                    'nama'                => $aData['nama'],
+                    'tempat_lahir'        => $aData['tempat_lahir'],
+                    'tanggal_lahir'       => $aData['tanggal_lahir'],
+                    'jenis_kelamin'       => $aData['jenis_kelamin'],
+                    'agama'               => $aData['agama'],
+                    'pendidikan_terakhir' => $aData['pendidikan_terakhir'],
+                    'pekerjaan'           => $aData['pekerjaan'],
+                    'alamat'              => $aData['alamat'],
+                    'status_hubungan'     => $aData['status_hubungan'],
+                    'status_warga'        => 'hidup',
+                ]);
+                $wargasCreated[$aData['nik']] = $anggotaWarga;
+            }
+
+            $keluargasCreated[$kData['no_kk']] = $keluarga;
+        }
 
         // ═══════════════════════════════════════════
-        // 3. KELUARGA 2 — Dewi Rahayu (Kepala KK)
+        // 3. SEED DATA REAL IURAN TAHUN 2026 (BR-06)
         // ═══════════════════════════════════════════
-        $keluarga2 = Keluarga::create([
-            'no_kk'          => '3271050106850002',
-            'status_ekonomi' => 'kurang_mampu',
-            'status_tinggal' => 'kontrak',
-        ]);
+        $tahun = 2026;
+        // Tarif standar iuran bulanan
+        $tarif = config('wargaku.nominal_iuran_awal', 75000);
 
-        $userWarga2 = User::create([
-            'username' => '3271050106850002',
-            'password' => Hash::make('3271050106850002'), // Default password = NIK
-            'no_telp'  => '082198765432',
-            'role'     => 'warga',
-        ]);
+        $catatanLunasList = [
+            'Diterima tunai di Pos Ronda RT 04.',
+            'Transfer via rekening Kas Paguyuban RT.',
+            'Pembayaran lunas diserahkan ke Bendahara RT.',
+            'Diterima tunai langsung oleh Ketua RT.',
+            'Pembayaran iuran rutin bulanan warga.',
+        ];
 
-        $wargaDewi = Warga::create([
-            'user_id'             => $userWarga2->id,
-            'keluarga_id'         => $keluarga2->id,
-            'nik'                 => '3271050106850002',
-            'nama'                => 'Dewi Rahayu',
-            'tempat_lahir'        => 'Bogor',
-            'tanggal_lahir'       => '1985-06-01',
-            'jenis_kelamin'       => 'perempuan',
-            'agama'               => 'islam',
-            'pendidikan_terakhir' => 'sma_sederajat',
-            'pekerjaan'           => 'Wiraswasta',
-            'alamat'              => 'Jl. Mawar Blok B No. 5, RT 04/RW 08',
-            'status_hubungan'     => 'kepala_keluarga',
-            'status_warga'        => 'hidup',
-        ]);
+        foreach ($keluargasCreated as $noKk => $keluarga) {
+            for ($bulan = 1; $bulan <= 12; $bulan++) {
+                $isLunas = false;
+                $tanggalBayar = null;
+                $catatan = null;
 
-        // Anggota KK 2 — Anak
-        $wargaLaila = Warga::create([
-            'user_id'             => $userWarga2->id,
-            'keluarga_id'         => $keluarga2->id,
-            'nik'                 => '3271052005100001',
-            'nama'                => 'Laila Rahayu',
-            'tempat_lahir'        => 'Jakarta',
-            'tanggal_lahir'       => '2010-05-20',
-            'jenis_kelamin'       => 'perempuan',
-            'agama'               => 'islam',
-            'pendidikan_terakhir' => 'smp_sederajat',
-            'pekerjaan'           => 'Pelajar',
-            'alamat'              => 'Jl. Mawar Blok B No. 5, RT 04/RW 08',
-            'status_hubungan'     => 'anak',
-            'status_warga'        => 'hidup',
-        ]);
+                if ($bulan < 10) {
+                    // Bulan 1 s.d. 9 (Januari s.d. September 2026): Lunas
+                    $isLunas = true;
+                    $tgl = rand(2, 9);
+                    $jam = rand(8, 17);
+                    $menit = rand(10, 50);
+                    $tanggalBayar = Carbon::create($tahun, $bulan, $tgl, $jam, $menit, 0);
+                    $catatan = $catatanLunasList[array_rand($catatanLunasList)];
+                } else {
+                    // Bulan 10 (Oktober 2026 - Bulan Berjalan) s.d. Bulan 12: Belum Lunas
+                    $isLunas = false;
+                    $catatan = 'Iuran kebersihan sampah, keamanan 24 jam, & kas sosial RT 04.';
+                }
+
+                Iuran::create([
+                    'keluarga_id'   => $keluarga->id,
+                    'nominal'       => $tarif,
+                    'catatan'       => $catatan,
+                    'bulan'         => $bulan,
+                    'tahun'         => $tahun,
+                    'status'        => $isLunas ? 'lunas' : 'belum_lunas',
+                    'tanggal_bayar' => $tanggalBayar,
+                ]);
+            }
+        }
 
         // ═══════════════════════════════════════════
         // 4. PENGUMUMAN RT
@@ -196,6 +373,11 @@ class DatabaseSeeder extends Seeder
         // ═══════════════════════════════════════════
         // 5. PENGAJUAN SURAT PENGANTAR (UC-12, BR-05, BR-07, BR-10)
         // ═══════════════════════════════════════════
+        $wargaBudi = $wargasCreated['3271048809920001'];
+        $wargaSiti = $wargasCreated['3271044502950002'];
+        $wargaDewi = $wargasCreated['3271050106850002'];
+        $wargaLaila = $wargasCreated['3271052005100001'];
+
         Surat::create([
             'pemohon_id'      => $wargaBudi->id,
             'warga_tujuan_id' => $wargaSiti->id,
@@ -227,13 +409,65 @@ class DatabaseSeeder extends Seeder
         ]);
 
         Surat::create([
+            'pemohon_id'      => $wargaBudi->id,
+            'warga_tujuan_id' => $wargaBudi->id,
+            'keperluan'       => 'Pengantar permohonan penerbitan paspor untuk perjalanan ibadah umroh',
+            'nomor_surat'     => null,
+            'status'          => StatusSurat::DITOLAK,
+            'alasan'          => 'Dokumen identitas pendukung belum lengkap dan belum melampirkan bukti lunas iuran RT bulan berjalan.',
+            'created_at'      => now()->subDays(4),
+        ]);
+
+        Surat::create([
             'pemohon_id'      => $wargaDewi->id,
             'warga_tujuan_id' => $wargaDewi->id,
             'keperluan'       => 'Pengantar izin keramaian hajatan syukuran keluarga besar di jalan lingkungan RT',
             'nomor_surat'     => null,
             'status'          => StatusSurat::DITOLAK,
             'alasan'          => 'Lokasi tenda melewati batas jalan utama dan belum melampirkan persetujuan tertulis dari tetangga kanan kiri.',
-            'created_at'      => now()->subDays(4),
+            'created_at'      => now()->subDays(5),
+        ]);
+
+        // ═══════════════════════════════════════════
+        // 6. RIWAYAT PENGAJUAN PERUBAHAN DATA WARGA (UC-11, F008, BR-08)
+        // ═══════════════════════════════════════════
+        $keluargaBudi = $keluargasCreated['3271048809920001'];
+        $wargaRaka = $wargasCreated['3271041807180003'];
+
+        Riwayat_Perubahan::create([
+            'keluarga_id'     => $keluargaBudi->id,
+            'warga_id'        => $wargaRaka->id,
+            'jenis_pengajuan' => 'ubah_data',
+            'data_lama'       => [
+                'pendidikan_terakhir' => 'tidak_belum_sekolah',
+                'pekerjaan'           => null,
+            ],
+            'data_baru'       => [
+                'pendidikan_terakhir' => 'sd_sederajat',
+                'pekerjaan'           => 'Pelajar',
+            ],
+            'bukti_path'      => 'contoh_Ijazah.png',
+            'status'          => 'menunggu',
+            'alasan'          => 'Raka telah memasuki usia sekolah dasar dan resmi terdaftar di SDN Sukamaju 01.',
+            'admin_id'        => null,
+            'created_at'      => now()->subDays(2),
+        ]);
+
+        Riwayat_Perubahan::create([
+            'keluarga_id'     => $keluargaBudi->id,
+            'warga_id'        => $wargaSiti->id,
+            'jenis_pengajuan' => 'ubah_data',
+            'data_lama'       => [
+                'pekerjaan' => 'Ibu Rumah Tangga',
+            ],
+            'data_baru'       => [
+                'pekerjaan' => 'Wiraswasta',
+            ],
+            'bukti_path'      => 'contoh_buku_nikah.png',
+            'status'          => 'disetujui',
+            'alasan'          => 'Pembaruan data profesi karena membuka toko perlengkapan busana mandiri.',
+            'admin_id'        => $adminUser->id,
+            'created_at'      => now()->subMonths(2),
         ]);
     }
 }

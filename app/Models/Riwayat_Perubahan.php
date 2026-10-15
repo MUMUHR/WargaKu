@@ -54,4 +54,25 @@ class Riwayat_Perubahan extends Model
     {
         return $this->belongsTo(Keluarga::class, 'keluarga_id');
     }
+
+    /**
+     * Mendapatkan daftar berkas bukti pendukung (mendukung 1 atau banyak berkas)
+     */
+    public function getBuktiListAttribute(): array
+    {
+        if (empty($this->bukti_path)) {
+            return [];
+        }
+
+        $decoded = json_decode($this->bukti_path, true);
+        if (is_array($decoded)) {
+            return $decoded;
+        }
+
+        if (str_contains($this->bukti_path, ',')) {
+            return array_values(array_filter(array_map('trim', explode(',', $this->bukti_path))));
+        }
+
+        return [$this->bukti_path];
+    }
 }

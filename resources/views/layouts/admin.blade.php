@@ -30,7 +30,7 @@
         </a>
     </div>
 
-    <div class="admin-sidebar__profile">
+    <a href="{{ route('admin.pengaturan') }}" class="admin-sidebar__profile" style="text-decoration:none;" title="Buka Profil & Keamanan">
         <div class="admin-sidebar__avatar" aria-hidden="true">
             <i class="bx bxs-user" style="font-size: 20px;"></i>
         </div>
@@ -38,7 +38,12 @@
             <span class="admin-sidebar__profile-name">Admin RT</span>
             <span class="admin-sidebar__profile-role">Administrator</span>
         </div>
-    </div>
+    </a>
+
+    @php
+        $badgeAdminVerifikasi = \App\Models\Riwayat_Perubahan::where('status', 'menunggu')->count();
+        $badgeAdminSurat = \App\Models\Surat::where('status', 'menunggu')->count();
+    @endphp
 
     <nav class="admin-sidebar__nav" aria-label="Menu admin">
         <p class="admin-sidebar__nav-label">MENU UTAMA</p>
@@ -51,15 +56,21 @@
             Kelola Pengumuman
         </a>
 
-        <a href="{{ route('admin.data-warga') }}" class="admin-sidebar__nav-link {{ request()->routeIs('admin.data-warga*') ? 'admin-sidebar__nav-link--active' : '' }}">
-            Kelola Data Warga & Verifikasi
+        <a href="{{ route('admin.data-warga') }}" class="admin-sidebar__nav-link {{ request()->routeIs('admin.data-warga*') ? 'admin-sidebar__nav-link--active' : '' }}" style="display:flex;align-items:center;justify-content:space-between;">
+            <span>Kelola Data Warga & Verifikasi</span>
+            @if($badgeAdminVerifikasi > 0)
+                <span style="background:#eab308;color:#000;font-size:10px;font-weight:800;padding:2px 7px;border-radius:10px;">{{ $badgeAdminVerifikasi }}</span>
+            @endif
         </a>
 
-        <a href="{{ route('admin.surat') }}" class="admin-sidebar__nav-link {{ request()->routeIs('admin.surat') ? 'admin-sidebar__nav-link--active' : '' }}">
-            Proses Pengajuan Surat
+        <a href="{{ route('admin.surat') }}" class="admin-sidebar__nav-link {{ request()->routeIs('admin.surat*') ? 'admin-sidebar__nav-link--active' : '' }}" style="display:flex;align-items:center;justify-content:space-between;">
+            <span>Proses Pengajuan Surat</span>
+            @if($badgeAdminSurat > 0)
+                <span style="background:#eab308;color:#000;font-size:10px;font-weight:800;padding:2px 7px;border-radius:10px;">{{ $badgeAdminSurat }}</span>
+            @endif
         </a>
 
-        <a href="{{ route('admin.iuran') }}" class="admin-sidebar__nav-link {{ request()->routeIs('admin.iuran') ? 'admin-sidebar__nav-link--active' : '' }}">
+        <a href="{{ route('admin.iuran') }}" class="admin-sidebar__nav-link {{ request()->routeIs('admin.iuran*') ? 'admin-sidebar__nav-link--active' : '' }}">
             Kelola & Rekap Iuran
         </a>
 
@@ -93,7 +104,7 @@
                 @endif
             </nav>
         </div>
-        <div class="admin-topbar__right">
+        <a href="{{ route('admin.pengaturan') }}" class="admin-topbar__right" style="text-decoration:none;cursor:pointer;" title="Buka Profil & Keamanan">
             <div class="admin-topbar__user-info">
                 <span class="admin-topbar__admin-name">Admin RT</span>
                 <span class="admin-topbar__admin-role">Administrator RT</span>
@@ -101,7 +112,7 @@
             <div class="admin-topbar__avatar" aria-hidden="true" style="background: #28a745; color: #fff; width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
                 <i class="bx bxs-user" style="font-size: 18px;"></i>
             </div>
-        </div>
+        </a>
     </header>
 
     <div class="admin-content">

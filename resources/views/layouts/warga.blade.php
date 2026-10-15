@@ -31,17 +31,40 @@
         </a>
     </div>
 
-    <div class="admin-sidebar__profile">
+    @php
+        $userAktif = auth()->user();
+        $namaWargaAktif = $userAktif?->wargaPemilik?->nama 
+            ?? $userAktif?->wargas?->first()?->nama 
+            ?? $userAktif?->username 
+            ?? 'Warga';
+    @endphp
+
+    <a href="{{ route('warga.profil') }}" class="admin-sidebar__profile" style="text-decoration:none;" title="Buka Profil & Keamanan">
         <div class="admin-sidebar__avatar" aria-hidden="true" style="background: #ffffff; color: #0284c7;">
             <i class="bx bxs-user" style="font-size: 20px;"></i>
         </div>
         <div class="admin-sidebar__profile-info">
-            <span class="admin-sidebar__profile-name">Bpk. Bambang Pamungkas</span>
-            <span class="admin-sidebar__profile-role" style="display: flex; align-items: center; gap: 4px; color: #28a745; font-weight: 600;">
-                <span style="font-size: 9px;">●</span> Online
-            </span>
+            <span class="admin-sidebar__profile-name">{{ $namaWargaAktif }}</span>
+       
         </div>
-    </div>
+    </a>
+
+    @php
+        $badgeSuratMenunggu = 0;
+        $badgeDataMenunggu = 0;
+        if ($userAktif) {
+            $keluargaUser = $userAktif->wargaPemilik?->keluarga ?? $userAktif->wargas?->first()?->keluarga;
+            if ($keluargaUser) {
+                $wargaIds = $keluargaUser->wargas()->pluck('id')->toArray();
+                $badgeSuratMenunggu = \App\Models\Surat::where(function($q) use ($wargaIds) {
+                    $q->whereIn('pemohon_id', $wargaIds)->orWhereIn('warga_tujuan_id', $wargaIds);
+                })->where('status', 'menunggu')->count();
+                $badgeDataMenunggu = \App\Models\Riwayat_Perubahan::where('keluarga_id', $keluargaUser->id)
+                    ->where('status', 'menunggu')
+                    ->count();
+            }
+        }
+    @endphp
 
     <nav class="admin-sidebar__nav" aria-label="Menu warga">
         <p class="admin-sidebar__nav-label">MENU UTAMA</p>
@@ -50,12 +73,18 @@
             Beranda
         </a>
 
-        <a href="{{ route('warga.keluarga') }}" class="admin-sidebar__nav-link {{ request()->routeIs('warga.keluarga*') ? 'warga-nav-link--active' : '' }}">
-            Data Keluarga
+        <a href="{{ route('warga.keluarga') }}" class="admin-sidebar__nav-link {{ request()->routeIs('warga.keluarga*') ? 'warga-nav-link--active' : '' }}" style="display:flex;align-items:center;justify-content:space-between;">
+            <span>Data Keluarga</span>
+            @if($badgeDataMenunggu > 0)
+                <span style="background:#eab308;color:#000;font-size:10px;font-weight:800;padding:2px 7px;border-radius:10px;">{{ $badgeDataMenunggu }}</span>
+            @endif
         </a>
 
-        <a href="{{ route('warga.surat') }}" class="admin-sidebar__nav-link {{ request()->routeIs('warga.surat*') ? 'warga-nav-link--active' : '' }}">
-            Ajukan Surat
+        <a href="{{ route('warga.surat') }}" class="admin-sidebar__nav-link {{ request()->routeIs('warga.surat*') ? 'warga-nav-link--active' : '' }}" style="display:flex;align-items:center;justify-content:space-between;">
+            <span>Ajukan Surat</span>
+            @if($badgeSuratMenunggu > 0)
+                <span style="background:#eab308;color:#000;font-size:10px;font-weight:800;padding:2px 7px;border-radius:10px;">{{ $badgeSuratMenunggu }}</span>
+            @endif
         </a>
 
         <a href="{{ route('warga.iuran') }}" class="admin-sidebar__nav-link {{ request()->routeIs('warga.iuran*') ? 'warga-nav-link--active' : '' }}">
@@ -90,15 +119,15 @@
                 @endif
             </nav>
         </div>
-        <div class="admin-topbar__right">
+        <a href="{{ route('warga.profil') }}" class="admin-topbar__right" style="text-decoration:none;cursor:pointer;" title="Buka Profil & Keamanan">
             <div class="admin-topbar__user-info" style="text-align: right;">
-                <span class="admin-topbar__admin-name" style="font-size: 13.5px; font-weight: 700; color: #212529;">Bpk. Bambang Pamungkas</span>
+                <span class="admin-topbar__admin-name" style="font-size: 13.5px; font-weight: 700; color: #212529;">{{ $namaWargaAktif }}</span>
                 <span class="admin-topbar__admin-role" style="font-size: 11.5px; color: #6c757d;">Warga</span>
             </div>
             <div class="admin-topbar__avatar" aria-hidden="true" style="background: #007bff; color: #fff; width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
                 <i class="bx bxs-user" style="font-size: 18px;"></i>
             </div>
-        </div>
+        </a>
     </header>
 
     <div class="admin-content" style="padding: 20px 24px 30px;">

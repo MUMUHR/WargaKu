@@ -39,13 +39,35 @@
     </div>
     @endif
 
-    {{-- ── 3 Big Stat Cards Grid (Screenshot 1 & 2) ── --}}
+    @if(session('error'))
+    <div style="background:#f8d7da;border:1px solid #f5c6cb;color:#721c24;padding:12px 18px;border-radius:6px;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 1px 3px rgba(0,0,0,0.05);">
+        <div style="display:flex;align-items:center;gap:10px;font-size:13.5px;font-weight:600;">
+            <i class='bx bx-error-circle' style="font-size:20px;color:#dc3545;"></i>
+            <span>{{ session('error') }}</span>
+        </div>
+        <button type="button" onclick="this.parentElement.remove()" style="background:transparent;border:none;color:#721c24;font-size:18px;cursor:pointer;line-height:1;">
+            &times;
+        </button>
+    </div>
+    @endif
+
+    @if($errors->any())
+    <div style="background:#f8d7da;border:1px solid #f5c6cb;color:#721c24;padding:12px 18px;border-radius:6px;margin-bottom:20px;">
+        <ul style="margin: 0; padding-left: 20px; font-size: 13.5px;">
+            @foreach($errors->all() as $err)
+                <li>{{ $err }}</li>
+            @endforeach
+        </ul>
+    </div>
+    @endif
+
+    {{-- ── 3 Big Stat Cards Grid ── --}}
     <div class="ws-stat-grid">
         
         {{-- Card 1: Menunggu Verifikasi --}}
         <div class="ws-stat-card ws-stat-card--yellow">
             <div class="ws-stat-card__body">
-                <div class="ws-stat-card__number" id="stat-menunggu">1</div>
+                <div class="ws-stat-card__number" id="stat-menunggu">{{ $statMenunggu }}</div>
                 <div class="ws-stat-card__label">SURAT MENUNGGU VERIFIKASI</div>
                 <i class='bx bx-hourglass ws-stat-card__watermark'></i>
             </div>
@@ -58,7 +80,7 @@
         {{-- Card 2: Disetujui & Terbit --}}
         <div class="ws-stat-card ws-stat-card--green">
             <div class="ws-stat-card__body">
-                <div class="ws-stat-card__number" id="stat-disetujui">4</div>
+                <div class="ws-stat-card__number" id="stat-disetujui">{{ $statDisetujui }}</div>
                 <div class="ws-stat-card__label">SURAT DISETUJUI &amp; TERBIT</div>
                 <i class='bx bx-badge-check ws-stat-card__watermark'></i>
             </div>
@@ -71,7 +93,7 @@
         {{-- Card 3: Perlu Revisi / Ditolak --}}
         <div class="ws-stat-card ws-stat-card--red">
             <div class="ws-stat-card__body">
-                <div class="ws-stat-card__number" id="stat-ditolak">1</div>
+                <div class="ws-stat-card__number" id="stat-ditolak">{{ $statDitolak }}</div>
                 <div class="ws-stat-card__label">SURAT PERLU REVISI / DITOLAK</div>
                 <i class='bx bx-x-circle ws-stat-card__watermark'></i>
             </div>
@@ -105,7 +127,7 @@
     <div class="ws-tab-content-wrapper">
         
         {{-- ══════════════════════════════════════════════════════
-             TAB 1: RIWAYAT & STATUS PENGAJUAN (SCREENSHOT 1)
+             TAB 1: RIWAYAT & STATUS PENGAJUAN
              ══════════════════════════════════════════════════════ --}}
         <div id="tab-riwayat-content">
             
@@ -113,7 +135,7 @@
             <div class="ws-toolbar">
                 <div>
                     <div class="ws-toolbar__title">Daftar Riwayat Pengajuan Surat Pengantar</div>
-                    <div class="ws-toolbar__sub">Sinkronisasi langsung data tabel <code>pengajuan_surat</code> keluarga Bambang Pamungkas</div>
+                    <div class="ws-toolbar__sub">Sinkronisasi langsung data tabel <code>pengajuan_surat</code> keluarga {{ $kepala?->nama ?? 'Warga' }}</div>
                 </div>
                 <div class="ws-toolbar__actions">
                     <select class="ws-filter-select" id="filter-status-select" onchange="applyFilters()">
@@ -145,183 +167,108 @@
                     </thead>
                     <tbody id="tbody-riwayat-surat">
                         
-                        {{-- Row 1: Menunggu Verifikasi (Siti Aminah) --}}
-                        <tr class="ws-row-item" data-status="menunggu" data-pemohon="siti aminah" data-nosurat="" data-keperluan="pengantar permohonan surat keterangan catatan kepolisian skck">
-                            <td style="font-weight: 600; color: #475569;">22 Okt 2025</td>
-                            <td>
-                                <strong style="color: #0f172a; font-size: 14px;">Siti Aminah</strong>
-                            </td>
-                            <td>
-                                <div style="line-height: 1.5; color: #334155; font-size: 13.5px;">
-                                    Pengantar permohonan Surat Keterangan Catatan Kepolisian (SKCK) untuk persyaratan rekrutmen BUMN
-                                </div>
-                            </td>
-                            <td>
-                                <span style="color: #94a3b8; font-weight: 700; font-size: 16px; padding-left: 4px;">—</span>
-                            </td>
-                            <td>
-                                <span class="ws-badge-status ws-badge-status--menunggu">
-                                    <i class='bx bx-time-five'></i> Menunggu Verifikasi
-                                </span>
-                            </td>
-                            <td>
-                                <div style="display: flex; align-items: center; justify-content: flex-start; gap: 8px;">
-                                    <button type="button" class="ws-btn-preview-outline" onclick="bukaPreviewDraft('Siti Aminah', 'Pengantar permohonan Surat Keterangan Catatan Kepolisian (SKCK) untuk persyaratan rekrutmen BUMN')">
-                                        <i class='bx bx-show'></i>
-                                        <span>Preview</span>
-                                    </button>
-                                    <button type="button" class="ws-btn-batal-outline" onclick="konfirmasiBatalSurat(2)">
-                                        <i class='bx bx-x-circle'></i>
-                                        <span>Batalkan</span>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-
-                        {{-- Row 2: Disetujui (Dimas) --}}
-                        <tr class="ws-row-item" data-status="disetujui" data-pemohon="dimas arya pratama" data-nosurat="470/882/rt04/x/2025" data-keperluan="pengantar permohonan surat keterangan catatan kepolisian skck">
-                            <td style="font-weight: 600; color: #475569;">24 Okt 2025</td>
-                            <td>
-                                <strong style="color: #0f172a; font-size: 14px;">Dimas Arya Pratama</strong>
-                            </td>
-                            <td>
-                                <div style="line-height: 1.5; color: #334155; font-size: 13.5px;">
-                                    Pengantar permohonan Surat Keterangan Catatan Kepolisian (SKCK) untuk persyaratan rekrutmen BUMN
-                                </div>
-                            </td>
-                            <td>
-                                <span class="ws-badge-no-surat">470/882/RT04/X/2025</span>
-                            </td>
-                            <td>
-                                <span class="ws-badge-status ws-badge-status--disetujui">
-                                    <i class='bx bx-check-circle'></i> Disetujui
-                                </span>
-                            </td>
-                            <td>
-                                <div style="display: flex; align-items: center; justify-content: flex-start;">
-                                    <a href="{{ route('warga.surat.cetak') }}" class="ws-btn-esurat" title="Lihat dan Unduh Surat">
-                                        <i class='bx bx-download'></i>
-                                        <span>Unduh e-Surat</span>
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
-
-                        {{-- Row 3: Ditolak (Bambang Pamungkas) --}}
-                        <tr class="ws-row-item" data-status="ditolak" data-pemohon="bambang pamungkas" data-nosurat="" data-keperluan="pengantar permohonan surat keterangan catatan kepolisian skck">
-                            <td style="font-weight: 600; color: #475569;">15 Okt 2025</td>
-                            <td>
-                                <strong style="color: #0f172a; font-size: 14px;">Bambang Pamungkas</strong>
-                            </td>
-                            <td>
-                                <div style="line-height: 1.5; color: #334155; font-size: 13.5px;">
-                                    Pengantar permohonan Surat Keterangan Catatan Kepolisian (SKCK) untuk persyaratan rekrutmen BUMN
-                                </div>
-                            </td>
-                            <td>
-                                <span style="color: #94a3b8; font-weight: 700; font-size: 16px; padding-left: 4px;">—</span>
-                            </td>
-                            <td>
-                                <span class="ws-badge-status ws-badge-status--ditolak">
-                                    <i class='bx bx-x-circle'></i> Ditolak
-                                </span>
-                            </td>
-                            <td>
-                                <div style="display: flex; align-items: center; justify-content: flex-start;">
-                                    <button type="button" class="ws-btn-alasan-outline" onclick="bukaAlasanPenolakan('Dokumen identitas pendukung belum lengkap dan lampiran tidak terbaca jelas. Silakan ajukan ulang dengan melampirkan berkas KTP/KK yang jelas.')">
-                                        <i class='bx bx-error-circle'></i>
-                                        <span>Lihat Alasan</span>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-
-                        {{-- Row 4: Disetujui (Nabila Putri Kirani) --}}
-                        <tr class="ws-row-item" data-status="disetujui" data-pemohon="nabila putri kirani" data-nosurat="470/731/rt04/ix/2025" data-keperluan="pengantar permohonan kartu identitas anak kia ke dinas dukcapil">
-                            <td style="font-weight: 600; color: #475569;">08 Sep 2025</td>
-                            <td>
-                                <strong style="color: #0f172a; font-size: 14px;">Nabila Putri Kirani</strong>
-                            </td>
-                            <td>
-                                <div style="line-height: 1.5; color: #334155; font-size: 13.5px;">
-                                    Pengantar permohonan penerbitan Kartu Identitas Anak (KIA) ke Dinas Kependudukan dan Catatan Sipil
-                                </div>
-                            </td>
-                            <td>
-                                <span class="ws-badge-no-surat">470/731/RT04/IX/2025</span>
-                            </td>
-                            <td>
-                                <span class="ws-badge-status ws-badge-status--disetujui">
-                                    <i class='bx bx-check-circle'></i> Disetujui
-                                </span>
-                            </td>
-                            <td>
-                                <div style="display: flex; align-items: center; justify-content: flex-start;">
-                                    <a href="{{ route('warga.surat.cetak') }}" class="ws-btn-esurat" title="Lihat dan Unduh Surat">
-                                        <i class='bx bx-download'></i>
-                                        <span>Unduh e-Surat</span>
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
-
-                        {{-- Row 5: Disetujui (Dimas Arya Pratama) --}}
-                        <tr class="ws-row-item" data-status="disetujui" data-pemohon="dimas arya pratama" data-nosurat="470/624/rt04/viii/2025" data-keperluan="pengantar surat keterangan belum menikah untuk persyaratan beasiswa">
-                            <td style="font-weight: 600; color: #475569;">19 Agu 2025</td>
-                            <td>
-                                <strong style="color: #0f172a; font-size: 14px;">Dimas Arya Pratama</strong>
-                            </td>
-                            <td>
-                                <div style="line-height: 1.5; color: #334155; font-size: 13.5px;">
-                                    Pengantar surat keterangan belum menikah untuk kelengkapan administrasi beasiswa pendidikan
-                                </div>
-                            </td>
-                            <td>
-                                <span class="ws-badge-no-surat">470/624/RT04/VIII/2025</span>
-                            </td>
-                            <td>
-                                <span class="ws-badge-status ws-badge-status--disetujui">
-                                    <i class='bx bx-check-circle'></i> Disetujui
-                                </span>
-                            </td>
-                            <td>
-                                <div style="display: flex; align-items: center; justify-content: flex-start;">
-                                    <a href="{{ route('warga.surat.cetak') }}" class="ws-btn-esurat" title="Lihat dan Unduh Surat">
-                                        <i class='bx bx-download'></i>
-                                        <span>Unduh e-Surat</span>
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
-
-                        {{-- Row 6: Disetujui (Bambang Pamungkas) --}}
-                        <tr class="ws-row-item" data-status="disetujui" data-pemohon="bambang pamungkas" data-nosurat="470/512/rt04/vii/2025" data-keperluan="pengantar pengurusan klaim jaminan hari tua jht bpjs ketenagakerjaan">
-                            <td style="font-weight: 600; color: #475569;">04 Jul 2025</td>
-                            <td>
-                                <strong style="color: #0f172a; font-size: 14px;">Bambang Pamungkas</strong>
-                            </td>
-                            <td>
-                                <div style="line-height: 1.5; color: #334155; font-size: 13.5px;">
-                                    Pengantar pengurusan klaim jaminan hari tua (JHT) BPJS Ketenagakerjaan
-                                </div>
-                            </td>
-                            <td>
-                                <span class="ws-badge-no-surat">470/512/RT04/VII/2025</span>
-                            </td>
-                            <td>
-                                <span class="ws-badge-status ws-badge-status--disetujui">
-                                    <i class='bx bx-check-circle'></i> Disetujui
-                                </span>
-                            </td>
-                            <td>
-                                <div style="display: flex; align-items: center; justify-content: flex-start;">
-                                    <a href="{{ route('warga.surat.cetak') }}" class="ws-btn-esurat" title="Lihat dan Unduh Surat">
-                                        <i class='bx bx-download'></i>
-                                        <span>Unduh e-Surat</span>
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
+                        @forelse($allSurats as $surat)
+                            @php
+                                $statusStr = is_object($surat->status) ? $surat->status->value : $surat->status;
+                                $wargaTarget = $surat->wargaTujuan ?? $surat->pemohon;
+                                $namaTarget = $wargaTarget?->nama ?? '-';
+                                $ttlTarget = ($wargaTarget?->tempat_lahir ? $wargaTarget->tempat_lahir . ', ' : '') . ($wargaTarget?->tanggal_lahir ? $wargaTarget->tanggal_lahir->translatedFormat('d F Y') : '-');
+                                $jkTarget = $wargaTarget?->jenis_kelamin === 'laki_laki' ? 'Laki-Laki' : ($wargaTarget?->jenis_kelamin === 'perempuan' ? 'Perempuan' : '-');
+                                $agamaTarget = ucfirst($wargaTarget?->agama ?? 'Islam');
+                                $alamatTarget = $wargaTarget?->alamat ?? ($surat->pemohon?->alamat ?? $alamatKeluarga);
+                                $keperluanTarget = $surat->keperluan;
+                            @endphp
+                            <tr class="ws-row-item" 
+                                data-status="{{ $statusStr }}" 
+                                data-pemohon="{{ strtolower($namaTarget) }}" 
+                                data-nosurat="{{ strtolower($surat->nomor_surat ?? '') }}" 
+                                data-keperluan="{{ strtolower($surat->keperluan) }}">
+                                <td style="font-weight: 600; color: #475569;">
+                                    {{ $surat->created_at ? $surat->created_at->translatedFormat('d M Y') : '-' }}
+                                </td>
+                                <td>
+                                    <strong style="color: #0f172a; font-size: 14px;">{{ $namaTarget }}</strong>
+                                    @if($wargaTarget && $surat->pemohon && $wargaTarget->id !== $surat->pemohon->id)
+                                        <div style="font-size: 11px; color: #64748b; margin-top: 2px;">
+                                            Diajukan: {{ $surat->pemohon->nama }}
+                                        </div>
+                                    @endif
+                                </td>
+                                <td>
+                                    <div style="line-height: 1.5; color: #334155; font-size: 13.5px;">
+                                        {{ $surat->keperluan }}
+                                    </div>
+                                </td>
+                                <td>
+                                    @if($surat->nomor_surat)
+                                        <span class="ws-badge-no-surat">{{ $surat->nomor_surat }}</span>
+                                    @else
+                                        <span style="color: #94a3b8; font-weight: 700; font-size: 16px; padding-left: 4px;">—</span>
+                                    @endif
+                                </td>
+                                <td>
+                                    @if($statusStr === 'menunggu')
+                                        <span class="ws-badge-status ws-badge-status--menunggu">
+                                            <i class='bx bx-time-five'></i> Menunggu Verifikasi
+                                        </span>
+                                    @elseif($statusStr === 'disetujui')
+                                        <span class="ws-badge-status ws-badge-status--disetujui">
+                                            <i class='bx bx-check-circle'></i> Disetujui
+                                        </span>
+                                    @elseif($statusStr === 'ditolak')
+                                        <span class="ws-badge-status ws-badge-status--ditolak">
+                                            <i class='bx bx-x-circle'></i> Ditolak
+                                        </span>
+                                    @else
+                                        <span class="ws-badge-status" style="background:#f1f5f9;color:#64748b;border-color:#cbd5e1;">
+                                            <i class='bx bx-minus-circle'></i> {{ ucfirst($statusStr) }}
+                                        </span>
+                                    @endif
+                                </td>
+                                <td>
+                                    @if($statusStr === 'menunggu')
+                                        <div style="display: flex; align-items: center; justify-content: flex-start; gap: 8px;">
+                                            <button type="button" class="ws-btn-preview-outline" 
+                                                onclick="bukaPreviewDraftCustom('{{ addslashes($namaTarget) }}', '{{ addslashes($ttlTarget) }}', '{{ addslashes($jkTarget) }}', '{{ addslashes($agamaTarget) }}', '{{ addslashes($alamatTarget) }}', '{{ addslashes($keperluanTarget) }}')">
+                                                <i class='bx bx-show'></i>
+                                                <span>Preview</span>
+                                            </button>
+                                            <button type="button" class="ws-btn-batal-outline" onclick="konfirmasiBatalSurat({{ $surat->id }})">
+                                                <i class='bx bx-x-circle'></i>
+                                                <span>Batalkan</span>
+                                            </button>
+                                        </div>
+                                    @elseif($statusStr === 'disetujui')
+                                        <div style="display: flex; align-items: center; justify-content: flex-start; gap: 8px;">
+                                            <a href="{{ route('warga.surat.preview', $surat->id) }}" class="ws-btn-preview-outline" title="Lihat Pratinjau Surat Resmi" target="_blank">
+                                                <i class='bx bx-show'></i>
+                                                <span>Preview</span>
+                                            </a>
+                                            <a href="{{ route('warga.surat.cetak', $surat->id) }}" class="ws-btn-esurat" title="Unduh dan Cetak Dokumen Surat">
+                                                <i class='bx bx-download'></i>
+                                                <span>Unduh e-Surat</span>
+                                            </a>
+                                        </div>
+                                    @elseif($statusStr === 'ditolak')
+                                        <div style="display: flex; align-items: center; justify-content: flex-start;">
+                                            <button type="button" class="ws-btn-alasan-outline" onclick="bukaAlasanPenolakan('{{ addslashes($surat->alasan ?? 'Berkas permohonan belum memenuhi syarat administratif RT.') }}')">
+                                                <i class='bx bx-error-circle'></i>
+                                                <span>Lihat Alasan</span>
+                                            </button>
+                                        </div>
+                                    @else
+                                        <span style="font-size: 12px; color: #94a3b8; font-style: italic;">Tidak ada aksi</span>
+                                    @endif
+                                </td>
+                            </tr>
+                        @empty
+                            <tr id="row-empty-surat-default">
+                                <td colspan="6" style="text-align: center; padding: 36px 20px; color: #6b7280;">
+                                    <i class='bx bx-folder-open' style="font-size: 32px; color: #cbd5e1; display: block; margin-bottom: 6px;"></i>
+                                    <span>Belum ada riwayat pengajuan surat pengantar dari keluarga Anda.</span>
+                                </td>
+                            </tr>
+                        @endforelse
 
                         <tr id="row-empty-surat" style="display: none;">
                             <td colspan="6" style="text-align: center; padding: 36px 20px; color: #6b7280;">
@@ -336,7 +283,7 @@
 
             {{-- Table Footer Pagination --}}
             <div class="ws-table-footer">
-                <span id="footer-summary-text">Menampilkan 1 sampai 6 dari 6 data riwayat <code>pengajuan_surat</code></span>
+                <span id="footer-summary-text">Menampilkan {{ count($allSurats) }} data riwayat <code>pengajuan_surat</code></span>
                 <div class="ws-pagination" id="ws-pagination-container">
                     <button type="button" class="ws-page-btn" id="btn-prev-page" onclick="gantiHalamanSurat('prev')" disabled>
                         <i class='bx bx-chevron-left' style="font-size: 18px; margin-right: 4px;"></i>
@@ -355,7 +302,7 @@
         </div>
 
         {{-- ══════════════════════════════════════════════════════
-             TAB 2: BUAT PENGAJUAN SURAT BARU (SCREENSHOT 2)
+             TAB 2: BUAT PENGAJUAN SURAT BARU
              ══════════════════════════════════════════════════════ --}}
         <div id="tab-buat-content" style="display: none;">
             
@@ -399,16 +346,17 @@
                                     <span>Pilih Anggota Keluarga (warga_tujuan_id) <span class="ws-req">*</span></span>
                                 </label>
                                 <span style="font-size: 11.5px; color: #64748b; font-weight: 600;">
-                                    No. KK : <strong style="color: #0284c7;">3271048809920001</strong>
+                                    No. KK : <strong style="color: #0284c7;">{{ $keluarga->no_kk ?? '-' }}</strong>
                                 </span>
                             </div>
                             
                             <select id="select-warga-tujuan" name="warga_tujuan_id" class="ws-select" onchange="gantiTargetSurat(this.value)" required>
                                 <option value="" disabled selected>-- Pilih Anggota Keluarga Pemohon --</option>
-                                <option value="dimas">Dimas Arya Pratama (Anak Kandung - NIK: 3271048809920003)</option>
-                                <option value="bambang">Bpk. Bambang Pamungkas (Kepala Keluarga - NIK: 3271041203780002)</option>
-                                <option value="siti">Siti Aminah (Istri - NIK: 3271046204830002)</option>
-                                <option value="nabila">Nabila Putri Kirani (Anak Kandung - NIK: 3271045011120004)</option>
+                                @foreach($anggotaKeluarga as $w)
+                                    <option value="{{ $w->id }}" {{ old('warga_tujuan_id') == $w->id ? 'selected' : '' }}>
+                                        {{ $w->nama }} ({{ ucwords(str_replace('_', ' ', $w->status_hubungan ?? 'Anggota')) }} - NIK: {{ $w->nik }})
+                                    </option>
+                                @endforeach
                             </select>
                         </div>
 
@@ -461,7 +409,7 @@
                                 <span style="font-size: 11.5px; color: #dc2626; font-weight: 700;">Wajib diisi</span>
                             </div>
 
-                            <textarea id="keperluan" name="keperluan" rows="4" class="ws-textarea" placeholder="Tuliskan secara jelas keperluan permohonan surat pengantar Anda (contoh: Pengantar permohonan SKCK di Polsek untuk persyaratan kelengkapan berkas melamar pekerjaan)..." required></textarea>
+                            <textarea id="keperluan" name="keperluan" rows="4" class="ws-textarea" placeholder="Tuliskan secara jelas keperluan permohonan surat pengantar Anda (contoh: Pengantar permohonan SKCK di Polsek untuk persyaratan kelengkapan berkas melamar pekerjaan)..." required>{{ old('keperluan') }}</textarea>
                             <div class="ws-help-text">
                                 Jelaskan tujuan pengajuan surat secara rinci dan jelas untuk mempermudah verifikasi Ketua RT.
                             </div>
@@ -505,7 +453,7 @@
 
 </div>
 
-{{-- ══ MODAL 1: LIHAT ALASAN PENOLAKAN (SCREENSHOT 1 ROW 3) ══ --}}
+{{-- ══ MODAL 1: LIHAT ALASAN PENOLAKAN ══ --}}
 <div class="ws-modal-overlay" id="modal-alasan-penolakan">
     <div class="ws-modal-card">
         <div class="ws-modal-header">
@@ -522,7 +470,7 @@
                 Catatan dari Pengurus RT 04 terkait pengajuan surat yang ditolak:
             </p>
             <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 6px; padding: 14px 16px; font-size: 13.5px; color: #991b1b; line-height: 1.5;" id="alasan-text-content">
-                Dokumen identitas pendukung belum lengkap dan lampiran tidak terbaca jelas. Silakan ajukan ulang dengan melampirkan berkas KTP/KK yang jelas.
+                -
             </div>
         </div>
         <div class="ws-modal-footer">
@@ -536,7 +484,7 @@
     </div>
 </div>
 
-{{-- ══ MODAL 2: KONFIRMASI BATALKAN SURAT (SCREENSHOT 1 ROW 2) ══ --}}
+{{-- ══ MODAL 2: KONFIRMASI BATALKAN SURAT ══ --}}
 <div class="ws-modal-overlay" id="modal-batal-surat">
     <div class="ws-modal-card">
         <div class="ws-modal-header">
@@ -557,9 +505,12 @@
             <button type="button" class="ws-btn-action-reset" onclick="tutupModal('modal-batal-surat')">
                 Kembali
             </button>
-            <button type="button" class="ws-btn-batal-outline" style="background: #dc2626; color: #fff;" onclick="eksekusiBatalSurat()">
-                Ya, Batalkan Pengajuan
-            </button>
+            <form id="form-batal-surat" action="" method="POST" style="margin: 0;">
+                @csrf
+                <button type="submit" class="ws-btn-batal-outline" style="background: #dc2626; color: #fff;">
+                    Ya, Batalkan Pengajuan
+                </button>
+            </form>
         </div>
     </div>
 </div>
@@ -583,18 +534,20 @@
                 <span>Format pratinjau dokumen skala tetap (A4). Geser ke samping jika tampilan terpotong di layar kecil.</span>
             </div>
 
-            {{-- Kertas Dokumen Tetap (Non-Responsive A4 fixed width agar proporsi kertas & posisi tanda tangan tidak berubah) --}}
+            {{-- Kertas Dokumen Tetap (A4 format) --}}
             <div class="ws-paper-preview">
                 <div style="text-align: center; line-height: 1.35; margin-bottom: 8px;">
-                    <p style="font-size: 15px; font-weight: bold; letter-spacing: 0.5px; margin: 0; text-transform: uppercase;">RUKUN TETANGGA 04 KELURAHAN BARANANGSIANG</p>
+                    <p style="font-size: 15px; font-weight: bold; letter-spacing: 0.5px; margin: 0; text-transform: uppercase;">RUKUN TETANGGA 04 KELURAHAN SUKAMAJU</p>
                     <p style="font-size: 14px; font-weight: bold; margin: 2px 0 0 0; text-transform: uppercase;">KECAMATAN BOGOR TIMUR – KOTA BOGOR</p>
-                    <p style="font-size: 12.5px; margin: 2px 0 0 0;">Sekretariat: Jl. Melati Blok B No. 14, RT 04 Kode Pos: 16143</p>
+                    <p style="font-size: 12.5px; margin: 2px 0 0 0;">Sekretariat: Jl. Melati Blok A No. 1, RT 04 Kode Pos: 16143</p>
                 </div>
                 <div style="border-top: 3px solid #000; border-bottom: 1px solid #000; height: 2px; margin: 10px 0 22px 0;"></div>
 
                 <div style="text-align: center; margin-bottom: 22px;">
                     <p style="font-size: 15.5px; font-weight: bold; text-decoration: underline; margin: 0; letter-spacing: 0.5px;">SURAT PENGANTAR</p>
-                    <p style="font-size: 13px; font-weight: bold; margin: 3px 0 0 0; color: #64748b;">(Nomor surat akan diterbitkan otomatis setelah verifikasi RT)</p>
+                    <p style="font-size: 13px; font-weight: bold; margin: 3px 0 0 0; color: #64748b;" id="prev-nomor-surat">
+                        (Nomor surat akan diterbitkan otomatis setelah verifikasi RT)
+                    </p>
                 </div>
 
                 <p style="font-size: 13.5px; line-height: 1.5; text-indent: 30px; text-align: justify; margin-bottom: 12px;">Yang bertanda tangan di bawah ini Ketua RT 04, menerangkan bahwa:</p>
@@ -602,27 +555,27 @@
                     <tr>
                         <td style="width: 175px; padding: 3px 0;">Nama Lengkap</td>
                         <td style="width: 20px; padding: 3px 0; text-align: center;">:</td>
-                        <td style="font-weight: bold; padding: 3px 0;" id="prev-nama">Dimas Arya Pratama</td>
+                        <td style="font-weight: bold; padding: 3px 0;" id="prev-nama">-</td>
                     </tr>
                     <tr>
                         <td style="padding: 3px 0;">Tempat/Tgl Lahir</td>
                         <td style="padding: 3px 0; text-align: center;">:</td>
-                        <td style="padding: 3px 0;" id="prev-ttl">Bogor, 08 Agustus 2005</td>
+                        <td style="padding: 3px 0;" id="prev-ttl">-</td>
                     </tr>
                     <tr>
                         <td style="padding: 3px 0;">Jenis Kelamin</td>
                         <td style="padding: 3px 0; text-align: center;">:</td>
-                        <td style="padding: 3px 0;" id="prev-jk">Laki-Laki</td>
+                        <td style="padding: 3px 0;" id="prev-jk">-</td>
                     </tr>
                     <tr>
                         <td style="padding: 3px 0;">Agama</td>
                         <td style="padding: 3px 0; text-align: center;">:</td>
-                        <td style="padding: 3px 0;" id="prev-agama">Islam</td>
+                        <td style="padding: 3px 0;" id="prev-agama">-</td>
                     </tr>
                     <tr>
                         <td style="padding: 3px 0;">Alamat</td>
                         <td style="padding: 3px 0; text-align: center;">:</td>
-                        <td style="padding: 3px 0;" id="prev-alamat">Jl. Melati Blok B No. 14, RT 04</td>
+                        <td style="padding: 3px 0;" id="prev-alamat">-</td>
                     </tr>
                     <tr>
                         <td style="padding: 3px 0;">Keperluan</td>
@@ -638,14 +591,13 @@
                         <p style="margin: 0;">&nbsp;</p>
                         <p style="margin: 0; font-weight: bold; font-size: 13.5px;">Pemohon,</p>
                         <div style="height: 65px;"></div>
-                        <span style="font-weight: bold; text-decoration: underline; display: inline-block; font-size: 13.5px;" id="prev-ttd-pemohon">Dimas Arya Pratama</span>
+                        <span style="font-weight: bold; text-decoration: underline; display: inline-block; font-size: 13.5px;" id="prev-ttd-pemohon">-</span>
                     </div>
 
                     <div style="width: 200px;">
                         <p style="margin: 0; font-size: 13.5px;" id="prev-tanggal-surat">Bogor, -</p>
                         <p style="margin: 0; font-weight: bold; font-size: 13.5px;">Ketua RT. 04,</p>
                         <div style="height: 65px; display: flex; align-items: center; justify-content: center;" id="prev-ttd-rt-box">
-                            {{-- Area tanda tangan: Jangan munculkan gambar ttd jika belum disetujui --}}
                             <div id="prev-ttd-rt-empty" style="font-size: 11px; color: #64748b; font-style: italic; border: 1px dashed #cbd5e1; border-radius: 4px; padding: 6px 10px; background: #f8fafc; line-height: 1.3;">
                                 (Menunggu Persetujuan RT)
                             </div>
@@ -669,41 +621,8 @@
 
 @push('scripts')
 <script>
-// Master Data KK untuk Auto-Fill Read-Only Fields
-const masterWarga = {
-    dimas: {
-        nama: 'Dimas Arya Pratama',
-        ttl: 'Bogor, 08 Agustus 2005 (20 Th)',
-        ttlSurat: 'Bogor, 08 Agustus 2005',
-        jk: 'Laki-Laki',
-        agama: 'Islam',
-        alamat: 'Jl. Melati Blok B No. 14, RT 04 Kel. Baranangsiang'
-    },
-    bambang: {
-        nama: 'Bpk. Bambang Pamungkas',
-        ttl: 'Depok, 15 Agustus 1988 (37 Th)',
-        ttlSurat: 'Depok, 15 Agustus 1988',
-        jk: 'Laki-Laki',
-        agama: 'Islam',
-        alamat: 'Jl. Melati Blok B No. 14, RT 04 Kel. Baranangsiang'
-    },
-    siti: {
-        nama: 'Siti Aminah',
-        ttl: 'Bandung, 12 April 1983 (42 Th)',
-        ttlSurat: 'Bandung, 12 April 1983',
-        jk: 'Perempuan',
-        agama: 'Islam',
-        alamat: 'Jl. Melati Blok B No. 14, RT 04 Kel. Baranangsiang'
-    },
-    nabila: {
-        nama: 'Nabila Putri Kirani',
-        ttl: 'Bogor, 10 November 2012 (13 Th)',
-        ttlSurat: 'Bogor, 10 November 2012',
-        jk: 'Perempuan',
-        agama: 'Islam',
-        alamat: 'Jl. Melati Blok B No. 14, RT 04 Kel. Baranangsiang'
-    }
-};
+// Master Data Anggota Keluarga dari Database untuk Auto-Fill Form
+const masterWarga = @json($dataWargaMap);
 
 // Tab Switching
 function switchSuratTab(tab) {
@@ -726,8 +645,8 @@ function switchSuratTab(tab) {
 }
 
 // Ganti Anggota Warga Tujuan (Auto-Fill Realtime)
-function gantiTargetSurat(key) {
-    const data = masterWarga[key];
+function gantiTargetSurat(id) {
+    const data = masterWarga[id];
     if (!data) {
         document.getElementById('ro-nama').value = '';
         document.getElementById('ro-ttl').value = '';
@@ -754,63 +673,59 @@ function resetFormSurat() {
     }, 50);
 }
 
-// Helper Tanda Tangan RT Preview (Hanya muncul jika surat disetujui)
-function aturTtdPreview(isDisetujui, tanggalTerbit) {
-    const imgTtd = document.getElementById('prev-ttd-rt-img');
-    const emptyTtd = document.getElementById('prev-ttd-rt-empty');
-    const tglEl = document.getElementById('prev-tanggal-surat');
-
-    if (isDisetujui) {
-        if (imgTtd) imgTtd.style.display = 'block';
-        if (emptyTtd) emptyTtd.style.display = 'none';
-        if (tglEl) tglEl.textContent = 'Bogor, ' + (tanggalTerbit || '24 Oktober 2025');
-    } else {
-        if (imgTtd) imgTtd.style.display = 'none';
-        if (emptyTtd) emptyTtd.style.display = 'block';
-        if (tglEl) tglEl.textContent = 'Bogor, (Menunggu Tanggal Terbit)';
-    }
-}
-
 // Pratinjau Surat Baru sebelum Kirim (Draft Belum Disetujui)
 function bukaPreviewSuratBaru() {
     const selectEl = document.getElementById('select-warga-tujuan');
-    const key = selectEl.value;
-    if (!key || !masterWarga[key]) {
+    const id = selectEl.value;
+    if (!id || !masterWarga[id]) {
         alert('Silakan pilih Anggota Keluarga Pemohon terlebih dahulu sebelum melihat pratinjau surat.');
         selectEl.focus();
         return;
     }
-    const data = masterWarga[key];
+    const data = masterWarga[id];
     const keperluan = document.getElementById('keperluan').value.trim() || '(Keperluan belum diisi)';
 
-    document.getElementById('prev-nama').textContent = data.nama;
-    document.getElementById('prev-ttl').textContent = data.ttlSurat;
+    document.getElementById('prev-nomor-surat').textContent = '(Nomor surat akan diterbitkan otomatis setelah verifikasi RT)';
+    document.getElementById('prev-nama').textContent = data.namaLengkap || data.nama;
+    document.getElementById('prev-ttl').textContent = data.ttlSurat || data.ttl;
     document.getElementById('prev-jk').textContent = data.jk;
     document.getElementById('prev-agama').textContent = data.agama;
     document.getElementById('prev-alamat').textContent = data.alamat;
     document.getElementById('prev-keperluan').textContent = keperluan;
+    
     const ttdPemohon = document.getElementById('prev-ttd-pemohon');
-    if (ttdPemohon) ttdPemohon.textContent = data.nama;
+    if (ttdPemohon) ttdPemohon.textContent = data.namaLengkap || data.nama;
 
-    // Surat belum disetujui: Jangan munculkan tanda tangan RT
-    aturTtdPreview(false);
+    // TTD RT masih belum disetujui
+    const imgTtd = document.getElementById('prev-ttd-rt-img');
+    const emptyTtd = document.getElementById('prev-ttd-rt-empty');
+    const tglEl = document.getElementById('prev-tanggal-surat');
+    if (imgTtd) imgTtd.style.display = 'none';
+    if (emptyTtd) emptyTtd.style.display = 'block';
+    if (tglEl) tglEl.textContent = 'Bogor, (Menunggu Persetujuan RT)';
 
     bukaModal('modal-preview-surat');
 }
 
-// Preview Draft Surat (Status Menunggu Verifikasi)
-function bukaPreviewDraft(nama, keperluan) {
+// Preview Draft Surat dari Tabel Riwayat
+function bukaPreviewDraftCustom(nama, ttl, jk, agama, alamat, keperluan) {
+    document.getElementById('prev-nomor-surat').textContent = '(Menunggu Nomor Registrasi dari RT 04)';
     document.getElementById('prev-nama').textContent = nama;
-    document.getElementById('prev-ttl').textContent = 'Bogor, 12 April 1983';
-    document.getElementById('prev-jk').textContent = 'Perempuan';
-    document.getElementById('prev-agama').textContent = 'Islam';
-    document.getElementById('prev-alamat').textContent = 'Jl. Melati Blok B No. 14, RT 04';
+    document.getElementById('prev-ttl').textContent = ttl;
+    document.getElementById('prev-jk').textContent = jk;
+    document.getElementById('prev-agama').textContent = agama;
+    document.getElementById('prev-alamat').textContent = alamat;
     document.getElementById('prev-keperluan').textContent = keperluan;
+
     const ttdPemohon = document.getElementById('prev-ttd-pemohon');
     if (ttdPemohon) ttdPemohon.textContent = nama;
 
-    // Surat berstatus menunggu verifikasi: Jangan munculkan tanda tangan RT
-    aturTtdPreview(false);
+    const imgTtd = document.getElementById('prev-ttd-rt-img');
+    const emptyTtd = document.getElementById('prev-ttd-rt-empty');
+    const tglEl = document.getElementById('prev-tanggal-surat');
+    if (imgTtd) imgTtd.style.display = 'none';
+    if (emptyTtd) emptyTtd.style.display = 'block';
+    if (tglEl) tglEl.textContent = 'Bogor, (Menunggu Persetujuan RT)';
 
     bukaModal('modal-preview-surat');
 }
@@ -822,21 +737,12 @@ function bukaAlasanPenolakan(teks) {
 }
 
 // Batalkan Surat Modal
-let rowBatalTarget = null;
-function konfirmasiBatalSurat(rowId) {
-    rowBatalTarget = rowId;
-    bukaModal('modal-batal-surat');
-}
-
-function eksekusiBatalSurat() {
-    tutupModal('modal-batal-surat');
-    // Update stat counter
-    const statMenunggu = document.getElementById('stat-menunggu');
-    if (statMenunggu && parseInt(statMenunggu.textContent) > 0) {
-        statMenunggu.textContent = parseInt(statMenunggu.textContent) - 1;
+function konfirmasiBatalSurat(suratId) {
+    const form = document.getElementById('form-batal-surat');
+    if (form) {
+        form.action = '{{ url('/warga/surat') }}/' + suratId + '/batal';
     }
-    alert('Pengajuan surat berhasil dibatalkan.');
-    location.reload();
+    bukaModal('modal-batal-surat');
 }
 
 // Modal Helpers
@@ -861,14 +767,7 @@ function updatePagination() {
     if (!tbody) return;
     const allRows = Array.from(tbody.querySelectorAll('.ws-row-item'));
 
-    // Prioritaskan status 'menunggu' selalu di paling depan, disusul 'disetujui' dan 'ditolak'
-    allRows.sort((a, b) => {
-        const statusOrder = { 'menunggu': 1, 'disetujui': 2, 'ditolak': 3 };
-        const orderA = statusOrder[(a.dataset.status || '').toLowerCase()] || 99;
-        const orderB = statusOrder[(b.dataset.status || '').toLowerCase()] || 99;
-        return orderA - orderB;
-    });
-    allRows.forEach(r => tbody.appendChild(r));
+    if (allRows.length === 0) return;
 
     // Filter matching rows
     const matchingRows = allRows.filter(row => {
@@ -979,6 +878,12 @@ document.addEventListener('DOMContentLoaded', function () {
     const tabParam = urlParams.get('tab');
     if (tabParam === 'buat') {
         switchSuratTab('buat');
+    }
+    
+    // Auto-populate if old input exists
+    const initialSelect = document.getElementById('select-warga-tujuan');
+    if (initialSelect && initialSelect.value) {
+        gantiTargetSurat(initialSelect.value);
     }
 });
 </script>

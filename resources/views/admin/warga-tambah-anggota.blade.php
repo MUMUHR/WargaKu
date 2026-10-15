@@ -6,7 +6,7 @@
 @section('breadcrumb')
     <a href="{{ route('admin.data-warga') }}" class="admin-topbar__breadcrumb-link">Kelola Data Warga</a>
     <span class="admin-topbar__breadcrumb-sep" aria-hidden="true">/</span>
-    <a href="{{ route('admin.data-warga', ['view' => 'detail']) }}" class="admin-topbar__breadcrumb-link">Detail Kartu Keluarga</a>
+    <a href="{{ route('admin.data-warga.detail', $keluarga->no_kk) }}" class="admin-topbar__breadcrumb-link">Detail Kartu Keluarga</a>
     <span class="admin-topbar__breadcrumb-sep" aria-hidden="true">/</span>
     <span class="admin-topbar__breadcrumb-current">Tambah Anggota Keluarga</span>
 @endsection
@@ -28,7 +28,7 @@
             <span>/</span>
             <a href="{{ route('admin.data-warga') }}" style="color:#6c757d;text-decoration:none;">Kelola Data Warga</a>
             <span>/</span>
-            <a href="{{ route('admin.data-warga', ['view' => 'detail']) }}" style="color:#6c757d;text-decoration:none;">Detail Kartu Keluarga</a>
+            <a href="{{ route('admin.data-warga.detail', $keluarga->no_kk) }}" style="color:#6c757d;text-decoration:none;">Detail Kartu Keluarga</a>
             <span>/</span>
             <span style="color:#007bff;font-weight:600;">Tambah Anggota Keluarga</span>
         </nav>
@@ -40,8 +40,16 @@
     </div>
 </div>
 
+@if(session('error'))
+<div style="background:#f8d7da;color:#721c24;border:1px solid #f5c6cb;padding:12px 16px;border-radius:6px;margin-bottom:16px;font-size:13px;display:flex;align-items:center;gap:8px;">
+    <i class='bx bx-error-circle' style="font-size:18px;"></i>
+    <span>{{ session('error') }}</span>
+</div>
+@endif
+
 <form action="{{ route('admin.data-warga.tambah-anggota.store') }}" method="POST" id="form-tambah-anggota">
     @csrf
+    <input type="hidden" name="no_kk" value="{{ $keluarga->no_kk }}">
 
     {{-- Top Summary Card --}}
     <div class="form-anggota-summary-card">
@@ -51,7 +59,7 @@
                 <span>Formulir Anggota Keluarga Baru</span>
             </h3>
             <div class="form-summary-meta">
-                No. KK: <strong>3275010905120008</strong> • Kepala Keluarga: <strong>Bambang Santoso, S.T.</strong>
+                No. KK: <strong>{{ $keluarga->no_kk }}</strong> • Kepala Keluarga: <strong>{{ $kepalaKeluarga->nama ?? '-' }}</strong>
             </div>
         </div>
 
@@ -60,20 +68,20 @@
                 <div class="form-summary-box__label">KEPALA KELUARGA</div>
                 <div class="form-summary-box__val">
                     <i class='bx bx-user' style="color:#007bff;"></i>
-                    <span>Bambang Santoso, S.T.</span>
+                    <span>{{ $kepalaKeluarga->nama ?? '-' }}</span>
                 </div>
             </div>
             <div class="form-summary-box">
                 <div class="form-summary-box__label">DOMISILI RUMAH</div>
                 <div class="form-summary-box__val">
                     <i class='bx bx-map-pin' style="color:#28a745;"></i>
-                    <span>Blok B4 No. 12 (RT 04 / RW 08)</span>
+                    <span>{{ $alamatKeluarga }}</span>
                 </div>
             </div>
             <div class="form-summary-box">
                 <div class="form-summary-box__label">STATUS KK / ANGGOTA</div>
                 <div class="form-summary-box__val">
-                    <span style="color:#28a745;">●</span> <span>4 Jiwa Terdaftar</span>
+                    <span style="color:#28a745;">●</span> <span>{{ $totalJiwa ?? 0 }} Jiwa Terdaftar</span>
                 </div>
             </div>
         </div>
@@ -107,10 +115,16 @@
                             Nomor Induk Kependudukan (NIK) <span class="req">*</span>
                         </label>
                         <div class="input-with-badge">
-                            <input type="text" name="nik" class="form-control-warga" id="input-nik" placeholder="16 digit NIK baru" maxlength="16" required autofocus>
+                            <input type="text" name="nik" class="form-control-warga" id="input-nik"
+                                   placeholder="16 digit NIK baru (angka saja)"
+                                   value="{{ old('nik') }}"
+                                   maxlength="16" inputmode="numeric" pattern="[0-9]{16}"
+                                   oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 16)"
+                                   onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                                   required autofocus>
                             <span class="badge-input-right">16 Digit</span>
                         </div>
-                        <span class="form-field-help">Pastikan NIK valid dan belum terdaftar pada KK lain di RT 04.</span>
+                        <span class="form-field-help">16 digit angka sesuai e-KTP. Hanya angka tanpa huruf atau simbol.</span>
                     </div>
                     <div class="form-field">
                         <label class="form-field-label" for="input-nama">
@@ -242,14 +256,14 @@
             </div>
             <div class="form-sidebar-body">
                 <p class="form-sidebar-text">
-                    Konfirmasi Penambahan: Anda akan menambahkan 1 anggota keluarga baru ke dalam Kartu Keluarga milik <strong>Bambang Santoso, S.T.</strong> (KK #3275010905120008).
+                    Konfirmasi Penambahan: Anda akan menambahkan 1 anggota keluarga baru ke dalam Kartu Keluarga milik <strong>{{ $kepalaKeluarga->nama ?? 'Kepala Keluarga' }}</strong> (KK #{{ $keluarga->no_kk }}).
                 </p>
 
                 <button type="button" class="btn-sidebar-submit" onclick="konfirmasiTambahAnggota()">
                     <i class='bx bx-save'></i> Simpan &amp; Tambahkan Anggota
                 </button>
 
-                <a href="{{ route('admin.data-warga', ['view' => 'detail']) }}" class="btn-sidebar-cancel" style="text-decoration:none;">
+                <a href="{{ route('admin.data-warga.detail', $keluarga->no_kk) }}" class="btn-sidebar-cancel" style="text-decoration:none;">
                     <i class='bx bx-x'></i> Batal &amp; Kembali ke Detail KK
                 </a>
 

@@ -106,6 +106,10 @@
                                    class="form-control"
                                    placeholder="3271048809920001"
                                    maxlength="16"
+                                   inputmode="numeric"
+                                   pattern="[0-9]{16}"
+                                   oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 16)"
+                                   onkeypress="return event.charCode >= 48 && event.charCode <= 57"
                                    required>
                         </div>
                     </div>
@@ -176,6 +180,10 @@
                                    class="form-control"
                                    placeholder="3271041508800001"
                                    maxlength="16"
+                                   inputmode="numeric"
+                                   pattern="[0-9]{16}"
+                                   oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 16)"
+                                   onkeypress="return event.charCode >= 48 && event.charCode <= 57"
                                    required>
                         </div>
                     </div>

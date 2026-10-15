@@ -47,17 +47,17 @@
                     <div class="wf-card__body">
                         <div class="wf-kk-summary">
                             <div class="wf-kk-item">
-                                <span class="wf-kk-label">NOMOR KARTU KELUARGA (KELUARGA.NO_KK)</span>
-                                <span class="wf-kk-value-nkk">3271048809920001</span>
+                                <span class="wf-kk-label">NOMOR KARTU KELUARGA</span>
+                                <span class="wf-kk-value-nkk">{{ $keluarga?->no_kk ?? '-' }}</span>
                             </div>
                             <div class="wf-kk-item">
                                 <span class="wf-kk-label">KEPALA KELUARGA AKTIF</span>
-                                <span class="wf-kk-value-head">Bpk. Bambang Pamungkas</span>
-                                <span class="wf-kk-subhead">NIK: 3271041203780002</span>
+                                <span class="wf-kk-value-head">{{ $kepala?->nama ?? '-' }}</span>
+                                <span class="wf-kk-subhead">NIK: {{ $kepala?->nik ?? '-' }}</span>
                             </div>
                             <div class="wf-kk-item">
                                 <span class="wf-kk-label">ALAMAT TERDAFTAR</span>
-                                <span class="wf-kk-value-address">Jl. Melati Blok B No. 14</span>
+                                <span class="wf-kk-value-address">{{ $alamatKeluarga }}</span>
                             </div>
                         </div>
                     </div>
@@ -81,7 +81,11 @@
                             <div class="wf-input-wrap">
                                 <i class='bx bx-id-card wf-input-icon'></i>
                                 <input type="text" id="nik" name="nik" class="wf-input wf-input-with-icon" 
-                                       placeholder="NIK AKAN DITERBITKAN DUKCAPIL BERSAMA AKTA LAHIR" 
+                                       placeholder="16 digit angka NIK (kosongkan bila belum terbit)" 
+                                       maxlength="16"
+                                       inputmode="numeric"
+                                       oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 16)"
+                                       onkeypress="return event.charCode >= 48 && event.charCode <= 57"
                                        value="">
                             </div>
                         </div>
@@ -192,20 +196,11 @@
                                 <label class="wf-label" for="pekerjaan">
                                     <span>Pekerjaan <span class="wf-req">*</span></span>
                                 </label>
-                                <select id="pekerjaan" name="pekerjaan" class="wf-select" required>
-                                    <option value="Belum / Tidak Bekerja" selected>Belum / Tidak Bekerja</option>
-                                    <option value="Pelajar / Mahasiswa">Pelajar / Mahasiswa</option>
-                                    <option value="Karyawan Swasta">Karyawan Swasta</option>
-                                    <option value="Pegawai Negeri Sipil (PNS)">Pegawai Negeri Sipil (PNS) / ASN</option>
-                                    <option value="Wiraswasta / Pedagang">Wiraswasta / Pedagang / Pengusaha</option>
-                                    <option value="Buruh Harian Lepas">Buruh Harian Lepas / Pabrik</option>
-                                    <option value="Ibu Rumah Tangga">Ibu Rumah Tangga</option>
-                                    <option value="Pensiunan">Pensiunan</option>
-                                    <option value="Guru / Dosen">Guru / Dosen / Tenaga Pendidik</option>
-                                    <option value="Tenaga Medis">Tenaga Medis / Dokter / Perawat</option>
-                                    <option value="TNI / POLRI">TNI / POLRI</option>
-                                    <option value="Lainnya">Lainnya</option>
-                                </select>
+                                <div class="wf-input-wrap">
+                                    <i class='bx bx-briefcase wf-input-icon'></i>
+                                    <input type="text" id="pekerjaan" name="pekerjaan" class="wf-input wf-input-with-icon" 
+                                           placeholder="Contoh: Karyawan Swasta, Wiraswasta, PNS, Pelajar, dll." required>
+                                </div>
                             </div>
                             <div>
                                 <label class="wf-label">
@@ -254,7 +249,7 @@
                         
                         {{-- Dropzone --}}
                         <div class="wf-upload-dropzone" id="dropzone-tambah" onclick="document.getElementById('file-input-tambah').click()" style="cursor: pointer;">
-                            <input type="file" id="file-input-tambah" name="bukti" style="display:none;" multiple accept=".pdf,.jpg,.jpeg,.png">
+                            <input type="file" id="file-input-tambah" name="bukti[]" style="display:none;" multiple accept=".pdf,.jpg,.jpeg,.png">
                             <div class="wf-upload-icon-circle">
                                 <i class='bx bx-cloud-upload'></i>
                             </div>
@@ -345,6 +340,13 @@ document.addEventListener('DOMContentLoaded', function () {
     let uploadedFiles = [];
 
     function renderUploadedFiles() {
+        if (fileInput) {
+            try {
+                const dt = new DataTransfer();
+                uploadedFiles.forEach(f => dt.items.add(f));
+                fileInput.files = dt.files;
+            } catch(e) {}
+        }
         if (!attachedSection || !fileListContainer) return;
         if (uploadedFiles.length === 0) {
             attachedSection.style.display = 'none';
@@ -389,6 +391,15 @@ document.addEventListener('DOMContentLoaded', function () {
             `;
             fileListContainer.appendChild(item);
         });
+
+        // Sinkronisasi data transfer ke input file form
+        try {
+            if (fileInput) {
+                const dt = new DataTransfer();
+                uploadedFiles.forEach(f => dt.items.add(f));
+                fileInput.files = dt.files;
+            }
+        } catch(e) {}
     }
 
     window.previewFileTambah = function(index) {

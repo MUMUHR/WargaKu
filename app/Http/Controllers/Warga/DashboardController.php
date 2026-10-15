@@ -4,40 +4,45 @@ namespace App\Http\Controllers\Warga;
 
 use App\Http\Controllers\Controller;
 use App\Models\Surat;
+use App\Services\IuranService;
 use Carbon\Carbon;
 use Illuminate\View\View;
 
 class DashboardController extends Controller
 {
     /**
-     * Menampilkan Dashboard Beranda Mandiri Warga (Layar 2.3.1)
+     * Menampilkan Dashboard Beranda Mandiri Warga (Layar 2.2.19)
      */
-    public function index(): View
+    public function index(IuranService $iuranService): View
     {
         $user = auth()->user();
 
-        // Ambil data kepala keluarga / warga yang terikat pada akun
-        $kepala = $user->wargaPemilik 
-            ?? $user->wargas()->where('status_hubungan', 'kepala_keluarga')->first() 
-            ?? $user->wargas()->first();
-        $keluarga = $kepala?->keluarga;
+        // 1. Ambil data Keluarga & Kepala Keluarga secara efisien (BR-01 & BR-13)
+        $wargaAkun = $user->wargas()->with('keluarga')->first();
+        $keluarga  = $wargaAkun?->keluarga;
 
-        // Periode berjalan
-        $now = Carbon::now('Asia/Jakarta');
+        $anggotaKeluarga = $keluarga
+            ? $keluarga->wargas()->get()
+            : collect($wargaAkun ? [$wargaAkun] : []);
+
+        $anggotaHidup = $anggotaKeluarga->where('status_warga', 'hidup');
+
+        // Prioritaskan Kepala Keluarga yang hidup, fallback ke pemilik akun (nik == username), lalu anggota pertama
+        $kepala = $anggotaHidup->firstWhere('status_hubungan', 'kepala_keluarga')
+            ?? $anggotaHidup->firstWhere('nik', $user->username)
+            ?? $anggotaHidup->first()
+            ?? $wargaAkun;
+
+        // 2. Periode Berjalan (Zona Waktu Asia/Jakarta - BR-06)
+        $now           = Carbon::now('Asia/Jakarta')->locale('id');
         $bulanBerjalan = $now->month;
         $tahunBerjalan = $now->year;
+        $namaBulan     = $now->translatedFormat('F');
 
-        $daftarBulan = [
-            1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April',
-            5 => 'Mei', 6 => 'Juni', 7 => 'Juli', 8 => 'Agustus',
-            9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Desember'
-        ];
-        $namaBulan = $daftarBulan[$bulanBerjalan] ?? 'Bulan ' . $bulanBerjalan;
-
-        // 1. Data Iuran Bulan Ini
-        $nominalIuran = config('wargaku.nominal_iuran_awal', 75000);
-        $isIuranLunas = false;
+        // 3. Data Ringkasan Iuran Bulan Ini (Sesuai Prioritas Nominal BR-06 via IuranService)
         $iuranBulanIni = null;
+        $isIuranLunas  = false;
+        $nominalIuran  = $iuranService->ambilNominalStandar();
 
         if ($keluarga) {
             $iuranBulanIni = $keluarga->iurans()
@@ -51,39 +56,34 @@ class DashboardController extends Controller
             }
         }
 
-        // 2. Data Statistik Pengajuan Surat Keluarga
-        $wargaIds = $keluarga ? $keluarga->wargas()->pluck('id')->toArray() : [];
-        if (empty($wargaIds) && $kepala) {
-            $wargaIds = [$kepala->id];
-        }
+        // 4. Data Statistik Pengajuan Surat & Perubahan Data Keluarga (UC-07, UC-09, F017)
+        $wargaIds = $anggotaKeluarga->pluck('id')->all();
 
-        $totalSuratMenunggu = 0;
-        $totalSuratSelesai = 0;
-        $riwayatSuratTerakhir = collect();
+        $totalSuratMenunggu         = 0;
+        $totalSuratSelesai          = 0;
+        $totalPerubahanDataMenunggu = 0;
+        $riwayatSuratTerakhir       = collect();
 
         if (!empty($wargaIds)) {
-            $totalSuratMenunggu = Surat::where(function ($q) use ($wargaIds) {
-                    $q->whereIn('pemohon_id', $wargaIds)
-                      ->orWhereIn('warga_tujuan_id', $wargaIds);
-                })
-                ->where('status', 'menunggu')
-                ->count();
+            $baseSuratQuery = Surat::where(function ($q) use ($wargaIds) {
+                $q->whereIn('pemohon_id', $wargaIds)
+                  ->orWhereIn('warga_tujuan_id', $wargaIds);
+            });
 
-            $totalSuratSelesai = Surat::where(function ($q) use ($wargaIds) {
-                    $q->whereIn('pemohon_id', $wargaIds)
-                      ->orWhereIn('warga_tujuan_id', $wargaIds);
-                })
-                ->where('status', 'disetujui')
-                ->count();
+            $totalSuratMenunggu = (clone $baseSuratQuery)->where('status', 'menunggu')->count();
+            $totalSuratSelesai  = (clone $baseSuratQuery)->where('status', 'disetujui')->count();
 
-            $riwayatSuratTerakhir = Surat::with(['pemohon', 'wargaTujuan'])
-                ->where(function ($q) use ($wargaIds) {
-                    $q->whereIn('pemohon_id', $wargaIds)
-                      ->orWhereIn('warga_tujuan_id', $wargaIds);
-                })
-                ->orderBy('created_at', 'desc')
+            $riwayatSuratTerakhir = (clone $baseSuratQuery)
+                ->with(['pemohon', 'wargaTujuan'])
+                ->latest()
                 ->take(5)
                 ->get();
+        }
+
+        if ($keluarga) {
+            $totalPerubahanDataMenunggu = $keluarga->riwayatPerubahan()
+                ->where('status', 'menunggu')
+                ->count();
         }
 
         return view('warga.beranda', compact(
@@ -97,6 +97,7 @@ class DashboardController extends Controller
             'iuranBulanIni',
             'totalSuratMenunggu',
             'totalSuratSelesai',
+            'totalPerubahanDataMenunggu',
             'riwayatSuratTerakhir'
         ));
     }

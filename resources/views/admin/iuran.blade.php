@@ -275,7 +275,7 @@
                 <span id="banner-riwayat-title">Catatan Pembayaran &amp; Riwayat Kas - {{ $namaBulanBerjalan }} {{ $tahunBerjalan }}</span>
             </div>
             <div style="font-size:12.5px;color:#495057;">
-                Total Terverifikasi Lunas: <strong style="color:#198754;font-weight:700;" id="val-riwayat-total-nominal">Rp 0</strong> (<span id="val-riwayat-total-transaksi">0 Transaksi</span>)
+                Total Terverifikasi Lunas: <strong style="color:#198754;font-weight:700;" id="val-riwayat-total-nominal">Rp {{ number_format($totalTerverifikasiLunas, 0, ',', '.') }}</strong> (<span id="val-riwayat-total-transaksi">{{ count($daftarRiwayat) }} Transaksi</span>)
             </div>
         </div>
 

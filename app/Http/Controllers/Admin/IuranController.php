@@ -4,113 +4,50 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Iuran;
-use App\Models\Keluarga;
+use App\Services\IuranService;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class IuranController extends Controller
 {
     /**
-     * Nama-nama bulan dalam bahasa Indonesia
-     */
-    protected array $daftarBulan = [
-        1 => 'Januari',
-        2 => 'Februari',
-        3 => 'Maret',
-        4 => 'April',
-        5 => 'Mei',
-        6 => 'Juni',
-        7 => 'Juli',
-        8 => 'Agustus',
-        9 => 'September',
-        10 => 'Oktober',
-        11 => 'November',
-        12 => 'Desember',
-    ];
-
-    /**
-     * Singkatan nama bulan
-     */
-    protected array $daftarBulanSingkat = [
-        1 => 'Jan',
-        2 => 'Feb',
-        3 => 'Mar',
-        4 => 'Apr',
-        5 => 'Mei',
-        6 => 'Jun',
-        7 => 'Jul',
-        8 => 'Agu',
-        9 => 'Sep',
-        10 => 'Okt',
-        11 => 'Nov',
-        12 => 'Des',
-    ];
-
-    /**
      * Menampilkan halaman kelola dan rekap iuran warga (Layar 2.2.16 / UC-10 / BR-06)
      */
-    public function index(Request $request): View
+    public function index(Request $request, IuranService $iuranService): View
     {
-        $now = Carbon::now('Asia/Jakarta');
+        $now           = Carbon::now('Asia/Jakarta');
         $tahunBerjalan = (int) $request->input('tahun', $now->year);
         $bulanBerjalan = (int) $request->input('bulan', $now->month);
 
-        // 1. Eksekusi Lazy generation 12 bulan sesuai BR-06
-        $this->generateLazyIuranTahunBerjalan($tahunBerjalan);
+        // 1. Eksekusi Lazy generation 12 bulan sesuai BR-06 untuk tahun berjalan via IuranService
+        $iuranService->generateLazyIuranSemuaKeluargaAktif($now->year);
 
-        // 2. Metrik Statistik Kas & Status Pembayaran
-        $totalPenerimaanKas = (float) Iuran::where('status', 'lunas')->sum('nominal');
+        // 2. Metrik Statistik Kas & Status Pembayaran via IuranService
+        $stat = $iuranService->hitungStatistikAdmin($tahunBerjalan, $bulanBerjalan);
+        $totalPenerimaanKas        = $stat['totalPenerimaanKas'];
+        $totalKkLunasBulanIni      = $stat['totalKkLunasBulanIni'];
+        $totalKkBelumBulanIni      = $stat['totalKkBelumBulanIni'];
+        $totalTunggakanKeseluruhan = $stat['totalTunggakanKeseluruhan'];
 
-        $totalKkLunasBulanIni = Iuran::where('status', 'lunas')
-            ->where('bulan', $bulanBerjalan)
-            ->where('tahun', $tahunBerjalan)
-            ->distinct('keluarga_id')
-            ->count('keluarga_id');
+        $nominalWajibSaatIni = $iuranService->ambilNominalStandar();
+        $catatanTerkini      = $iuranService->ambilCatatanTarifAdmin();
 
-        $totalKkBelumBulanIni = Iuran::where('status', 'belum_lunas')
-            ->where('bulan', $bulanBerjalan)
-            ->where('tahun', $tahunBerjalan)
-            ->distinct('keluarga_id')
-            ->count('keluarga_id');
-
-        // Jika bulan ini belum ada data tagihan, hitung total KK yang belum lunas di tahun berjalan
-        $totalTunggakanKeseluruhan = Iuran::where('status', 'belum_lunas')
-            ->where('tahun', $tahunBerjalan)
-            ->where('bulan', '<=', $bulanBerjalan)
-            ->count();
-
-        $nominalWajibSaatIni = $this->ambilNominalTerkini();
-
-        $catatanTerkini = Iuran::whereNotNull('catatan')
-            ->where('catatan', '!=', '')
-            ->latest('updated_at')
-            ->value('catatan') ?? 'Iuran operasional kebersihan sampah, keamanan pos ronda 24 jam, & kas sosial RT 04.';
+        // Eager load relasi keluarga & anggota berstatus hidup (BR-13 & 0 N+1 Query)
+        $relasiKeluargaHidup = [
+            'keluarga.kepalaKeluarga' => fn($q) => $q->where('status_warga', 'hidup'),
+            'keluarga.wargas'         => fn($q) => $q->where('status_warga', 'hidup'),
+        ];
 
         // 3. Tab 1: Query Data Tunggakan KK (Belum Lunas)
-        $tunggakanQuery = Iuran::with([
-            'keluarga.kepalaKeluarga' => function ($q) {
-                $q->where('status_warga', 'hidup');
-            },
-            'keluarga.wargas' => function ($q) {
-                $q->where('status_warga', 'hidup');
-            },
-        ])->where('status', 'belum_lunas')
-          ->where('tahun', $tahunBerjalan);
+        $tunggakanQuery = Iuran::with($relasiKeluargaHidup)
+            ->where('status', 'belum_lunas')
+            ->where('tahun', $tahunBerjalan);
 
         // Filter pencarian teks tunggakan
         if ($request->filled('search_tunggakan')) {
-            $q = trim($request->input('search_tunggakan'));
-            $tunggakanQuery->where(function ($query) use ($q) {
-                $query->whereHas('keluarga', function ($kq) use ($q) {
-                    $kq->where('no_kk', 'like', "%{$q}%")
-                        ->orWhereHas('wargas', function ($wq) use ($q) {
-                            $wq->where('nama', 'like', "%{$q}%")
-                                ->orWhere('alamat', 'like', "%{$q}%");
-                        });
-                });
-            });
+            $this->terapkanFilterPencarian($tunggakanQuery, $request->input('search_tunggakan'));
         }
 
         // Filter status ekonomi tunggakan
@@ -121,39 +58,20 @@ class IuranController extends Controller
             });
         }
 
-        // Urutkan: Bulan Berjalan dulu (1), tunggakan lampau (2), lalu bulan mendatang (3)
+        // Urutkan: Bulan Berjalan dulu (1), tunggakan lampau (2), lalu bulan mendatang (3) dengan parameter binding
         $daftarTunggakan = $tunggakanQuery
-            ->orderByRaw("CASE 
-                WHEN bulan = {$bulanBerjalan} THEN 1 
-                WHEN bulan < {$bulanBerjalan} THEN 2 
-                ELSE 3 
-            END ASC")
+            ->orderByRaw("CASE WHEN bulan = ? THEN 1 WHEN bulan < ? THEN 2 ELSE 3 END ASC", [$bulanBerjalan, $bulanBerjalan])
             ->orderBy('bulan', 'desc')
             ->orderBy('keluarga_id', 'asc')
             ->get();
 
         // 4. Tab 2: Query Riwayat Pembayaran Kas (Lunas)
-        $riwayatQuery = Iuran::with([
-            'keluarga.kepalaKeluarga' => function ($q) {
-                $q->where('status_warga', 'hidup');
-            },
-            'keluarga.wargas' => function ($q) {
-                $q->where('status_warga', 'hidup');
-            },
-        ])->where('status', 'lunas');
+        $riwayatQuery = Iuran::with($relasiKeluargaHidup)
+            ->where('status', 'lunas');
 
         // Filter pencarian riwayat
         if ($request->filled('search_riwayat')) {
-            $rq = trim($request->input('search_riwayat'));
-            $riwayatQuery->where(function ($query) use ($rq) {
-                $query->whereHas('keluarga', function ($kq) use ($rq) {
-                    $kq->where('no_kk', 'like', "%{$rq}%")
-                        ->orWhereHas('wargas', function ($wq) use ($rq) {
-                            $wq->where('nama', 'like', "%{$rq}%")
-                                ->orWhere('alamat', 'like', "%{$rq}%");
-                        });
-                });
-            });
+            $this->terapkanFilterPencarian($riwayatQuery, $request->input('search_riwayat'));
         }
 
         // Filter bulan riwayat
@@ -173,8 +91,8 @@ class IuranController extends Controller
 
         $totalTerverifikasiLunas = $daftarRiwayat->sum('nominal');
 
-        $namaBulanBerjalan = $this->daftarBulan[$bulanBerjalan] ?? 'Bulan ' . $bulanBerjalan;
-        $periodeAktifTeks = "{$namaBulanBerjalan} {$tahunBerjalan}";
+        $namaBulanBerjalan = IuranService::DAFTAR_BULAN[$bulanBerjalan] ?? 'Bulan ' . $bulanBerjalan;
+        $periodeAktifTeks  = "{$namaBulanBerjalan} {$tahunBerjalan}";
 
         return view('admin.iuran', compact(
             'tahunBerjalan',
@@ -196,28 +114,28 @@ class IuranController extends Controller
     /**
      * Mencatat pelunasan iuran warga (Layar 2.2.18 / BR-06)
      */
-    public function tandaiLunas(Request $request, int $id)
+    public function tandaiLunas(Request $request, int $id, IuranService $iuranService)
     {
         $iuran = Iuran::with('keluarga')->findOrFail($id);
 
         $validated = $request->validate([
             'tanggal_bayar' => ['nullable', 'date'],
-            'nominal' => ['nullable', 'numeric', 'min:0'],
-            'catatan' => ['nullable', 'string', 'max:500'],
+            'nominal'       => ['nullable', 'numeric', 'min:0'],
+            'catatan'       => ['nullable', 'string', 'max:500'],
         ]);
 
-        $tanggalBayar = $request->filled('tanggal_bayar')
-            ? Carbon::parse($validated['tanggal_bayar'])->setTimeFrom(Carbon::now('Asia/Jakarta'))
-            : Carbon::now('Asia/Jakarta');
+        $nominal = isset($validated['nominal']) 
+            ? (float) $validated['nominal'] 
+            : null;
 
-        $iuran->update([
-            'status' => 'lunas',
-            'tanggal_bayar' => $tanggalBayar,
-            'nominal' => $validated['nominal'] ?? $iuran->nominal,
-            'catatan' => $validated['catatan'] ?? $iuran->catatan,
-        ]);
+        $iuranService->catatPelunasan(
+            $iuran,
+            $validated['tanggal_bayar'] ?? null,
+            $nominal,
+            $validated['catatan'] ?? null
+        );
 
-        $bulanNama = $this->daftarBulan[$iuran->bulan] ?? 'Bulan ' . $iuran->bulan;
+        $bulanNama = IuranService::DAFTAR_BULAN[$iuran->bulan] ?? 'Bulan ' . $iuran->bulan;
         $noKk = $iuran->keluarga?->no_kk ?? '-';
 
         return redirect()->back()->with('success', "Pembayaran iuran KK No. {$noKk} periode {$bulanNama} {$iuran->tahun} berhasil dicatat LUNAS.");
@@ -226,107 +144,47 @@ class IuranController extends Controller
     /**
      * Memperbarui besaran tarif standar iuran bulanan RT (Layar 2.2.17 / BR-06)
      */
-    public function aturStandarIuran(Request $request)
+    public function aturStandarIuran(Request $request, IuranService $iuranService)
     {
         $validated = $request->validate([
             'nominal' => ['required', 'numeric', 'min:1000'],
             'catatan' => ['nullable', 'string', 'max:500'],
         ]);
 
-        $now = Carbon::now('Asia/Jakarta');
+        $now           = Carbon::now('Asia/Jakarta');
         $tahunBerjalan = $now->year;
         $bulanBerjalan = $now->month;
-        $nominalBaru = (float) $validated['nominal'];
-        $catatanBaru = $validated['catatan'] ?? null;
+        $nominalBaru   = (float) $validated['nominal'];
+        $catatanBaru   = isset($validated['catatan']) ? trim($validated['catatan']) : null;
 
-        // BR-06: UPDATE baris belum_lunas mulai bulan berjalan sampai akhir tahun berjalan
-        $query = Iuran::where('status', 'belum_lunas')
-            ->where('tahun', $tahunBerjalan)
-            ->where('bulan', '>=', $bulanBerjalan);
+        // BR-06: UPDATE baris belum_lunas mulai bulan berjalan sampai akhir tahun via IuranService
+        $affected = $iuranService->aturStandarIuran($nominalBaru, $catatanBaru, $tahunBerjalan, $bulanBerjalan);
 
-        $updateData = ['nominal' => $nominalBaru];
-        if ($catatanBaru !== null) {
-            $updateData['catatan'] = $catatanBaru;
-        }
-
-        $affected = $query->update($updateData);
-
-        $namaBulan = $this->daftarBulan[$bulanBerjalan] ?? 'Bulan ' . $bulanBerjalan;
+        $namaBulan = IuranService::DAFTAR_BULAN[$bulanBerjalan] ?? 'Bulan ' . $bulanBerjalan;
         $nominalFmt = 'Rp ' . number_format($nominalBaru, 0, ',', '.');
 
         return redirect()->back()->with('success', "Standar iuran bulanan berhasil diperbarui menjadi {$nominalFmt} / KK mulai periode {$namaBulan} {$tahunBerjalan} hingga akhir tahun ({$affected} baris diperbarui).");
     }
 
     /**
-     * Implementasi BR-06: Lazy generation 12 bulan untuk KK aktif
+     * Filter pencarian No. KK, nama anggota hidup, atau alamat (BR-13)
      */
-    public function generateLazyIuranTahunBerjalan(int $tahun): void
+    private function terapkanFilterPencarian(Builder $query, string $keyword): void
     {
-        // Temukan KK yang aktif (memiliki minimal 1 anggota dengan status 'hidup')
-        $keluargasAktif = Keluarga::whereHas('wargas', function ($q) {
-            $q->where('status_warga', 'hidup');
-        })->get();
-
-        if ($keluargasAktif->isEmpty()) {
+        $q = trim($keyword);
+        if ($q === '') {
             return;
         }
 
-        $nominalDefault = $this->ambilNominalTerkini();
-
-        foreach ($keluargasAktif as $keluarga) {
-            // Hitung bulan awal tagih sesuai BR-06:
-            // Jika tahun created_at < tahun: Januari (1). Jika sama: bulan created_at.
-            $createdYear = $keluarga->created_at ? $keluarga->created_at->year : $tahun;
-            $createdMonth = $keluarga->created_at ? $keluarga->created_at->month : 1;
-
-            $bulanAwalTagih = ($createdYear < $tahun) ? 1 : $createdMonth;
-
-            // Generate baris belum_lunas dari bulan awal tagih sampai Desember (12)
-            for ($b = $bulanAwalTagih; $b <= 12; $b++) {
-                Iuran::firstOrCreate(
-                    [
-                        'keluarga_id' => $keluarga->id,
-                        'bulan' => $b,
-                        'tahun' => $tahun,
-                    ],
-                    [
-                        'nominal' => $nominalDefault,
-                        'status' => 'belum_lunas',
-                        'catatan' => null,
-                        'tanggal_bayar' => null,
-                    ]
-                );
-            }
-        }
-    }
-
-    /**
-     * Menentukan sumber nominal baris baru sesuai prioritas BR-06
-     */
-    public function ambilNominalTerkini(): float
-    {
-        // Prioritas 1: Baris terbaru di database berstatus 'belum_lunas'
-        $nomBelumLunas = Iuran::where('status', 'belum_lunas')
-            ->orderBy('tahun', 'desc')
-            ->orderBy('bulan', 'desc')
-            ->orderBy('id', 'desc')
-            ->value('nominal');
-
-        if ($nomBelumLunas !== null && (float) $nomBelumLunas > 0) {
-            return (float) $nomBelumLunas;
-        }
-
-        // Prioritas 2: Jika tidak ada, baris terbaru berstatus apa pun
-        $nomTerbaru = Iuran::orderBy('tahun', 'desc')
-            ->orderBy('bulan', 'desc')
-            ->orderBy('id', 'desc')
-            ->value('nominal');
-
-        if ($nomTerbaru !== null && (float) $nomTerbaru > 0) {
-            return (float) $nomTerbaru;
-        }
-
-        // Prioritas 3: File konfigurasi config/wargaku.php (nilai default Rp 75.000)
-        return (float) config('wargaku.nominal_iuran_awal', 75000);
+        $query->whereHas('keluarga', function ($kq) use ($q) {
+            $kq->where('no_kk', 'like', "%{$q}%")
+               ->orWhereHas('wargas', function ($wq) use ($q) {
+                   $wq->where('status_warga', 'hidup')
+                      ->where(function ($sub) use ($q) {
+                          $sub->where('nama', 'like', "%{$q}%")
+                              ->orWhere('alamat', 'like', "%{$q}%");
+                      });
+               });
+        });
     }
 }

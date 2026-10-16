@@ -209,8 +209,20 @@
                     </div>
                 </div>
 
-                {{-- Upload Dropzone --}}
-                <div class="upload-zone" id="upload-zone" onclick="document.getElementById('input-gambar').click()">
+                {{-- Tombol Ganti / Hapus Foto Sampul saat Thumbnail Aktif --}}
+                <div class="thumb-actions-bar" id="thumb-actions-bar" style="display: {{ $gambarVal ? 'flex' : 'none' }}; margin-bottom: 12px; gap: 8px;">
+                    <button type="button" class="btn-thumb-change-main" onclick="document.getElementById('input-gambar').click()" style="flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 7px 12px; font-size: 12px; font-weight: 600; color: #1e293b; background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 5px; cursor: pointer; transition: all 0.2s;">
+                        <i class='bx bx-image-add' style="font-size: 16px; color: #0284c7;"></i>
+                        <span>Ganti Foto Sampul</span>
+                    </button>
+                    <button type="button" class="btn-thumb-delete-main" onclick="hapusThumbnail()" title="Hapus Gambar" style="padding: 7px 12px; font-size: 12px; font-weight: 600; color: #dc2626; background: #fef2f2; border: 1px solid #fecaca; border-radius: 5px; cursor: pointer; transition: all 0.2s;">
+                        <i class='bx bx-trash' style="font-size: 15px;"></i>
+                        <span>Hapus</span>
+                    </button>
+                </div>
+
+                {{-- Upload Dropzone (disembunyikan saat ada thumbnail agar leluasa dan tidak stretch) --}}
+                <div class="upload-zone" id="upload-zone" onclick="document.getElementById('input-gambar').click()" style="display: {{ $gambarVal ? 'none' : 'block' }};">
                     <div class="upload-zone__icon">
                         <i class='bx bx-cloud-upload'></i>
                     </div>
@@ -218,10 +230,10 @@
                         Tarik &amp; letakkan foto di sini, atau
                         <a href="#" class="upload-zone__link" onclick="event.preventDefault()">Pilih Berkas</a>
                     </p>
-                    <span class="upload-zone__hint">JPG, JPEG, PNG</span>
-                    <input type="file" id="input-gambar" name="gambar" accept="image/*"
-                           style="display:none" onchange="previewGambar(this)">
+                    <span class="upload-zone__hint">JPG, JPEG, PNG (Rekomendasi 16:9)</span>
                 </div>
+                <input type="file" id="input-gambar" name="gambar" accept="image/*"
+                       style="display:none" onchange="previewGambar(this)">
 
                 <div class="upload-zone__disclaimer">
                     <i class='bx bx-image-alt'></i>
@@ -326,11 +338,15 @@
         reader.onload = function(e) {
             var img = document.getElementById('thumb-preview-img');
             var card = document.getElementById('thumb-preview-card');
+            var actionsBar = document.getElementById('thumb-actions-bar');
+            var zone = document.getElementById('upload-zone');
             var fn = document.getElementById('thumb-filename');
             var indicator = document.getElementById('thumb-status-indicator');
 
             if (img) img.src = e.target.result;
             if (card) card.style.display = 'block';
+            if (actionsBar) actionsBar.style.display = 'flex';
+            if (zone) zone.style.display = 'none';
             if (fn) fn.textContent = file.name;
             if (indicator) {
                 indicator.textContent = '● Tersedia';
@@ -343,6 +359,8 @@
     // Hapus thumbnail
     function hapusThumbnail() {
         var card = document.getElementById('thumb-preview-card');
+        var actionsBar = document.getElementById('thumb-actions-bar');
+        var zone = document.getElementById('upload-zone');
         var input = document.getElementById('input-gambar');
         var indicator = document.getElementById('thumb-status-indicator');
         var img = document.getElementById('thumb-preview-img');
@@ -351,6 +369,8 @@
         if (img) img.src = '';
         if (fn) fn.textContent = '';
         if (card) card.style.display = 'none';
+        if (actionsBar) actionsBar.style.display = 'none';
+        if (zone) zone.style.display = 'block';
         if (indicator) {
             indicator.textContent = '○ Kosong';
             indicator.style.color = '#6c757d';

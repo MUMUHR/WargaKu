@@ -648,7 +648,9 @@ document.addEventListener('DOMContentLoaded', function () {
                             </div>
                         </div>
                         <div class="wf-file-actions">
-                            <span class="wf-badge-file-ready">✓ Siap</span>
+                            <button type="button" class="wf-file-btn" title="Lihat Berkas" onclick="previewSelectedFile(${idx})">
+                                <i class='bx bx-show'></i>
+                            </button>
                             <button type="button" class="wf-file-btn wf-file-btn--delete" title="Hapus Berkas" onclick="removeSelectedFile(${idx})">
                                 <i class='bx bx-trash'></i>
                             </button>
@@ -658,6 +660,22 @@ document.addEventListener('DOMContentLoaded', function () {
             }).join('');
         }
     }
+
+    window.previewSelectedFile = function (idx) {
+        const file = selectedFiles[idx];
+        if (file) {
+            const fileUrl = URL.createObjectURL(file);
+            const win = window.open(fileUrl, '_blank');
+            if (!win) {
+                const a = document.createElement('a');
+                a.href = fileUrl;
+                a.target = '_blank';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            }
+        }
+    };
 
     window.removeSelectedFile = function (idx) {
         selectedFiles.splice(idx, 1);

@@ -403,8 +403,18 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     window.previewFileTambah = function(index) {
-        if (uploadedFiles[index]) {
-            alert('Pratinjau berkas: ' + uploadedFiles[index].name);
+        const file = uploadedFiles[index];
+        if (file) {
+            const fileUrl = URL.createObjectURL(file);
+            const win = window.open(fileUrl, '_blank');
+            if (!win) {
+                const a = document.createElement('a');
+                a.href = fileUrl;
+                a.target = '_blank';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            }
         }
     };
 

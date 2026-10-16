@@ -239,11 +239,7 @@
                                             </button>
                                         </div>
                                     @elseif($statusStr === 'disetujui')
-                                        <div style="display: flex; align-items: center; justify-content: flex-start; gap: 8px;">
-                                            <a href="{{ route('warga.surat.preview', $surat->id) }}" class="ws-btn-preview-outline" title="Lihat Pratinjau Surat Resmi" target="_blank">
-                                                <i class='bx bx-show'></i>
-                                                <span>Preview</span>
-                                            </a>
+                                        <div style="display: flex; align-items: center; justify-content: flex-start;">
                                             <a href="{{ route('warga.surat.cetak', $surat->id) }}" class="ws-btn-esurat" title="Unduh dan Cetak Dokumen Surat">
                                                 <i class='bx bx-download'></i>
                                                 <span>Unduh e-Surat</span>

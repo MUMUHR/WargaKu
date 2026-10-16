@@ -7,7 +7,6 @@ use App\Models\Keluarga;
 use App\Models\Riwayat_Perubahan;
 use App\Models\User;
 use App\Models\Warga;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -108,8 +107,7 @@ class WargaController extends Controller
         $anggotaHidup = $keluarga->wargas()
             ->where('status_warga', 'hidup')
             ->with('user')
-            ->orderByRaw("FIELD(status_hubungan, 'kepala_keluarga', 'suami', 'istri', 'anak', 'menantu', 'cucu', 'orang_tua', 'mertua', 'famili_lain', 'lainnya')")
-            ->orderBy('tanggal_lahir', 'asc')
+            ->urutHierarkiKk()
             ->get();
 
         $totalJiwaAktif = $anggotaHidup->count();
@@ -117,11 +115,9 @@ class WargaController extends Controller
         $totalPerempuanKk = $anggotaHidup->where('jenis_kelamin', 'perempuan')->count();
 
         $kepalaKeluarga = $anggotaHidup->firstWhere('status_hubungan', 'kepala_keluarga') ?? $keluarga->kepalaKeluarga;
-        $alamatKeluarga = ($kepalaKeluarga && ! empty($kepalaKeluarga->alamat))
-            ? $kepalaKeluarga->alamat
-            : ($anggotaHidup->first(fn ($w) => ! empty($w->alamat))?->alamat ?? 'RT 04 / RW 08');
+        $alamatKeluarga = $keluarga->alamat;
 
-        $akunKk = $this->ambilAkunKeluarga($keluarga);
+        $akunKk = $keluarga->ambilAkunUser();
         $noTelpKeluarga = $akunKk?->no_telp ?? '-';
 
         $terakhirDiupdate = collect([$keluarga->updated_at, $anggotaHidup->max('updated_at')])
@@ -160,9 +156,7 @@ class WargaController extends Controller
 
         $anggotaHidup = $keluarga->wargas()->where('status_warga', 'hidup')->get();
         $kepalaKeluarga = $anggotaHidup->firstWhere('status_hubungan', 'kepala_keluarga') ?? $keluarga->kepalaKeluarga;
-        $alamatKeluarga = ($kepalaKeluarga && ! empty($kepalaKeluarga->alamat))
-            ? $kepalaKeluarga->alamat
-            : ($anggotaHidup->first(fn ($w) => ! empty($w->alamat))?->alamat ?? 'RT 04 / RW 08');
+        $alamatKeluarga = $keluarga->alamat;
         $totalJiwa = $anggotaHidup->count();
 
         return view('admin.warga-tambah-anggota', compact(
@@ -216,11 +210,7 @@ class WargaController extends Controller
         $akunKk = $this->ambilAkunKeluarga($keluarga);
         $userId = $akunKk?->id;
 
-        $alamatFinal = $validated['alamat'] ?? null;
-        if (empty($alamatFinal)) {
-            $kepala = $keluarga->wargas()->where('status_hubungan', 'kepala_keluarga')->where('status_warga', 'hidup')->first();
-            $alamatFinal = $kepala?->alamat ?? 'RT 04 / RW 08';
-        }
+        $alamatFinal = $validated['alamat'] ?? $keluarga->alamat;
 
         if ($existingWarga) {
             // Rule 4: NIK sudah ada pada KK yang sama
@@ -284,9 +274,7 @@ class WargaController extends Controller
 
         $anggotaHidup = $keluarga->wargas()->where('status_warga', 'hidup')->get();
         $kepalaKeluarga = $anggotaHidup->firstWhere('status_hubungan', 'kepala_keluarga') ?? $keluarga->kepalaKeluarga;
-        $alamatKeluarga = ($kepalaKeluarga && ! empty($kepalaKeluarga->alamat))
-            ? $kepalaKeluarga->alamat
-            : ($anggotaHidup->first(fn ($w) => ! empty($w->alamat))?->alamat ?? 'RT 04 / RW 08');
+        $alamatKeluarga = $keluarga->alamat;
 
         return view('admin.warga-edit-anggota', compact(
             'warga',
@@ -526,11 +514,19 @@ class WargaController extends Controller
                     if ($nikBaru) {
                         $existing = Warga::where('nik', $nikBaru)->first();
                         if ($existing && $existing->status_warga === 'pindah_kk') {
-                            // Pindahkan warga pindah_kk ke KK baru
+                            // Pindahkan warga pindah_kk ke KK baru & perbarui data kependudukan
                             $existing->update([
                                 'keluarga_id' => $keluarga->id,
                                 'user_id' => $akunKk?->id,
                                 'nama' => $dataBaru['nama'] ?? $existing->nama,
+                                'tempat_lahir' => $dataBaru['tempat_lahir'] ?? $existing->tempat_lahir,
+                                'tanggal_lahir' => $dataBaru['tanggal_lahir'] ?? $existing->tanggal_lahir,
+                                'jenis_kelamin' => $this->normalisasiJenisKelamin($dataBaru['jenis_kelamin'] ?? null) ?? $existing->jenis_kelamin,
+                                'agama' => $this->normalisasiAgama($dataBaru['agama'] ?? null) ?? $existing->agama,
+                                'pendidikan_terakhir' => $this->normalisasiPendidikan($dataBaru['pendidikan_terakhir'] ?? null) ?? $existing->pendidikan_terakhir,
+                                'pekerjaan' => $dataBaru['pekerjaan'] ?? $existing->pekerjaan,
+                                'alamat' => $dataBaru['alamat'] ?? ($keluarga?->kepalaKeluarga?->alamat ?? 'RT 04 / RW 08'),
+                                'status_hubungan' => $this->normalisasiStatusHubungan($dataBaru['status_hubungan'] ?? null) ?? $existing->status_hubungan,
                                 'status_warga' => 'hidup',
                             ]);
                         } elseif (! $existing) {
@@ -579,72 +575,7 @@ class WargaController extends Controller
      */
     protected function prosesTransferAkunOtomatis(Warga $warga): void
     {
-        $akunLama = $warga->user;
-        $keluargaId = $warga->keluarga_id;
-
-        // 1. Set warga.user_id = null
-        $warga->update(['user_id' => null]);
-
-        if (! $akunLama) {
-            return;
-        }
-
-        // 2. Cek apakah warga ini adalah pemilik akun (username == nik)
-        if ($akunLama->username !== $warga->nik) {
-            // Bukan pemilik akun, akun KK tetap aktif untuk pemilik saat ini
-            return;
-        }
-
-        // 3. Cek apakah masih ada anggota berstatus 'hidup' pada keluarga yang sama
-        $anggotaHidup = Warga::where('keluarga_id', $keluargaId)
-            ->where('status_warga', 'hidup')
-            ->where('id', '!=', $warga->id)
-            ->get();
-
-        if ($anggotaHidup->isEmpty()) {
-            // BR-03: Pembersihan Akun. Seluruh anggota KK habis -> hapus akun users
-            $akunLama->delete();
-            return;
-        }
-
-        // Urutan pemilihan pemilik baru:
-        // a. Kepala Keluarga
-        $pemilikBaru = $anggotaHidup->firstWhere('status_hubungan', 'kepala_keluarga');
-
-        // b. Istri / Suami
-        if (! $pemilikBaru) {
-            $pemilikBaru = $anggotaHidup->first(fn ($w) => in_array($w->status_hubungan, ['istri', 'suami']));
-        }
-
-        // c. Anak Tertua usia 17+
-        if (! $pemilikBaru) {
-            $pemilikBaru = $anggotaHidup
-                ->filter(function ($w) {
-                    if ($w->status_hubungan !== 'anak' || empty($w->tanggal_lahir)) {
-                        return false;
-                    }
-                    return Carbon::parse($w->tanggal_lahir)->age >= 17;
-                })
-                ->sortBy('tanggal_lahir')
-                ->first();
-        }
-
-        // d. Anggota Tertua
-        if (! $pemilikBaru) {
-            $pemilikBaru = $anggotaHidup->sortBy('tanggal_lahir')->first();
-        }
-
-        if ($pemilikBaru) {
-            // Perbarui username ke NIK pemilik baru, password tetap
-            $akunLama->update([
-                'username' => $pemilikBaru->nik,
-            ]);
-
-            // Pastikan user_id mengarah ke akun KK
-            $pemilikBaru->update([
-                'user_id' => $akunLama->id,
-            ]);
-        }
+        $warga->prosesTransferAkunOtomatis();
     }
 
     /**
@@ -652,32 +583,7 @@ class WargaController extends Controller
      */
     protected function ambilAkunKeluarga(Keluarga $keluarga): ?User
     {
-        // 1. Cek user_id dari kepala keluarga
-        if ($keluarga->kepalaKeluarga && $keluarga->kepalaKeluarga->user_id) {
-            $user = User::find($keluarga->kepalaKeluarga->user_id);
-            if ($user) {
-                return $user;
-            }
-        }
-
-        // 2. Cek user_id dari anggota keluarga mana pun
-        $wargaWithUser = $keluarga->wargas()->whereNotNull('user_id')->first();
-        if ($wargaWithUser && $wargaWithUser->user_id) {
-            $user = User::find($wargaWithUser->user_id);
-            if ($user) {
-                return $user;
-            }
-        }
-
-        // 3. Cek User berdasarkan username = NIK kepala keluarga
-        if ($keluarga->kepalaKeluarga && $keluarga->kepalaKeluarga->nik) {
-            $user = User::where('username', $keluarga->kepalaKeluarga->nik)->first();
-            if ($user) {
-                return $user;
-            }
-        }
-
-        return null;
+        return $keluarga->ambilAkunUser();
     }
 
     /**
@@ -685,19 +591,7 @@ class WargaController extends Controller
      */
     protected function normalisasiJenisKelamin(?string $value): ?string
     {
-        if (! $value) {
-            return null;
-        }
-
-        $v = strtolower(trim($value));
-        if (in_array($v, ['laki_laki', 'laki-laki', 'laki laki', 'pria', 'l'])) {
-            return 'laki_laki';
-        }
-        if (in_array($v, ['perempuan', 'wanita', 'p'])) {
-            return 'perempuan';
-        }
-
-        return 'laki_laki';
+        return Warga::normalisasiJenisKelamin($value);
     }
 
     /**
@@ -705,26 +599,7 @@ class WargaController extends Controller
      */
     protected function normalisasiStatusHubungan(?string $value): ?string
     {
-        if (! $value) {
-            return null;
-        }
-
-        $v = strtolower(trim(str_replace(['-', ' '], '_', $value)));
-        $allowed = [
-            'kepala_keluarga', 'suami', 'istri', 'anak', 'menantu',
-            'cucu', 'orang_tua', 'mertua', 'famili_lain', 'lainnya',
-        ];
-
-        if (in_array($v, $allowed)) {
-            return $v;
-        }
-
-        return match ($v) {
-            'anak_kandung' => 'anak',
-            'kepala' => 'kepala_keluarga',
-            'famili' => 'famili_lain',
-            default => 'lainnya',
-        };
+        return Warga::normalisasiStatusHubungan($value);
     }
 
     /**
@@ -732,25 +607,7 @@ class WargaController extends Controller
      */
     protected function normalisasiAgama(?string $value): ?string
     {
-        if (! $value) {
-            return null;
-        }
-
-        $v = strtolower(trim($value));
-        $allowed = ['islam', 'katolik', 'protestan', 'buddha', 'hindu', 'konghucu'];
-
-        if (in_array($v, $allowed)) {
-            return $v;
-        }
-
-        if (str_contains($v, 'kristen') || str_contains($v, 'protestan')) {
-            return 'protestan';
-        }
-        if (str_contains($v, 'katolik')) {
-            return 'katolik';
-        }
-
-        return 'islam';
+        return Warga::normalisasiAgama($value);
     }
 
     /**
@@ -758,46 +615,7 @@ class WargaController extends Controller
      */
     protected function normalisasiPendidikan(?string $value): ?string
     {
-        if (! $value) {
-            return null;
-        }
-
-        $v = strtolower(trim(str_replace(['/', '-', ' '], '_', $value)));
-        $allowed = [
-            'tidak_belum_sekolah', 'belum_tamat_sd', 'sd_sederajat',
-            'smp_sederajat', 'sma_sederajat', 'd1_d2', 'd3', 'd4_s1', 's2', 's3',
-        ];
-
-        if (in_array($v, $allowed)) {
-            return $v;
-        }
-
-        if (str_contains($v, 's3') || str_contains($v, 'doktor')) {
-            return 's3';
-        }
-        if (str_contains($v, 's2') || str_contains($v, 'magister')) {
-            return 's2';
-        }
-        if (str_contains($v, 's1') || str_contains($v, 'sarjana') || str_contains($v, 'd4')) {
-            return 'd4_s1';
-        }
-        if (str_contains($v, 'd3') || str_contains($v, 'diploma_3')) {
-            return 'd3';
-        }
-        if (str_contains($v, 'd1') || str_contains($v, 'd2')) {
-            return 'd1_d2';
-        }
-        if (str_contains($v, 'sma') || str_contains($v, 'smk') || str_contains($v, 'slta')) {
-            return 'sma_sederajat';
-        }
-        if (str_contains($v, 'smp') || str_contains($v, 'sltp')) {
-            return 'smp_sederajat';
-        }
-        if (str_contains($v, 'sd')) {
-            return 'sd_sederajat';
-        }
-
-        return 'tidak_belum_sekolah';
+        return Warga::normalisasiPendidikan($value);
     }
 
     /**
@@ -805,24 +623,6 @@ class WargaController extends Controller
      */
     protected function normalisasiStatusWarga(?string $value): ?string
     {
-        if (! $value) {
-            return null;
-        }
-
-        $v = strtolower(trim(str_replace([' ', '-', '(', ')'], '_', $value)));
-        if (str_contains($v, 'hidup')) {
-            return 'hidup';
-        }
-        if (str_contains($v, 'pindah_kk')) {
-            return 'pindah_kk';
-        }
-        if (str_contains($v, 'pindah_rumah') || str_contains($v, 'pindah')) {
-            return 'pindah_rumah';
-        }
-        if (str_contains($v, 'meninggal')) {
-            return 'meninggal';
-        }
-
-        return 'hidup';
+        return Warga::normalisasiStatusWarga($value);
     }
 }

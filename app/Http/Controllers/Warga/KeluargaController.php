@@ -62,21 +62,12 @@ class KeluargaController extends Controller
         if ($keluarga) {
             $anggotaKeluarga = $keluarga->wargas()
                 ->where('status_warga', 'hidup')
-                ->orderByRaw("CASE 
-                    WHEN status_hubungan = 'kepala_keluarga' THEN 1 
-                    WHEN status_hubungan = 'suami' THEN 2 
-                    WHEN status_hubungan = 'istri' THEN 3 
-                    WHEN status_hubungan = 'anak' THEN 4 
-                    ELSE 5 
-                END ASC")
-                ->orderBy('tanggal_lahir', 'asc')
+                ->urutHierarkiKk()
                 ->get();
 
             $totalJiwa = $anggotaKeluarga->count();
 
-            $alamatKeluarga = ($kepala && !empty($kepala->alamat))
-                ? $kepala->alamat
-                : ($anggotaKeluarga->first(fn($w) => !empty($w->alamat))?->alamat ?? 'RT 04 / RW 08');
+            $alamatKeluarga = $keluarga->alamat;
 
             $riwayatPengajuan = Riwayat_Perubahan::with(['warga', 'admin'])
                 ->where('keluarga_id', $keluarga->id)
@@ -251,12 +242,10 @@ class KeluargaController extends Controller
         $keluarga = $kepala?->keluarga;
 
         $anggotaKeluarga = $keluarga 
-            ? $keluarga->wargas()->where('status_warga', 'hidup')->orderBy('tanggal_lahir', 'asc')->get() 
+            ? $keluarga->wargas()->where('status_warga', 'hidup')->urutHierarkiKk()->get() 
             : collect();
 
-        $alamatKeluarga = ($kepala && !empty($kepala->alamat))
-            ? $kepala->alamat
-            : ($anggotaKeluarga->first(fn($w) => !empty($w->alamat))?->alamat ?? 'RT 04 / RW 08');
+        $alamatKeluarga = $keluarga ? $keluarga->alamat : 'RT 04 / RW 08';
 
         $targetNik = $request->query('nik') 
             ?? $request->query('target') 
@@ -397,29 +386,7 @@ class KeluargaController extends Controller
             $dataBaru['pekerjaan'] = $allPossibleFields['pekerjaan']['new'];
         }
 
-        // Upload berkas pendukung (Mendukung Multi-Berkas)
-        $buktiPaths = [];
-        if ($request->hasFile('bukti')) {
-            $files = $request->file('bukti');
-            if (!is_array($files)) {
-                $files = [$files];
-            }
-
-            foreach ($files as $file) {
-                if ($file && $file->isValid()) {
-                    $ext = $file->getClientOriginalExtension();
-                    $filename = 'bukti_' . time() . '_' . uniqid() . '.' . $ext;
-                    $file->move(public_path('uploads/bukti'), $filename);
-                    $buktiPaths[] = 'uploads/bukti/' . $filename;
-                }
-            }
-        }
-
-        if (empty($buktiPaths)) {
-            $buktiPaths[] = 'contoh_Ijazah.png';
-        }
-
-        $buktiPath = count($buktiPaths) === 1 ? $buktiPaths[0] : json_encode($buktiPaths);
+        $buktiPath = $this->uploadBerkasBukti($request);
 
         Riwayat_Perubahan::create([
             'keluarga_id' => $keluarga->id,
@@ -447,9 +414,7 @@ class KeluargaController extends Controller
             ?? $user->wargas()->first();
         $keluarga = $kepala?->keluarga;
 
-        $alamatKeluarga = ($kepala && !empty($kepala->alamat))
-            ? $kepala->alamat
-            : ($keluarga?->wargas()->first(fn($w) => !empty($w->alamat))?->alamat ?? 'RT 04 / RW 08');
+        $alamatKeluarga = $keluarga ? $keluarga->alamat : 'RT 04 / RW 08';
 
         return view('warga.keluarga-tambah', compact(
             'user',
@@ -499,11 +464,32 @@ class KeluargaController extends Controller
             'status_warga' => 'hidup',
         ];
 
-        // Upload berkas pendukung (Mendukung Multi-Berkas)
+        $buktiPath = $this->uploadBerkasBukti($request);
+
+        Riwayat_Perubahan::create([
+            'keluarga_id' => $keluarga->id,
+            'warga_id' => null,
+            'jenis_pengajuan' => 'tambah_anggota',
+            'data_lama' => null,
+            'data_baru' => $dataBaru,
+            'bukti_path' => $buktiPath,
+            'status' => 'menunggu',
+            'alasan' => 'Pendaftaran anggota keluarga baru (' . $request->input('nama_lengkap') . ')',
+        ]);
+
+        return redirect()->route('warga.keluarga')
+            ->with('success', 'Pendaftaran anggota keluarga baru berhasil diajukan dan menunggu verifikasi Pengurus RT 04.');
+    }
+
+    /**
+     * Helper unggah berkas pendukung (Mendukung berkas tunggal maupun multi-berkas)
+     */
+    private function uploadBerkasBukti(Request $request): string
+    {
         $buktiPaths = [];
         if ($request->hasFile('bukti')) {
             $files = $request->file('bukti');
-            if (!is_array($files)) {
+            if (! is_array($files)) {
                 $files = [$files];
             }
 
@@ -521,20 +507,6 @@ class KeluargaController extends Controller
             $buktiPaths[] = 'contoh_Ijazah.png';
         }
 
-        $buktiPath = count($buktiPaths) === 1 ? $buktiPaths[0] : json_encode($buktiPaths);
-
-        Riwayat_Perubahan::create([
-            'keluarga_id' => $keluarga->id,
-            'warga_id' => null,
-            'jenis_pengajuan' => 'tambah_anggota',
-            'data_lama' => null,
-            'data_baru' => $dataBaru,
-            'bukti_path' => $buktiPath,
-            'status' => 'menunggu',
-            'alasan' => 'Pendaftaran anggota keluarga baru (' . $request->input('nama_lengkap') . ')',
-        ]);
-
-        return redirect()->route('warga.keluarga')
-            ->with('success', 'Pendaftaran anggota keluarga baru berhasil diajukan dan menunggu verifikasi Pengurus RT 04.');
+        return count($buktiPaths) === 1 ? $buktiPaths[0] : json_encode($buktiPaths);
     }
 }

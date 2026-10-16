@@ -46,10 +46,8 @@ class SuratController extends Controller
             });
         }
 
-        // Urutkan status menunggu terlebih dahulu, lalu berdasarkan waktu rilis terbaru
-        $surats = $query->orderByRaw("CASE WHEN status = 'menunggu' THEN 1 WHEN status = 'disetujui' THEN 2 ELSE 3 END")
-            ->latest('id')
-            ->get();
+        // Urutkan status menunggu terlebih dahulu via scope Model Surat
+        $surats = $query->urutPrioritasStatus()->get();
 
         $rekomendasiNomorSurat = Surat::generateNomorSurat();
 

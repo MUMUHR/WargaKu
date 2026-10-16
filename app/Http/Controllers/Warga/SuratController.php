@@ -25,19 +25,9 @@ class SuratController extends Controller
             ?? $user->wargas()->first();
         $keluarga = $kepala?->keluarga;
 
-        // Ambil seluruh anggota keluarga yang masih hidup dalam satu KK
+        // Ambil seluruh anggota keluarga yang masih hidup dalam satu KK (terurut hierarki KK)
         $anggotaKeluarga = $keluarga
-            ? $keluarga->wargas()
-                ->where('status_warga', 'hidup')
-                ->orderByRaw("CASE 
-                    WHEN status_hubungan = 'kepala_keluarga' THEN 1 
-                    WHEN status_hubungan = 'suami' THEN 2 
-                    WHEN status_hubungan = 'istri' THEN 3 
-                    WHEN status_hubungan = 'anak' THEN 4 
-                    ELSE 5 
-                END ASC")
-                ->orderBy('tanggal_lahir', 'asc')
-                ->get()
+            ? $keluarga->wargas()->where('status_warga', 'hidup')->urutHierarkiKk()->get()
             : collect();
 
         // Kumpulkan ID seluruh anggota keluarga untuk filter surat keluarga
@@ -52,8 +42,7 @@ class SuratController extends Controller
                 $q->whereIn('pemohon_id', $keluargaWargaIds)
                   ->orWhereIn('warga_tujuan_id', $keluargaWargaIds);
             })
-            ->orderByRaw("CASE WHEN status = 'menunggu' THEN 1 WHEN status = 'disetujui' THEN 2 ELSE 3 END")
-            ->latest('id')
+            ->urutPrioritasStatus()
             ->get();
 
         // Hitung statistik ringkasan status surat
@@ -129,9 +118,13 @@ class SuratController extends Controller
 
         $targetWarga = Warga::findOrFail($request->input('warga_tujuan_id'));
 
-        // Keamanan: pastikan warga tujuan berada dalam KK yang sama dengan pengguna login
+        // Keamanan: pastikan warga tujuan berada dalam KK yang sama dan berstatus hidup (BR-10 & BR-13)
         if ($keluarga && $targetWarga->keluarga_id !== $keluarga->id) {
             return back()->with('error', 'Anda hanya dapat mengajukan permohonan surat untuk anggota dalam Kartu Keluarga Anda.')->withInput();
+        }
+
+        if ($targetWarga->status_warga !== 'hidup') {
+            return back()->with('error', 'Surat pengantar hanya dapat diajukan untuk anggota keluarga yang berstatus hidup.')->withInput();
         }
 
         $pemohon = $kepala ?? $user->wargaPemilik ?? $targetWarga;

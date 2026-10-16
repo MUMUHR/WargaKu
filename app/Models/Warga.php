@@ -68,4 +68,19 @@ class Warga extends Model
     {
         return $this->hasMany(Riwayat_Perubahan::class, 'warga_id');
     }
+
+    /**
+     * Scope untuk mengurutkan anggota keluarga sesuai hierarki resmi Kartu Keluarga:
+     * 1. Kepala Keluarga, 2. Suami, 3. Istri, 4. Anak (tertua ke termuda), 5. Lainnya.
+     */
+    public function scopeUrutHierarkiKk($query)
+    {
+        return $query->orderByRaw("CASE 
+            WHEN status_hubungan = 'kepala_keluarga' THEN 1 
+            WHEN status_hubungan = 'suami' THEN 2 
+            WHEN status_hubungan = 'istri' THEN 3 
+            WHEN status_hubungan = 'anak' THEN 4 
+            ELSE 5 
+        END ASC")->orderBy('tanggal_lahir', 'asc');
+    }
 }

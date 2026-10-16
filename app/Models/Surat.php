@@ -101,4 +101,17 @@ class Surat extends Model
 
         return "{$nomorUrutPad}/SP/RT04/RW08/{$bulanRomawi}/{$tahun}";
     }
+
+    /**
+     * Scope untuk mengurutkan permohonan surat:
+     * 1. Status 'menunggu' paling atas (verifikasi prioritas Admin),
+     * 2. Status 'disetujui',
+     * 3. Status lainnya ('ditolak', 'dibatalkan'),
+     * lalu berdasarkan rilis terbaru (latest id).
+     */
+    public function scopeUrutPrioritasStatus($query)
+    {
+        return $query->orderByRaw("CASE WHEN status = 'menunggu' THEN 1 WHEN status = 'disetujui' THEN 2 ELSE 3 END")
+            ->latest('id');
+    }
 }

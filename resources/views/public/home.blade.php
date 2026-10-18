@@ -140,29 +140,7 @@
      ═══════════════════════════════════════════ --}}
 <section class="announcements-section" aria-label="Pengumuman terkini">
     @php
-        $pengumuman = $pengumuman ?? [
-            [
-                'id' => 1,
-                'judul' => 'Kerja Bakti Lingkungan Serentak & PSN Menjelang Musim Hujan',
-                'isi' => 'Kegiatan gotong royong membersihkan saluran air, selokan, dan pencegahan sarang nyamuk jelang musim penghujan di seluruh gang RT 04.',
-                'gambar' => 'images/pengumuman/kerjabakti.jpg',
-                'created_at' => '2025-05-16 08:00:00',
-            ],
-            [
-                'id' => 2,
-                'judul' => 'Jadwal Fogging Nyamuk DBD Wilayah RT 04 / RW 08',
-                'isi' => 'Penyemprotan disinfeksi dan pengasapan fogging DBD terjadwal dari Puskesmas. Mohon warga menutup makanan dan mengamankan hewan peliharaan.',
-                'gambar' => 'images/pengumuman/fogging.jpg',
-                'created_at' => '2025-05-12 07:30:00',
-            ],
-            [
-                'id' => 4,
-                'judul' => 'Edaran Pembayaran Iuran Kebersihan & Kas RT Periode Mei 2025',
-                'isi' => 'Pemberitahuan penarikan iuran rutin warga untuk kebersihan lingkungan, sampah, dan uang kas RT periode Mei 2025.',
-                'gambar' => 'images/pengumuman/sembako.jpg',
-                'created_at' => '2025-05-01 08:00:00',
-            ],
-        ];
+        $pengumuman = $pengumuman ?? collect();
     @endphp
     <div class="container">
         <div class="section__header">

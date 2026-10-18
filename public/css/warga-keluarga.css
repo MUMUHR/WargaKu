@@ -21,6 +21,7 @@
 
 .kk-stat-card--teal  { background: #007a87; color:#fff; }
 .kk-stat-card--gray  { background: #6c757d; color:#fff; }
+.kk-stat-card--amber { background: #d97706; color:#fff; }
 
 .kk-stat-card__body {
     padding: 20px 24px 18px;

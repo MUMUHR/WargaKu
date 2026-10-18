@@ -170,9 +170,6 @@ class KeluargaController extends Controller
                 // Berkas Bukti Pendukung (Mendukung Multi-Berkas)
                 $docs = [];
                 $buktiList = $r->bukti_list;
-                if (empty($buktiList)) {
-                    $buktiList = ['contoh_Ijazah.png'];
-                }
 
                 foreach ($buktiList as $idx => $bPath) {
                     $docUrl = '';
@@ -504,7 +501,7 @@ class KeluargaController extends Controller
         }
 
         if (empty($buktiPaths)) {
-            $buktiPaths[] = 'contoh_Ijazah.png';
+            return '';
         }
 
         return count($buktiPaths) === 1 ? $buktiPaths[0] : json_encode($buktiPaths);

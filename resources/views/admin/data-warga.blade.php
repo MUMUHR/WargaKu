@@ -62,85 +62,8 @@
             ];
         }
     } else {
-        $listKk = $listKk ?? [
-            [
-                'no_kk' => '3275010905120008',
-                'nama_kepala' => 'Bambang Santoso, S.T.',
-                'nik_kepala' => '3275012304800001',
-                'alamat' => 'Blok B4 No. 12, RT 04 / RW 08',
-                'blok' => 'Blok B',
-                'jumlah_anggota' => 3,
-                'laki_laki' => 1,
-                'perempuan' => 2,
-                'status_tinggal' => 'Tetap (Milik Sendiri)',
-                'status_tinggal_badge' => 'Tetap',
-                'status_ekonomi' => 'Kurang Mampu',
-                'ekonomi_kategori' => 'Mampu',
-                'kontak' => '0812-8901-2345',
-            ],
-            [
-                'no_kk' => '3275012010150012',
-                'nama_kepala' => 'Hendro Gunawan',
-                'nik_kepala' => '3275011005820002',
-                'alamat' => 'Blok A1 No. 05, RT 04 / RW 08',
-                'blok' => 'Blok A',
-                'jumlah_anggota' => 4,
-                'laki_laki' => 2,
-                'perempuan' => 2,
-                'status_tinggal' => 'Tetap (Milik Sendiri)',
-                'status_tinggal_badge' => 'Tetap',
-                'status_ekonomi' => 'Mampu',
-                'ekonomi_kategori' => 'Mampu',
-                'kontak' => '0813-5678-9012',
-            ],
-            [
-                'no_kk' => '3275011802110003',
-                'nama_kepala' => 'Achmad Fauzi, S.Pd.',
-                'nik_kepala' => '3275011802790003',
-                'alamat' => 'Blok C2 No. 08, RT 04 / RW 08',
-                'blok' => 'Blok C',
-                'jumlah_anggota' => 5,
-                'laki_laki' => 2,
-                'perempuan' => 3,
-                'status_tinggal' => 'Kontrak / Sewa',
-                'status_tinggal_badge' => 'Kontrak / Sewa',
-                'status_ekonomi' => 'Kurang Mampu',
-                'ekonomi_kategori' => 'Kurang Mampu',
-                'kontak' => '0856-7788-9901',
-            ],
-            [
-                'no_kk' => '3275012408190021',
-                'nama_kepala' => 'Ibu Sumarti',
-                'nik_kepala' => '3275016408650005',
-                'alamat' => 'Blok D3 No. 02, RT 04 / RW 08',
-                'blok' => 'Blok D',
-                'jumlah_anggota' => 2,
-                'laki_laki' => 0,
-                'perempuan' => 2,
-                'status_tinggal' => 'Tetap (Milik Sendiri)',
-                'status_tinggal_badge' => 'Tetap',
-                'status_ekonomi' => 'Mampu',
-                'ekonomi_kategori' => 'Mampu',
-                'kontak' => '0878-1122-3344',
-            ],
-            [
-                'no_kk' => '3275010503220035',
-                'nama_kepala' => 'Raden Dimas Arya',
-                'nik_kepala' => '3275010503900004',
-                'alamat' => 'Blok B1 No. 17, RT 04 / RW 08',
-                'blok' => 'Blok B',
-                'jumlah_anggota' => 3,
-                'laki_laki' => 2,
-                'perempuan' => 1,
-                'status_tinggal' => 'Tetap (Milik Sendiri)',
-                'status_tinggal_badge' => 'Tetap',
-                'status_ekonomi' => 'Mampu',
-                'ekonomi_kategori' => 'Mampu',
-                'kontak' => '0811-2233-4455',
-            ],
-        ];
+        $listKk = [];
     }
-
 @endphp
 
 @if(session('success'))
@@ -188,13 +111,13 @@
         <i class='bx bx-home-alt warga-stat-box__icon'></i>
     </div>
     <div class="warga-stat-box warga-stat-box--green">
-        <div class="warga-stat-box__val">{{ $totalWargaHidup ?? 312 }} <small>Jiwa</small></div>
+        <div class="warga-stat-box__val">{{ $totalWargaHidup ?? 0 }} <small>Jiwa</small></div>
         <div class="warga-stat-box__label">Warga Terdaftar (Hidup)</div>
-        <div class="warga-stat-box__sub">{{ $totalLakiLaki ?? 158 }} Laki-laki • {{ $totalPerempuan ?? 154 }} Perempuan</div>
+        <div class="warga-stat-box__sub">{{ $totalLakiLaki ?? 0 }} Laki-laki • {{ $totalPerempuan ?? 0 }} Perempuan</div>
         <i class='bx bx-group warga-stat-box__icon'></i>
     </div>
     <div class="warga-stat-box warga-stat-box--amber">
-        <div class="warga-stat-box__val">{{ $totalMenungguVerifikasi ?? (isset($daftarPengajuan) ? $daftarPengajuan->total() : 5) }} <small>Pengajuan</small></div>
+        <div class="warga-stat-box__val">{{ $totalMenungguVerifikasi ?? (isset($daftarPengajuan) ? $daftarPengajuan->total() : 0) }} <small>Pengajuan</small></div>
         <div class="warga-stat-box__label">Menunggu Verifikasi RT</div>
         <i class='bx bx-clipboard warga-stat-box__icon'></i>
     </div>
@@ -287,7 +210,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($listKk as $idx => $k)
+                    @forelse($listKk as $idx => $k)
                     <tr class="row-kk-item"
                         data-nokk="{{ $k['no_kk'] }}"
                         data-kepala="{{ strtolower($k['nama_kepala']) }}"
@@ -313,7 +236,7 @@
                         <td>
                             <div class="status-tags-wrap">
                                 @if(str_contains(strtolower($k['status_tinggal_badge']), 'kontrak') || str_contains(strtolower($k['status_tinggal_badge']), 'sewa'))
-                                    <span class="badge-status-sewa">{{ $k['status_tinggal_badge'] }}</span>
+                                     <span class="badge-status-sewa">{{ $k['status_tinggal_badge'] }}</span>
                                 @else
                                     <span class="badge-status-tetap">{{ $k['status_tinggal_badge'] }}</span>
                                 @endif
@@ -342,7 +265,14 @@
                             </div>
                         </td>
                     </tr>
-                    @endforeach
+                    @empty
+                    <tr>
+                        <td colspan="7" style="text-align: center; padding: 40px 16px; color: #6c757d;">
+                            <i class='bx bx-search-alt' style="font-size: 32px; color: #adb5bd; display: block; margin-bottom: 8px;"></i>
+                            Tidak ada data Kartu Keluarga yang sesuai dengan kriteria.
+                        </td>
+                    </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>

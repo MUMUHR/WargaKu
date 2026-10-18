@@ -105,6 +105,7 @@
                                    id="no_kk"
                                    class="form-control"
                                    placeholder="3271048809920001"
+                                   value="{{ old('no_kk') }}"
                                    maxlength="16"
                                    inputmode="numeric"
                                    pattern="[0-9]{16}"
@@ -124,10 +125,10 @@
                                 </svg>
                             </span>
                             <select name="status_tempat_tinggal" id="status_tempat_tinggal" class="form-control" required>
-                                <option value="" disabled selected>-- Pilih Status Tempat Tinggal --</option>
-                                <option value="tetap">Tetap</option>
-                                <option value="kontrak">Kontrak / Sewa</option>
-                                <option value="kost">Kost</option>
+                                <option value="" disabled {{ old('status_tempat_tinggal') ? '' : 'selected' }}>-- Pilih Status Tempat Tinggal --</option>
+                                <option value="tetap" {{ old('status_tempat_tinggal') === 'tetap' ? 'selected' : '' }}>Tetap</option>
+                                <option value="kontrak" {{ old('status_tempat_tinggal') === 'kontrak' ? 'selected' : '' }}>Kontrak / Sewa</option>
+                                <option value="kost" {{ old('status_tempat_tinggal') === 'kost' ? 'selected' : '' }}>Kost</option>
                             </select>
                         </div>
                     </div>
@@ -148,6 +149,7 @@
                                    id="no_hp"
                                    class="form-control"
                                    placeholder="08xxxxxxxxxx"
+                                   value="{{ old('no_hp') }}"
                                    required>
                         </div>
                     </div>
@@ -179,6 +181,7 @@
                                    id="nik"
                                    class="form-control"
                                    placeholder="3271041508800001"
+                                   value="{{ old('nik') }}"
                                    maxlength="16"
                                    inputmode="numeric"
                                    pattern="[0-9]{16}"
@@ -202,6 +205,7 @@
                                    id="nama"
                                    class="form-control"
                                    placeholder="Nama lengkap sesuai KTP"
+                                   value="{{ old('nama') }}"
                                    required>
                         </div>
                     </div>
@@ -228,7 +232,8 @@
                                    name="tempat_lahir"
                                    id="tempat_lahir"
                                    class="form-control"
-                                   placeholder="Kota / tempat lahir">
+                                   placeholder="Kota / tempat lahir"
+                                   value="{{ old('tempat_lahir') }}">
                         </div>
                     </div>
 
@@ -237,6 +242,7 @@
                         <input type="date"
                                name="tanggal_lahir"
                                id="tanggal_lahir"
+                               value="{{ old('tanggal_lahir') }}"
                                class="form-control form-control--no-icon">
                     </div>
                 </div>
@@ -246,21 +252,21 @@
                     <div class="form-group">
                         <label for="jenis_kelamin" class="form-label">Jenis Kelamin<span class="req">*</span></label>
                         <select name="jenis_kelamin" id="jenis_kelamin" class="form-control form-control--no-icon" required>
-                            <option value="" disabled selected>-- Pilih Jenis Kelamin --</option>
-                            <option value="L">Laki-laki</option>
-                            <option value="P">Perempuan</option>
+                            <option value="" disabled {{ old('jenis_kelamin') ? '' : 'selected' }}>-- Pilih Jenis Kelamin --</option>
+                            <option value="L" {{ old('jenis_kelamin') === 'L' ? 'selected' : '' }}>Laki-laki</option>
+                            <option value="P" {{ old('jenis_kelamin') === 'P' ? 'selected' : '' }}>Perempuan</option>
                         </select>
                     </div>
 
                     <div class="form-group">
                         <label for="agama" class="form-label">Agama</label>
                         <select name="agama" id="agama" class="form-control form-control--no-icon">
-                            <option value="Islam" selected>Islam</option>
-                            <option value="Kristen">Kristen Protestan</option>
-                            <option value="Katolik">Katolik</option>
-                            <option value="Hindu">Hindu</option>
-                            <option value="Buddha">Buddha</option>
-                            <option value="Konghucu">Konghucu</option>
+                            <option value="Islam" {{ old('agama', 'Islam') === 'Islam' ? 'selected' : '' }}>Islam</option>
+                            <option value="Kristen" {{ old('agama') === 'Kristen' ? 'selected' : '' }}>Kristen Protestan</option>
+                            <option value="Katolik" {{ old('agama') === 'Katolik' ? 'selected' : '' }}>Katolik</option>
+                            <option value="Hindu" {{ old('agama') === 'Hindu' ? 'selected' : '' }}>Hindu</option>
+                            <option value="Buddha" {{ old('agama') === 'Buddha' ? 'selected' : '' }}>Buddha</option>
+                            <option value="Konghucu" {{ old('agama') === 'Konghucu' ? 'selected' : '' }}>Konghucu</option>
                         </select>
                     </div>
                 </div>
@@ -270,13 +276,13 @@
                     <div class="form-group">
                         <label for="pendidikan" class="form-label">Pendidikan Terakhir</label>
                         <select name="pendidikan" id="pendidikan" class="form-control form-control--no-icon">
-                            <option value="SMA/SMK" selected>SMA/SMK/Sederajat</option>
-                            <option value="SD">SD/Sederajat</option>
-                            <option value="SMP">SMP/Sederajat</option>
-                            <option value="D3">Diploma (D3)</option>
-                            <option value="S1">Sarjana (D4/S1)</option>
-                            <option value="S2/S3">Magister/Doktor (S2/S3)</option>
-                            <option value="Tidak/Belum Sekolah">Tidak/Belum Sekolah</option>
+                            <option value="SMA/SMK" {{ old('pendidikan', 'SMA/SMK') === 'SMA/SMK' ? 'selected' : '' }}>SMA/SMK/Sederajat</option>
+                            <option value="SD" {{ old('pendidikan') === 'SD' ? 'selected' : '' }}>SD/Sederajat</option>
+                            <option value="SMP" {{ old('pendidikan') === 'SMP' ? 'selected' : '' }}>SMP/Sederajat</option>
+                            <option value="D3" {{ old('pendidikan') === 'D3' ? 'selected' : '' }}>Diploma (D3)</option>
+                            <option value="S1" {{ old('pendidikan') === 'S1' ? 'selected' : '' }}>Sarjana (D4/S1)</option>
+                            <option value="S2/S3" {{ old('pendidikan') === 'S2/S3' ? 'selected' : '' }}>Magister/Doktor (S2/S3)</option>
+                            <option value="Tidak/Belum Sekolah" {{ old('pendidikan') === 'Tidak/Belum Sekolah' ? 'selected' : '' }}>Tidak/Belum Sekolah</option>
                         </select>
                     </div>
 
@@ -293,7 +299,8 @@
                                    name="pekerjaan"
                                    id="pekerjaan"
                                    class="form-control"
-                                   placeholder="Karyawan Swasta, Wiraswasta, PNS">
+                                   placeholder="Karyawan Swasta, Wiraswasta, PNS"
+                                   value="{{ old('pekerjaan') }}">
                         </div>
                     </div>
                 </div>
@@ -314,6 +321,7 @@
                                    id="alamat"
                                    class="form-control"
                                    placeholder="Jl. Melati Blok C No. 12, RT 04 / RW 08"
+                                   value="{{ old('alamat') }}"
                                    required>
                         </div>
                     </div>
@@ -365,5 +373,6 @@
 
 </div>
 
+@include('partials.sweetalert')
 </body>
 </html>

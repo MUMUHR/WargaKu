@@ -44,7 +44,7 @@ class LoginRequest extends FormRequest
         ];
     }
 
-    /**
+        /**
      * Attempt to authenticate the request's credentials.
      *
      * @throws ValidationException
@@ -59,6 +59,25 @@ class LoginRequest extends FormRequest
             throw ValidationException::withMessages([
                 'username' => 'NIK / Username atau kata sandi yang Anda masukkan tidak sesuai.',
             ]);
+        }
+
+        $user = Auth::user();
+        if ($user && $user->role === 'warga') {
+            $warga = $user->wargaPemilik ?? \App\Models\Warga::where('nik', $user->username)->first();
+            if ($warga && $warga->status_warga !== 'hidup') {
+                Auth::guard('web')->logout();
+
+                $pesan = match($warga->status_warga) {
+                    'meninggal'    => 'Akun ini tidak aktif karena warga tercatat telah meninggal dunia.',
+                    'pindah_rumah' => 'Akun ini tidak aktif karena warga tercatat telah pindah domisili keluar wilayah RT 04.',
+                    'pindah_kk'    => 'Akun ini telah dinonaktifkan karena status pindah KK. Silakan lakukan pendaftaran KK baru atau hubungi Admin RT.',
+                    default        => 'Akun Anda sedang tidak aktif. Silakan hubungi Pengurus RT 04.',
+                };
+
+                throw ValidationException::withMessages([
+                    'username' => $pesan,
+                ]);
+            }
         }
 
         RateLimiter::clear($this->throttleKey());

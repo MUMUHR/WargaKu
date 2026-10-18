@@ -222,7 +222,7 @@
                             <label class="wf-label" for="alamat_domisili">
                                 <span>Alamat Domisili Lengkap <span class="wf-req">*</span></span>
                             </label>
-                            <textarea id="alamat_domisili" name="alamat_domisili" rows="3" class="wf-textarea" required>Jl. Melati Blok B No. 14, RT 04 / RW 08, Kel. Baranangsiang, Kec. Bogor Timur</textarea>
+                            <textarea id="alamat_domisili" name="alamat_domisili" rows="3" class="wf-textarea" placeholder="Masukkan alamat domisili lengkap sesuai Kartu Keluarga..." required>{{ old('alamat_domisili') }}</textarea>
                             <div class="wf-help-text">
                                 Diisi sesuai alamat domisili Kartu Keluarga pemohon.
                             </div>

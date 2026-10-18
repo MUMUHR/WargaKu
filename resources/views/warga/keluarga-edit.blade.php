@@ -15,7 +15,10 @@
 
 @section('content')
 
-{{-- ── Header Halaman ── --}}
+@php
+    $selectedNik = $targetNik ?? ($anggotaKeluarga->first()?->nik ?? '');
+    $selectedData = $anggotaDataEdit[$selectedNik] ?? (count($anggotaDataEdit) > 0 ? reset($anggotaDataEdit) : null);
+@endphp
 <div class="warga-form-page">
     <div class="wf-header-action-row">
         <div>
@@ -97,10 +100,10 @@
                         {{-- Kartu Ringkasan Anggota Terpilih --}}
                         <div class="wf-target-card" id="member-preview-card">
                             <div class="wf-target-card__user">
-                                <div class="wf-target-card__avatar" id="preview-avatar">DA</div>
+                                <div class="wf-target-card__avatar" id="preview-avatar">{{ $selectedData['avatar'] ?? 'WG' }}</div>
                                 <div>
-                                    <div class="wf-target-card__name" id="preview-name">Dimas Arya Pratama</div>
-                                    <div class="wf-target-card__nik">NIK: <span id="preview-nik">3271048809920003</span> • Hubungan: <span id="preview-shdk">Anak Kandung</span></div>
+                                    <div class="wf-target-card__name" id="preview-name">{{ $selectedData['nama'] ?? 'Pilih Anggota' }}</div>
+                                    <div class="wf-target-card__nik">NIK: <span id="preview-nik">{{ $selectedData['nik'] ?? '-' }}</span> • Hubungan: <span id="preview-shdk">{{ $selectedData['shdk'] ?? '-' }}</span></div>
                                 </div>
                             </div>
                             <div>
@@ -152,13 +155,13 @@
                                     </td>
                                     <td>
                                         <div class="wf-input-old-lock">
-                                            <span id="old-nik">3271048809920003</span>
+                                            <span id="old-nik">{{ $selectedData['nik'] ?? '' }}</span>
                                             <i class='bx bx-lock-alt'></i>
                                         </div>
                                     </td>
                                     <td>
                                         <div class="wf-input-editable-wrap">
-                                            <input type="text" id="new-nik" name="new_nik" class="wf-input" value="3271048809920003" maxlength="16">
+                                            <input type="text" id="new-nik" name="new_nik" class="wf-input" value="{{ $selectedData['nik'] ?? '' }}" maxlength="16">
                                         </div>
                                     </td>
                                 </tr>
@@ -174,13 +177,13 @@
                                     </td>
                                     <td>
                                         <div class="wf-input-old-lock">
-                                            <span id="old-nama">Dimas Arya Pratama</span>
+                                            <span id="old-nama">{{ $selectedData['nama'] ?? '' }}</span>
                                             <i class='bx bx-lock-alt'></i>
                                         </div>
                                     </td>
                                     <td>
                                         <div class="wf-input-editable-wrap">
-                                            <input type="text" id="new-nama" name="new_nama" class="wf-input" value="Dimas Arya Pratama">
+                                            <input type="text" id="new-nama" name="new_nama" class="wf-input" value="{{ $selectedData['nama'] ?? '' }}">
                                         </div>
                                     </td>
                                 </tr>
@@ -196,13 +199,13 @@
                                     </td>
                                     <td>
                                         <div class="wf-input-old-lock">
-                                            <span id="old-tempat-lahir">Bogor</span>
+                                            <span id="old-tempat-lahir">{{ $selectedData['tempatLahir'] ?? '-' }}</span>
                                             <i class='bx bx-lock-alt'></i>
                                         </div>
                                     </td>
                                     <td>
                                         <div class="wf-input-editable-wrap">
-                                            <input type="text" id="new-tempat-lahir" name="new_tempat_lahir" class="wf-input" value="Bogor">
+                                            <input type="text" id="new-tempat-lahir" name="new_tempat_lahir" class="wf-input" value="{{ $selectedData['tempatLahir'] ?? '' }}">
                                         </div>
                                     </td>
                                 </tr>
@@ -218,13 +221,13 @@
                                     </td>
                                     <td>
                                         <div class="wf-input-old-lock">
-                                            <span id="old-tgl-lahir">08-08-2005</span>
+                                            <span id="old-tgl-lahir">{{ $selectedData['tglLahir'] ?? '-' }}</span>
                                             <i class='bx bx-lock-alt'></i>
                                         </div>
                                     </td>
                                     <td>
                                         <div class="wf-input-editable-wrap">
-                                            <input type="date" id="new-tgl-lahir" name="new_tgl_lahir" class="wf-input" value="2005-08-08">
+                                            <input type="date" id="new-tgl-lahir" name="new_tgl_lahir" class="wf-input" value="{{ $selectedData['tglLahirNew'] ?? '' }}">
                                         </div>
                                     </td>
                                 </tr>
@@ -240,15 +243,15 @@
                                     </td>
                                     <td>
                                         <div class="wf-input-old-lock">
-                                            <span id="old-jk">Laki-Laki</span>
+                                            <span id="old-jk">{{ $selectedData['jk'] ?? '-' }}</span>
                                             <i class='bx bx-lock-alt'></i>
                                         </div>
                                     </td>
                                     <td>
                                         <div class="wf-input-editable-wrap">
                                             <select id="new-jk" name="new_jk" class="wf-select">
-                                                <option value="Laki-Laki" selected>Laki-Laki</option>
-                                                <option value="Perempuan">Perempuan</option>
+                                                <option value="Laki-Laki" {{ ($selectedData['jk'] ?? '') === 'Laki-Laki' ? 'selected' : '' }}>Laki-Laki</option>
+                                                <option value="Perempuan" {{ ($selectedData['jk'] ?? '') === 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
                                             </select>
                                         </div>
                                     </td>
@@ -265,19 +268,16 @@
                                     </td>
                                     <td>
                                         <div class="wf-input-old-lock">
-                                            <span id="old-agama">Islam</span>
+                                            <span id="old-agama">{{ $selectedData['agama'] ?? '-' }}</span>
                                             <i class='bx bx-lock-alt'></i>
                                         </div>
                                     </td>
                                     <td>
                                         <div class="wf-input-editable-wrap">
                                             <select id="new-agama" name="new_agama" class="wf-select">
-                                                <option value="Islam" selected>Islam</option>
-                                                <option value="Kristen Protestan">Kristen Protestan</option>
-                                                <option value="Katolik">Katolik</option>
-                                                <option value="Hindu">Hindu</option>
-                                                <option value="Buddha">Buddha</option>
-                                                <option value="Konghucu">Konghucu</option>
+                                                @foreach(['Islam', 'Kristen Protestan', 'Katolik', 'Hindu', 'Buddha', 'Konghucu'] as $agm)
+                                                    <option value="{{ $agm }}" {{ ($selectedData['agama'] ?? '') === $agm ? 'selected' : '' }}>{{ $agm }}</option>
+                                                @endforeach
                                             </select>
                                         </div>
                                     </td>
@@ -294,23 +294,23 @@
                                     </td>
                                     <td>
                                         <div class="wf-input-old-lock">
-                                            <span id="old-pendidikan">SLTA / Sederajat</span>
+                                            <span id="old-pendidikan">{{ $selectedData['pendidikanOld'] ?? '-' }}</span>
                                             <i class='bx bx-lock-alt'></i>
                                         </div>
                                     </td>
                                     <td>
                                         <div class="wf-input-editable-wrap">
                                             <select id="new-pendidikan" name="new_pendidikan" class="wf-select">
-                                                <option value="Tidak / Belum Sekolah">Tidak / Belum Sekolah</option>
-                                                <option value="Belum Tamat SD / Sederajat">Belum Tamat SD / Sederajat</option>
-                                                <option value="SD / Sederajat">SD / Sederajat</option>
-                                                <option value="SMP / Sederajat">SMP / Sederajat</option>
-                                                <option value="SLTA / Sederajat" selected>SLTA / SMA / SMK / Sederajat</option>
-                                                <option value="Diploma I / II">Diploma I / II</option>
-                                                <option value="Diploma III">Diploma III</option>
-                                                <option value="Diploma IV / Strata 1 (S1)">Diploma IV / Strata 1 (S1)</option>
-                                                <option value="Strata 2 (S2)">Strata 2 (S2)</option>
-                                                <option value="Strata 3 (S3)">Strata 3 (S3)</option>
+                                                @php
+                                                    $opsiPendidikan = [
+                                                        'Tidak / Belum Sekolah', 'Belum Tamat SD / Sederajat', 'SD / Sederajat',
+                                                        'SMP / Sederajat', 'SLTA / Sederajat', 'Diploma I / II', 'Diploma III',
+                                                        'Diploma IV / Strata 1 (S1)', 'Strata 2 (S2)', 'Strata 3 (S3)'
+                                                    ];
+                                                @endphp
+                                                @foreach($opsiPendidikan as $pdd)
+                                                    <option value="{{ $pdd }}" {{ ($selectedData['pendidikanNew'] ?? '') === $pdd ? 'selected' : '' }}>{{ $pdd }}</option>
+                                                @endforeach
                                             </select>
                                         </div>
                                     </td>
@@ -327,13 +327,13 @@
                                     </td>
                                     <td>
                                         <div class="wf-input-old-lock">
-                                            <span id="old-pekerjaan">Pelajar / Mahasiswa</span>
+                                            <span id="old-pekerjaan">{{ $selectedData['pekerjaanOld'] ?? '-' }}</span>
                                             <i class='bx bx-lock-alt'></i>
                                         </div>
                                     </td>
                                     <td>
                                         <div class="wf-input-editable-wrap">
-                                            <input type="text" id="new-pekerjaan" name="new_pekerjaan" class="wf-input" value="Pelajar / Mahasiswa" placeholder="Contoh: Karyawan Swasta, Wiraswasta, PNS, Pelajar, dll.">
+                                            <input type="text" id="new-pekerjaan" name="new_pekerjaan" class="wf-input" value="{{ $selectedData['pekerjaanNew'] ?? '' }}" placeholder="Contoh: Karyawan Swasta, Wiraswasta, PNS, Pelajar, dll.">
                                         </div>
                                     </td>
                                 </tr>
@@ -349,13 +349,13 @@
                                     </td>
                                     <td>
                                         <div class="wf-input-old-lock">
-                                            <span id="old-alamat">Jl. Melati Blok B No. 14, RT 04 / RW 08</span>
+                                            <span id="old-alamat">{{ $selectedData['alamat'] ?? '-' }}</span>
                                             <i class='bx bx-lock-alt'></i>
                                         </div>
                                     </td>
                                     <td>
                                         <div class="wf-input-editable-wrap">
-                                            <input type="text" id="new-alamat" name="new_alamat" class="wf-input" value="Jl. Melati Blok B No. 14, RT 04 / RW 08">
+                                            <input type="text" id="new-alamat" name="new_alamat" class="wf-input" value="{{ $selectedData['alamat'] ?? '' }}">
                                         </div>
                                     </td>
                                 </tr>
@@ -371,23 +371,16 @@
                                     </td>
                                     <td>
                                         <div class="wf-input-old-lock">
-                                            <span id="old-shdk">Anak Kandung</span>
+                                            <span id="old-shdk">{{ $selectedData['shdk'] ?? '-' }}</span>
                                             <i class='bx bx-lock-alt'></i>
                                         </div>
                                     </td>
                                     <td>
                                         <div class="wf-input-editable-wrap">
                                             <select id="new-shdk" name="new_shdk" class="wf-select">
-                                                <option value="Anak Kandung" selected>Anak Kandung</option>
-                                                <option value="Kepala Keluarga">Kepala Keluarga</option>
-                                                <option value="Suami">Suami</option>
-                                                <option value="Istri">Istri</option>
-                                                <option value="Menantu">Menantu</option>
-                                                <option value="Cucu">Cucu</option>
-                                                <option value="Orang Tua">Orang Tua</option>
-                                                <option value="Mertua">Mertua</option>
-                                                <option value="Famili Lain">Famili Lain</option>
-                                                <option value="Lainnya">Lainnya</option>
+                                                @foreach(['Kepala Keluarga', 'Suami', 'Istri', 'Anak Kandung', 'Menantu', 'Cucu', 'Orang Tua', 'Mertua', 'Famili Lain', 'Lainnya'] as $sh)
+                                                    <option value="{{ $sh }}" {{ ($selectedData['shdk'] ?? '') === $sh ? 'selected' : '' }}>{{ $sh }}</option>
+                                                @endforeach
                                             </select>
                                         </div>
                                     </td>
@@ -404,17 +397,16 @@
                                     </td>
                                     <td>
                                         <div class="wf-input-old-lock">
-                                            <span id="old-status-warga">Hidup (Aktif)</span>
+                                            <span id="old-status-warga">{{ $selectedData['statusWarga'] ?? '-' }}</span>
                                             <i class='bx bx-lock-alt'></i>
                                         </div>
                                     </td>
                                     <td>
                                         <div class="wf-input-editable-wrap">
                                             <select id="new-status-warga" name="new_status_warga" class="wf-select">
-                                                <option value="Hidup (Aktif)" selected>Hidup (Aktif)</option>
-                                                <option value="Pindah KK">Pindah KK</option>
-                                                <option value="Pindah Rumah">Pindah Rumah</option>
-                                                <option value="Meninggal">Meninggal</option>
+                                                @foreach(['Hidup (Aktif)', 'Pindah KK', 'Pindah Rumah', 'Meninggal'] as $sw)
+                                                    <option value="{{ $sw }}" {{ ($selectedData['statusWarga'] ?? '') === $sw ? 'selected' : '' }}>{{ $sw }}</option>
+                                                @endforeach
                                             </select>
                                         </div>
                                     </td>

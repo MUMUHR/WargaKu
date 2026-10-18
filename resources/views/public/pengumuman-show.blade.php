@@ -8,15 +8,6 @@
 @endpush
 
 @section('content')
-@php
-    $item = $item ?? [
-        'id' => 1,
-        'judul' => 'Kerja Bakti Lingkungan Serentak & PSN Menjelang Musim Hujan',
-        'isi' => "Kegiatan gotong royong membersihkan saluran air, selokan, dan pencegahan sarang nyamuk jelang musim penghujan di seluruh gang RT 04. Seluruh warga diharapkan hadir pada hari Minggu pukul 07.00 WIB. Harap membawa peralatan kebersihan masing-masing seperti sapu, cangkul, dan kantong sampah.",
-        'gambar' => 'images/pengumuman/kerjabakti.jpg',
-        'created_at' => '2025-05-16 08:00:00',
-    ];
-@endphp
 <div class="detail-page">
 
     {{-- Tombol kembali (hijau sesuai mockup) --}}

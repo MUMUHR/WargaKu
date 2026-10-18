@@ -138,5 +138,7 @@
         });
     })();
 </script>
+
+@include('partials.sweetalert')
 </body>
 </html>

@@ -37,11 +37,17 @@ class AuthenticatedSessionController extends Controller
 
         $user = Auth::user();
 
+        $nama = $user->wargaPemilik?->nama 
+            ?? $user->wargas?->first()?->nama 
+            ?? $user->username;
+
         if ($user->isAdmin()) {
-            return redirect()->route('admin.beranda');
+            return redirect()->route('admin.beranda')
+                ->with('success', 'Selamat datang kembali, Administrator RT 04!');
         }
 
-        return redirect()->route('warga.beranda');
+        return redirect()->route('warga.beranda')
+            ->with('success', "Selamat datang kembali, {$nama}! Anda berhasil masuk.");
     }
 
     /**
@@ -55,6 +61,7 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect()->route('home');
+        return redirect()->route('home')
+            ->with('success', 'Anda telah berhasil keluar dari sistem WargaKu.');
     }
 }

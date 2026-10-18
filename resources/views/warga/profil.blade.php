@@ -220,8 +220,7 @@
         </div>
     </div>
     <div>
-        <form method="POST" action="{{ route('logout') }}" style="margin:0;"
-              onsubmit="return confirm('Apakah Anda yakin ingin keluar dari sesi kerja Portal Warga?')">
+        <form method="POST" action="{{ route('logout') }}" style="margin:0;">
             @csrf
             <button type="submit" class="btn-profil-logout-outline" id="btn-logout-card">
                 <i class='bx bx-log-out'></i> Logout / Keluar

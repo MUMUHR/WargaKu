@@ -42,7 +42,7 @@
             <i class='bx bxs-group kk-stat-card__watermark'></i>
         </div>
     </div>
-    <div class="kk-stat-card kk-stat-card--gray">
+    <div class="kk-stat-card {{ $totalMenunggu > 0 ? 'kk-stat-card--amber' : 'kk-stat-card--gray' }}">
         <div class="kk-stat-card__body">
             <div class="kk-stat-card__number">{{ $totalMenunggu }}</div>
             <div class="kk-stat-card__label">Menunggu Verifikasi RT</div>
@@ -80,10 +80,12 @@
         <div class="kk-info-divider"></div>
         <div class="kk-info-item">
             <div class="kk-info-item__label">ALAMAT &amp; DOMISILI</div>
-            <div class="kk-info-item__value">
-                {{ $alamatKeluarga }}
-                <span class="kk-badge kk-badge--tetap">{{ strtoupper(str_replace('_', ' ', $keluarga?->status_tinggal ?? 'TETAP')) }}</span>
-                <span class="kk-badge kk-badge--mampu">{{ strtoupper(str_replace('_', ' ', $keluarga?->status_ekonomi ?? 'MAMPU')) }}</span>
+            <div class="kk-info-item__value" style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;">
+                <span>{{ $alamatKeluarga }}</span>
+                <div style="display:inline-flex;gap:5px;align-items:center;flex-shrink:0;">
+                    <span class="kk-badge kk-badge--tetap">{{ strtoupper(str_replace('_', ' ', $keluarga?->status_tinggal ?? 'TETAP')) }}</span>
+                    <span class="kk-badge kk-badge--mampu">{{ strtoupper(str_replace('_', ' ', $keluarga?->status_ekonomi ?? 'MAMPU')) }}</span>
+                </div>
             </div>
         </div>
     </div>
@@ -285,9 +287,13 @@
                         <td><span class="kk-badge-jenis {{ $jenisClass }}">{{ $jenisLabel }}</span></td>
                         <td style="font-weight:600; color:#212529;">{{ $targetNama }}</td>
                         <td>
-                            <a href="javascript:void(0)" class="kk-file-link" onclick="bukaModalLihatPengajuan({{ $r->id }})" title="Klik untuk pratinjau berkas">
-                                <i class='bx bx-file-blank'></i> {{ basename($r->bukti_path ?: 'Dokumen.pdf') }}
-                            </a>
+                            @if(!empty($r->bukti_path))
+                                <a href="javascript:void(0)" class="kk-file-link" onclick="bukaModalLihatPengajuan({{ $r->id }})" title="Klik untuk pratinjau berkas">
+                                    <i class='bx bx-file-blank'></i> {{ basename($r->bukti_path) }}
+                                </a>
+                            @else
+                                <span style="color:#94a3b8; font-size:12px; font-style:italic;">Tidak ada berkas</span>
+                            @endif
                         </td>
                         <td><span class="kk-badge-rstatus {{ $statusDotClass }}"><span class="kk-status-dot">●</span> {{ $statusLabel }}</span></td>
                         <td style="color:{{ $r->status === 'ditolak' ? '#dc3545' : '#6c757d' }}; font-size:12.5px; font-weight:{{ $r->status === 'ditolak' ? '500' : 'normal' }};">
@@ -518,7 +524,11 @@
                     <!-- Visual Document Box Serupa Admin -->
                     <div class="kk-doc-preview-box">
                         <div class="kk-doc-display-container">
-                            <img id="modal-p-doc-img" src="{{ asset('contoh_Ijazah.png') }}" alt="Pratinjau Dokumen" class="kk-doc-preview-img" onclick="bukaZoomDokumen()" title="Klik untuk memperbesar gambar">
+                            <img id="modal-p-doc-img" src="" alt="Pratinjau Dokumen" class="kk-doc-preview-img" onclick="bukaZoomDokumen()" title="Klik untuk memperbesar gambar" style="display:none;">
+                            <div id="modal-p-doc-fallback" style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:36px 16px;color:#94a3b8;width:100%;">
+                                <i class='bx bx-file' id="modal-p-doc-none-icon" style="font-size:52px;color:#cbd5e1;margin-bottom:8px;"></i>
+                                <span id="modal-p-doc-fallback-text" style="font-size:13px;font-weight:600;">Tidak ada berkas bukti yang diunggah</span>
+                            </div>
                         </div>
 
                         <div class="kk-doc-info-bar">
@@ -533,7 +543,7 @@
                             <button type="button" class="kk-doc-btn" onclick="bukaZoomDokumen()" id="btn-perbesar-berkas">
                                 <i class='bx bx-zoom-in'></i> Perbesar Berkas
                             </button>
-                            <a id="btn-unduh-berkas" href="{{ asset('contoh_Ijazah.png') }}" download class="kk-doc-btn">
+                            <a id="btn-unduh-berkas" href="#" download class="kk-doc-btn">
                                 <i class='bx bx-download'></i> Unduh File Asli
                             </a>
                         </div>
@@ -718,10 +728,30 @@ function bukaModalLihatPengajuan(id) {
     }
 
     // Dokumen Tabs & Content
-    document.getElementById('modal-p-doc-count').textContent = p.docs.length + ' Dokumen';
-    renderDocTabs(p.docs, 0);
-    if (p.docs.length > 0) {
+    document.getElementById('modal-p-doc-count').textContent = (p.docs ? p.docs.length : 0) + ' Dokumen';
+    renderDocTabs(p.docs || [], 0);
+    var imgEl = document.getElementById('modal-p-doc-img');
+    var fallbackEl = document.getElementById('modal-p-doc-fallback');
+    var verEl = document.getElementById('modal-p-doc-verified');
+    var btnPerbesar = document.getElementById('btn-perbesar-berkas');
+    var btnUnduh = document.getElementById('btn-unduh-berkas');
+
+    if (p.docs && p.docs.length > 0) {
+        if (imgEl) imgEl.style.display = 'block';
+        if (fallbackEl) fallbackEl.style.display = 'none';
+        if (btnPerbesar) btnPerbesar.style.display = 'inline-flex';
+        if (btnUnduh) btnUnduh.style.display = 'inline-flex';
         renderDocPreview(p.docs[0]);
+    } else {
+        if (imgEl) imgEl.style.display = 'none';
+        if (fallbackEl) fallbackEl.style.display = 'flex';
+        document.getElementById('modal-p-doc-filename').textContent = 'Tidak ada dokumen';
+        if (verEl) {
+            verEl.style.color = '#dc2626';
+            verEl.innerHTML = "<i class='bx bx-error-circle'></i> Belum Terlampir";
+        }
+        if (btnPerbesar) btnPerbesar.style.display = 'none';
+        if (btnUnduh) btnUnduh.style.display = 'none';
     }
 
     // Footer Status & Tombol Reapply

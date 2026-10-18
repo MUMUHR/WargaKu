@@ -54,7 +54,17 @@ it('warga berhasil login dan diarahkan ke beranda warga', function () {
     ]);
 
     $response->assertRedirect(route('warga.beranda'));
+    $response->assertSessionHas('success');
     $this->assertAuthenticatedAs($this->warga);
+
+    auth()->logout();
+
+    $follow = $this->followingRedirects()->post(route('login.post'), [
+        'username' => '3271048809920001',
+        'password' => '3271048809920001',
+    ]);
+    $follow->assertSee('Swal.fire');
+    $follow->assertSee('Selamat datang kembali');
 });
 
 it('pengguna yang sudah login diarahkan ke dashboard masing-masing jika mengakses login', function () {
@@ -80,3 +90,150 @@ it('pengguna dapat melakukan logout', function () {
     $response->assertRedirect(route('home'));
     $this->assertGuest();
 });
+
+it('warga berstatus pindah_kk berhasil mendaftar KK baru dan datanya terupdate sesuai BR-09', function () {
+    // 1. Buat keluarga awal dan anggota berstatus pindah_kk (contoh: sang anak Raka)
+    $keluargaLama = \App\Models\Keluarga::create([
+        'no_kk'          => '3271048809920099',
+        'status_ekonomi' => 'mampu',
+        'status_tinggal' => 'tetap',
+        'alamat'         => 'Jl. Melati Blok A No. 1, RT 04/RW 08',
+    ]);
+
+    $wargaPindah = \App\Models\Warga::create([
+        'keluarga_id'     => $keluargaLama->id,
+        'user_id'         => null,
+        'nik'             => '3271041807180009',
+        'nama'            => 'Raka Santoso',
+        'tempat_lahir'    => 'Bogor',
+        'tanggal_lahir'   => '2000-07-18',
+        'jenis_kelamin'   => 'laki_laki',
+        'status_hubungan' => 'anak',
+        'status_warga'    => 'pindah_kk',
+        'alamat'          => 'Jl. Melati Blok A No. 1, RT 04/RW 08',
+    ]);
+
+    // 2. Mendaftar KK baru dengan NIK yang berstatus pindah_kk
+    $response = $this->post(route('register.post'), [
+        'no_kk'                 => '3271049999990001',
+        'status_tempat_tinggal' => 'tetap',
+        'no_hp'                 => '081299998888',
+        'nik'                   => '3271041807180009',
+        'nama'                  => 'Raka Santoso',
+        'tempat_lahir'          => 'Bogor',
+        'tanggal_lahir'         => '2000-07-18',
+        'jenis_kelamin'         => 'L',
+        'agama'                 => 'Islam',
+        'pendidikan'            => 'SMA/SMK',
+        'pekerjaan'             => 'Wiraswasta',
+        'alamat'                => 'Jl. Melati Baru No. 10, RT 04/RW 08',
+    ]);
+
+    $response->assertRedirect(route('warga.beranda'));
+
+    // 3. Verifikasi data terupdate dan KK baru terbentuk
+    $wargaPindah->refresh();
+    expect($wargaPindah->status_warga)->toBe('hidup');
+    expect($wargaPindah->status_hubungan)->toBe('kepala_keluarga');
+    expect($wargaPindah->alamat)->toBe('Jl. Melati Baru No. 10, RT 04/RW 08');
+    expect($wargaPindah->keluarga->no_kk)->toBe('3271049999990001');
+
+    // Akun user terbentuk dan terotentikasi
+    $this->assertAuthenticated();
+    expect(auth()->user()->username)->toBe('3271041807180009');
+});
+
+it('warga berstatus hidup ditolak mendaftar ulang sesuai BR-09', function () {
+    $keluarga = \App\Models\Keluarga::create([
+        'no_kk'          => '3271048809920088',
+        'status_ekonomi' => 'mampu',
+        'status_tinggal' => 'tetap',
+    ]);
+
+    \App\Models\Warga::create([
+        'keluarga_id'     => $keluarga->id,
+        'nik'             => '3271048809920088',
+        'nama'            => 'Warga Aktif',
+        'jenis_kelamin'   => 'laki_laki',
+        'status_warga'    => 'hidup',
+        'status_hubungan' => 'kepala_keluarga',
+        'alamat'          => 'Jl. Melati No. 8',
+    ]);
+
+    $response = $this->post(route('register.post'), [
+        'no_kk'                 => '3271048809920089',
+        'status_tempat_tinggal' => 'tetap',
+        'no_hp'                 => '081299998888',
+        'nik'                   => '3271048809920088',
+        'nama'                  => 'Warga Aktif',
+        'jenis_kelamin'         => 'L',
+        'alamat'                => 'Jl. Melati No. 8',
+    ]);
+
+    $response->assertSessionHasErrors('nik');
+});
+
+it('warga berstatus meninggal ditolak mendaftar akun', function () {
+    $keluarga = \App\Models\Keluarga::create([
+        'no_kk'          => '3271048809920077',
+        'status_ekonomi' => 'mampu',
+        'status_tinggal' => 'tetap',
+    ]);
+
+    \App\Models\Warga::create([
+        'keluarga_id'     => $keluarga->id,
+        'nik'             => '3271048809920077',
+        'nama'            => 'Almarhum',
+        'jenis_kelamin'   => 'laki_laki',
+        'status_warga'    => 'meninggal',
+        'status_hubungan' => 'kepala_keluarga',
+        'alamat'          => 'Jl. Melati No. 7',
+    ]);
+
+    $response = $this->post(route('register.post'), [
+        'no_kk'                 => '3271048809920078',
+        'status_tempat_tinggal' => 'tetap',
+        'no_hp'                 => '081299998888',
+        'nik'                   => '3271048809920077',
+        'nama'                  => 'Almarhum',
+        'jenis_kelamin'         => 'L',
+        'alamat'                => 'Jl. Melati No. 7',
+    ]);
+
+    $response->assertSessionHasErrors('nik');
+});
+
+it('warga berstatus selain hidup ditolak saat login', function () {
+    $userMeninggal = \App\Models\User::create([
+        'username' => '3271048809920066',
+        'password' => bcrypt('password123'),
+        'role'     => 'warga',
+        'no_telp'  => '081234567899',
+    ]);
+
+    $keluarga = \App\Models\Keluarga::create([
+        'no_kk'          => '3271048809920066',
+        'status_ekonomi' => 'mampu',
+        'status_tinggal' => 'tetap',
+    ]);
+
+    \App\Models\Warga::create([
+        'user_id'         => $userMeninggal->id,
+        'keluarga_id'     => $keluarga->id,
+        'nik'             => '3271048809920066',
+        'nama'            => 'Warga Meninggal',
+        'jenis_kelamin'   => 'laki_laki',
+        'status_warga'    => 'meninggal',
+        'status_hubungan' => 'kepala_keluarga',
+        'alamat'          => 'Jl. Melati No. 6',
+    ]);
+
+    $response = $this->post(route('login.post'), [
+        'username' => '3271048809920066',
+        'password' => 'password123',
+    ]);
+
+    $response->assertSessionHasErrors('username');
+    $this->assertGuest();
+});
+

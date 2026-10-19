@@ -91,25 +91,29 @@
 .admin-stat-card--dark  { background: #1f2d3d !important; }
 
 .admin-stat-card__inner {
-    padding: 16px 20px 22px 20px !important;
+    padding: 14px 16px 18px 16px !important;
     position: relative;
     z-index: 2;
     text-align: left !important;
 }
 
 .admin-stat-card__number {
-    font-size: 32px !important;
+    font-size: clamp(22px, 2.2vw, 30px) !important;
     font-weight: 700 !important;
     line-height: 1.1 !important;
-    margin: 0 0 6px 0 !important;
+    margin: 0 0 4px 0 !important;
     white-space: nowrap;
     color: #ffffff !important;
     text-align: left !important;
     display: block !important;
 }
 
+.admin-stat-card--dark .admin-stat-card__number {
+    font-size: clamp(17px, 1.7vw, 24px) !important;
+}
+
 .admin-stat-card__label {
-    font-size: 13.5px !important;
+    font-size: 12.5px !important;
     margin: 0 !important;
     color: rgba(255, 255, 255, 0.9) !important;
     text-align: left !important;
@@ -121,17 +125,17 @@
 .admin-stat-card__icon {
     position: absolute !important;
     top: 10px !important;
-    right: 15px !important;
+    right: 12px !important;
     z-index: 1 !important;
-    font-size: 70px !important;
-    color: rgba(0, 0, 0, 0.15) !important;
+    font-size: 54px !important;
+    color: rgba(0, 0, 0, 0.12) !important;
     transition: all 0.3s linear;
     pointer-events: none;
     line-height: 1 !important;
 }
 
 .admin-stat-card:hover .admin-stat-card__icon {
-    font-size: 75px !important;
+    font-size: 58px !important;
 }
 
 .admin-stat-card__footer {
@@ -163,8 +167,8 @@
 /* ── Dashboard Two-Column Grid ── */
 .admin-dashboard-grid {
     display: grid;
-    grid-template-columns: 1fr 400px;
-    gap: 20px;
+    grid-template-columns: minmax(0, 1fr) 360px;
+    gap: 16px;
     align-items: start;
 }
 
@@ -419,9 +423,21 @@
 }
 
 /* Responsive */
+@media (max-width: 1400px) {
+    .admin-stat-grid {
+        gap: 12px;
+        margin-bottom: 18px;
+    }
+    .admin-dashboard-grid {
+        grid-template-columns: minmax(0, 1fr) 340px;
+        gap: 14px;
+    }
+}
+
 @media (max-width: 1200px) {
     .admin-stat-grid {
         grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
     }
     .admin-dashboard-grid {
         grid-template-columns: 1fr;
@@ -435,5 +451,10 @@
     .dash-card__header {
         flex-direction: column;
         align-items: flex-start;
+        gap: 8px;
+    }
+    .dash-card__actions {
+        width: 100%;
+        justify-content: space-between;
     }
 }

@@ -16,8 +16,7 @@
 {{-- Page Header --}}
 <div class="admin-page-header">
     <div>
-        <h1 class="admin-page-header__title">Kelola Pengumuman</h1>
-        <p class="admin-page-header__sub">Daftar publikasi informasi dan pengumuman untuk seluruh warga RT 04 / RW 08</p>
+        <h1 class="admin-page-header__title" style="margin:0;">Kelola Pengumuman</h1>
     </div>
     <a href="{{ route('admin.pengumuman.create') }}" class="btn-tambah-pengumuman">
         <i class='bx bx-plus'></i> Tambah Pengumuman Baru

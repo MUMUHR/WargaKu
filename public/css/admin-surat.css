@@ -41,14 +41,14 @@
 }
 
 .surat-stat-box__val {
-    font-size: 32px;
+    font-size: clamp(24px, 2.2vw, 32px);
     font-weight: 700;
     line-height: 1;
     margin: 0 0 6px;
 }
 
 .surat-stat-box__label {
-    font-size: 13px;
+    font-size: 12.5px;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.04em;
@@ -66,8 +66,8 @@
     right: 14px;
     top: 50%;
     transform: translateY(-50%);
-    font-size: 64px;
-    opacity: 0.22;
+    font-size: clamp(44px, 4vw, 56px);
+    opacity: 0.16;
     pointer-events: none;
     line-height: 1;
 }
@@ -239,7 +239,7 @@
 
 .surat-table {
     width: 100%;
-    min-width: 1150px;
+    min-width: 1255px;
     table-layout: fixed;
     border-collapse: collapse;
     background: #ffffff;
@@ -252,7 +252,7 @@
 }
 
 .surat-table thead th {
-    padding: 12px 14px;
+    padding: 11px 12px;
     font-size: 11.5px;
     font-weight: 700;
     letter-spacing: 0.04em;
@@ -278,14 +278,14 @@
 }
 
 .surat-table td {
-    padding: 12px 14px;
+    padding: 10px 12px;
     vertical-align: middle;
     color: #212529;
     text-align: left;
 }
 
 .surat-table td:last-child {
-    padding: 10px 14px;
+    padding: 10px 12px;
 }
 
 .surat-table td.text-center {
@@ -312,24 +312,31 @@
 .nomor-surat-copy {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    color: #007bff;
-    font-weight: 700;
-    font-size: 11.5px;
+    gap: 5px;
+    color: #0066cc;
+    background: #f0f7ff;
+    border: 1px solid #cce5ff;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 11px;
     cursor: pointer;
     text-decoration: none;
-    transition: color 0.15s;
+    transition: all 0.15s ease;
     white-space: nowrap;
+    letter-spacing: -0.01em;
 }
 
 .nomor-surat-copy:hover {
-    text-decoration: underline;
-    color: #0056b3;
+    background: #e1effe;
+    border-color: #b8daff;
+    color: #004085;
 }
 
 .nomor-surat-copy i {
-    font-size: 14px;
+    font-size: 13px;
     flex-shrink: 0;
+    color: #007bff;
 }
 
 .badge-status-surat {
@@ -360,7 +367,7 @@
 .surat-row-actions {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    gap: 4px;
     justify-content: flex-start;
     white-space: nowrap;
 }
@@ -369,15 +376,15 @@
     background: #0284c7;
     color: #ffffff;
     border: none;
-    padding: 6px 11px;
-    border-radius: 6px;
-    font-size: 12px;
+    padding: 5px 9px;
+    border-radius: 4px;
+    font-size: 11.5px;
     font-weight: 600;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
-    gap: 5px;
-    height: 32px;
+    gap: 4px;
+    height: 30px;
     transition: all 0.15s ease;
     white-space: nowrap;
     text-decoration: none;
@@ -391,22 +398,22 @@
 }
 
 .btn-surat-preview-draft i {
-    font-size: 15px;
+    font-size: 14px;
 }
 
 .btn-surat-setujui {
     background: #16a34a;
     color: #ffffff;
     border: none;
-    padding: 6px 12px;
-    border-radius: 6px;
-    font-size: 12px;
+    padding: 5px 9px;
+    border-radius: 4px;
+    font-size: 11.5px;
     font-weight: 600;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
-    gap: 5px;
-    height: 32px;
+    gap: 4px;
+    height: 30px;
     transition: all 0.15s ease;
     white-space: nowrap;
     box-shadow: 0 1px 2px rgba(22, 163, 74, 0.2);
@@ -418,22 +425,22 @@
 }
 
 .btn-surat-setujui i {
-    font-size: 15px;
+    font-size: 14px;
 }
 
 .btn-surat-tolak {
     background: #dc2626;
     color: #ffffff;
     border: none;
-    padding: 6px 12px;
-    border-radius: 6px;
-    font-size: 12px;
+    padding: 5px 9px;
+    border-radius: 4px;
+    font-size: 11.5px;
     font-weight: 600;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
-    gap: 5px;
-    height: 32px;
+    gap: 4px;
+    height: 30px;
     transition: all 0.15s ease;
     white-space: nowrap;
     box-shadow: 0 1px 2px rgba(220, 38, 38, 0.2);
@@ -445,22 +452,22 @@
 }
 
 .btn-surat-tolak i {
-    font-size: 15px;
+    font-size: 14px;
 }
 
 .btn-surat-cetak {
     background: #0284c7;
     color: #ffffff;
     border: none;
-    padding: 6px 13px;
-    border-radius: 6px;
-    font-size: 12px;
+    padding: 5px 12px;
+    border-radius: 4px;
+    font-size: 11.5px;
     font-weight: 600;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    height: 32px;
+    gap: 5px;
+    height: 30px;
     transition: all 0.15s ease;
     white-space: nowrap;
     text-decoration: none;
@@ -473,22 +480,22 @@
 }
 
 .btn-surat-cetak i {
-    font-size: 15px;
+    font-size: 14px;
 }
 
 .btn-surat-alasan {
-    background: #f1f5f9;
+    background: #f8fafc;
     color: #475569;
     border: 1px solid #cbd5e1;
-    padding: 6px 13px;
-    border-radius: 6px;
-    font-size: 12px;
+    padding: 5px 12px;
+    border-radius: 4px;
+    font-size: 11.5px;
     font-weight: 600;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    height: 32px;
+    gap: 5px;
+    height: 30px;
     transition: all 0.15s ease;
     white-space: nowrap;
 }
@@ -888,4 +895,50 @@
     font-size: 12.5px;
     line-height: 1.5;
     margin: 0;
+}
+
+/* Responsive */
+@media (max-width: 1400px) {
+    .surat-table thead th {
+        padding: 9px 10px;
+        font-size: 11px;
+    }
+    .surat-table td {
+        padding: 9px 10px;
+        font-size: 12px;
+    }
+    .btn-surat-preview-draft,
+    .btn-surat-setujui,
+    .btn-surat-tolak,
+    .btn-surat-cetak,
+    .btn-surat-alasan {
+        height: 28px;
+        padding: 4px 7px;
+        font-size: 11px;
+        gap: 3px;
+    }
+    .btn-surat-preview-draft i,
+    .btn-surat-setujui i,
+    .btn-surat-tolak i,
+    .btn-surat-cetak i,
+    .btn-surat-alasan i {
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 1200px) {
+    .surat-stats-grid {
+        gap: 12px;
+        margin-bottom: 16px;
+    }
+    .surat-stat-box {
+        padding: 12px 14px;
+        min-height: 85px;
+    }
+}
+
+@media (max-width: 800px) {
+    .surat-stats-grid {
+        grid-template-columns: 1fr;
+    }
 }

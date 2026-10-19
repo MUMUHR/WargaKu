@@ -16,13 +16,7 @@
 {{-- Page Header --}}
 <div class="admin-page-header">
     <div class="admin-page-header__left">
-        <h1 class="admin-page-header__title">Dashboard</h1>
-        <p class="admin-page-header__sub">Sistem Manajemen Informasi RT 04 / RW 08</p>
-    </div>
-    <div class="admin-page-header__breadcrumb">
-        <a href="{{ route('home') }}">Home</a>
-        <span class="sep">/</span>
-        <span class="current">Dashboard</span>
+        <h1 class="admin-page-header__title" style="margin:0;">Dashboard</h1>
     </div>
 </div>
 

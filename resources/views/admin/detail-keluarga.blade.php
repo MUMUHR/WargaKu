@@ -61,20 +61,9 @@
      ======================================================== --}}
 <div class="admin-page-header">
     <div>
-        <nav style="font-size:12px;color:#6c757d;margin-bottom:4px;display:flex;align-items:center;gap:4px;">
-            <i class='bx bx-home-alt'></i>
-            <span>Portal RT 04</span>
-            <span style="margin: 0 2px;">/</span>
-            <a href="{{ route('admin.data-warga') }}" style="color:#6c757d;text-decoration:none;">Kelola Data Warga</a>
-            <span style="margin: 0 2px;">/</span>
-            <span style="color:#007bff;font-weight:600">Detail Kartu Keluarga</span>
-        </nav>
-        <h1 class="admin-page-header__title">
+        <h1 class="admin-page-header__title" style="margin:0;">
             Detail Kartu Keluarga (KK): <span style="color:#007bff;font-weight:700">{{ $keluarga->no_kk }}</span>
         </h1>
-        <p class="admin-page-header__sub">
-            Informasi lengkap kepala keluarga, susunan seluruh anggota keluarga terdaftar, dokumen KK, dan status kependudukan.
-        </p>
     </div>
     <div id="header-actions">
         <a href="{{ route('admin.data-warga') }}" class="btn-kembali-kk" style="text-decoration:none;">
@@ -206,13 +195,13 @@
         <div class="warga-table-wrap">
             <table class="warga-table" id="table-anggota">
                 <colgroup>
-                    <col style="width: 4%;">
-                    <col style="width: 21%;">
-                    <col style="width: 13%;">
-                    <col style="width: 13%;">
-                    <col style="width: 19%;">
-                    <col style="width: 12%;">
-                    <col style="width: 18%;">
+                    <col style="width: 45px;">
+                    <col style="width: 210px;">
+                    <col style="width: 130px;">
+                    <col style="width: 125px;">
+                    <col style="width: 185px;">
+                    <col style="width: 115px;">
+                    <col style="width: 255px;">
                 </colgroup>
                 <thead>
                     <tr>

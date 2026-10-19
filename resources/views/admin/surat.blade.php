@@ -18,11 +18,7 @@
      ======================================================== --}}
 <div class="admin-page-header">
     <div>
-        <nav style="font-size:12px;color:#6c757d;margin-bottom:4px;display:flex;align-items:center;gap:4px;" id="header-breadcrumb">
-            Beranda / Portal RT 04 / Administrasi &amp; Layanan / <span style="font-weight: 600; color: #212529;">Proses Pengajuan Surat</span>
-        </nav>
-        <h1 class="admin-page-header__title" id="page-title">Proses Pengajuan Surat Pengantar Warga</h1>
-        <p class="admin-page-header__sub" id="page-subtitle">Kelola, validasi permohonan surat pengantar lingkungan RT, penerbitan nomor surat resmi, dan cetak dokumen.</p>
+        <h1 class="admin-page-header__title" id="page-title" style="margin:0;">Proses Pengajuan Surat Pengantar Warga</h1>
     </div>
 </div>
 
@@ -112,14 +108,14 @@
     <div class="surat-table-wrap">
         <table class="surat-table" id="table-pengajuan-surat">
             <colgroup>
-                <col style="width: 3%;">
-                <col style="width: 10%;">
-                <col style="width: 12%;">
-                <col style="width: 12%;">
-                <col style="width: 17%;">
-                <col style="width: 17%;">
-                <col style="width: 9%;">
-                <col style="width: 20%;">
+                <col style="width: 45px;">
+                <col style="width: 140px;">
+                <col style="width: 155px;">
+                <col style="width: 155px;">
+                <col style="width: 200px;">
+                <col style="width: 215px;">
+                <col style="width: 105px;">
+                <col style="width: 240px;">
             </colgroup>
             <thead>
                 <tr>
@@ -196,7 +192,7 @@
                         @if($statusStr === 'menunggu')
                             <div class="surat-row-actions">
                                 <a href="{{ route('admin.surat.preview', $s->id) }}" class="btn-surat-preview-draft" title="Pratinjau Draf Surat">
-                                    <i class='bx bx-show'></i> Preview Draft
+                                    <i class='bx bx-show'></i> Preview
                                 </a>
                                 <button type="button" class="btn-surat-setujui" onclick="bukaModalSetujui({{ $s->id }}, '{{ addslashes($pemohonNama) }}', '{{ addslashes($tujuanNama) }}', '{{ $rekomendasiNomorSurat ?? '' }}')" title="Setujui dan Terbitkan Nomor">
                                     <i class='bx bx-check'></i> Setujui

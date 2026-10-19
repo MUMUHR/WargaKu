@@ -22,21 +22,10 @@
      ======================================================== --}}
 <div class="admin-page-header">
     <div>
-        <nav style="font-size:12px;color:#6c757d;margin-bottom:4px;display:flex;align-items:center;gap:4px;">
-            <i class='bx bx-home-alt'></i>
-            <span>Beranda</span>
-            <span>/</span>
-            <a href="{{ route('admin.data-warga') }}" style="color:#6c757d;text-decoration:none;">Kelola Data Warga</a>
-            <span>/</span>
-            <a href="{{ route('admin.data-warga.detail', $keluarga->no_kk) }}" style="color:#6c757d;text-decoration:none;">Detail Kartu Keluarga</a>
-            <span>/</span>
-            <span style="color:#007bff;font-weight:600;">Tambah Anggota Keluarga</span>
-        </nav>
         <h1 class="admin-page-header__title">
             Tambah Anggota Keluarga Baru
             <span class="badge-admin-direct" style="background:#16a34a;color:#fff;font-size:11px;font-weight:700;padding:3px 8px;border-radius:4px;vertical-align:middle;margin-left:8px;">MODE ADMIN LANGSUNG</span>
         </h1>
-        <p class="admin-page-header__sub">Penambahan data anggota keluarga baru langsung ke database kependudukan RT 04 oleh Admin RT tanpa proses verifikasi bersilang.</p>
     </div>
 </div>
 

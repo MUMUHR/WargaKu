@@ -24,7 +24,6 @@
                 <i class='bx bx-check-shield'></i> Akun Admin Terverifikasi
             </span>
         </div>
-        <p class="profil-header__sub">Kelola data akun pengurus RT dan perbarui kata sandi portal admin.</p>
     </div>
 
     {{-- Notification Messages --}}

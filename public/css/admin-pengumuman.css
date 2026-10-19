@@ -203,6 +203,7 @@
 
 .kelola-table {
     width: 100%;
+    min-width: 900px;
     border-collapse: collapse;
     background: #ffffff;
     font-size: 13px;
@@ -421,6 +422,21 @@
 }
 
 /* Responsive */
+@media (max-width: 1200px) {
+    .kelola-stat-row {
+        gap: 12px;
+    }
+    .kelola-stat-mini {
+        padding: 12px 14px;
+    }
+    .kelola-stat-mini__number {
+        font-size: clamp(20px, 2vw, 26px);
+    }
+    .kelola-toolbar__search-box {
+        max-width: 320px;
+    }
+}
+
 @media (max-width: 900px) {
     .kelola-stat-row {
         grid-template-columns: 1fr;

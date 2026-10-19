@@ -32,11 +32,7 @@
 {{-- Page Header --}}
 <div class="admin-page-header">
     <div>
-        <nav style="font-size:12px;color:#6c757d;margin-bottom:4px">
-            Home / <a href="{{ route('admin.pengumuman') }}" style="color:#6c757d;text-decoration:none">Kelola Pengumuman</a> / <span style="color:#212529;font-weight:600">{{ $isEdit ? 'Edit Pengumuman' : 'Tambah Pengumuman Baru' }}</span>
-        </nav>
-        <h1 class="admin-page-header__title">{{ $isEdit ? 'Form Edit Pengumuman RT' : 'Form Tambah Pengumuman RT' }}</h1>
-        <p class="admin-page-header__sub">{{ $isEdit ? 'Perbarui isi dan informasi publikasi pengumuman untuk seluruh warga RT 04 / RW 08.' : 'Buat dan publikasikan informasi resmi untuk seluruh warga RT 04 / RW 08.' }}</p>
+        <h1 class="admin-page-header__title" style="margin:0;">{{ $isEdit ? 'Form Edit Pengumuman RT' : 'Form Tambah Pengumuman RT' }}</h1>
     </div>
     <a href="{{ route('admin.pengumuman') }}" class="btn-kembali">
         <i class='bx bx-arrow-back'></i> Kembali ke Daftar

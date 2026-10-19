@@ -72,14 +72,14 @@
 }
 
 .warga-stat-box__val {
-    font-size: 28px;
+    font-size: clamp(22px, 2.2vw, 28px);
     font-weight: 700;
-    line-height: 1;
+    line-height: 1.1;
     margin: 0 0 4px;
 }
 
 .warga-stat-box__val small {
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 500;
     margin-left: 4px;
 }
@@ -102,8 +102,8 @@
     right: 14px;
     top: 50%;
     transform: translateY(-50%);
-    font-size: 64px;
-    opacity: 0.22;
+    font-size: clamp(46px, 4.2vw, 60px);
+    opacity: 0.15;
     pointer-events: none;
     line-height: 1;
 }
@@ -344,7 +344,7 @@
 
 .warga-table {
     width: 100%;
-    min-width: 1220px;
+    min-width: 1145px;
     table-layout: fixed;
     border-collapse: collapse;
     background: #ffffff;
@@ -495,7 +495,7 @@
     display: inline-flex;
     align-items: center;
     gap: 4px;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
 }
 
 .kontak-wa-link {
@@ -527,7 +527,7 @@
 .warga-row-actions {
     display: inline-flex;
     align-items: center;
-    gap: 5px;
+    gap: 4px;
     justify-content: flex-start;
     white-space: nowrap;
 }
@@ -548,23 +548,23 @@
     background: #17a2b8;
     color: #ffffff;
     border: none;
-    padding: 6px 11px;
+    padding: 5px 9px;
     border-radius: 4px;
-    font-size: 12px;
+    font-size: 11.5px;
     font-weight: 600;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
-    gap: 5px;
+    gap: 4px;
     text-decoration: none;
     transition: all 0.15s ease;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
     white-space: nowrap;
-    height: 33px;
+    height: 30px;
 }
 
 .btn-act-detail i {
-    font-size: 15px;
+    font-size: 14px;
 }
 
 .btn-act-detail:hover {
@@ -577,23 +577,23 @@
     background: #ffc107;
     color: #212529;
     border: none;
-    padding: 6px 11px;
+    padding: 5px 9px;
     border-radius: 4px;
-    font-size: 12px;
+    font-size: 11.5px;
     font-weight: 600;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
-    gap: 5px;
+    gap: 4px;
     text-decoration: none;
     transition: all 0.15s ease;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
     white-space: nowrap;
-    height: 33px;
+    height: 30px;
 }
 
 .btn-act-edit i {
-    font-size: 15px;
+    font-size: 14px;
 }
 
 .btn-act-edit:hover {
@@ -606,23 +606,23 @@
     background: #dc3545;
     color: #ffffff;
     border: none;
-    padding: 6px 11px;
+    padding: 5px 9px;
     border-radius: 4px;
-    font-size: 12px;
+    font-size: 11.5px;
     font-weight: 600;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
-    gap: 5px;
+    gap: 4px;
     text-decoration: none;
     transition: all 0.15s ease;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
     white-space: nowrap;
-    height: 33px;
+    height: 30px;
 }
 
 .btn-act-delete i {
-    font-size: 15px;
+    font-size: 14px;
 }
 
 .btn-act-delete:hover {
@@ -765,22 +765,22 @@
     background: #28a745;
     color: #ffffff;
     border: none;
-    padding: 6px 12px;
+    padding: 5px 10px;
     border-radius: 4px;
-    font-size: 12px;
+    font-size: 11.5px;
     font-weight: 600;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
-    gap: 5px;
+    gap: 4px;
     transition: all 0.15s ease;
-    height: 33px;
+    height: 30px;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
     white-space: nowrap;
 }
 
 .btn-tindakan-setujui i {
-    font-size: 15px;
+    font-size: 14px;
 }
 
 .btn-tindakan-setujui:hover {
@@ -791,22 +791,22 @@
     background: #007bff;
     color: #ffffff;
     border: none;
-    padding: 6px 12px;
+    padding: 5px 10px;
     border-radius: 4px;
-    font-size: 12px;
+    font-size: 11.5px;
     font-weight: 600;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
-    gap: 5px;
+    gap: 4px;
     transition: all 0.15s ease;
-    height: 33px;
+    height: 30px;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
     white-space: nowrap;
 }
 
 .btn-tindakan-review i {
-    font-size: 15px;
+    font-size: 14px;
 }
 
 .btn-tindakan-review:hover {
@@ -2551,6 +2551,191 @@
         flex-direction: column;
         align-items: flex-start;
         gap: 6px;
+    }
+}
+
+/* ========================================================
+   RESPONSIVE DESIGN FOR LAPTOP SCREENS & SMALL VIEWPORTS
+   (1400px, 1200px, 992px, 768px)
+   ======================================================== */
+
+.kk-pengajuan-modal__footer--admin {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 14px 24px;
+}
+
+.kk-pengajuan-modal__footer--admin .kk-pengajuan-modal__footer-status {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12.5px;
+    color: #64748b;
+    margin: 0;
+}
+
+.kk-pengajuan-modal__footer--admin .kk-pengajuan-modal__footer-status span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.kk-pengajuan-modal__footer--admin .kk-pengajuan-modal__footer-btns {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+@media (max-width: 1400px) {
+    .warga-stat-box {
+        padding: 14px 18px;
+        min-height: 90px;
+    }
+    .warga-stat-box__val {
+        font-size: 24px;
+    }
+    .warga-stat-box__icon {
+        font-size: 50px;
+        right: 12px;
+        opacity: 0.14;
+    }
+    .warga-table thead th {
+        padding: 10px 12px;
+        font-size: 11px;
+    }
+    .warga-table td {
+        padding: 10px 12px;
+        font-size: 12.5px;
+    }
+    .btn-act-detail,
+    .btn-act-edit,
+    .btn-act-delete,
+    .btn-tindakan-setujui,
+    .btn-tindakan-review,
+    .btn-act-detail-blue,
+    .btn-act-edit-green {
+        height: 30px;
+        padding: 5px 9px;
+        font-size: 11.5px;
+        gap: 4px;
+    }
+    .btn-act-detail i,
+    .btn-act-edit i,
+    .btn-act-delete i,
+    .btn-tindakan-setujui i,
+    .btn-tindakan-review i,
+    .btn-act-detail-blue i,
+    .btn-act-edit-green i {
+        font-size: 14px;
+    }
+    .warga-filter-bar {
+        padding: 10px 14px;
+        gap: 10px;
+    }
+    .warga-filter-input {
+        height: 34px;
+        font-size: 12.5px;
+        padding: 6px 10px;
+    }
+    .btn-filter-reset {
+        height: 34px;
+        width: 34px;
+        font-size: 16px;
+    }
+    .warga-tab-btn {
+        padding: 8px 14px;
+        font-size: 12.5px;
+    }
+}
+
+@media (max-width: 1200px) {
+    .warga-stats-grid {
+        gap: 12px;
+    }
+    .warga-stat-box {
+        padding: 12px 14px;
+    }
+    .warga-stat-box__val {
+        font-size: 22px;
+    }
+    .warga-stat-box__label {
+        font-size: 12px;
+    }
+    .warga-stat-box__sub {
+        font-size: 11px;
+    }
+    .detail-profil-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 14px;
+        padding: 14px 16px;
+    }
+    .warga-pagination-bar {
+        padding: 10px 14px;
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 992px) {
+    .warga-filter-col--search {
+        flex: 1 1 100%;
+    }
+    .warga-filter-col--select {
+        flex: 1 1 calc(50% - 28px);
+        min-width: 130px;
+    }
+    .warga-filter-col--actions {
+        margin-left: auto;
+    }
+    .kk-pengajuan-modal__footer--admin {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+    }
+    .kk-pengajuan-modal__footer--admin .kk-pengajuan-modal__footer-status {
+        order: -1;
+        width: 100%;
+    }
+    .kk-pengajuan-modal__footer--admin .kk-pengajuan-modal__footer-btns {
+        width: 100%;
+        justify-content: flex-end;
+    }
+}
+
+@media (max-width: 768px) {
+    .warga-stats-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    .warga-tabs-nav {
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        -webkit-overflow-scrolling: touch;
+        padding: 8px 12px 0 12px;
+    }
+    .warga-tabs-left {
+        flex-shrink: 0;
+    }
+    .warga-tab-btn {
+        white-space: nowrap;
+        font-size: 12px;
+        padding: 8px 12px;
+    }
+    .detail-profil-grid {
+        grid-template-columns: 1fr;
+    }
+    .kk-pengajuan-modal__footer--admin .kk-pengajuan-modal__footer-btns {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .kk-pengajuan-modal__footer--admin .kk-pengajuan-modal__footer-btns button {
+        width: 100%;
+        justify-content: center;
     }
 }
 

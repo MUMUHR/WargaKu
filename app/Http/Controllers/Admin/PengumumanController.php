@@ -103,7 +103,7 @@ class PengumumanController extends Controller
         $validated = $request->validate([
             'judul'            => ['required', 'string', 'max:150'],
             'isi'              => ['required', 'string'],
-            'gambar'           => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
+            'gambar'           => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:255'],
             'status_publikasi' => ['nullable', Rule::enum(StatusPublikasi::class)],
         ], [
             'judul.required' => 'Judul pengumuman wajib diisi.',
@@ -139,9 +139,7 @@ class PengumumanController extends Controller
             ->with('success', 'Perubahan pengumuman RT berhasil disimpan!');
     }
 
-    /**
-     * Menghapus pengumuman.
-     */
+    /*** Menghapus pengumuman.*/
     public function hapusPengumuman(int|string $id): RedirectResponse
     {
         $pengumuman = Pengumuman::findOrFail($id);
@@ -149,7 +147,7 @@ class PengumumanController extends Controller
         if ($pengumuman->gambar) {
             $oldPath = str_replace('storage/', '', $pengumuman->gambar);
             Storage::disk('public')->delete($oldPath);
-        }
+        }   
 
         $pengumuman->delete();
 

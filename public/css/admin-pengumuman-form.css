@@ -30,7 +30,7 @@
 /* ── Layout dua kolom ───────────────────────────────────── */
 .form-pengumuman-grid {
     display: grid;
-    grid-template-columns: 1fr 540px;
+    grid-template-columns: minmax(0, 1fr) 400px;
     gap: 20px;
     align-items: start;
 }
@@ -667,8 +667,16 @@
 }
 
 /* Responsive */
-@media (max-width: 960px) {
+@media (max-width: 1366px) {
+    .form-pengumuman-grid {
+        grid-template-columns: minmax(0, 1fr) 350px;
+        gap: 16px;
+    }
+}
+
+@media (max-width: 1080px) {
     .form-pengumuman-grid {
         grid-template-columns: 1fr;
+        gap: 16px;
     }
 }

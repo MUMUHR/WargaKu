@@ -79,14 +79,14 @@
 }
 
 .iuran-stat-box__val {
-    font-size: 28px;
+    font-size: clamp(20px, 1.9vw, 26px);
     font-weight: 700;
-    line-height: 1;
+    line-height: 1.1;
     margin: 0 0 6px;
 }
 
 .iuran-stat-box__label {
-    font-size: 13.5px;
+    font-size: 13px;
     font-weight: 500;
     margin: 0;
     opacity: 0.95;
@@ -97,8 +97,8 @@
     right: 14px;
     top: 50%;
     transform: translateY(-50%);
-    font-size: 64px;
-    opacity: 0.22;
+    font-size: clamp(46px, 4.2vw, 56px);
+    opacity: 0.14;
     pointer-events: none;
     line-height: 1;
 }
@@ -300,11 +300,11 @@
 
 .iuran-table {
     width: 100%;
-    min-width: 1220px;
+    min-width: 980px;
     table-layout: fixed;
     border-collapse: collapse;
     background: #ffffff;
-    font-size: 13px;
+    font-size: 12.5px;
 }
 
 .iuran-table thead {
@@ -313,8 +313,8 @@
 }
 
 .iuran-table thead th {
-    padding: 12px 14px;
-    font-size: 11.5px;
+    padding: 11px 12px;
+    font-size: 11px;
     font-weight: 700;
     letter-spacing: 0.04em;
     text-transform: uppercase;
@@ -339,7 +339,7 @@
 }
 
 .iuran-table tbody td {
-    padding: 12px 14px;
+    padding: 10px 12px;
     vertical-align: middle;
     color: #212529;
     text-align: left;
@@ -429,15 +429,15 @@
     background: #198754;
     color: #ffffff;
     border: none;
-    padding: 6px 14px;
+    padding: 5px 12px;
     border-radius: 4px;
-    font-size: 12px;
+    font-size: 11.5px;
     font-weight: 600;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    height: 32px;
+    gap: 5px;
+    height: 30px;
     white-space: nowrap;
     transition: all 0.15s ease;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
@@ -448,22 +448,22 @@
 }
 
 .btn-tandai-lunas i {
-    font-size: 15px;
+    font-size: 14px;
 }
 
 .btn-cetak-kwitansi {
     background: #007bff;
     color: #ffffff;
     border: none;
-    padding: 6px 14px;
+    padding: 5px 12px;
     border-radius: 4px;
-    font-size: 12px;
+    font-size: 11.5px;
     font-weight: 600;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    height: 32px;
+    gap: 5px;
+    height: 30px;
     white-space: nowrap;
     transition: all 0.15s ease;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
@@ -759,8 +759,91 @@
 }
 
 /* Responsive */
-@media (max-width: 960px) {
+@media (max-width: 1400px) {
+    .iuran-table thead th {
+        padding: 10px 10px;
+        font-size: 11px;
+    }
+    .iuran-table tbody td {
+        padding: 9px 10px;
+        font-size: 12px;
+    }
+    .btn-tandai-lunas,
+    .btn-cetak-kwitansi {
+        height: 29px;
+        padding: 4px 10px;
+        font-size: 11px;
+        gap: 4px;
+    }
+    .btn-tandai-lunas i,
+    .btn-cetak-kwitansi i {
+        font-size: 14px;
+    }
+    .iuran-toolbar-row {
+        padding: 10px 14px;
+        gap: 10px;
+    }
+    .iuran-search-input,
+    .iuran-filter-select {
+        height: 34px;
+        font-size: 12.5px;
+    }
+    .iuran-besaran-tag {
+        height: 34px;
+        font-size: 11.5px;
+        padding: 6px 10px;
+    }
+    .iuran-tab-btn {
+        padding: 8px 14px;
+        font-size: 12.5px;
+    }
+}
+
+@media (max-width: 1200px) {
+    .iuran-stats-grid {
+        gap: 12px;
+        margin-bottom: 16px;
+    }
+    .iuran-stat-box {
+        padding: 12px 14px;
+        min-height: 85px;
+    }
+    .iuran-pagination-bar {
+        padding: 10px 14px;
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 992px) {
+    .iuran-toolbar-left {
+        width: 100%;
+    }
+    .iuran-search-wrap {
+        max-width: 100%;
+        flex: 1 1 100%;
+    }
+    .iuran-besaran-tag {
+        margin-left: auto;
+    }
+}
+
+@media (max-width: 768px) {
     .iuran-stats-grid {
         grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    .iuran-tabs-nav {
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        -webkit-overflow-scrolling: touch;
+        padding: 8px 12px 0 12px;
+    }
+    .iuran-tabs-left {
+        flex-shrink: 0;
+    }
+    .iuran-tab-btn {
+        white-space: nowrap;
+        font-size: 12px;
+        padding: 8px 12px;
     }
 }

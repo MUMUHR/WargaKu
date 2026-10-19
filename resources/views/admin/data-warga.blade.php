@@ -91,13 +91,7 @@
      ======================================================== --}}
 <div class="admin-page-header">
     <div>
-        <nav style="font-size:12px;color:#6c757d;margin-bottom:4px;display:flex;align-items:center;gap:4px;" id="header-breadcrumb">
-            <i class='bx bx-home-alt'></i> <span>Portal RT 04</span>
-            <span style="margin: 0 2px;">/</span>
-            <span style="color:#007bff;font-weight:600">Kelola Data Warga</span>
-        </nav>
-        <h1 class="admin-page-header__title" id="page-title">Kelola Data Warga &amp; Verifikasi Kependudukan</h1>
-        <p class="admin-page-header__sub" id="page-subtitle">Kelola data master kependudukan warga RT 04, status mutasi, dan validasi permohonan perubahan data dari warga.</p>
+        <h1 class="admin-page-header__title" id="page-title" style="margin:0;">Kelola Data Warga &amp; Verifikasi Kependudukan</h1>
     </div>
 </div>
 
@@ -143,10 +137,7 @@
                 @endif
             </button>
         </div>
-        <div class="wilayah-info-text">
-            <span class="wilayah-dot">●</span>
-            <span>Wilayah: <strong>RT 04 / RW 08</strong> (Kelurahan Sukamaju)</span>
-        </div>
+
     </div>
 
     {{-- ═══ TAB 1: LIST SEMUA KARTU KELUARGA ═══ --}}
@@ -190,13 +181,13 @@
         <div class="warga-table-wrap">
             <table class="warga-table" id="table-kk">
                 <colgroup>
-                    <col style="width: 3.5%;">
-                    <col style="width: 15%;">
-                    <col style="width: 22%;">
-                    <col style="width: 12%;">
-                    <col style="width: 16%;">
-                    <col style="width: 13.5%;">
-                    <col style="width: 18%;">
+                    <col style="width: 45px;">
+                    <col style="width: 165px;">
+                    <col style="width: 220px;">
+                    <col style="width: 120px;">
+                    <col style="width: 175px;">
+                    <col style="width: 135px;">
+                    <col style="width: 285px;">
                 </colgroup>
                 <thead>
                     <tr>
@@ -289,13 +280,13 @@
         <div class="warga-table-wrap">
             <table class="warga-table" id="table-verifikasi">
                 <colgroup>
-                    <col style="width: 17%;">
-                    <col style="width: 14%;">
-                    <col style="width: 10%;">
-                    <col style="width: 15%;">
-                    <col style="width: 8%;">
-                    <col style="width: 12%;">
-                    <col style="width: 19%;">
+                    <col style="width: 175px;">
+                    <col style="width: 145px;">
+                    <col style="width: 125px;">
+                    <col style="width: 155px;">
+                    <col style="width: 95px;">
+                    <col style="width: 125px;">
+                    <col style="width: 280px;">
                 </colgroup>
                 <thead>
                     <tr>
@@ -767,12 +758,12 @@
             </div>
         </div>
 
-        <!-- Footer: Sisi Admin dengan Tombol Sejajar Rapi 1 Baris -->
-        <div class="kk-pengajuan-modal__footer" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:nowrap; gap:16px; padding:14px 26px;">
-            <button type="button" class="kk-pbtn-close" onclick="tutupModalReviewVerifikasi()" style="height:38px; display:inline-flex; align-items:center; justify-content:center; padding:0 18px; border-radius:6px; font-size:13px; font-weight:600; background:#ffffff; border:1px solid #cbd5e1; color:#475569; cursor:pointer; flex-shrink:0;">
+        <!-- Footer: Sisi Admin dengan Tombol Sejajar Rapi -->
+        <div class="kk-pengajuan-modal__footer kk-pengajuan-modal__footer--admin">
+            <button type="button" class="kk-pbtn-close" onclick="tutupModalReviewVerifikasi()">
                 Tutup / Batal
             </button>
-            <div class="kk-pengajuan-modal__footer-status" id="review-footer-status" style="flex:1; min-width:0; display:flex; align-items:center; gap:6px; font-size:12.5px; color:#64748b; margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+            <div class="kk-pengajuan-modal__footer-status" id="review-footer-status">
                 <i class='bx bx-time-five' style="color:#d97706; font-size:16px; flex-shrink:0;"></i>
                 <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">Pengajuan ini sedang dalam antrean verifikasi oleh Pengurus RT 04.</span>
             </div>

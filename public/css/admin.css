@@ -206,6 +206,7 @@
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+    min-width: 0;
     transition: margin-left var(--transition-slow);
 }
 
@@ -369,7 +370,7 @@
     font-size: 24px;
     font-weight: 600;
     color: #212529;
-    margin: 0 0 3px;
+    margin: 0;
     line-height: 1.2;
 }
 
@@ -805,6 +806,104 @@
 .admin-sidebar-backdrop--active {
     display: block;
     opacity: 1;
+}
+
+/* ── Laptop & Tablet Viewport Adaptations ── */
+@media (max-width: 1400px) {
+    :root {
+        --sidebar-width: 235px;
+    }
+
+    .admin-sidebar__header {
+        padding: 12px 14px;
+    }
+    .admin-sidebar__logo {
+        width: 32px;
+        height: 32px;
+    }
+    .admin-sidebar__brand-name {
+        font-size: 14.5px;
+    }
+    .admin-sidebar__brand-sub {
+        font-size: 9.5px;
+    }
+
+    .admin-sidebar__profile {
+        padding: 10px 14px;
+        gap: 10px;
+    }
+    .admin-sidebar__avatar {
+        width: 32px;
+        height: 32px;
+    }
+    .admin-sidebar__avatar i {
+        font-size: 17px !important;
+    }
+    .admin-sidebar__profile-name {
+        font-size: 13px;
+    }
+    .admin-sidebar__profile-role {
+        font-size: 11px;
+    }
+
+    .admin-sidebar__nav {
+        padding: 8px 6px;
+    }
+    .admin-sidebar__nav-label {
+        font-size: 9.5px;
+        padding: 8px 8px 4px;
+    }
+    .admin-sidebar__nav-link {
+        font-size: 13px;
+        padding: 7px 10px;
+        margin: 1px 2px;
+    }
+
+    .admin-sidebar__footer {
+        padding: 10px 14px;
+    }
+    .admin-sidebar__logout-label {
+        font-size: 11px;
+    }
+    .admin-sidebar__logout-btn {
+        font-size: 11px;
+        padding: 3px 8px;
+    }
+
+    .admin-main {
+        overflow-x: hidden;
+    }
+
+    .admin-topbar {
+        padding: 0 16px;
+    }
+
+    .admin-content {
+        padding: 10px 16px 20px;
+    }
+}
+
+@media (max-width: 1200px) {
+    :root {
+        --sidebar-width: 220px;
+    }
+
+    .admin-sidebar__nav-link {
+        font-size: 12px;
+        padding: 6px 8px;
+    }
+
+    .admin-sidebar__brand-name {
+        font-size: 13.5px;
+    }
+
+    .admin-topbar__admin-role {
+        display: none;
+    }
+
+    .admin-content {
+        padding: 10px 14px 18px;
+    }
 }
 
 @media (max-width: 768px) {

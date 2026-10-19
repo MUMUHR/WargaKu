@@ -70,20 +70,9 @@
      ======================================================== --}}
 <div class="admin-page-header">
     <div>
-        <nav style="font-size:12px;color:#6c757d;margin-bottom:4px;display:flex;align-items:center;gap:4px;">
-            <i class='bx bx-home-alt'></i>
-            <span>Beranda</span>
-            <span>/</span>
-            <a href="{{ route('admin.data-warga') }}" style="color:#6c757d;text-decoration:none;">Kelola Data Warga</a>
-            <span>/</span>
-            <a href="{{ route('admin.data-warga.detail', $noKkDisplay) }}" style="color:#6c757d;text-decoration:none;">Detail Kartu Keluarga</a>
-            <span>/</span>
-            <span style="color:#007bff;font-weight:600;">Edit Data Warga</span>
-        </nav>
         <h1 class="admin-page-header__title">
             Edit Data Warga Kependudukan
         </h1>
-        <p class="admin-page-header__sub">Pembaruan langsung data master warga oleh Admin RT. Perubahan akan langsung tersimpan ke database kependudukan tanpa proses verifikasi berulang.</p>
     </div>
 </div>
 

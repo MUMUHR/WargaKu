@@ -28,15 +28,9 @@
      HEADER HALAMAN
      ======================================================== --}}
 <div class="admin-page-header">
-    <div>
-        <nav style="font-size:12px;color:#6c757d;margin-bottom:4px;display:flex;align-items:center;gap:4px;" id="header-breadcrumb">
-            WargaKu / Portal RT 04 / Keuangan &amp; Kas / <span style="font-weight: 600; color: #212529;">Kelola &amp; Rekap Iuran</span>
-        </nav>
-        <div style="display:flex;align-items:center;flex-wrap:wrap;gap:8px;">
-            <h1 class="admin-page-header__title" id="page-title" style="margin:0;">Kelola &amp; Rekap Iuran Warga</h1>
-            <span class="badge-periode-aktif" id="header-periode-badge">Periode Aktif: {{ $periodeAktifTeks }}</span>
-        </div>
-        <p class="admin-page-header__sub" id="page-subtitle" style="margin-top:4px;">Monitoring penerimaan kas lingkungan, verifikasi pembayaran rutin bulanan, dan status tunggakan RT 04 / RW 08 Sukamaju.</p>
+    <div style="display:flex;align-items:center;flex-wrap:wrap;gap:8px;">
+        <h1 class="admin-page-header__title" id="page-title" style="margin:0;">Kelola &amp; Rekap Iuran Warga</h1>
+        <span class="badge-periode-aktif" id="header-periode-badge">Periode Aktif: {{ $periodeAktifTeks }}</span>
     </div>
     <div>
         <button type="button" class="btn-atur-iuran" onclick="bukaModalAturIuran()">
@@ -96,10 +90,7 @@
                 Riwayat Penerimaan Kas Transaksi</span>
             </button>
         </div>
-        <div class="iuran-tabs-right">
-            <span>Besaran Iuran Wajib:</span>
-            <span class="badge-besaran-iuran" id="label-besaran-wajib">Rp {{ number_format($nominalWajibSaatIni, 0, ',', '.') }} / KK</span>
-        </div>
+      
     </div>
 
     {{-- ═══ TAB 1: DAFTAR TUNGGAKAN KK ═══ --}}
@@ -135,13 +126,13 @@
         <div class="iuran-table-wrap">
             <table class="iuran-table" id="table-tunggakan">
                 <colgroup>
-                    <col style="width: 4%;">
-                    <col style="width: 17%;">
-                    <col style="width: 22%;">
-                    <col style="width: 12%;">
-                    <col style="width: 14%;">
-                    <col style="width: 14%;">
-                    <col style="width: 17%;">
+                    <col style="width: 45px;">
+                    <col style="width: 180px;">
+                    <col style="width: 230px;">
+                    <col style="width: 110px;">
+                    <col style="width: 125px;">
+                    <col style="width: 125px;">
+                    <col style="width: 160px;">
                 </colgroup>
                 <thead>
                     <tr>
@@ -283,13 +274,13 @@
         <div class="iuran-table-wrap">
             <table class="iuran-table" id="table-riwayat">
                 <colgroup>
-                    <col style="width: 4%;">
-                    <col style="width: 18%;">
-                    <col style="width: 28%;">
-                    <col style="width: 12%;">
-                    <col style="width: 16%;">
-                    <col style="width: 12%;">
-                    <col style="width: 10%;">
+                    <col style="width: 45px;">
+                    <col style="width: 165px;">
+                    <col style="width: 230px;">
+                    <col style="width: 110px;">
+                    <col style="width: 145px;">
+                    <col style="width: 125px;">
+                    <col style="width: 105px;">
                 </colgroup>
                 <thead>
                     <tr>

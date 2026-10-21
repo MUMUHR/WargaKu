@@ -497,6 +497,7 @@
 .kk-badge-rstatus--menunggu  { background: #fef9c3; color: #854d0e; }
 .kk-badge-rstatus--disetujui { background: #dcfce7; color: #14532d; }
 .kk-badge-rstatus--ditolak   { background: #fee2e2; color: #991b1b; }
+.kk-badge-rstatus--dibatalkan { background: #f1f5f9; color: #64748b; }
 
 .kk-file-link {
     color: #007bff;
@@ -522,11 +523,56 @@
     white-space: nowrap;
     transition: background 0.15s;
     font-family: inherit;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
 }
 
 .kk-btn-lihat:hover { background: #5a6268; }
 .kk-btn-lihat--green { background: #28a745; border-color: #28a745; }
 .kk-btn-lihat--green:hover { background: #218838; }
+
+.kk-btn-batal {
+    background: #fff5f5;
+    color: #dc2626;
+    border: 1px solid #fecaca;
+    padding: 7px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.15s;
+    font-family: inherit;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+.kk-btn-batal:hover {
+    background: #dc2626;
+    color: #ffffff;
+    border-color: #dc2626;
+}
+
+.kk-pbtn-batal {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #fff1f2;
+    color: #e11d48;
+    border: 1px solid #fecdd3;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+.kk-pbtn-batal:hover {
+    background: #e11d48;
+    color: #ffffff;
+    border-color: #e11d48;
+}
 
 /* ── Table Footer ── */
 .kk-table-footer {

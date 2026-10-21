@@ -239,6 +239,7 @@
                     <option value="menunggu">Menunggu</option>
                     <option value="disetujui">Disetujui</option>
                     <option value="ditolak">Ditolak</option>
+                    <option value="dibatalkan">Dibatalkan</option>
                 </select>
             </div>
             <a href="{{ route('warga.keluarga.edit') }}" class="kk-btn-tambah" id="btn-ajukan-perubahan" style="display:inline-flex;align-items:center;gap:6px;text-decoration:none;">
@@ -270,11 +271,13 @@
                         $statusDotClass = match($r->status) {
                             'disetujui' => 'kk-badge-rstatus--disetujui',
                             'ditolak' => 'kk-badge-rstatus--ditolak',
+                            'dibatalkan' => 'kk-badge-rstatus--dibatalkan',
                             default => 'kk-badge-rstatus--menunggu'
                         };
                         $statusLabel = match($r->status) {
                             'disetujui' => 'Disetujui',
                             'ditolak' => 'Ditolak',
+                            'dibatalkan' => 'Dibatalkan',
                             default => 'Menunggu'
                         };
                     @endphp
@@ -296,19 +299,28 @@
                             @endif
                         </td>
                         <td><span class="kk-badge-rstatus {{ $statusDotClass }}"><span class="kk-status-dot">●</span> {{ $statusLabel }}</span></td>
-                        <td style="color:{{ $r->status === 'ditolak' ? '#dc3545' : '#6c757d' }}; font-size:12.5px; font-weight:{{ $r->status === 'ditolak' ? '500' : 'normal' }};">
+                        <td style="color:{{ $r->status === 'ditolak' ? '#dc3545' : ($r->status === 'dibatalkan' ? '#94a3b8' : '#6c757d') }}; font-size:12.5px; font-weight:{{ $r->status === 'ditolak' ? '500' : 'normal' }};">
                             {{ $r->catatan_admin ?? ($r->status === 'ditolak' ? $r->alasan : ($r->alasan ?? '-')) }}
                         </td>
                         <td style="text-align:center;">
-                            <button type="button" class="kk-btn-lihat {{ $r->status === 'disetujui' ? 'kk-btn-lihat--green' : '' }}" id="btn-lihat-{{ $r->id }}" onclick="bukaModalLihatPengajuan({{ $r->id }})">
-                                @if($r->status === 'disetujui')
-                                    <i class='bx bx-check-circle'></i> Selesai
-                                @elseif($r->status === 'ditolak')
-                                    <i class='bx bx-info-circle'></i> Lihat Catatan
-                                @else
-                                    <i class='bx bx-show'></i> Lihat Perubahan
+                            <div style="display:inline-flex; align-items:center; justify-content:center; gap:6px;">
+                                <button type="button" class="kk-btn-lihat {{ $r->status === 'disetujui' ? 'kk-btn-lihat--green' : '' }}" id="btn-lihat-{{ $r->id }}" onclick="bukaModalLihatPengajuan({{ $r->id }})">
+                                    @if($r->status === 'disetujui')
+                                        <i class='bx bx-check-circle'></i> Selesai
+                                    @elseif($r->status === 'ditolak')
+                                        <i class='bx bx-info-circle'></i> Catatan
+                                    @elseif($r->status === 'dibatalkan')
+                                        <i class='bx bx-show'></i> Detail
+                                    @else
+                                        <i class='bx bx-show'></i> Lihat Perubahan
+                                    @endif
+                                </button>
+                                @if($r->status === 'menunggu')
+                                    <button type="button" class="kk-btn-batal" id="btn-batal-{{ $r->id }}" onclick="konfirmasiBatalPengajuan({{ $r->id }}, '{{ addslashes($targetNama) }}')" title="Batalkan Pengajuan">
+                                        <i class='bx bx-x-circle'></i> Batalkan
+                                    </button>
                                 @endif
-                            </button>
+                            </div>
                         </td>
                     </tr>
                     @empty
@@ -562,10 +574,47 @@
                     <i class='bx bx-info-circle' style="color:#0284c7;"></i>
                     <span>Pengajuan ini sedang dalam antrean verifikasi oleh Pengurus RT 04.</span>
                 </div>
+                <button type="button" class="kk-pbtn-batal" id="modal-p-btn-batal" onclick="konfirmasiBatalDariModal()" style="display:none;">
+                    <i class='bx bx-x-circle'></i> Batalkan Pengajuan Ini
+                </button>
                 <a href="{{ route('warga.keluarga.edit') }}" class="kk-pbtn-reapply" id="modal-p-btn-reapply" style="display:none;">
                     <i class='bx bx-refresh'></i> Ajukan Ulang Perubahan
                 </a>
             </div>
+        </div>
+    </div>
+</div>
+
+{{-- ══ MODAL KONFIRMASI BATALKAN PENGAJUAN PERUBAHAN DATA ══ --}}
+<div class="kk-modal-overlay" id="modal-batal-pengajuan" onclick="if(event.target === this) tutupModalBatalPengajuan()">
+    <div class="kk-modal" style="max-width: 440px;" role="dialog" aria-modal="true">
+        <div class="kk-modal__header" style="border-bottom: 1px solid #fee2e2;">
+            <div style="display:flex; align-items:center; gap:8px; color:#dc2626; font-weight:700; font-size:15px;">
+                <i class='bx bx-x-circle' style="font-size: 20px;"></i>
+                <span>Batalkan Pengajuan Perubahan Data?</span>
+            </div>
+            <button type="button" class="kk-modal__close" onclick="tutupModalBatalPengajuan()" aria-label="Tutup">
+                <i class='bx bx-x'></i>
+            </button>
+        </div>
+        <div class="kk-modal__body" style="padding: 20px 24px;">
+            <p style="font-size: 13.5px; color: #374151; margin: 0; line-height: 1.5;">
+                Apakah Anda yakin ingin membatalkan pengajuan perubahan data untuk <strong id="modal-batal-target">-</strong>?
+            </p>
+            <div style="margin-top:12px; padding:10px 14px; background:#fff1f2; border:1px solid #fecdd3; border-radius:6px; font-size:12px; color:#991b1b; line-height:1.4;">
+                <i class='bx bx-info-circle'></i> Pengajuan yang dibatalkan akan langsung ditarik dan hilang dari antrean verifikasi Pengurus RT 04.
+            </div>
+        </div>
+        <div class="kk-modal__footer" style="display:flex; justify-content:flex-end; gap:10px; padding: 14px 24px; background: #f8fafc; border-top: 1px solid #e2e8f0;">
+            <button type="button" class="kk-modal__btn-tutup" onclick="tutupModalBatalPengajuan()" style="background:#e2e8f0; color:#475569;">
+                Kembali
+            </button>
+            <form id="form-batal-pengajuan" action="" method="POST" style="margin: 0;">
+                @csrf
+                <button type="submit" style="display:inline-flex; align-items:center; gap:6px; background:#dc2626; color:#ffffff; border:none; padding:8px 16px; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer;">
+                    <i class='bx bx-x-circle'></i> Ya, Batalkan Pengajuan
+                </button>
+            </form>
         </div>
     </div>
 </div>
@@ -767,6 +816,11 @@ function bukaModalLihatPengajuan(id) {
         reapplyBtn.style.display = 'none';
     }
 
+    var batalBtn = document.getElementById('modal-p-btn-batal');
+    if (batalBtn) {
+        batalBtn.style.display = (p.status === 'menunggu') ? 'inline-flex' : 'none';
+    }
+
     // Tampilkan Modal
     document.getElementById('modal-pengajuan-overlay').classList.add('kk-modal-overlay--open');
     document.body.style.overflow = 'hidden';
@@ -833,10 +887,42 @@ function tutupPengajuanViaOverlay(e) {
     }
 }
 
+function konfirmasiBatalPengajuan(id, targetNama) {
+    var modal = document.getElementById('modal-batal-pengajuan');
+    var form = document.getElementById('form-batal-pengajuan');
+    var targetEl = document.getElementById('modal-batal-target');
+    if (form) {
+        form.action = '{{ url('/warga/keluarga/pengajuan') }}/' + id + '/batal';
+    }
+    if (targetEl) {
+        targetEl.textContent = targetNama || 'warga ini';
+    }
+    if (modal) {
+        modal.classList.add('kk-modal-overlay--open');
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+function tutupModalBatalPengajuan() {
+    var modal = document.getElementById('modal-batal-pengajuan');
+    if (modal) {
+        modal.classList.remove('kk-modal-overlay--open');
+        document.body.style.overflow = '';
+    }
+}
+
+function konfirmasiBatalDariModal() {
+    if (!currentPengajuanId) return;
+    var d = dataPengajuan[currentPengajuanId];
+    tutupModalLihatPengajuan();
+    konfirmasiBatalPengajuan(currentPengajuanId, d ? d.targetTitle : '');
+}
+
 document.addEventListener('keydown', function(e){
     if(e.key === 'Escape') {
         tutupDetailWarga();
         tutupModalLihatPengajuan();
+        tutupModalBatalPengajuan();
     }
 });
 </script>

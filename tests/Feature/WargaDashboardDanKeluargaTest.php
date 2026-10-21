@@ -238,4 +238,48 @@ class WargaDashboardDanKeluargaTest extends TestCase
         $this->assertNotNull($riwayat);
         $this->assertCount(2, $riwayat->bukti_list);
     }
+
+    public function test_warga_dapat_membatalkan_pengajuan_yang_masih_menunggu(): void
+    {
+        $riwayat = \App\Models\Riwayat_Perubahan::create([
+            'warga_id' => $this->kepalaWarga->id,
+            'keluarga_id' => $this->keluarga->id,
+            'jenis_pengajuan' => 'ubah_data',
+            'data_lama' => ['pekerjaan' => 'Karyawan Swasta'],
+            'data_baru' => ['pekerjaan' => 'Wiraswasta'],
+            'bukti_path' => 'uploads/bukti/test.png',
+            'status' => 'menunggu',
+            'alasan' => 'Mau ganti pekerjaan',
+        ]);
+
+        $response = $this->actingAs($this->userWarga)->post(route('warga.keluarga.pengajuan.batal', $riwayat->id));
+        $response->assertRedirect(route('warga.keluarga'));
+        $response->assertSessionHas('success');
+
+        $this->assertEquals('dibatalkan', $riwayat->fresh()->status);
+
+        // Pastikan di halaman verifikasi admin pengajuan ini hilang/tidak muncul
+        $adminUser = \App\Models\User::where('role', 'admin')->first() ?? \App\Models\User::factory()->create(['role' => 'admin']);
+        $adminRes = $this->actingAs($adminUser)->get(route('admin.data-warga'));
+        $adminRes->assertOk();
+        $adminRes->assertDontSee('Mau ganti pekerjaan');
+    }
+
+    public function test_warga_tidak_dapat_membatalkan_pengajuan_yang_sudah_disetujui(): void
+    {
+        $riwayat = \App\Models\Riwayat_Perubahan::create([
+            'warga_id' => $this->kepalaWarga->id,
+            'keluarga_id' => $this->keluarga->id,
+            'jenis_pengajuan' => 'ubah_data',
+            'data_lama' => ['pekerjaan' => 'Karyawan Swasta'],
+            'data_baru' => ['pekerjaan' => 'Wiraswasta'],
+            'bukti_path' => 'uploads/bukti/test.png',
+            'status' => 'disetujui',
+            'alasan' => 'Sudah diverifikasi',
+        ]);
+
+        $response = $this->actingAs($this->userWarga)->post(route('warga.keluarga.pengajuan.batal', $riwayat->id));
+        $response->assertSessionHas('error');
+        $this->assertEquals('disetujui', $riwayat->fresh()->status);
+    }
 }

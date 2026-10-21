@@ -51,6 +51,7 @@ Route::prefix('warga')->name('warga.')->middleware(['auth', 'warga'])->group(fun
 
     Route::get('/keluarga/edit/{nik?}', [WargaKeluargaController::class, 'tampilkanFormEdit'])->name('keluarga.edit');
     Route::post('/keluarga/edit', [WargaKeluargaController::class, 'simpanPengajuanEdit'])->name('keluarga.edit.store');
+    Route::post('/keluarga/pengajuan/{id}/batal', [WargaKeluargaController::class, 'batalkanPengajuan'])->name('keluarga.pengajuan.batal');
 
     // Layanan Surat Pengantar
     Route::get('/surat', [WargaSuratController::class, 'index'])->name('surat');

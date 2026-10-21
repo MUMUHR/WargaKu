@@ -356,10 +356,10 @@
                                     <td>
                                         <div class="wf-input-editable-wrap">
                                             <input type="text" id="new-alamat" name="new_alamat" class="wf-input" value="{{ $selectedData['alamat'] ?? '' }}" placeholder="Contoh: Blok B4 No. 12">
-                                            <span class="wf-help-text" style="font-size:11px; color:#64748b; margin-top:4px; display:block;">
-                                                Contoh: <strong>Blok A No. 05</strong> atau <strong>Blok B4 No. 12</strong> (hanya blok &amp; nomor rumah di RT 04).
-                                            </span>
                                         </div>
+                                        <small style="display:block; margin-top:6px; font-size:11.5px; color:#64748b; line-height:1.4;">
+                                            Contoh: <strong>Blok A No. 05</strong> atau <strong>Blok B4 No. 12</strong> (hanya blok &amp; nomor rumah di RT 04).
+                                        </small>
                                     </td>
                                 </tr>
 

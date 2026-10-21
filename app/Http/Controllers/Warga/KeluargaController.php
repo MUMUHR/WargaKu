@@ -9,6 +9,7 @@ use App\Models\Warga;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
 class KeluargaController extends Controller
@@ -111,6 +112,7 @@ class KeluargaController extends Controller
                     'menunggu' => 'Menunggu Persetujuan RT',
                     'disetujui' => 'Telah Disetujui RT',
                     'ditolak' => 'Ditolak oleh RT',
+                    'dibatalkan' => 'Dibatalkan',
                     default => ucfirst($r->status),
                 };
 
@@ -118,6 +120,7 @@ class KeluargaController extends Controller
                     'menunggu' => 'Pengajuan ini sedang dalam antrean verifikasi oleh Pengurus RT 04. Mohon menunggu konfirmasi.',
                     'disetujui' => 'Pengajuan telah disetujui oleh RT 04. Data keluarga Anda telah resmi diperbarui.',
                     'ditolak' => 'Pengajuan ditolak oleh Ketua RT 04. Silakan ajukan ulang perubahan berkas.',
+                    'dibatalkan' => 'Pengajuan ini telah Anda batalkan dan tidak diproses oleh Pengurus RT 04.',
                     default => '-',
                 };
 
@@ -477,6 +480,35 @@ class KeluargaController extends Controller
 
         return redirect()->route('warga.keluarga')
             ->with('success', 'Pendaftaran anggota keluarga baru berhasil diajukan dan menunggu verifikasi Pengurus RT 04.');
+    }
+
+    /**
+     * Membatalkan pengajuan perubahan data keluarga yang masih berstatus menunggu verifikasi
+     */
+    public function batalkanPengajuan(Request $request, int $id): RedirectResponse
+    {
+        $user = Auth::user();
+        $kepala = $user->wargaPemilik 
+            ?? $user->wargas()->where('status_hubungan', 'kepala_keluarga')->first() 
+            ?? $user->wargas()->first();
+        $keluarga = $kepala?->keluarga ?? $user->keluarga;
+
+        if (!$keluarga) {
+            return redirect()->route('warga.keluarga')->with('error', 'Data keluarga tidak ditemukan.');
+        }
+
+        $pengajuan = Riwayat_Perubahan::where('keluarga_id', $keluarga->id)->findOrFail($id);
+
+        if ($pengajuan->status !== 'menunggu') {
+            return redirect()->route('warga.keluarga')->with('error', 'Hanya pengajuan dengan status Menunggu Verifikasi yang dapat dibatalkan.');
+        }
+
+        $pengajuan->status = 'dibatalkan';
+        $pengajuan->alasan = ($pengajuan->alasan ? $pengajuan->alasan . ' ' : '') . '(Dibatalkan oleh pemohon)';
+        $pengajuan->save();
+
+        return redirect()->route('warga.keluarga')
+            ->with('success', 'Pengajuan perubahan data berhasil dibatalkan dan telah ditarik dari antrean verifikasi RT.');
     }
 
     /**

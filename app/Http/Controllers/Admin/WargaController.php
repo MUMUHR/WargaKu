@@ -71,8 +71,8 @@ class WargaController extends Controller
 
         $keluargas = $keluargaQuery->latest()->paginate(10)->withQueryString();
 
-        // 3. Query Pengajuan Verifikasi (Tab 2)
-        $pengajuanQuery = Riwayat_Perubahan::with([
+        // 3. Query Pengajuan Verifikasi (Tab 2) - Tidak menampilkan pengajuan yang telah dibatalkan oleh warga
+        $pengajuanQuery = Riwayat_Perubahan::where('status', '!=', 'dibatalkan')->with([
             'keluarga.kepalaKeluarga' => function ($q) {
                 $q->where('status_warga', 'hidup');
             },
@@ -458,6 +458,9 @@ class WargaController extends Controller
     public function verifikasiPengajuan(Request $request, int $id)
     {
         $pengajuan = Riwayat_Perubahan::with('keluarga')->findOrFail($id);
+        if ($pengajuan->status !== 'menunggu') {
+            return back()->with('error', 'Pengajuan ini tidak dapat diproses karena berstatus: ' . ucfirst($pengajuan->status) . '.');
+        }
 
         $validated = $request->validate([
             'tindakan' => ['required', Rule::in(['setujui', 'tolak'])],

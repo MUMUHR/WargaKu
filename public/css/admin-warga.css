@@ -1086,6 +1086,10 @@
     font-size: 14px;
 }
 
+#table-anggota {
+    min-width: 1200px;
+}
+
 #table-anggota .btn-act-delete {
     height: 30px;
     padding: 5px 10px;

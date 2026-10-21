@@ -196,7 +196,8 @@
             <table class="warga-table" id="table-anggota">
                 <colgroup>
                     <col style="width: 45px;">
-                    <col style="width: 210px;">
+                    <col style="width: 165px;">
+                    <col style="width: 180px;">
                     <col style="width: 130px;">
                     <col style="width: 125px;">
                     <col style="width: 185px;">
@@ -206,7 +207,8 @@
                 <thead>
                     <tr>
                         <th style="text-align: center;">NO</th>
-                        <th>NIK &amp; NAMA LENGKAP</th>
+                        <th>NIK</th>
+                        <th>NAMA LENGKAP</th>
                         <th>HUBUNGAN KK</th>
                         <th>JK &amp; AGAMA</th>
                         <th>PENDIDIKAN TERAKHIR &amp; PEKERJAAN</th>
@@ -255,8 +257,12 @@
                     <tr>
                         <td style="text-align: center; color: #495057; font-weight: 500;">{{ $index + 1 }}</td>
                         <td>
+                            <span style="font-weight: 700; color: #007bff; font-size: 13px; letter-spacing: 0.02em;">
+                                {{ $m->nik }}
+                            </span>
+                        </td>
+                        <td>
                             <div style="font-weight: 700; color: #212529; font-size: 13px;">{{ $m->nama }}</div>
-                            <div style="font-size: 11.5px; color: #6c757d; margin-top: 2px;">NIK : {{ $m->nik }}</div>
                         </td>
                         <td>
                             <span class="{{ $badgeClass }}">{{ $hubunganLabel }}</span>
@@ -306,7 +312,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="7" style="text-align: center; padding: 32px; color: #6c757d;">
+                        <td colspan="8" style="text-align: center; padding: 32px; color: #6c757d;">
                             Belum ada anggota keluarga aktif yang terdaftar pada Kartu Keluarga ini.
                         </td>
                     </tr>

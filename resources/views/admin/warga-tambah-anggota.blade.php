@@ -119,7 +119,7 @@
                         <label class="form-field-label" for="input-nama">
                             Nama Lengkap (Termasuk Gelar jika ada) <span class="req">*</span>
                         </label>
-                        <input type="text" name="nama" class="form-control-warga" id="input-nama" placeholder="Contoh: M. Rayhan Pratama, S.Kom atau Siti Aisyah." required>
+                        <input type="text" name="nama" class="form-control-warga" id="input-nama" placeholder="Contoh: M. Rayhan Pratama, S.Kom atau Siti Aisyah." value="{{ old('nama') }}" required>
                     </div>
                 </div>
             </div>
@@ -136,11 +136,11 @@
                 <div class="form-grid-2col">
                     <div class="form-field">
                         <label class="form-field-label" for="input-tempat">Tempat Lahir <span class="req">*</span></label>
-                        <input type="text" name="tempat_lahir" class="form-control-warga" id="input-tempat" placeholder="Kota / Kabupaten tempat lahir" required>
+                        <input type="text" name="tempat_lahir" class="form-control-warga" id="input-tempat" placeholder="Kota / Kabupaten tempat lahir" value="{{ old('tempat_lahir') }}" required>
                     </div>
                     <div class="form-field">
                         <label class="form-field-label" for="input-tgl">Tanggal Lahir <span class="req">*</span></label>
-                        <input type="date" name="tanggal_lahir" class="form-control-warga" id="input-tgl" required>
+                        <input type="date" name="tanggal_lahir" class="form-control-warga" id="input-tgl" value="{{ old('tanggal_lahir') }}" required>
                     </div>
                 </div>
 
@@ -149,20 +149,20 @@
                         <label class="form-field-label" for="input-jk">Jenis Kelamin <span class="req">*</span></label>
                         <select name="jk" class="form-select-warga" id="input-jk" required>
                             <option value="">-- Pilih Jenis Kelamin --</option>
-                            <option value="Laki-laki">Laki-laki</option>
-                            <option value="Perempuan">Perempuan</option>
+                            <option value="Laki-laki" {{ old('jk') === 'Laki-laki' ? 'selected' : '' }}>Laki-laki</option>
+                            <option value="Perempuan" {{ old('jk') === 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
                         </select>
                     </div>
                     <div class="form-field">
                         <label class="form-field-label" for="input-agama">Agama <span class="req">*</span></label>
                         <select name="agama" class="form-select-warga" id="input-agama" required>
                             <option value="">-- Pilih Agama --</option>
-                            <option value="Islam">Islam</option>
-                            <option value="Kristen Protestan">Kristen Protestan</option>
-                            <option value="Katolik">Katolik</option>
-                            <option value="Hindu">Hindu</option>
-                            <option value="Buddha">Buddha</option>
-                            <option value="Konghucu">Konghucu</option>
+                            <option value="Islam" {{ old('agama') === 'Islam' ? 'selected' : '' }}>Islam</option>
+                            <option value="Kristen Protestan" {{ old('agama') === 'Kristen Protestan' ? 'selected' : '' }}>Kristen Protestan</option>
+                            <option value="Katolik" {{ old('agama') === 'Katolik' ? 'selected' : '' }}>Katolik</option>
+                            <option value="Hindu" {{ old('agama') === 'Hindu' ? 'selected' : '' }}>Hindu</option>
+                            <option value="Buddha" {{ old('agama') === 'Buddha' ? 'selected' : '' }}>Buddha</option>
+                            <option value="Konghucu" {{ old('agama') === 'Konghucu' ? 'selected' : '' }}>Konghucu</option>
                         </select>
                     </div>
                 </div>
@@ -172,46 +172,46 @@
                         <label class="form-field-label" for="input-pendidikan">Pendidikan Terakhir <span class="req">*</span></label>
                         <select name="pendidikan" class="form-select-warga" id="input-pendidikan" required>
                             <option value="">-- Pilih Pendidikan --</option>
-                            <option value="Tidak/Belum Sekolah">Tidak/Belum Sekolah</option>
-                            <option value="SD/Sederajat">SD / Sederajat</option>
-                            <option value="SMP/Sederajat">SMP / Sederajat</option>
-                            <option value="SMA/SMK/Sederajat">SMA / SMK / Sederajat</option>
-                            <option value="Diploma (D3)">Diploma (D3)</option>
-                            <option value="Sarjana (S1)">Sarjana (S1)</option>
-                            <option value="Magister (S2)">Magister (S2)</option>
-                            <option value="Doktor (S3)">Doktor (S3)</option>
+                            <option value="Tidak/Belum Sekolah" {{ old('pendidikan') === 'Tidak/Belum Sekolah' ? 'selected' : '' }}>Tidak/Belum Sekolah</option>
+                            <option value="Belum Tamat SD" {{ old('pendidikan') === 'Belum Tamat SD' ? 'selected' : '' }}>Belum Tamat SD</option>
+                            <option value="SD/Sederajat" {{ old('pendidikan') === 'SD/Sederajat' ? 'selected' : '' }}>SD / Sederajat</option>
+                            <option value="SMP/Sederajat" {{ old('pendidikan') === 'SMP/Sederajat' ? 'selected' : '' }}>SMP / Sederajat</option>
+                            <option value="SMA/SMK/Sederajat" {{ old('pendidikan') === 'SMA/SMK/Sederajat' ? 'selected' : '' }}>SMA / SMK / Sederajat</option>
+                            <option value="Diploma I/II (D1/D2)" {{ old('pendidikan') === 'Diploma I/II (D1/D2)' ? 'selected' : '' }}>Diploma I / II (D1/D2)</option>
+                            <option value="Diploma (D3)" {{ old('pendidikan') === 'Diploma (D3)' ? 'selected' : '' }}>Diploma (D3)</option>
+                            <option value="Sarjana (S1/D4)" {{ old('pendidikan') === 'Sarjana (S1/D4)' ? 'selected' : '' }}>Sarjana / Diploma IV (S1/D4)</option>
+                            <option value="Magister (S2)" {{ old('pendidikan') === 'Magister (S2)' ? 'selected' : '' }}>Magister (S2)</option>
+                            <option value="Doktor (S3)" {{ old('pendidikan') === 'Doktor (S3)' ? 'selected' : '' }}>Doktor (S3)</option>
                         </select>
                     </div>
                     <div class="form-field">
                         <label class="form-field-label" for="input-pekerjaan">Pekerjaan Terkini <span class="req">*</span></label>
-                        <input type="text" name="pekerjaan" class="form-control-warga" id="input-pekerjaan" placeholder="Karyawan Swasta, Wiraswasta, Pelajar, dll." required>
+                        <input type="text" name="pekerjaan" class="form-control-warga" id="input-pekerjaan" placeholder="Karyawan Swasta, Wiraswasta, Pelajar, dll." value="{{ old('pekerjaan') }}" required>
                     </div>
                 </div>
 
                 <div class="form-grid-2col">
                     <div class="form-field">
-                        <label class="form-field-label" for="input-kawin">Status Pernikahan <span class="req">*</span></label>
-                        <select name="status_kawin" class="form-select-warga" id="input-kawin" required>
-                            <option value="">-- Pilih Status Kawin --</option>
-                            <option value="Belum Kawin">Belum Kawin</option>
-                            <option value="Kawin">Kawin</option>
-                            <option value="Cerai Hidup">Cerai Hidup</option>
-                            <option value="Cerai Mati">Cerai Mati</option>
-                        </select>
-                    </div>
-                    <div class="form-field">
                         <label class="form-field-label" for="input-shdk">Status Hubungan Dalam Keluarga (SHDK) <span class="req">*</span></label>
                         <select name="shdk" class="form-select-warga" id="input-shdk" required>
                             <option value="">-- Hubungan dengan Kepala Keluarga --</option>
-                            <option value="Kepala Keluarga">Kepala Keluarga</option>
-                            <option value="Istri">Istri</option>
-                            <option value="Anak" selected>Anak</option>
-                            <option value="Menantu">Menantu</option>
-                            <option value="Cucu">Cucu</option>
-                            <option value="Orang Tua">Orang Tua</option>
-                            <option value="Mertua">Mertua</option>
-                            <option value="Famili Lain">Famili Lain</option>
+                            <option value="Kepala Keluarga" {{ old('shdk') === 'Kepala Keluarga' ? 'selected' : '' }}>Kepala Keluarga</option>
+                            <option value="Suami" {{ old('shdk') === 'Suami' ? 'selected' : '' }}>Suami</option>
+                            <option value="Istri" {{ old('shdk') === 'Istri' ? 'selected' : '' }}>Istri</option>
+                            <option value="Anak" {{ old('shdk', 'Anak') === 'Anak' ? 'selected' : '' }}>Anak</option>
+                            <option value="Menantu" {{ old('shdk') === 'Menantu' ? 'selected' : '' }}>Menantu</option>
+                            <option value="Cucu" {{ old('shdk') === 'Cucu' ? 'selected' : '' }}>Cucu</option>
+                            <option value="Orang Tua" {{ old('shdk') === 'Orang Tua' ? 'selected' : '' }}>Orang Tua</option>
+                            <option value="Mertua" {{ old('shdk') === 'Mertua' ? 'selected' : '' }}>Mertua</option>
+                            <option value="Famili Lain" {{ old('shdk') === 'Famili Lain' ? 'selected' : '' }}>Famili Lain</option>
+                            <option value="Lainnya" {{ old('shdk') === 'Lainnya' ? 'selected' : '' }}>Lainnya</option>
                         </select>
+                        <span class="form-field-help">Hubungan kependudukan terhadap Kepala Keluarga saat ini.</span>
+                    </div>
+                    <div class="form-field">
+                        <label class="form-field-label" for="input-alamat">Alamat Domisili <span class="req">*</span></label>
+                        <input type="text" name="alamat" class="form-control-warga" id="input-alamat" value="{{ old('alamat', $alamatKeluarga) }}" placeholder="Contoh: RT 04 / RW 08" required>
+                        <span class="form-field-help">Otomatis terisi alamat Kartu Keluarga. Dapat disesuaikan bila domisili berbeda.</span>
                     </div>
                 </div>
             </div>

@@ -1251,3 +1251,128 @@
         font-size: 14.5px;
     }
 }
+
+/* ═════════════════════════════════════════════════════════════════
+   RAMAH WARGA (PANDUAN UNGGAH BUKTI DOKUMEN & MULTI-UPLOAD)
+   ═════════════════════════════════════════════════════════════════ */
+.wf-upload-info-box {
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    border-radius: 8px;
+    padding: 11px 13px;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.wf-upload-info-box__icon {
+    width: 28px;
+    height: 28px;
+    background: #dcfce7;
+    color: #16a34a;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 17px;
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+.wf-upload-info-box__content {
+    flex: 1;
+    min-width: 0;
+}
+
+.wf-upload-info-box__title {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: #14532d;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 3px;
+}
+
+.wf-upload-info-box__desc {
+    font-size: 11.5px;
+    color: #166534;
+    line-height: 1.5;
+}
+
+.wf-upload-multi-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #ecfdf5;
+    color: #047857;
+    border: 1px solid #a7f3d0;
+    padding: 4px 11px;
+    border-radius: 20px;
+    font-size: 11.5px;
+    font-weight: 700;
+    margin: 8px 0;
+}
+
+.wf-empty-file-notice {
+    margin-top: 12px;
+    padding: 10px 14px;
+    border-radius: 6px;
+    background: #f8fafc;
+    border: 1px dashed #cbd5e1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11.5px;
+    color: #64748b;
+    line-height: 1.4;
+}
+
+.wf-btn-add-more {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: #f0fdf4;
+    color: #15803d;
+    border: 1px solid #bbf7d0;
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-size: 11.5px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.wf-btn-add-more:hover {
+    background: #dcfce7;
+    color: #166534;
+    border-color: #86efac;
+}
+
+.wf-upload-examples-box {
+    margin-top: 14px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 12px 14px;
+}
+
+.wf-upload-examples-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.wf-upload-examples-list {
+    margin: 0;
+    padding-left: 18px;
+    font-size: 11.5px;
+    color: #475569;
+    line-height: 1.6;
+}
+

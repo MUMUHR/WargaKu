@@ -246,22 +246,74 @@
                         <span class="wf-badge-wajib-red">WAJIB</span>
                     </div>
                     <div class="wf-card__body">
-                        
-                        {{-- Dropzone --}}
+
+                        {{-- Kotak Edukasi / Petunjuk Ramah untuk Orang Awam --}}
+                        <div class="wf-upload-info-box">
+                            <div class="wf-upload-info-box__icon">
+                                <i class='bx bx-info-circle'></i>
+                            </div>
+                            <div class="wf-upload-info-box__content">
+                                <div class="wf-upload-info-box__title">
+                                    <i class='bx bx-check-double' style="color:#16a34a;"></i>
+                                    Boleh &amp; Bisa Unggah Lebih Dari 1 Bukti
+                                </div>
+                                <div class="wf-upload-info-box__desc">
+                                    Anda dapat melampirkan beberapa foto / dokumen sekaligus (misal: <strong>Akta Kelahiran + KK Lama + KTP</strong>). Klik area di bawah untuk memilih file dari HP atau Komputer Anda.
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- Dropzone Area --}}
                         <div class="wf-upload-dropzone" id="dropzone-tambah" onclick="document.getElementById('file-input-tambah').click()" style="cursor: pointer;">
                             <input type="file" id="file-input-tambah" name="bukti[]" style="display:none;" multiple accept=".pdf,.jpg,.jpeg,.png">
                             <div class="wf-upload-icon-circle">
                                 <i class='bx bx-cloud-upload'></i>
                             </div>
-                            <div class="wf-upload-text-main">Tarik &amp; lepas berkas di sini</div>
-                            <div class="wf-upload-text-sub">atau Pilih Berkas dari Komputer</div>
-                            <div class="wf-upload-text-hint">Mendukung format PDF, JPG, PNG (Maksimal 2 MB per berkas)</div>
+                            <div class="wf-upload-text-main">
+                                <i class='bx bx-pointer'></i> Klik di Sini untuk Memilih / Unggah Berkas
+                            </div>
+                            <div class="wf-upload-text-sub">
+                                atau seret &amp; lepas (drag &amp; drop) berkas ke dalam kotak ini
+                            </div>
+
+                            <div class="wf-upload-multi-badge">
+                                <i class='bx bx-layer-plus'></i>
+                                <span>Bisa Upload Banyak Bukti Sekaligus</span>
+                            </div>
+
+                            <div class="wf-upload-text-hint">
+                                Format didukung: <strong>PDF, JPG, JPEG, PNG</strong> (Maksimal 2 MB per berkas)
+                            </div>
                         </div>
 
-                        {{-- Berkas Terlampir (Default Kosong & Tersembunyi) --}}
+                        {{-- Notice Bila Belum Ada Berkas yang Dipilih --}}
+                        <div id="notice-belum-ada-berkas" class="wf-empty-file-notice">
+                            <i class='bx bx-file-blank' style="font-size:16px; color:#94a3b8; flex-shrink:0;"></i>
+                            <span>Belum ada berkas yang dipilih. Silakan klik kotak di atas untuk memilih foto/dokumen bukti pendukung.</span>
+                        </div>
+
+                        {{-- Berkas Terlampir (Dinamis) --}}
                         <div class="wf-attached-section" id="section-berkas-terlampir" style="display: none;">
-                            <div class="wf-attached-title" id="judul-berkas-terlampir">BERKAS TERLAMPIR (0 FILE)</div>
+                            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
+                                <div class="wf-attached-title" id="judul-berkas-terlampir" style="margin-bottom:0;">BERKAS TERLAMPIR (0 FILE)</div>
+                                <button type="button" class="wf-btn-add-more" onclick="document.getElementById('file-input-tambah').click()">
+                                    <i class='bx bx-plus-circle'></i> Tambah Bukti Lain
+                                </button>
+                            </div>
                             <div class="wf-file-list" id="tambah-file-list"></div>
+                        </div>
+
+                        {{-- Contoh Dokumen yang Dianjurkan --}}
+                        <div class="wf-upload-examples-box">
+                            <div class="wf-upload-examples-title">
+                                <i class='bx bx-book-bookmark' style="color:#0284c7;"></i>
+                                Contoh Dokumen yang Dapat Anda Lampirkan:
+                            </div>
+                            <ul class="wf-upload-examples-list">
+                                <li><strong>Anak Baru Lahir:</strong> Akta Kelahiran atau Surat Keterangan Lahir dari Bidan/RS.</li>
+                                <li><strong>Suami / Istri:</strong> Buku Nikah atau Akta Perkawinan resmi.</li>
+                                <li><strong>Warga Dewasa (17+ tahun):</strong> Foto / Scan e-KTP asli.</li>
+                            </ul>
                         </div>
 
                     </div>
@@ -337,6 +389,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const attachedSection = document.getElementById('section-berkas-terlampir');
     const fileListContainer = document.getElementById('tambah-file-list');
     const attachedTitle = document.getElementById('judul-berkas-terlampir');
+    const emptyNotice = document.getElementById('notice-belum-ada-berkas');
     let uploadedFiles = [];
 
     function renderUploadedFiles() {
@@ -350,13 +403,15 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!attachedSection || !fileListContainer) return;
         if (uploadedFiles.length === 0) {
             attachedSection.style.display = 'none';
+            if (emptyNotice) emptyNotice.style.display = 'flex';
             fileListContainer.innerHTML = '';
             return;
         }
 
         attachedSection.style.display = 'block';
+        if (emptyNotice) emptyNotice.style.display = 'none';
         if (attachedTitle) {
-            attachedTitle.textContent = `BERKAS TERLAMPIR (${uploadedFiles.length} FILE TERDETEKSI)`;
+            attachedTitle.textContent = `BERKAS TERPILIH (${uploadedFiles.length} FILE SIAP DIUNGGAH)`;
         }
         fileListContainer.innerHTML = '';
 
@@ -431,6 +486,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     uploadedFiles.push(f);
                 }
             });
+            e.target.value = '';
             renderUploadedFiles();
         });
     }

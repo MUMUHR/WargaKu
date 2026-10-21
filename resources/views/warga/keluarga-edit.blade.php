@@ -457,26 +457,74 @@
                         <span class="wf-badge-step-blue">LANGKAH 3</span>
                     </div>
                     <div class="wf-card__body">
-                        
+
+                        {{-- Kotak Edukasi / Petunjuk Ramah untuk Orang Awam --}}
+                        <div class="wf-upload-info-box">
+                            <div class="wf-upload-info-box__icon">
+                                <i class='bx bx-info-circle'></i>
+                            </div>
+                            <div class="wf-upload-info-box__content">
+                                <div class="wf-upload-info-box__title">
+                                    <i class='bx bx-check-double' style="color:#16a34a;"></i>
+                                    Boleh &amp; Bisa Unggah Lebih Dari 1 Bukti
+                                </div>
+                                <div class="wf-upload-info-box__desc">
+                                    Anda dapat melampirkan beberapa foto/dokumen sekaligus (misal: <strong>KTP + Ijazah Baru + Akta</strong>). Klik area di bawah untuk memilih file dari HP atau Komputer Anda.
+                                </div>
+                            </div>
+                        </div>
+
                         {{-- Dropzone --}}
-                        <div class="wf-upload-dropzone" onclick="document.getElementById('file-input-edit').click()">
+                        <div class="wf-upload-dropzone" onclick="document.getElementById('file-input-edit').click()" style="cursor: pointer;">
                             <input type="file" id="file-input-edit" name="bukti[]" style="display:none;" multiple accept=".pdf,.jpg,.jpeg,.png">
                             <div class="wf-upload-icon-circle">
                                 <i class='bx bx-cloud-upload' style="font-size:26px;color:#0284c7;"></i>
                             </div>
-                            <div class="wf-upload-text-main">Tarik berkas ke sini, atau <span style="color:#0284c7;text-decoration:underline;">Pilih File</span></div>
-                            <div class="wf-upload-text-hint">Format didukung: PDF, JPG, PNG (Maks. 5 MB)</div>
+                            <div class="wf-upload-text-main">
+                                <i class='bx bx-pointer'></i> Klik di Sini untuk Memilih / Unggah Berkas
+                            </div>
+                            <div class="wf-upload-text-sub">
+                                atau seret &amp; lepas (drag &amp; drop) berkas ke dalam kotak ini
+                            </div>
+
+                            <div class="wf-upload-multi-badge">
+                                <i class='bx bx-layer-plus'></i>
+                                <span>Bisa Upload Banyak Bukti Sekaligus</span>
+                            </div>
+
+                            <div class="wf-upload-text-hint">
+                                Format didukung: <strong>PDF, JPG, JPEG, PNG</strong> (Maksimal 5 MB per berkas)
+                            </div>
                         </div>
 
                         {{-- Berkas Terpilih --}}
                         <div class="wf-attached-section" id="edit-attached-section" style="display:none;margin-top:14px;">
-                            <div class="wf-attached-title" id="edit-attached-title">BERKAS TERPILIH (0 BERKAS)</div>
+                            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
+                                <div class="wf-attached-title" id="edit-attached-title" style="margin-bottom:0;">BERKAS TERPILIH (0 BERKAS)</div>
+                                <button type="button" class="wf-btn-add-more" onclick="document.getElementById('file-input-edit').click()">
+                                    <i class='bx bx-plus-circle'></i> Tambah Bukti Lain
+                                </button>
+                            </div>
                             <div class="wf-file-list" id="edit-file-list"></div>
                         </div>
 
-                        <div id="edit-empty-file-notice" style="margin-top:14px; padding:12px; border-radius:6px; background:#f8fafc; border:1px dashed #cbd5e1; text-align:center; font-size:12px; color:#64748b;">
-                            <i class='bx bx-info-circle' style="font-size:15px; vertical-align:middle; color:#0284c7; margin-right:4px;"></i>
-                            Belum ada dokumen yang dipilih. Contoh: KTP, Akta Kelahiran, Ijazah, atau Surat Nikah.
+                        <div id="edit-empty-file-notice" class="wf-empty-file-notice">
+                            <i class='bx bx-file-blank' style="font-size:16px; color:#94a3b8; flex-shrink:0;"></i>
+                            <span>Belum ada dokumen yang dipilih. Contoh: KTP, Akta Kelahiran, Ijazah, atau Surat Nikah.</span>
+                        </div>
+
+                        {{-- Contoh Dokumen yang Dianjurkan --}}
+                        <div class="wf-upload-examples-box">
+                            <div class="wf-upload-examples-title">
+                                <i class='bx bx-book-bookmark' style="color:#0284c7;"></i>
+                                Contoh Dokumen Sesuai Data yang Diubah:
+                            </div>
+                            <ul class="wf-upload-examples-list">
+                                <li><strong>Ubah Nama / Tgl Lahir:</strong> Akta Kelahiran atau Ijazah.</li>
+                                <li><strong>Ubah Pendidikan:</strong> Ijazah kelulusan terakhir atau Transkrip nilai.</li>
+                                <li><strong>Ubah Pekerjaan:</strong> SK Kerja / Kartu Pegawai / Surat Keterangan Usaha.</li>
+                                <li><strong>Pindah KK / Meninggal:</strong> Surat Keterangan Pindah / Surat Kematian.</li>
+                            </ul>
                         </div>
 
                     </div>
@@ -598,6 +646,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (fileInputEdit) {
         fileInputEdit.addEventListener('change', function (e) {
             Array.from(e.target.files).forEach(f => selectedFiles.push(f));
+            e.target.value = '';
             renderFileList();
         });
     }

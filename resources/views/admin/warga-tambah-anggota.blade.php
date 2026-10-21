@@ -210,8 +210,8 @@
                     </div>
                     <div class="form-field">
                         <label class="form-field-label" for="input-alamat">Alamat Domisili <span class="req">*</span></label>
-                        <input type="text" name="alamat" class="form-control-warga" id="input-alamat" value="{{ old('alamat', $alamatKeluarga) }}" placeholder="Contoh: RT 04 / RW 08" required>
-                        <span class="form-field-help">Otomatis terisi alamat Kartu Keluarga. Dapat disesuaikan bila domisili berbeda.</span>
+                        <input type="text" name="alamat" class="form-control-warga" id="input-alamat" value="{{ old('alamat', $alamatKeluarga) }}" placeholder="Contoh: Blok B4 No. 12" required>
+                        <span class="form-field-help">Contoh: Blok A No. 05 atau Blok B4 No. 12 (hanya blok &amp; nomor rumah di RT 04).</span>
                     </div>
                 </div>
             </div>

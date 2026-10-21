@@ -21,7 +21,7 @@
         $ttl = ($targetWarga?->tempat_lahir ? $targetWarga->tempat_lahir . ', ' : '') . $tglLahir;
         $jk = $targetWarga?->jenis_kelamin === 'laki_laki' ? 'Laki-Laki' : ($targetWarga?->jenis_kelamin === 'perempuan' ? 'Perempuan' : '-');
         $agama = ucfirst($targetWarga?->agama ?? 'Islam');
-        $alamat = $targetWarga?->alamat ?? ($surat->pemohon?->alamat ?? 'RT 04 / RW 08');
+        $alamat = $targetWarga?->alamat ?? ($surat->pemohon?->alamat ?? 'RT 04');
         $nomorSurat = $surat->nomor_surat ?? '-';
         $tglSurat = $surat->updated_at ? $surat->updated_at->translatedFormat('d F Y') : now()->translatedFormat('d F Y');
     @endphp

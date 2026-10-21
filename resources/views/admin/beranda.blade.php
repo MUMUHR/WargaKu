@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 
 @section('title', 'Dashboard')
-@section('meta_description', 'Dashboard Admin RT 04 / RW 08 — WargaKu')
+@section('meta_description', 'Dashboard Admin RT 04 — WargaKu')
 
 @section('breadcrumb')
     <span class="admin-topbar__breadcrumb-current">Admin RT Dashboard</span>

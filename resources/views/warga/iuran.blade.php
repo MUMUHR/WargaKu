@@ -1,7 +1,7 @@
 @extends('layouts.warga')
 
 @section('title', 'Monitoring Iuran Warga RT 04')
-@section('meta_description', 'Sistem monitoring status pembayaran iuran warga per bulan resmi tercatat oleh Bendahara RT 04 / RW 08.')
+@section('meta_description', 'Sistem monitoring status pembayaran iuran warga per bulan resmi tercatat oleh Bendahara RT 04.')
 
 @section('topbar_section')
     <span class="admin-topbar__breadcrumb-link">Layanan Keuangan</span>
@@ -20,7 +20,7 @@
      ======================================================== --}}
 <div class="warga-iuran-header">
     <h1 class="warga-iuran-header__title">Monitoring Iuran Warga RT 04</h1>
-    <p class="warga-iuran-header__sub">Sistem monitoring status pembayaran iuran warga per bulan (read-only) resmi tercatat oleh Bendahara RT 04 / RW 08.</p>
+    <p class="warga-iuran-header__sub">Sistem monitoring status pembayaran iuran warga per bulan (read-only) resmi tercatat oleh Bendahara RT 04.</p>
 </div>
 
 {{-- ========================================================

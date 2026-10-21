@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 
 @section('title', 'Kelola & Rekap Iuran Warga')
-@section('meta_description', 'Monitoring penerimaan kas lingkungan, verifikasi pembayaran rutin bulanan, dan status tunggakan RT 04 / RW 08 Sukamaju.')
+@section('meta_description', 'Monitoring penerimaan kas lingkungan, verifikasi pembayaran rutin bulanan, dan status tunggakan RT 04 Sukamaju.')
 
 @section('breadcrumb')
     <span class="admin-topbar__breadcrumb-current">Kelola &amp; Rekap Iuran</span>
@@ -152,7 +152,7 @@
                         $statusEkoLabel = ($t->keluarga?->status_ekonomi === 'kurang_mampu') ? 'EKONOMI: KURANG MAMPU' : 'EKONOMI: MAMPU';
                         $kepala = $t->keluarga?->kepalaKeluarga ?? $t->keluarga?->wargas?->first();
                         $namaKepala = $kepala?->nama ?? 'Kepala Keluarga';
-                        $blokAlamat = $kepala?->alamat ?? 'RT 04 / RW 08';
+                        $blokAlamat = $kepala?->alamat ?? 'RT 04';
                         $singkatBulan = $daftarBulanSingkat[$t->bulan] ?? $t->bulan;
                         $lengkapBulan = $daftarBulanLengkap[$t->bulan] ?? $t->bulan;
                         $periodeTeks = "{$singkatBulan} {$t->tahun}";
@@ -299,7 +299,7 @@
                         $noKkR = $r->keluarga?->no_kk ?? '-';
                         $kepalaR = $r->keluarga?->kepalaKeluarga ?? $r->keluarga?->wargas?->first();
                         $namaKepalaR = $kepalaR?->nama ?? 'Kepala Keluarga';
-                        $blokAlamatR = $kepalaR?->alamat ?? 'RT 04 / RW 08';
+                        $blokAlamatR = $kepalaR?->alamat ?? 'RT 04';
                         $singkatBulanR = $daftarBulanSingkat[$r->bulan] ?? $r->bulan;
                         $lengkapBulanR = $daftarBulanLengkap[$r->bulan] ?? $r->bulan;
                         $periodeTeksR = "{$singkatBulanR} {$r->tahun}";

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Pendaftaran Akun Warga Baru RT 04 / RW 08 - WargaKu.">
+    <meta name="description" content="Pendaftaran Akun Warga Baru RT 04 - WargaKu.">
     <title>Daftar Akun Warga Baru — WargaKu</title>
 
     {{-- CSS Vanilla terpisah --}}
@@ -308,7 +308,7 @@
                 {{-- Baris 7: Alamat Rumah / Blok RT 04 --}}
                 <div class="form-row-1">
                     <div class="form-group">
-                        <label for="alamat" class="form-label">Alamat Rumah / Blok RT 04<span class="req">*</span></label>
+                        <label for="alamat" class="form-label">Alamat Domisili (RT 04)<span class="req">*</span></label>
                         <div class="input-icon-wrap">
                             <span class="input-icon-left" aria-hidden="true">
                                 <svg viewBox="0 0 24 24">
@@ -320,10 +320,13 @@
                                    name="alamat"
                                    id="alamat"
                                    class="form-control"
-                                   placeholder="Jl. Melati Blok C No. 12, RT 04 / RW 08"
+                                   placeholder="Contoh: Blok B4 No. 12"
                                    value="{{ old('alamat') }}"
                                    required>
                         </div>
+                        <small style="display:block; margin-top:6px; font-size:0.8125rem; color:#64748b;">
+                            Contoh: Blok A No. 05 atau Blok B4 No. 12 (hanya blok &amp; nomor rumah tempat tinggal di RT 04).
+                        </small>
                     </div>
                 </div>
 
@@ -363,7 +366,7 @@
                     <svg viewBox="0 0 24 24" aria-hidden="true">
                         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
                     </svg>
-                    <span>Dilindungi enkripsi data kependudukan RT 04 / RW 08</span>
+                    <span>Dilindungi enkripsi data kependudukan RT 04</span>
                 </div>
             </footer>
 

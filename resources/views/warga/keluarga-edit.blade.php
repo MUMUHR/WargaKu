@@ -1,7 +1,7 @@
 @extends('layouts.warga')
 
 @section('title', 'Form Pengajuan Perubahan Data Warga')
-@section('meta_description', 'Formulir Pengajuan Perubahan Data Warga — WargaKu RT 04 / RW 08')
+@section('meta_description', 'Formulir Pengajuan Perubahan Data Warga — WargaKu RT 04')
 
 @section('topbar_section')
     <a href="{{ route('warga.keluarga') }}" class="admin-topbar__breadcrumb-link">Data Warga</a>
@@ -77,7 +77,7 @@
                             </div>
                             <div class="wf-kk-bar__item">
                                 <span class="wf-kk-bar__label">Wilayah Domisili</span>
-                                <span class="wf-kk-bar__val">RT 04 / RW 08</span>
+                                <span class="wf-kk-bar__val">RT 04</span>
                             </div>
                         </div>
 
@@ -345,7 +345,7 @@
                                             <span>9. Alamat Domisili</span>
                                             <span class="wf-badge-updated">● Diubah</span>
                                         </div>
-                                        <div class="wf-param-desc">Tempat tinggal saat ini</div>
+                                        <div class="wf-param-desc">Tempat tinggal saat ini di lingkungan RT 04</div>
                                     </td>
                                     <td>
                                         <div class="wf-input-old-lock">
@@ -355,7 +355,10 @@
                                     </td>
                                     <td>
                                         <div class="wf-input-editable-wrap">
-                                            <input type="text" id="new-alamat" name="new_alamat" class="wf-input" value="{{ $selectedData['alamat'] ?? '' }}">
+                                            <input type="text" id="new-alamat" name="new_alamat" class="wf-input" value="{{ $selectedData['alamat'] ?? '' }}" placeholder="Contoh: Blok B4 No. 12">
+                                            <span class="wf-help-text" style="font-size:11px; color:#64748b; margin-top:4px; display:block;">
+                                                Contoh: <strong>Blok A No. 05</strong> atau <strong>Blok B4 No. 12</strong> (hanya blok &amp; nomor rumah di RT 04).
+                                            </span>
                                         </div>
                                     </td>
                                 </tr>

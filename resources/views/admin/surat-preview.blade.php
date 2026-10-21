@@ -389,7 +389,7 @@
         ? $surat->wargaTujuan->agama->label()
         : ucfirst($surat->wargaTujuan?->agama ?? '-');
 
-    $alamat = $surat->wargaTujuan?->alamat ?? ($surat->pemohon?->alamat ?? 'RT 04 / RW 08');
+    $alamat = $surat->wargaTujuan?->alamat ?? ($surat->pemohon?->alamat ?? 'RT 04');
     $keperluan = $surat->keperluan;
     $rawCreatedAt = $surat->created_at;
     $tglSurat = $rawCreatedAt
@@ -467,13 +467,13 @@
         <div class="doc-title-block">
             <div class="doc-main-title">SURAT PENGANTAR</div>
             <div class="doc-nomor-title">
-                NO. <span id="label-doc-nomor">{{ $surat->nomor_surat ?? ($isDisetujui ? $nomorSurat : '..... / SP / RT04 / RW08 / ' . now()->format('Y')) }}</span>
+                NO. <span id="label-doc-nomor">{{ $surat->nomor_surat ?? ($isDisetujui ? $nomorSurat : '..... / SP / RT04 / ' . now()->format('Y')) }}</span>
             </div>
         </div>
 
         {{-- Paragraf Pembuka --}}
         <p class="doc-paragraph">
-            Yang bertanda tangan di bawah ini Ketua RT. 04 / RW 08 Kelurahan Sukamaju, Kecamatan Cilodong, menerangkan bahwa:
+            Yang bertanda tangan di bawah ini Ketua RT 04 Kelurahan Sukamaju, Kecamatan Cilodong, menerangkan bahwa:
         </p>
 
         {{-- Tabel Rincian Data Warga (diambil via relasi warga_tujuan_id sesuai PRD BR-10) --}}

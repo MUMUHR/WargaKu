@@ -22,7 +22,7 @@
             $wargasHidup = $k->wargas->where('status_warga', 'hidup');
             $laki = $wargasHidup->where('jenis_kelamin', 'laki_laki')->count();
             $perempuan = $wargasHidup->where('jenis_kelamin', 'perempuan')->count();
-            $alamat = $kepala?->alamat ?? $wargasHidup->first(fn($w) => !empty($w->alamat))?->alamat ?? 'RT 04 / RW 08';
+            $alamat = $kepala?->alamat ?? $wargasHidup->first(fn($w) => !empty($w->alamat))?->alamat ?? 'RT 04';
 
             preg_match('/Blok\s+[A-Za-z0-9]+/i', $alamat, $mBlok);
             $blok = $mBlok[0] ?? 'RT 04';
@@ -385,7 +385,7 @@
                             $targetTglLahir = $targetWarga?->tanggal_lahir ? \Carbon\Carbon::parse($targetWarga->tanggal_lahir)->format('d-m-Y') : (isset($v->data_baru['tanggal_lahir']) ? \Carbon\Carbon::parse($v->data_baru['tanggal_lahir'])->format('d-m-Y') : '-');
                             $targetSub = 'NIK: ' . ($targetWarga?->nik ?? $v->data_baru['nik'] ?? $noKkPemohon) . ' • ' . $targetJk . ' • Lahir: ' . $targetTempatLahir . ', ' . $targetTglLahir;
                             $tglDiajukan = $v->created_at ? \Carbon\Carbon::parse($v->created_at)->isoFormat('D MMM YYYY, HH:mm') . ' WIB' : '-';
-                            $alamatLengkap = $v->keluarga?->alamat ?? $targetWarga?->alamat ?? 'RT 04 / RW 08';
+                            $alamatLengkap = $v->keluarga?->alamat ?? $targetWarga?->alamat ?? 'RT 04';
                             $alasanTeks = $v->alasan ?? 'Pengajuan perubahan data kependudukan oleh warga.';
                         @endphp
                         <td style="padding-right: 18px;">
@@ -1087,7 +1087,7 @@
 
         document.getElementById('review-header-pemohon').textContent = data.pemohon || '-';
         document.getElementById('review-header-nokk').textContent = data.noKk || '-';
-        document.getElementById('review-header-alamat').textContent = data.alamat || 'RT 04 / RW 08';
+        document.getElementById('review-header-alamat').textContent = data.alamat || 'RT 04';
 
         // Strip Target Data
         document.getElementById('review-target-title').textContent = data.targetTitle || ('Target Data: ' + data.warga);

@@ -1,7 +1,7 @@
 @extends('layouts.warga')
 
 @section('title', 'Tambah Anggota Keluarga')
-@section('meta_description', 'Form Pendaftaran Anggota Keluarga Baru — WargaKu RT 04 / RW 08')
+@section('meta_description', 'Form Pendaftaran Anggota Keluarga Baru — WargaKu RT 04')
 
 @section('topbar_section')
     <a href="{{ route('warga.keluarga') }}" class="admin-topbar__breadcrumb-link">Data Keluarga</a>
@@ -217,14 +217,16 @@
                             </div>
                         </div>
 
-                        {{-- Alamat Domisili Lengkap --}}
+                        {{-- Alamat Domisili --}}
                         <div class="wf-form-group" style="margin-bottom:0;">
                             <label class="wf-label" for="alamat_domisili">
-                                <span>Alamat Domisili Lengkap <span class="wf-req">*</span></span>
+                                <span>Alamat Domisili (Tempat Tinggal di RT 04) <span class="wf-req">*</span></span>
                             </label>
-                            <textarea id="alamat_domisili" name="alamat_domisili" rows="3" class="wf-textarea" placeholder="Masukkan alamat domisili lengkap sesuai Kartu Keluarga..." required>{{ old('alamat_domisili') }}</textarea>
-                            <div class="wf-help-text">
-                                Diisi sesuai alamat domisili Kartu Keluarga pemohon.
+                            <input type="text" id="alamat_domisili" name="alamat_domisili" class="wf-input" 
+                                   placeholder="Contoh: Blok B4 No. 12" 
+                                   value="{{ old('alamat_domisili', $alamatKeluarga) }}" required>
+                            <div class="wf-help-text" style="font-size:11.5px; color:#64748b; margin-top:5px;">
+                                Contoh: <strong>Blok A No. 05</strong> atau <strong>Blok B4 No. 12</strong> (hanya blok &amp; nomor rumah tempat tinggal di RT 04).
                             </div>
                         </div>
 

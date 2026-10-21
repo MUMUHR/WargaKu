@@ -1,7 +1,7 @@
 @extends('layouts.warga')
 
 @section('title', 'Profil & Keamanan Akun')
-@section('meta_description', 'Kelola nomor kontak aktif kepala keluarga dan perbarui kata sandi portal warga RT 04 / RW 08.')
+@section('meta_description', 'Kelola nomor kontak aktif kepala keluarga dan perbarui kata sandi portal warga RT 04.')
 
 @section('topbar_section')
     <span class="admin-topbar__breadcrumb-link">Akun Warga</span>
@@ -108,7 +108,7 @@
                         <input type="text" id="profil-nokk" class="warga-profil-input" value="{{ $keluarga?->no_kk ?? '-' }}" readonly disabled>
                     </div>
                     <div class="warga-profil-help-text">
-                        Data identitas pokok sesuai arsip kependudukan RT 04 / RW 08. Perubahan identitas dilakukan melalui menu <a href="{{ route('warga.keluarga') }}">Pengajuan Surat &amp; Data Warga</a>.
+                        Data identitas pokok sesuai arsip kependudukan RT 04. Perubahan identitas dilakukan melalui menu <a href="{{ route('warga.keluarga') }}">Pengajuan Surat &amp; Data Warga</a>.
                     </div>
                 </div>
 

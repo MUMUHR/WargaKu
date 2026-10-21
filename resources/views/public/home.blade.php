@@ -1,7 +1,7 @@
 @extends('layouts.public')
 
 @section('title', 'Beranda')
-@section('meta_description', 'WargaKu - Informasi dan Layanan Warga RT 04 / RW 08. Kelola iuran, ajukan surat pengantar, dan akses pengumuman RT secara digital.')
+@section('meta_description', 'WargaKu - Informasi dan Layanan Warga RT 04. Kelola iuran, ajukan surat pengantar, dan akses pengumuman RT secara digital.')
 
 @push('styles')
     <link rel="stylesheet" href="{{ asset('css/home.css') }}">

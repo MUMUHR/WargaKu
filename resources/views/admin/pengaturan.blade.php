@@ -93,7 +93,7 @@
                     </div>
 
                     {{-- Subtext / Catatan --}}
-                    <p class="profil-footnote">Data identitas pengurus resmi terdaftar pada arsip pengurus RT 04 / RW 08.</p>
+                    <p class="profil-footnote">Data identitas pengurus resmi terdaftar pada arsip pengurus RT 04.</p>
 
                     {{-- Input Nomor Telepon / WhatsApp --}}
                     <div class="profil-form-group" style="margin-top: 18px;">

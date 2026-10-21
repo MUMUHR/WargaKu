@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="@yield('meta_description', 'WargaKu - Portal Layanan Warga Mandiri RT 04 / RW 08')">
+    <meta name="description" content="@yield('meta_description', 'WargaKu - Portal Layanan Warga Mandiri RT 04')">
     <title>@yield('title', 'Dashboard Warga') - WargaKu RT 04</title>
 
     {{-- Design Tokens & Base --}}
@@ -135,7 +135,7 @@
     </div>
 
     <footer class="admin-footer" role="contentinfo">
-        <span>Copyright &copy; 2025 <a href="{{ route('home') }}" class="admin-footer__link">WargaKu RT 04 / RW 08</a></span>
+        <span>Copyright &copy; 2025 <a href="{{ route('home') }}" class="admin-footer__link">WargaKu RT 04</a></span>
         <span class="admin-footer__right">Versi 3.2.0</span>
     </footer>
 </div>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="@yield('meta_description', 'WargaKu - Panel Admin RT 04 / RW 08')">
+    <meta name="description" content="@yield('meta_description', 'WargaKu - Panel Admin RT 04')">
     <title>@yield('title', 'Admin') - WargaKu RT 04</title>
 
     {{-- Design Tokens & Base --}}
@@ -120,7 +120,7 @@
     </div>
 
     <footer class="admin-footer" role="contentinfo">
-        <span>Copyright &copy; {{ date('Y') }} <a href="{{ route('home') }}" class="admin-footer__link">WargaKu RT 04 / RW 08</a>. All rights reserved.</span>
+        <span>Copyright &copy; {{ date('Y') }} <a href="{{ route('home') }}" class="admin-footer__link">WargaKu RT 04</a>. All rights reserved.</span>
     </footer>
 </div>
 

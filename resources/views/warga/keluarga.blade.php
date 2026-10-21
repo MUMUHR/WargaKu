@@ -1,7 +1,7 @@
 @extends('layouts.warga')
 
 @section('title', 'Data Keluarga')
-@section('meta_description', 'Data Kartu Keluarga & Anggota Keluarga — WargaKu RT 04 / RW 08')
+@section('meta_description', 'Data Kartu Keluarga & Anggota Keluarga — WargaKu RT 04')
 
 @section('topbar_section')
     <span class="admin-topbar__breadcrumb-current">Data Keluarga</span>
@@ -17,7 +17,7 @@
 <div class="warga-page-header">
     <div class="warga-page-header__left">
         <h1 class="warga-page-header__title">Data Keluarga</h1>
-        <p class="warga-page-header__sub">Sistem Administrasi Kependudukan Terpadu RT 04 / RW 08</p>
+        <p class="warga-page-header__sub">Sistem Administrasi Kependudukan Terpadu RT 04</p>
     </div>
 </div>
 
@@ -79,7 +79,7 @@
         </div>
         <div class="kk-info-divider"></div>
         <div class="kk-info-item">
-            <div class="kk-info-item__label">ALAMAT &amp; DOMISILI</div>
+            <div class="kk-info-item__label">ALAMAT DOMISILI</div>
             <div class="kk-info-item__value" style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;">
                 <span>{{ $alamatKeluarga }}</span>
                 <div style="display:inline-flex;gap:5px;align-items:center;flex-shrink:0;">
@@ -415,7 +415,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <td class="kk-modal-table__label">Alamat Lengkap</td>
+                            <td class="kk-modal-table__label">Alamat Domisili</td>
                             <td class="kk-modal-table__sep">:</td>
                             <td class="kk-modal-table__val" id="modal-alamat">-</td>
                         </tr>

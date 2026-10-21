@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 
 @section('title', 'Kelola Pengumuman')
-@section('meta_description', 'Kelola seluruh pengumuman RT 04 / RW 08 — WargaKu')
+@section('meta_description', 'Kelola seluruh pengumuman RT 04 — WargaKu')
 
 @section('breadcrumb')
     <span class="admin-topbar__breadcrumb-current">Kelola Pengumuman</span>

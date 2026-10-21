@@ -23,7 +23,7 @@
             Layanan Pengajuan Surat Pengantar RT 04
         </h1>
         <p style="font-size:13px;color:#6c757d;margin:0;">
-            Ajukan surat pengantar resmi ke Pengurus RT 04 / RW 08 secara online terintegrasi tabel <code>pengajuan_surat</code>, pantau status real-time, dan unduh e-surat resmi.
+            Ajukan surat pengantar resmi ke Pengurus RT 04 secara online terintegrasi tabel <code>pengajuan_surat</code>, pantau status real-time, dan unduh e-surat resmi.
         </p>
     </div>
 
@@ -309,7 +309,7 @@
                     <i class='bx bx-notepad ws-form-card__icon'></i>
                     <div>
                         <h2 class="ws-form-card__title">Formulir Pengajuan Surat Pengantar RT</h2>
-                        <p class="ws-form-card__sub">Tabel database <code>pengajuan_surat</code> • Pengurus RT 04 / RW 08 Sukamaju</p>
+                        <p class="ws-form-card__sub">Tabel database <code>pengajuan_surat</code> • Pengurus RT 04 Sukamaju</p>
                     </div>
                 </div>
 
@@ -390,8 +390,11 @@
                                 </div>
 
                                 <div class="ws-readonly-field" style="grid-column: 1 / -1;">
-                                    <span class="ws-readonly-label">Alamat KTP / Domisili:</span>
-                                    <input type="text" id="ro-alamat" class="ws-readonly-input" value="" placeholder="Otomatis terisi alamat domisili terverifikasi..." readonly>
+                                    <span class="ws-readonly-label">Alamat Domisili:</span>
+                                    <input type="text" id="ro-alamat" class="ws-readonly-input" value="" placeholder="Contoh: Blok B4 No. 12 (otomatis terisi dari data warga terpilih)" readonly>
+                                    <small style="font-size: 12px; color: #64748b; font-weight: 500; display: block; margin-top: 4px;">
+                                        Contoh: Blok A No. 05 atau Blok B4 No. 12 (hanya blok &amp; nomor rumah tempat tinggal di RT 04).
+                                    </small>
                                 </div>
                             </div>
                         </div>
@@ -569,7 +572,7 @@
                         <td style="padding: 3px 0;" id="prev-agama">-</td>
                     </tr>
                     <tr>
-                        <td style="padding: 3px 0;">Alamat</td>
+                        <td style="padding: 3px 0;">Alamat Domisili</td>
                         <td style="padding: 3px 0; text-align: center;">:</td>
                         <td style="padding: 3px 0;" id="prev-alamat">-</td>
                     </tr>

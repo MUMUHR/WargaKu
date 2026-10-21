@@ -457,6 +457,7 @@ class KeluargaController extends Controller
             'agama' => $request->input('agama'),
             'pendidikan_terakhir' => $request->input('pendidikan_terakhir'),
             'pekerjaan' => $request->input('pekerjaan'),
+            'alamat' => $request->input('alamat_domisili') ?? $request->input('alamat') ?? $keluarga->alamat,
             'status_hubungan' => $request->input('hubungan_keluarga'),
             'status_warga' => 'hidup',
         ];

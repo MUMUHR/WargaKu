@@ -15,7 +15,7 @@
 @endphp
 
 @section('title', $isEdit ? 'Edit Pengumuman RT' : 'Tambah Pengumuman Baru')
-@section('meta_description', ($isEdit ? 'Form edit pengumuman RT 04 / RW 08' : 'Form tambah pengumuman baru RT 04 / RW 08') . ' — WargaKu')
+@section('meta_description', ($isEdit ? 'Form edit pengumuman RT 04' : 'Form tambah pengumuman baru RT 04') . ' — WargaKu')
 
 @section('breadcrumb')
     <a href="{{ route('admin.pengumuman') }}" class="admin-topbar__breadcrumb-link">Kelola Pengumuman</a>
@@ -67,7 +67,7 @@
                     <i class='bx bx-notepad'></i>
                     Konten &amp; Informasi Pengumuman
                 </h2>
-                <span class="form-card__badge">RT 04 / RW 08</span>
+                <span class="form-card__badge">RT 04</span>
             </div>
             <div class="form-card__body">
 

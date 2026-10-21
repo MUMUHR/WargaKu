@@ -1,7 +1,7 @@
 @extends('layouts.warga')
 
 @section('title', 'Dashboard Warga')
-@section('meta_description', 'Portal Layanan Mandiri Warga RT 04 / RW 08 Kelurahan Sukamaju')
+@section('meta_description', 'Portal Layanan Mandiri Warga RT 04 Kelurahan Sukamaju')
 
 @section('content')
 
@@ -27,7 +27,7 @@
         <div>
             <h2 class="warga-greeting-card__title">Selamat Datang, {{ $kepala?->nama ?? 'Warga RT 04' }}</h2>
             <p class="warga-greeting-card__sub">
-                No. KK: <strong>{{ $keluarga?->no_kk ?? '-' }}</strong> | Alamat: {{ $kepala?->alamat ?? 'RT 04 / RW 08 Sukamaju' }}
+                No. KK: <strong>{{ $keluarga?->no_kk ?? '-' }}</strong> | Alamat: {{ $kepala?->alamat ?? 'RT 04 Sukamaju' }}
             </p>
         </div>
     </div>

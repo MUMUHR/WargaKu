@@ -64,7 +64,7 @@
 
     $noKkDisplay = $keluarga->no_kk ?? '3275010905120008';
     $kepalaNamaDisplay = $kepalaKeluarga->nama ?? 'Kepala Keluarga';
-    $alamatDisplay = $alamatKeluarga ?? 'RT 04 / RW 08';
+    $alamatDisplay = $alamatKeluarga ?? 'RT 04';
 @endphp
 
 {{-- ========================================================
@@ -258,8 +258,8 @@
                     </div>
                     <div class="form-field">
                         <label class="form-field-label" for="input-alamat">Alamat Domisili <span class="req">*</span></label>
-                        <input type="text" name="alamat" class="form-control-warga" id="input-alamat" value="{{ old('alamat', $w['alamat']) }}" placeholder="Contoh: RT 04 / RW 08" required>
-                        <span class="form-field-help">Alamat domisili saat ini di lingkungan RT 04.</span>
+                        <input type="text" name="alamat" class="form-control-warga" id="input-alamat" value="{{ old('alamat', $w['alamat']) }}" placeholder="Contoh: Blok B4 No. 12" required>
+                        <span class="form-field-help">Contoh: Blok A No. 05 atau Blok B4 No. 12 (hanya blok &amp; no. rumah di RT 04).</span>
                     </div>
                 </div>
             </div>

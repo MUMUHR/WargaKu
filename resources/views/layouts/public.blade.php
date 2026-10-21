@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="@yield('meta_description', 'WargaKu - Aplikasi Informasi dan Layanan Mandiri Warga RT 04 / RW 08. Transparan, aman, dan terpercaya.')">
-    <title>@yield('title', 'WargaKu') — Layanan Warga RT 04 / RW 08</title>
+    <meta name="description" content="@yield('meta_description', 'WargaKu - Aplikasi Informasi dan Layanan Mandiri Warga RT 04. Transparan, aman, dan terpercaya.')">
+    <title>@yield('title', 'WargaKu') — Layanan Warga RT 04</title>
 
     {{-- CSS Vanilla WargaKu (jangan muat resources/css/app.css / Tailwind) --}}
     <link rel="stylesheet" href="{{ asset('css/tokens.css') }}">

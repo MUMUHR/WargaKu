@@ -324,7 +324,7 @@
         <div class="detail-footer-sync">
             <div class="detail-footer-sync__left">
                 <i class='bx bx-info-circle'></i>
-                <span>Semua data anggota keluarga di atas telah disinkronkan dengan basis data RT 04 / RW 08.</span>
+                <span>Semua data anggota keluarga di atas telah disinkronkan dengan basis data RT 04.</span>
             </div>
             <div>
                 Terakhir diupdate: {{ $terakhirDiupdate ? \Carbon\Carbon::parse($terakhirDiupdate)->isoFormat('D MMMM Y • HH:mm') . ' WIB' : '-' }}

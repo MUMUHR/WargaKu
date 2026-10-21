@@ -1,7 +1,7 @@
 @extends('layouts.public')
 
 @section('title', 'Pengumuman RT')
-@section('meta_description', 'Daftar pengumuman terbaru dari RT 04 / RW 08 untuk seluruh warga.')
+@section('meta_description', 'Daftar pengumuman terbaru dari RT 04 untuk seluruh warga.')
 
 @push('styles')
     <link rel="stylesheet" href="{{ asset('css/pengumuman.css') }}">

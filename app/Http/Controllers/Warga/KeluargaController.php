@@ -245,7 +245,7 @@ class KeluargaController extends Controller
             ? $keluarga->wargas()->where('status_warga', 'hidup')->urutHierarkiKk()->get() 
             : collect();
 
-        $alamatKeluarga = $keluarga ? $keluarga->alamat : 'RT 04 / RW 08';
+        $alamatKeluarga = $keluarga ? $keluarga->alamat : 'RT 04';
 
         $targetNik = $request->query('nik') 
             ?? $request->query('target') 
@@ -414,7 +414,7 @@ class KeluargaController extends Controller
             ?? $user->wargas()->first();
         $keluarga = $kepala?->keluarga;
 
-        $alamatKeluarga = $keluarga ? $keluarga->alamat : 'RT 04 / RW 08';
+        $alamatKeluarga = $keluarga ? $keluarga->alamat : 'RT 04';
 
         return view('warga.keluarga-tambah', compact(
             'user',

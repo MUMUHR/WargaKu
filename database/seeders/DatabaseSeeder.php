@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Schema;
 class DatabaseSeeder extends Seeder
 {
     /**
-     * Seed data realistis untuk pengujian sistem WargaKu RT 04 / RW 08 Sukamaju.
+     * Seed data realistis untuk pengujian sistem WargaKu RT 04 Kelurahan Belian.
      */
     public function run(): void
     {
@@ -391,7 +391,7 @@ class DatabaseSeeder extends Seeder
         Surat::create([
             'pemohon_id'      => $wargaDewi->id,
             'warga_tujuan_id' => $wargaLaila->id,
-            'keperluan'       => 'Pengantar pembuatan Kartu Identitas Anak (KIA) ke kantor Kelurahan Sukamaju',
+            'keperluan'       => 'Pengantar pembuatan Kartu Identitas Anak (KIA) ke kantor Kelurahan Belian',
             'nomor_surat'     => null,
             'status'          => StatusSurat::MENUNGGU,
             'alasan'          => null,
@@ -448,7 +448,7 @@ class DatabaseSeeder extends Seeder
             ],
             'bukti_path'      => 'contoh_Ijazah.png',
             'status'          => 'menunggu',
-            'alasan'          => 'Raka telah memasuki usia sekolah dasar dan resmi terdaftar di SDN Sukamaju 01.',
+            'alasan'          => 'Raka telah memasuki usia sekolah dasar dan resmi terdaftar di SDN 01 Batam Kota.',
             'admin_id'        => null,
             'created_at'      => now()->subDays(2),
         ]);

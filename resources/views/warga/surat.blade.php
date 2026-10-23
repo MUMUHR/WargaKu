@@ -309,7 +309,7 @@
                     <i class='bx bx-notepad ws-form-card__icon'></i>
                     <div>
                         <h2 class="ws-form-card__title">Formulir Pengajuan Surat Pengantar RT</h2>
-                        <p class="ws-form-card__sub">Tabel database <code>pengajuan_surat</code> • Pengurus RT 04 Sukamaju</p>
+                        <p class="ws-form-card__sub">Tabel database <code>pengajuan_surat</code> • Pengurus RT 04 Kelurahan Belian</p>
                     </div>
                 </div>
 
@@ -536,9 +536,9 @@
             {{-- Kertas Dokumen Tetap (A4 format) --}}
             <div class="ws-paper-preview">
                 <div style="text-align: center; line-height: 1.35; margin-bottom: 8px;">
-                    <p style="font-size: 15px; font-weight: bold; letter-spacing: 0.5px; margin: 0; text-transform: uppercase;">RUKUN TETANGGA 04 KELURAHAN SUKAMAJU</p>
-                    <p style="font-size: 14px; font-weight: bold; margin: 2px 0 0 0; text-transform: uppercase;">KECAMATAN BOGOR TIMUR – KOTA BOGOR</p>
-                    <p style="font-size: 12.5px; margin: 2px 0 0 0;">Sekretariat: Jl. Melati Blok A No. 1, RT 04 Kode Pos: 16143</p>
+                    <p style="font-size: 15px; font-weight: bold; letter-spacing: 0.5px; margin: 0; text-transform: uppercase;">RUKUN TETANGGA 04 KELURAHAN BELIAN</p>
+                    <p style="font-size: 14px; font-weight: bold; margin: 2px 0 0 0; text-transform: uppercase;">KECAMATAN BATAM KOTA – KOTA BATAM</p>
+                    <p style="font-size: 12.5px; margin: 2px 0 0 0;">Sekretariat: Jl. Melati Blok A No. 1, RT 04 Kode Pos: 29464</p>
                 </div>
                 <div style="border-top: 3px solid #000; border-bottom: 1px solid #000; height: 2px; margin: 10px 0 22px 0;"></div>
 
@@ -594,7 +594,7 @@
                     </div>
 
                     <div style="width: 200px;">
-                        <p style="margin: 0; font-size: 13.5px;" id="prev-tanggal-surat">Bogor, -</p>
+                        <p style="margin: 0; font-size: 13.5px;" id="prev-tanggal-surat">Batam, -</p>
                         <p style="margin: 0; font-weight: bold; font-size: 13.5px;">Ketua RT. 04,</p>
                         <div style="height: 65px; display: flex; align-items: center; justify-content: center;" id="prev-ttd-rt-box">
                             <div id="prev-ttd-rt-empty" style="font-size: 11px; color: #64748b; font-style: italic; border: 1px dashed #cbd5e1; border-radius: 4px; padding: 6px 10px; background: #f8fafc; line-height: 1.3;">
@@ -701,7 +701,7 @@ function bukaPreviewSuratBaru() {
     const tglEl = document.getElementById('prev-tanggal-surat');
     if (imgTtd) imgTtd.style.display = 'none';
     if (emptyTtd) emptyTtd.style.display = 'block';
-    if (tglEl) tglEl.textContent = 'Bogor, (Menunggu Persetujuan RT)';
+    if (tglEl) tglEl.textContent = 'Batam, (Menunggu Persetujuan RT)';
 
     bukaModal('modal-preview-surat');
 }
@@ -724,7 +724,7 @@ function bukaPreviewDraftCustom(nama, ttl, jk, agama, alamat, keperluan) {
     const tglEl = document.getElementById('prev-tanggal-surat');
     if (imgTtd) imgTtd.style.display = 'none';
     if (emptyTtd) emptyTtd.style.display = 'block';
-    if (tglEl) tglEl.textContent = 'Bogor, (Menunggu Persetujuan RT)';
+    if (tglEl) tglEl.textContent = 'Batam, (Menunggu Persetujuan RT)';
 
     bukaModal('modal-preview-surat');
 }

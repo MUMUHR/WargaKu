@@ -16,7 +16,7 @@
     @php
         $targetWarga = $surat->wargaTujuan ?? $surat->pemohon;
         $namaWarga = $targetWarga?->nama ?? '-';
-        $tempatLahir = $targetWarga?->tempat_lahir ?? 'Bogor';
+        $tempatLahir = $targetWarga?->tempat_lahir ?? 'Batam';
         $tglLahir = $targetWarga?->tanggal_lahir ? $targetWarga->tanggal_lahir->translatedFormat('d F Y') : '-';
         $ttl = ($targetWarga?->tempat_lahir ? $targetWarga->tempat_lahir . ', ' : '') . $tglLahir;
         $jk = $targetWarga?->jenis_kelamin === 'laki_laki' ? 'Laki-Laki' : ($targetWarga?->jenis_kelamin === 'perempuan' ? 'Perempuan' : '-');
@@ -49,9 +49,9 @@
         
         {{-- Kop Surat --}}
         <div class="ws-kop">
-            <p class="ws-kop-instansi">RUKUN TETANGGA 04 KELURAHAN SUKAMAJU</p>
-            <p class="ws-kop-sub">KECAMATAN BOGOR TIMUR – KOTA BOGOR</p>
-            <p class="ws-kop-kota">Sekretariat: Jl. Melati Blok A No. 1, RT 04 Kode Pos: 16143</p>
+            <p class="ws-kop-instansi">RUKUN TETANGGA 04 KELURAHAN BELIAN</p>
+            <p class="ws-kop-sub">KECAMATAN BATAM KOTA – KOTA BATAM</p>
+            <p class="ws-kop-kota">Sekretariat: Jl. Melati Blok A No. 1, RT 04 Kode Pos: 29464</p>
         </div>
         <div class="ws-kop-line"></div>
 
@@ -64,7 +64,7 @@
         {{-- Isi Surat --}}
         <div class="ws-surat-content">
             <p>
-                Yang bertanda tangan di bawah ini Ketua RT. 04 Kelurahan Sukamaju Kecamatan Bogor Timur Kota Bogor, menerangkan bahwa:
+                Yang bertanda tangan di bawah ini Ketua RT. 04 Kelurahan Belian Kecamatan Batam Kota Kota Batam, menerangkan bahwa:
             </p>
 
             <table class="ws-surat-table-data">
@@ -123,7 +123,7 @@
             </div>
 
             <div class="ws-ttd-box">
-                <p style="margin: 0;">Bogor, {{ $tglSurat }}</p>
+                <p style="margin: 0;">Batam, {{ $tglSurat }}</p>
                 <p style="margin: 0; font-weight: bold;">Ketua RT. 04,</p>
                 <div class="ws-ttd-space">
                     <img src="{{ asset('tanda_tangan_rt.png') }}" alt="Tanda Tangan Ketua RT 04" class="ws-ttd-img-rt">
@@ -138,7 +138,7 @@
     <div class="ws-cetak-footer-bar">
         <div style="display: flex; align-items: center; gap: 8px;">
             <i class='bx bx-info-circle' style="color: #0284c7; font-size: 16px;"></i>
-            <span>Dokumen ini diterbitkan secara elektronik oleh Pengurus RT 04 Kelurahan Sukamaju.</span>
+            <span>Dokumen ini diterbitkan secara elektronik oleh Pengurus RT 04 Kelurahan Belian.</span>
         </div>
         <button type="button" class="ws-btn-salin-validasi" onclick="salinValidasi(this)">
             <i class='bx bx-link-alt'></i>

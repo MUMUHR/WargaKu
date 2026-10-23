@@ -54,7 +54,7 @@ class SuratController extends Controller
         // Alamat domisili keluarga
         $alamatKeluarga = ($kepala && !empty($kepala->alamat))
             ? $kepala->alamat
-            : ($anggotaKeluarga->first(fn($w) => !empty($w->alamat))?->alamat ?? 'Jl. Melati Blok A No. 1, RT 04/RW 08');
+            : ($anggotaKeluarga->first(fn($w) => !empty($w->alamat))?->alamat ?? 'Jl. Melati Blok A No. 1, RT 04');
 
         // Siapkan mapping master data anggota keluarga untuk JavaScript auto-fill form
         $dataWargaMap = [];

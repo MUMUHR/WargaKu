@@ -112,7 +112,7 @@
                                 <div class="wf-input-wrap">
                                     <i class='bx bx-buildings wf-input-icon'></i>
                                     <input type="text" id="tempat_lahir" name="tempat_lahir" class="wf-input wf-input-with-icon" 
-                                           placeholder="Contoh: Bogor" required>
+                                           placeholder="Contoh: Batam" required>
                                 </div>
                             </div>
                             <div>

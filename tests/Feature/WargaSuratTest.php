@@ -44,7 +44,7 @@ class WargaSuratTest extends TestCase
             'jenis_kelamin' => 'laki_laki',
             'agama' => 'islam',
             'pendidikan_terakhir' => 'd4_s1',
-            'alamat' => 'Jl. Melati Blok A No. 1, RT 04/RW 08',
+            'alamat' => 'Jl. Melati Blok A No. 1, RT 04',
             'status_hubungan' => 'kepala_keluarga',
             'status_warga' => 'hidup',
         ]);
@@ -59,7 +59,7 @@ class WargaSuratTest extends TestCase
             'jenis_kelamin' => 'perempuan',
             'agama' => 'islam',
             'pendidikan_terakhir' => 'd4_s1',
-            'alamat' => 'Jl. Melati Blok A No. 1, RT 04/RW 08',
+            'alamat' => 'Jl. Melati Blok A No. 1, RT 04',
             'status_hubungan' => 'istri',
             'status_warga' => 'hidup',
         ]);
@@ -80,7 +80,7 @@ class WargaSuratTest extends TestCase
             'pemohon_id' => $this->kepalaWarga->id,
             'warga_tujuan_id' => $this->kepalaWarga->id,
             'keperluan' => 'Pengantar permohonan SKU Toko Kelontong',
-            'nomor_surat' => '001/SP/RT04/RW08/II/2026',
+            'nomor_surat' => '001/SP/RT04/II/2026',
             'status' => StatusSurat::DISETUJUI,
         ]);
 
@@ -100,7 +100,7 @@ class WargaSuratTest extends TestCase
         $response->assertSee('Siti Aminah');
         $response->assertSee('Budi Santoso');
         $response->assertSee('Pengantar permohonan SKCK');
-        $response->assertSee('001/SP/RT04/RW08/II/2026');
+        $response->assertSee('001/SP/RT04/II/2026');
         $response->assertSee('Dokumen berkas belum lengkap');
     }
 
@@ -173,7 +173,7 @@ class WargaSuratTest extends TestCase
             'pemohon_id' => $this->kepalaWarga->id,
             'warga_tujuan_id' => $this->kepalaWarga->id,
             'keperluan' => 'Pengantar resmi',
-            'nomor_surat' => '001/SP/RT04/RW08/II/2026',
+            'nomor_surat' => '001/SP/RT04/II/2026',
             'status' => StatusSurat::DISETUJUI,
         ]);
 
@@ -189,7 +189,7 @@ class WargaSuratTest extends TestCase
             'pemohon_id' => $this->kepalaWarga->id,
             'warga_tujuan_id' => $this->anggotaWarga->id,
             'keperluan' => 'Pengantar permohonan SKCK resmi',
-            'nomor_surat' => '005/SP/RT04/RW08/X/2026',
+            'nomor_surat' => '005/SP/RT04/X/2026',
             'status' => StatusSurat::DISETUJUI,
         ]);
 
@@ -197,7 +197,7 @@ class WargaSuratTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertSee('SURAT PENGANTAR');
-        $response->assertSee('005/SP/RT04/RW08/X/2026');
+        $response->assertSee('005/SP/RT04/X/2026');
         $response->assertSee('Siti Aminah');
         $response->assertSee('Pengantar permohonan SKCK resmi');
     }
@@ -223,7 +223,7 @@ class WargaSuratTest extends TestCase
             'pemohon_id' => $this->kepalaWarga->id,
             'warga_tujuan_id' => $this->anggotaWarga->id,
             'keperluan' => 'Pengantar permohonan SKCK resmi',
-            'nomor_surat' => '005/SP/RT04/RW08/X/2026',
+            'nomor_surat' => '005/SP/RT04/X/2026',
             'status' => StatusSurat::DISETUJUI,
         ]);
 
@@ -231,6 +231,6 @@ class WargaSuratTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertSee('SURAT PENGANTAR');
-        $response->assertSee('005/SP/RT04/RW08/X/2026');
+        $response->assertSee('005/SP/RT04/X/2026');
     }
 }

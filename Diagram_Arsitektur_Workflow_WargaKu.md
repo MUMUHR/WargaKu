@@ -163,7 +163,7 @@ erDiagram
         int pemohon_id FK "NOT NULL, pemilik akun yang login (otomatis)"
         int warga_tujuan_id FK "NOT NULL, anggota KK tujuan, dipilih via dropdown"
         text keperluan
-        varchar nomor_surat UK "nullable, diisi saat disetujui, NNN/SP/RT04/RW08/bulan_romawi/tahun"
+        varchar nomor_surat UK "nullable, diisi saat disetujui, NNN/SP/RT04/bulan_romawi/tahun"
         enum status "menunggu, disetujui, ditolak, dibatalkan - default menunggu"
         text alasan "nullable"
     }
@@ -378,7 +378,7 @@ flowchart TD
     Simpan --> Preview["Admin buka Halaman Preview Surat"]
     Preview --> Putus{"Keputusan Admin"}
     Putus -- "Tolak" --> Tolak(["Status ditolak + alasan opsional"])
-    Putus -- "Setujui" --> NoSurat["Generate nomor_surat unik<br/>NNN/SP/RT04/RW08/bulan_romawi/tahun<br/>status disetujui"]
+    Putus -- "Setujui" --> NoSurat["Generate nomor_surat unik<br/>NNN/SP/RT04/bulan_romawi/tahun<br/>status disetujui"]
     NoSurat --> Unduh(["Warga preview dan unduh PDF ber-TTD RT<br/>dirender saat diunduh, biodata diambil via relasi warga_tujuan_id"])
 ```
 

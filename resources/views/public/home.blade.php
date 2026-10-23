@@ -81,7 +81,7 @@
                         </span>
                         <div class="feature-item__body">
                             <p class="feature-item__title">Surat-menyurat Otomatis</p>
-                            <p class="feature-item__desc">Buat surat pengantar RT/RW secara digital tanpa perlu antre atau bertamu di jam istirahat.</p>
+                            <p class="feature-item__desc">Buat surat pengantar RT secara digital tanpa perlu antre atau bertamu di jam istirahat.</p>
                         </div>
                     </li>
                     <li class="feature-item">
@@ -90,7 +90,7 @@
                         </span>
                         <div class="feature-item__body">
                             <p class="feature-item__title">Manajemen Iuran Transparan</p>
-                            <p class="feature-item__desc">Bayar iuran bulanan digital dan cek laporan keuangan RT/RW secara real-time.</p>
+                            <p class="feature-item__desc">Bayar iuran bulanan digital dan cek laporan keuangan RT secara real-time.</p>
                         </div>
                     </li>
                     <li class="feature-item">
@@ -118,7 +118,7 @@
                     <ul class="how-it-works-list">
                         <li class="how-it-works-item">
                             <span class="how-it-works-item__dot"></span>
-                            <p class="how-it-works-item__text"><strong>Daftar & Verifikasi:</strong> Masukkan data diri untuk diverifikasi oleh pengurus RT/RW kamu.</p>
+                            <p class="how-it-works-item__text"><strong>Daftar & Verifikasi:</strong> Masukkan data diri untuk diverifikasi oleh pengurus RT kamu.</p>
                         </li>
                         <li class="how-it-works-item">
                             <span class="how-it-works-item__dot"></span>

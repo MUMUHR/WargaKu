@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 
 @section('title', 'Kelola & Rekap Iuran Warga')
-@section('meta_description', 'Monitoring penerimaan kas lingkungan, verifikasi pembayaran rutin bulanan, dan status tunggakan RT 04 Sukamaju.')
+@section('meta_description', 'Monitoring penerimaan kas lingkungan, verifikasi pembayaran rutin bulanan, dan status tunggakan RT 04 Kelurahan Belian.')
 
 @section('breadcrumb')
     <span class="admin-topbar__breadcrumb-current">Kelola &amp; Rekap Iuran</span>

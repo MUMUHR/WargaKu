@@ -3,7 +3,7 @@
 | Item | Isi |
 | --- | --- |
 | Project | PBL-TRPL102, Program Studi Teknologi Rekayasa Perangkat Lunak, Politeknik Negeri Batam |
-| Lingkungan | RT 04 / RW 08 |
+| Lingkungan | RT 04 |
 | Versi PRD | 2.8 (2026-10-14) — menggantikan v2.7. Perubahan v2.8: sinkronisasi penuh dengan `DB_WAR.dbml`, `Diagram_Arsitektur_Workflow_WargaKu.md`, dan Laporan RPL-102 revisi 1 (penamaan tabel `riwayat_perubahan` dan `surat`, relasi `keluarga_id` mengacu ke PK `keluarga.id`, penghapusan kolom snapshot & `admin_id` pada tabel `surat`, penyesuaian FK `nullOnDelete` & `cascadeOnDelete`, serta penyelesaian O-06 dan O-18 mengikuti tangkapan layar pada Laporan Bab 2.2 dan 3.1). Perubahan v2.7: kebijakan pembersihan Tailwind dibatalkan (setup Tailwind bawaan Breeze dibiarkan terpasang dan tidak dipakai), view login dan registrasi ditulis ulang mengikuti PNG, lokasi CSS vanilla dipindah ke `public/css/`. Perubahan v2.6: varian Breeze ditetapkan Blade + Alpine.js (O-01 selesai) dan aturan JavaScript ditambahkan; pengecualian login Admin RT pada BR-04; Bagian 12 disamakan dengan aturan 4 (teks antarmuka hanya Bahasa Indonesia). Dasar v2.5: sinkronisasi dengan laporan RPL-102 revisi 1, `DB_WAR.dbml`, dan diagram arsitektur; keputusan O-03, O-12, O-13, O-14, O-15 sudah dimasukkan, O-16 sebagian. Nama file PNG di Lampiran C dikoreksi sesuai tangkapan layar folder terbaru |
 | Stack | Laravel 12 (sudah disetup), Laravel Breeze varian Blade + Alpine.js (sudah terpasang), view Blade murni (tanpa Livewire/Inertia), MySQL, CSS vanilla untuk seluruh tampilan (Tailwind bawaan Breeze dibiarkan terpasang dan tidak dipakai), JavaScript seperlunya |
 | Strategi | **Frontend-First**: seluruh tampilan diselesaikan dan divisualisasikan dulu, baru backend |
@@ -193,7 +193,7 @@ Jika seluruh anggota KK habis, record `users` langsung dihapus dari basis data (
 
 
 ### BR-05 Penomoran Surat
-Format `NNN/SP/RT04/RW08/{bulan_romawi}/{tahun}`. `NNN` sekuensial dan reset otomatis setiap pergantian tahun kalender. `nomor_surat` unik dan diisi saat disetujui.
+Format `NNN/SP/RT04/{bulan_romawi}/{tahun}`. `NNN` sekuensial dan reset otomatis setiap pergantian tahun kalender. `nomor_surat` unik dan diisi saat disetujui.
 
 ### BR-06 Iuran
 - **Lazy generation 12 bulan.** Saat menu Iuran dibuka (oleh Warga maupun Admin RT), sistem memeriksa setiap KK aktif (minimal satu anggota `hidup`). Untuk KK yang belum punya baris iuran bulan tertentu di tahun berjalan, sistem menyisipkan baris `belum_lunas` dari bulan awal tagih sampai Desember. Unique (`keluarga_id`, `bulan`, `tahun`) membuat proses ini aman diulang dan otomatis mencakup KK yang terdaftar setelah pembuatan pertama di tahun itu. Tidak ada cron. "Bulan berjalan" memakai zona waktu Asia/Jakarta.
@@ -476,7 +476,7 @@ Aturan bisnis tambahan: BR-05 (nomor 001 pada tahun baru, tanpa duplikat), BR-06
 
 ## Lampiran B — Bulan Romawi untuk Nomor Surat
 
-1 I, 2 II, 3 III, 4 IV, 5 V, 6 VI, 7 VII, 8 VIII, 9 IX, 10 X, 11 XI, 12 XII. Contoh: `003/SP/RT04/RW08/X/2026`.
+1 I, 2 II, 3 III, 4 IV, 5 V, 6 VI, 7 VII, 8 VIII, 9 IX, 10 X, 11 XI, 12 XII. Contoh: `003/SP/RT04/X/2026`.
 
 ---
 

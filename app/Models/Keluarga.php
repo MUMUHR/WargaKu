@@ -71,7 +71,7 @@ class Keluarga extends Model
 
     /**
      * Accessor untuk alamat domisili keluarga:
-     * Mengambil alamat Kepala Keluarga hidup, atau anggota hidup lainnya, atau default RT 04 / RW 08.
+     * Mengambil alamat Kepala Keluarga hidup, atau anggota hidup lainnya, atau default RT 04.
      */
     public function getAlamatAttribute(): string
     {
@@ -87,6 +87,6 @@ class Keluarga extends Model
             return $anggotaLain->alamat;
         }
 
-        return 'RT 04 / RW 08';
+        return 'RT 04';
     }
 }

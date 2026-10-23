@@ -45,7 +45,7 @@ class WargaIuranTest extends TestCase
             'jenis_kelamin' => 'laki_laki',
             'agama' => 'islam',
             'pendidikan_terakhir' => 'd4_s1',
-            'alamat' => 'Jl. Melati Blok A No. 1, RT 04/RW 08',
+            'alamat' => 'Jl. Melati Blok A No. 1, RT 04',
             'status_hubungan' => 'kepala_keluarga',
             'status_warga' => 'hidup',
         ]);

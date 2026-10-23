@@ -97,7 +97,7 @@ it('warga berstatus pindah_kk berhasil mendaftar KK baru dan datanya terupdate s
         'no_kk'          => '3271048809920099',
         'status_ekonomi' => 'mampu',
         'status_tinggal' => 'tetap',
-        'alamat'         => 'Jl. Melati Blok A No. 1, RT 04/RW 08',
+        'alamat'         => 'Jl. Melati Blok A No. 1, RT 04',
     ]);
 
     $wargaPindah = \App\Models\Warga::create([
@@ -110,7 +110,7 @@ it('warga berstatus pindah_kk berhasil mendaftar KK baru dan datanya terupdate s
         'jenis_kelamin'   => 'laki_laki',
         'status_hubungan' => 'anak',
         'status_warga'    => 'pindah_kk',
-        'alamat'          => 'Jl. Melati Blok A No. 1, RT 04/RW 08',
+        'alamat'          => 'Jl. Melati Blok A No. 1, RT 04',
     ]);
 
     // 2. Mendaftar KK baru dengan NIK yang berstatus pindah_kk
@@ -126,7 +126,7 @@ it('warga berstatus pindah_kk berhasil mendaftar KK baru dan datanya terupdate s
         'agama'                 => 'Islam',
         'pendidikan'            => 'SMA/SMK',
         'pekerjaan'             => 'Wiraswasta',
-        'alamat'                => 'Jl. Melati Baru No. 10, RT 04/RW 08',
+        'alamat'                => 'Jl. Melati Baru No. 10, RT 04',
     ]);
 
     $response->assertRedirect(route('warga.beranda'));
@@ -135,7 +135,7 @@ it('warga berstatus pindah_kk berhasil mendaftar KK baru dan datanya terupdate s
     $wargaPindah->refresh();
     expect($wargaPindah->status_warga)->toBe('hidup');
     expect($wargaPindah->status_hubungan)->toBe('kepala_keluarga');
-    expect($wargaPindah->alamat)->toBe('Jl. Melati Baru No. 10, RT 04/RW 08');
+    expect($wargaPindah->alamat)->toBe('Jl. Melati Baru No. 10, RT 04');
     expect($wargaPindah->keluarga->no_kk)->toBe('3271049999990001');
 
     // Akun user terbentuk dan terotentikasi

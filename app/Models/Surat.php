@@ -67,7 +67,7 @@ class Surat extends Model
 
     /**
      * BR-05: Penomoran Surat
-     * Format NNN/SP/RT04/RW08/{bulan_romawi}/{tahun}.
+     * Format NNN/SP/RT04/{bulan_romawi}/{tahun}.
      * NNN sekuensial dan reset otomatis setiap pergantian tahun kalender.
      */
     public static function generateNomorSurat(?int $tahun = null, ?int $bulan = null): string
@@ -99,7 +99,7 @@ class Surat extends Model
         $nextUrutan = $maxUrutan + 1;
         $nomorUrutPad = str_pad((string) $nextUrutan, 3, '0', STR_PAD_LEFT);
 
-        return "{$nomorUrutPad}/SP/RT04/RW08/{$bulanRomawi}/{$tahun}";
+        return "{$nomorUrutPad}/SP/RT04/{$bulanRomawi}/{$tahun}";
     }
 
     /**

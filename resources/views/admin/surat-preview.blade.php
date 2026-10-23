@@ -457,9 +457,9 @@
     <div class="surat-a4-paper">
         {{-- Kop Surat Resmi --}}
         <div class="kop-surat-header">
-            <div class="kop-rt-title">RUKUN TETANGGA 04 PERUMAHAN SUKAMAJU INDAH</div>
-            <div class="kop-kel-title">KELURAHAN SUKAMAJU, KECAMATAN CILODONG</div>
-            <div class="kop-kota-title">KOTA BATAM – 29461</div>
+            <div class="kop-rt-title">RUKUN TETANGGA 04 KELURAHAN BELIAN</div>
+            <div class="kop-kel-title">KECAMATAN BATAM KOTA – KOTA BATAM</div>
+            <div class="kop-kota-title">KOTA BATAM – 29464</div>
         </div>
         <div class="kop-divider-double"></div>
 
@@ -473,7 +473,7 @@
 
         {{-- Paragraf Pembuka --}}
         <p class="doc-paragraph">
-            Yang bertanda tangan di bawah ini Ketua RT 04 Kelurahan Sukamaju, Kecamatan Cilodong, menerangkan bahwa:
+            Yang bertanda tangan di bawah ini Ketua RT 04 Kelurahan Belian, Kecamatan Batam Kota, menerangkan bahwa:
         </p>
 
         {{-- Tabel Rincian Data Warga (diambil via relasi warga_tujuan_id sesuai PRD BR-10) --}}

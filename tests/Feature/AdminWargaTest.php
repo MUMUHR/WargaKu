@@ -55,7 +55,7 @@ class AdminWargaTest extends TestCase
             'agama' => 'islam',
             'pendidikan_terakhir' => 'd4_s1',
             'pekerjaan' => 'Pegawai BUMN',
-            'alamat' => 'Blok B4 No. 12, RT 04 / RW 08',
+            'alamat' => 'Blok B4 No. 12, RT 04',
             'status_hubungan' => 'kepala_keluarga',
             'status_warga' => 'hidup',
         ]);
@@ -70,7 +70,7 @@ class AdminWargaTest extends TestCase
             'agama' => 'islam',
             'pendidikan_terakhir' => 's2',
             'pekerjaan' => 'Guru',
-            'alamat' => 'Blok B4 No. 12, RT 04 / RW 08',
+            'alamat' => 'Blok B4 No. 12, RT 04',
             'status_hubungan' => 'istri',
             'status_warga' => 'hidup',
         ]);
@@ -85,7 +85,7 @@ class AdminWargaTest extends TestCase
             'agama' => 'islam',
             'pendidikan_terakhir' => 'd4_s1',
             'pekerjaan' => 'Karyawan Swasta',
-            'alamat' => 'Blok B4 No. 12, RT 04 / RW 08',
+            'alamat' => 'Blok B4 No. 12, RT 04',
             'status_hubungan' => 'anak',
             'status_warga' => 'hidup',
         ]);

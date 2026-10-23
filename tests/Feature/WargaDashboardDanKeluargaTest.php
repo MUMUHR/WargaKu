@@ -49,7 +49,7 @@ class WargaDashboardDanKeluargaTest extends TestCase
             'status_perkawinan'   => 'kawin',
             'status_hubungan'     => 'kepala_keluarga',
             'status_warga'        => 'hidup',
-            'alamat'              => 'Jl. Melati Blok A No. 1, RT 04/RW 08',
+            'alamat'              => 'Jl. Melati Blok A No. 1, RT 04',
         ]);
 
         $this->istriWarga = Warga::create([
@@ -65,7 +65,7 @@ class WargaDashboardDanKeluargaTest extends TestCase
             'status_perkawinan'   => 'kawin',
             'status_hubungan'     => 'istri',
             'status_warga'        => 'hidup',
-            'alamat'              => 'Jl. Melati Blok A No. 1, RT 04/RW 08',
+            'alamat'              => 'Jl. Melati Blok A No. 1, RT 04',
         ]);
     }
 
@@ -125,7 +125,7 @@ class WargaDashboardDanKeluargaTest extends TestCase
             'new_agama' => 'Islam',
             'new_pendidikan' => 'Diploma IV / Strata 1 (S1)',
             'new_pekerjaan' => 'Software Engineer',
-            'new_alamat' => 'Jl. Melati Blok A No. 1, RT 04/RW 08',
+            'new_alamat' => 'Jl. Melati Blok A No. 1, RT 04',
             'new_shdk' => 'Istri',
             'new_status_warga' => 'Hidup (Aktif)',
             'alasan_perubahan' => 'Pembaruan gelar sarjana dan profesi baru',

@@ -119,8 +119,8 @@ it('admin dapat menyetujui surat dan menghasilkan nomor surat sesuai BR-05', fun
     $surat->refresh();
     expect($surat->status)->toBe(StatusSurat::DISETUJUI);
     expect($surat->nomor_surat)->not->toBeNull();
-    // Cek format NNN/SP/RT04/RW08/{bulan_romawi}/{tahun}
-    expect($surat->nomor_surat)->toMatch('/^\d{3}\/SP\/RT04\/RW08\/[IVXLCDM]+\/\d{4}$/');
+    // Cek format NNN/SP/RT04/{bulan_romawi}/{tahun}
+    expect($surat->nomor_surat)->toMatch('/^\d{3}\/SP\/RT04\/[IVXLCDM]+\/\d{4}$/');
 
     $surat->delete();
 });
@@ -154,7 +154,7 @@ it('surat yang sudah disetujui tidak dapat disetujui ulang atau ditolak', functi
         'pemohon_id'      => $this->pemohon->id,
         'warga_tujuan_id' => $this->wargaTujuan->id,
         'keperluan'       => 'Pengantar Nikah',
-        'nomor_surat'     => '999/SP/RT04/RW08/II/2026',
+        'nomor_surat'     => '999/SP/RT04/II/2026',
         'status'          => StatusSurat::DISETUJUI,
     ]);
 

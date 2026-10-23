@@ -1,6 +1,6 @@
 # Peta Alur File & Arsitektur Backend WargaKu 🗺️
 
-Dokumen ini disusun sebagai panduan navigasi backend project **WargaKu (Sistem Administrasi RT 04 / RW 08)** untuk anggota tim pengembang. Fokus dokumen ini memetakan **keterhubungan nyata antar berkas fisik backend**:
+Dokumen ini disusun sebagai panduan navigasi backend project **WargaKu (Sistem Administrasi RT 04)** untuk anggota tim pengembang. Fokus dokumen ini memetakan **keterhubungan nyata antar berkas fisik backend**:
 > **Route / Endpoint** ➔ **Middleware** ➔ **Controller & Form Request** ➔ **Service & Logic** ➔ **Model Eloquent** ➔ **Tabel Database** ➔ **Blade View Output**.
 
 ---
@@ -410,4 +410,4 @@ Gunakan tabel ini untuk mencari file secara instan saat ingin mengedit atau mena
 
 ---
 
-*Dokumen ini selalu sinkron dengan struktur folder fisik project WargaKu RT 04 / RW 08.*
+*Dokumen ini selalu sinkron dengan struktur folder fisik project WargaKu RT 04.*

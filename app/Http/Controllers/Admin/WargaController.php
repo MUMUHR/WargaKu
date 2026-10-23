@@ -528,7 +528,7 @@ class WargaController extends Controller
                                 'agama' => $this->normalisasiAgama($dataBaru['agama'] ?? null) ?? $existing->agama,
                                 'pendidikan_terakhir' => $this->normalisasiPendidikan($dataBaru['pendidikan_terakhir'] ?? null) ?? $existing->pendidikan_terakhir,
                                 'pekerjaan' => $dataBaru['pekerjaan'] ?? $existing->pekerjaan,
-                                'alamat' => $dataBaru['alamat'] ?? ($keluarga?->kepalaKeluarga?->alamat ?? 'RT 04 / RW 08'),
+                                'alamat' => $dataBaru['alamat'] ?? ($keluarga?->kepalaKeluarga?->alamat ?? 'RT 04'),
                                 'status_hubungan' => $this->normalisasiStatusHubungan($dataBaru['status_hubungan'] ?? null) ?? $existing->status_hubungan,
                                 'status_warga' => 'hidup',
                             ]);
@@ -544,7 +544,7 @@ class WargaController extends Controller
                                 'agama' => $this->normalisasiAgama($dataBaru['agama'] ?? null),
                                 'pendidikan_terakhir' => $this->normalisasiPendidikan($dataBaru['pendidikan_terakhir'] ?? null),
                                 'pekerjaan' => $dataBaru['pekerjaan'] ?? null,
-                                'alamat' => $dataBaru['alamat'] ?? ($keluarga?->kepalaKeluarga?->alamat ?? 'RT 04 / RW 08'),
+                                'alamat' => $dataBaru['alamat'] ?? ($keluarga?->kepalaKeluarga?->alamat ?? 'RT 04'),
                                 'status_hubungan' => $this->normalisasiStatusHubungan($dataBaru['status_hubungan'] ?? null) ?? 'anak',
                                 'status_warga' => 'hidup',
                             ]);

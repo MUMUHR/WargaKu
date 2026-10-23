@@ -56,7 +56,7 @@ class AdminIuranTest extends TestCase
             'agama' => 'islam',
             'pendidikan_terakhir' => 'd4_s1',
             'pekerjaan' => 'Pegawai BUMN',
-            'alamat' => 'Blok B4 No. 12, RT 04 / RW 08',
+            'alamat' => 'Blok B4 No. 12, RT 04',
             'status_hubungan' => 'kepala_keluarga',
             'status_warga' => 'hidup',
         ]);

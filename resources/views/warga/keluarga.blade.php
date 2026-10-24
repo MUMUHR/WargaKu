@@ -139,7 +139,8 @@
                 <thead>
                     <tr>
                         <th style="width:52px; text-align:center;">NO</th>
-                        <th>NAMA LENGKAP &amp; NIK</th>
+                        <th>NAMA LENGKAP</th>
+                        <th style="width:170px;">NIK</th>
                         <th style="width:110px;">JENIS KELAMIN</th>
                         <th style="width:170px;">HUBUNGAN KK</th>
                         <th style="width:130px;">TGL LAHIR</th>
@@ -153,8 +154,10 @@
                     <tr class="anggota-row" data-hubungan="{{ $warga->status_hubungan }}" data-nama="{{ strtolower($warga->nama) }}" data-nik="{{ $warga->nik }}">
                         <td style="text-align:center; color:#495057; font-weight:600;">{{ $loop->iteration }}</td>
                         <td>
-                            <div class="kk-name">{{ $warga->nama }}</div>
-                            <div class="kk-nik">NIK: <a href="javascript:void(0)" class="kk-nik-link" onclick="bukaDetailWarga('{{ $warga->nik }}')">{{ $warga->nik }}</a></div>
+                            <div class="kk-name" style="margin-bottom:0;">{{ $warga->nama }}</div>
+                        </td>
+                        <td>
+                            <a href="javascript:void(0)" class="kk-nik-link" onclick="bukaDetailWarga('{{ $warga->nik }}')" style="font-family:monospace; font-size:13px; font-weight:600; letter-spacing:0.3px;">{{ $warga->nik }}</a>
                         </td>
                         <td>
                             @if($warga->jenis_kelamin === 'laki_laki')
@@ -198,14 +201,14 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="8" style="text-align:center; padding:36px 18px; color:#6c757d; font-size:13px;">
+                        <td colspan="9" style="text-align:center; padding:36px 18px; color:#6c757d; font-size:13px;">
                             <i class='bx bxs-group' style="font-size:30px; display:block; margin-bottom:8px; opacity:0.35;"></i>
                             Belum ada data anggota keluarga terdaftar.
                         </td>
                     </tr>
                     @endforelse
                     <tr id="row-empty-anggota" style="display:none;">
-                        <td colspan="8" style="text-align:center; padding:36px 18px; color:#6c757d; font-size:13px;">
+                        <td colspan="9" style="text-align:center; padding:36px 18px; color:#6c757d; font-size:13px;">
                             <i class='bx bx-search' style="font-size:30px; display:block; margin-bottom:8px; opacity:0.35;"></i>
                             Tidak ada anggota yang sesuai pencarian.
                         </td>
@@ -563,7 +566,7 @@
                 </div>
             </div>
         </div>
-
++
         <!-- Footer POV Warga -->
         <div class="kk-pengajuan-modal__footer">
             <button type="button" class="kk-pbtn-close" onclick="tutupModalLihatPengajuan()">

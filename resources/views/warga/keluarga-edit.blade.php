@@ -149,9 +149,11 @@
                                     <td>
                                         <div class="wf-param-title">
                                             <span>1. NIK</span>
-                                            <span class="wf-badge-updated">● Diubah</span>
+                                            <span style="background:#f1f5f9; color:#475569; font-size:10.5px; font-weight:600; padding:2px 8px; border-radius:4px; border:1px solid #cbd5e1; display:inline-flex; align-items:center; gap:4px;">
+                                                <i class='bx bx-lock-alt' style="font-size:12px; color:#64748b;"></i> Terkunci
+                                            </span>
                                         </div>
-                                        <div class="wf-param-desc">Nomor Induk Kependudukan (16 digit)</div>
+                                        <div class="wf-param-desc">Nomor Induk Kependudukan (16 digit) &bull; <em>Hanya Admin RT yang dapat mengoreksi NIK</em></div>
                                     </td>
                                     <td>
                                         <div class="wf-input-old-lock">
@@ -160,9 +162,14 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <div class="wf-input-editable-wrap">
-                                            <input type="text" id="new-nik" name="new_nik" class="wf-input" value="{{ $selectedData['nik'] ?? '' }}" maxlength="16">
+                                        <div class="wf-input-old-lock" style="background:#f8fafc; border-color:#e2e8f0; color:#334155;">
+                                            <span id="new-nik-display" style="font-family:monospace; font-weight:600;">{{ $selectedData['nik'] ?? '' }}</span>
+                                            <span style="display:inline-flex; align-items:center; gap:4px; font-size:11.5px; color:#64748b; font-weight:500;">
+                                                <i class='bx bx-shield-quarter' style="color:#0284c7; font-size:15px;"></i>
+                                                Hanya Admin RT
+                                            </span>
                                         </div>
+                                        <input type="hidden" id="new-nik" name="new_nik" value="{{ $selectedData['nik'] ?? '' }}">
                                     </td>
                                 </tr>
 
@@ -767,7 +774,6 @@ document.addEventListener('DOMContentLoaded', function () {
 const anggotaData = @json($anggotaDataEdit);
 
 const comparisonFields = [
-    { rowId: 'row-nik', oldId: 'old-nik', newId: 'new-nik' },
     { rowId: 'row-nama', oldId: 'old-nama', newId: 'new-nama' },
     { rowId: 'row-tempat-lahir', oldId: 'old-tempat-lahir', newId: 'new-tempat-lahir' },
     { rowId: 'row-tgl-lahir', oldId: 'old-tgl-lahir', newId: 'new-tgl-lahir', isDate: true },
@@ -834,7 +840,10 @@ function gantiAnggota(key) {
 
     // Perbarui data tabel
     document.getElementById('old-nik').innerText = data.nik;
-    document.getElementById('new-nik').value = data.nik;
+    const newNikDisplay = document.getElementById('new-nik-display');
+    if (newNikDisplay) newNikDisplay.innerText = data.nik;
+    const newNikInput = document.getElementById('new-nik');
+    if (newNikInput) newNikInput.value = data.nik;
 
     document.getElementById('old-nama').innerText = data.nama;
     document.getElementById('new-nama').value = data.nama;

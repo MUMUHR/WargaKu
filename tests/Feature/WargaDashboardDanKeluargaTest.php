@@ -282,4 +282,34 @@ class WargaDashboardDanKeluargaTest extends TestCase
         $response->assertSessionHas('error');
         $this->assertEquals('disetujui', $riwayat->fresh()->status);
     }
+
+    public function test_warga_tidak_dapat_mengubah_nik_dan_halaman_edit_menampilkan_nik_terkunci(): void
+    {
+        $response = $this->actingAs($this->userWarga)->get(route('warga.keluarga.edit'));
+        $response->assertOk();
+        $response->assertSee('Hanya Admin RT');
+        $response->assertSee('Terkunci');
+
+        // Pastikan jika warga mencoba mengirim new_nik yang berbeda, sistem backend mengabaikannya
+        $postRes = $this->actingAs($this->userWarga)->post(route('warga.keluarga.edit.store'), [
+            'target_anggota' => $this->kepalaWarga->nik,
+            'new_nik' => '9999999999999999',
+            'new_nama' => $this->kepalaWarga->nama,
+            'new_tempat_lahir' => $this->kepalaWarga->tempat_lahir,
+            'new_tgl_lahir' => \Carbon\Carbon::parse($this->kepalaWarga->tanggal_lahir)->format('Y-m-d'),
+            'new_pekerjaan' => 'Konsultan IT',
+            'alasan_perubahan' => 'Coba ubah NIK dan pekerjaan',
+        ]);
+
+        $postRes->assertRedirect(route('warga.keluarga'));
+
+        $riwayat = \App\Models\Riwayat_Perubahan::where('warga_id', $this->kepalaWarga->id)
+            ->latest('id')
+            ->first();
+
+        $this->assertNotNull($riwayat);
+        $this->assertArrayNotHasKey('nik', $riwayat->data_baru);
+        $this->assertEquals($this->kepalaWarga->nik, $this->kepalaWarga->fresh()->nik);
+    }
 }
+

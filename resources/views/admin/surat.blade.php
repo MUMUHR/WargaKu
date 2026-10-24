@@ -159,11 +159,21 @@
                         <div style="font-size: 11.5px; color: #6c757d; margin-top: 2px;">{{ $jamStr }}</div>
                     </td>
                     <td>
-                        <div style="font-weight: 600; color: #212529; font-size: 13px;">{{ $pemohonNama }}</div>
+                        <div style="font-weight: 600; color: #212529; font-size: 13px;">
+                            {{ $pemohonNama }}
+                            @if($s->pemohon?->status_warga === 'meninggal')
+                                <span style="display:inline-block; font-size:10px; font-weight:700; color:#dc2626; background:#fee2e2; padding:1px 5px; border-radius:4px; margin-left:3px;">(Alm.)</span>
+                            @endif
+                        </div>
                         <div style="font-size: 11.5px; color: #6c757d; margin-top: 2px;">NIK: {{ $pemohonNik }}</div>
                     </td>
                     <td>
-                        <div style="font-weight: 700; color: #212529; font-size: 13px;">{{ $tujuanNama }}</div>
+                        <div style="font-weight: 700; color: #212529; font-size: 13px;">
+                            {{ $tujuanNama }}
+                            @if($s->wargaTujuan?->status_warga === 'meninggal')
+                                <span style="display:inline-block; font-size:10px; font-weight:700; color:#dc2626; background:#fee2e2; padding:1px 5px; border-radius:4px; margin-left:3px;">(Alm.)</span>
+                            @endif
+                        </div>
                         <div style="font-size: 11.5px; color: #6c757d; margin-top: 2px;">NIK: {{ $tujuanNik }}</div>
                     </td>
                     <td>

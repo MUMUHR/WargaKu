@@ -21,17 +21,18 @@ class SuratController extends Controller
 
         // Ambil data kepala keluarga / warga yang terikat pada akun KK
         $kepala = $user->wargaPemilik 
-            ?? $user->wargas()->where('status_hubungan', 'kepala_keluarga')->first() 
+            ?? $user->wargas()->where('status_warga', 'hidup')->where('status_hubungan', 'kepala_keluarga')->first() 
+            ?? $user->wargas()->where('status_warga', 'hidup')->first()
             ?? $user->wargas()->first();
-        $keluarga = $kepala?->keluarga;
+        $keluarga = $kepala?->keluarga ?? $user->wargas()->first()?->keluarga;
 
-        // Ambil seluruh anggota keluarga yang masih hidup dalam satu KK (terurut hierarki KK)
+        // Ambil seluruh anggota keluarga yang masih hidup dalam satu KK (terurut hierarki KK) untuk opsi pengajuan baru
         $anggotaKeluarga = $keluarga
             ? $keluarga->wargas()->where('status_warga', 'hidup')->urutHierarkiKk()->get()
             : collect();
 
-        // Kumpulkan ID seluruh anggota keluarga untuk filter surat keluarga
-        $keluargaWargaIds = $anggotaKeluarga->pluck('id')->toArray();
+        // Kumpulkan ID seluruh anggota keluarga (termasuk yang sudah meninggal) agar riwayat surat keluarga tetap muncul
+        $keluargaWargaIds = $keluarga ? $keluarga->wargas()->pluck('id')->toArray() : [];
         if (empty($keluargaWargaIds) && $kepala) {
             $keluargaWargaIds = [$kepala->id];
         }
@@ -112,9 +113,10 @@ class SuratController extends Controller
 
         $user = auth()->user();
         $kepala = $user->wargaPemilik 
-            ?? $user->wargas()->where('status_hubungan', 'kepala_keluarga')->first() 
+            ?? $user->wargas()->where('status_warga', 'hidup')->where('status_hubungan', 'kepala_keluarga')->first() 
+            ?? $user->wargas()->where('status_warga', 'hidup')->first()
             ?? $user->wargas()->first();
-        $keluarga = $kepala?->keluarga;
+        $keluarga = $kepala?->keluarga ?? $user->wargas()->first()?->keluarga;
 
         $targetWarga = Warga::findOrFail($request->input('warga_tujuan_id'));
 
@@ -127,7 +129,7 @@ class SuratController extends Controller
             return back()->with('error', 'Surat pengantar hanya dapat diajukan untuk anggota keluarga yang berstatus hidup.')->withInput();
         }
 
-        $pemohon = $kepala ?? $user->wargaPemilik ?? $targetWarga;
+        $pemohon = $user->wargaPemilik ?? $kepala ?? $targetWarga;
 
         Surat::create([
             'pemohon_id'      => $pemohon->id,
@@ -151,9 +153,10 @@ class SuratController extends Controller
 
         $user = auth()->user();
         $kepala = $user->wargaPemilik 
-            ?? $user->wargas()->where('status_hubungan', 'kepala_keluarga')->first() 
+            ?? $user->wargas()->where('status_warga', 'hidup')->where('status_hubungan', 'kepala_keluarga')->first() 
+            ?? $user->wargas()->where('status_warga', 'hidup')->first()
             ?? $user->wargas()->first();
-        $keluarga = $kepala?->keluarga;
+        $keluarga = $kepala?->keluarga ?? $user->wargas()->first()?->keluarga;
         $keluargaWargaIds = $keluarga ? $keluarga->wargas()->pluck('id')->toArray() : [$kepala?->id];
 
         // Keamanan: verifikasi kepemilikan surat
@@ -181,9 +184,10 @@ class SuratController extends Controller
 
         $user = auth()->user();
         $kepala = $user->wargaPemilik 
-            ?? $user->wargas()->where('status_hubungan', 'kepala_keluarga')->first() 
+            ?? $user->wargas()->where('status_warga', 'hidup')->where('status_hubungan', 'kepala_keluarga')->first() 
+            ?? $user->wargas()->where('status_warga', 'hidup')->first()
             ?? $user->wargas()->first();
-        $keluarga = $kepala?->keluarga;
+        $keluarga = $kepala?->keluarga ?? $user->wargas()->first()?->keluarga;
         $keluargaWargaIds = $keluarga ? $keluarga->wargas()->pluck('id')->toArray() : [$kepala?->id];
 
         // Keamanan: verifikasi hak akses dokumen surat

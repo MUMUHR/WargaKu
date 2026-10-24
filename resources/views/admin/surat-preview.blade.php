@@ -433,6 +433,21 @@
 
 {{-- ═══ ALERT INFO ═══ --}}
 <div class="preview-alert-wrap no-print">
+    @if($surat->pemohon?->status_warga === 'meninggal' || $surat->wargaTujuan?->status_warga === 'meninggal')
+        <div style="background: #fff7ed; border: 1px solid #fdba74; border-radius: 6px; padding: 10px 18px; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; font-size: 13px; color: #9a3412;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <i class='bx bx-error' style="font-size: 20px; color: #f97316;"></i>
+                <span><strong>Catatan Status Kependudukan:</strong>
+                    @if($surat->wargaTujuan?->status_warga === 'meninggal')
+                        Warga yang bersangkutan ({{ $surat->wargaTujuan->nama }}) tercatat telah <strong>Meninggal Dunia</strong>.
+                    @elseif($surat->pemohon?->status_warga === 'meninggal')
+                        Pemohon awal surat ({{ $surat->pemohon->nama }}) tercatat telah <strong>Meninggal Dunia</strong>.
+                    @endif
+                </span>
+            </div>
+            <span class="badge-format-a4" style="background: #fee2e2; color: #b91c1c;">Almarhum</span>
+        </div>
+    @endif
     @if($isDitolak)
         <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 6px; padding: 10px 18px; display: flex; align-items: center; justify-content: space-between; font-size: 13px; color: #991b1b;">
             <div style="display: flex; align-items: center; gap: 10px;">

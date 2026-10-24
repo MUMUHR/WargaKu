@@ -233,4 +233,41 @@ class WargaSuratTest extends TestCase
         $response->assertSee('SURAT PENGANTAR');
         $response->assertSee('005/SP/RT04/X/2026');
     }
+
+    public function test_riwayat_surat_tetap_muncul_dan_sinkron_meskipun_pemohon_meninggal(): void
+    {
+        // 1. Kepala keluarga mengajukan surat permohonan
+        $surat = Surat::create([
+            'pemohon_id' => $this->kepalaWarga->id,
+            'warga_tujuan_id' => $this->kepalaWarga->id,
+            'keperluan' => 'Permohonan surat keterangan untuk klaim asuransi keluarga',
+            'status' => StatusSurat::MENUNGGU,
+        ]);
+
+        // 2. Kepala keluarga kemudian meninggal dunia
+        $this->kepalaWarga->update(['status_warga' => 'meninggal']);
+
+        // 3. Akun keluarga kini dipegang / diakses oleh anggota keluarga yang masih hidup (istri)
+        $userIstri = User::factory()->create([
+            'role' => 'warga',
+            'username' => $this->anggotaWarga->nik,
+        ]);
+        $this->anggotaWarga->update(['user_id' => $userIstri->id]);
+
+        // 4. Istri membuka halaman surat
+        $response = $this->actingAs($userIstri)->get(route('warga.surat'));
+
+        $response->assertStatus(200);
+        // Memastikan surat tetap muncul di tabel
+        $response->assertSee('Permohonan surat keterangan untuk klaim asuransi keluarga');
+        // Memastikan label (Alm.) muncul
+        $response->assertSee('(Alm.)');
+
+        // 5. Istri juga dapat membatalkan surat tersebut
+        $batalResponse = $this->actingAs($userIstri)->post(route('warga.surat.batal', $surat->id));
+        $batalResponse->assertRedirect(route('warga.surat'));
+        $batalResponse->assertSessionHas('success');
+
+        $this->assertEquals(StatusSurat::DIBATALKAN, $surat->fresh()->status);
+    }
 }

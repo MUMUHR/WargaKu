@@ -36,9 +36,10 @@ class KeluargaController extends Controller
 
         // Ambil data kepala keluarga / warga yang terikat pada akun
         $kepala = $user->wargaPemilik 
-            ?? $user->wargas()->where('status_hubungan', 'kepala_keluarga')->first() 
+            ?? $user->wargas()->where('status_warga', 'hidup')->where('status_hubungan', 'kepala_keluarga')->first() 
+            ?? $user->wargas()->where('status_warga', 'hidup')->first()
             ?? $user->wargas()->first();
-        $keluarga = $kepala?->keluarga;
+        $keluarga = $kepala?->keluarga ?? $user->wargas()->first()?->keluarga;
 
         $anggotaKeluarga = collect();
         $totalJiwa = 0;
@@ -248,9 +249,10 @@ class KeluargaController extends Controller
     {
         $user = auth()->user();
         $kepala = $user->wargaPemilik 
-            ?? $user->wargas()->where('status_hubungan', 'kepala_keluarga')->first() 
+            ?? $user->wargas()->where('status_warga', 'hidup')->where('status_hubungan', 'kepala_keluarga')->first() 
+            ?? $user->wargas()->where('status_warga', 'hidup')->first()
             ?? $user->wargas()->first();
-        $keluarga = $kepala?->keluarga;
+        $keluarga = $kepala?->keluarga ?? $user->wargas()->first()?->keluarga;
 
         $anggotaKeluarga = $keluarga 
             ? $keluarga->wargas()->where('status_warga', 'hidup')->urutHierarkiKk()->get() 
@@ -318,9 +320,10 @@ class KeluargaController extends Controller
 
         $user = auth()->user();
         $kepala = $user->wargaPemilik 
-            ?? $user->wargas()->where('status_hubungan', 'kepala_keluarga')->first() 
+            ?? $user->wargas()->where('status_warga', 'hidup')->where('status_hubungan', 'kepala_keluarga')->first() 
+            ?? $user->wargas()->where('status_warga', 'hidup')->first()
             ?? $user->wargas()->first();
-        $keluarga = $kepala?->keluarga;
+        $keluarga = $kepala?->keluarga ?? $user->wargas()->first()?->keluarga;
 
         if (!$keluarga) {
             return redirect()->route('warga.keluarga')->with('error', 'Data Kartu Keluarga tidak ditemukan.');
@@ -421,9 +424,10 @@ class KeluargaController extends Controller
     {
         $user = auth()->user();
         $kepala = $user->wargaPemilik 
-            ?? $user->wargas()->where('status_hubungan', 'kepala_keluarga')->first() 
+            ?? $user->wargas()->where('status_warga', 'hidup')->where('status_hubungan', 'kepala_keluarga')->first() 
+            ?? $user->wargas()->where('status_warga', 'hidup')->first()
             ?? $user->wargas()->first();
-        $keluarga = $kepala?->keluarga;
+        $keluarga = $kepala?->keluarga ?? $user->wargas()->first()?->keluarga;
 
         $alamatKeluarga = $keluarga ? $keluarga->alamat : 'RT 04';
 
@@ -454,9 +458,10 @@ class KeluargaController extends Controller
 
         $user = auth()->user();
         $kepala = $user->wargaPemilik 
-            ?? $user->wargas()->where('status_hubungan', 'kepala_keluarga')->first() 
+            ?? $user->wargas()->where('status_warga', 'hidup')->where('status_hubungan', 'kepala_keluarga')->first() 
+            ?? $user->wargas()->where('status_warga', 'hidup')->first()
             ?? $user->wargas()->first();
-        $keluarga = $kepala?->keluarga;
+        $keluarga = $kepala?->keluarga ?? $user->wargas()->first()?->keluarga;
 
         if (!$keluarga) {
             return redirect()->route('warga.keluarga')->with('error', 'Data Kartu Keluarga tidak ditemukan.');

@@ -182,6 +182,9 @@
                         <div style="font-size: 12px; color: #6c757d; margin-top: 2px;">
                             Keperluan: {{ $s->keperluan }} 
                             <span style="color:#0284c7;">({{ $wargaTujuanNama }})</span>
+                            @if(($s->wargaTujuan?->status_warga === 'meninggal') || (!$s->wargaTujuan && $s->pemohon?->status_warga === 'meninggal'))
+                                <span style="color:#dc2626; font-size:11px; font-weight:700;">(Alm.)</span>
+                            @endif
                         </div>
                     </td>
                     <td>

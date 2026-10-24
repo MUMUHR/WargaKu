@@ -188,9 +188,15 @@
                                 </td>
                                 <td>
                                     <strong style="color: #0f172a; font-size: 14px;">{{ $namaTarget }}</strong>
+                                    @if($wargaTarget?->status_warga === 'meninggal')
+                                        <span style="display:inline-block; font-size:10px; font-weight:700; color:#dc2626; background:#fee2e2; padding:1px 6px; border-radius:4px; margin-left:4px;">(Alm.)</span>
+                                    @endif
                                     @if($wargaTarget && $surat->pemohon && $wargaTarget->id !== $surat->pemohon->id)
                                         <div style="font-size: 11px; color: #64748b; margin-top: 2px;">
                                             Diajukan: {{ $surat->pemohon->nama }}
+                                            @if($surat->pemohon->status_warga === 'meninggal')
+                                                <span style="color:#dc2626; font-weight:600;">(Alm.)</span>
+                                            @endif
                                         </div>
                                     @endif
                                 </td>

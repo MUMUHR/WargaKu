@@ -311,5 +311,18 @@ class WargaDashboardDanKeluargaTest extends TestCase
         $this->assertArrayNotHasKey('nik', $riwayat->data_baru);
         $this->assertEquals($this->kepalaWarga->nik, $this->kepalaWarga->fresh()->nik);
     }
+
+    public function test_warga_melihat_anggota_keluarga_meninggal_dengan_badge_khusus_dan_aksi_terkunci(): void
+    {
+        $this->istriWarga->update(['status_warga' => 'meninggal']);
+
+        $response = $this->actingAs($this->userWarga)->get(route('warga.keluarga'));
+
+        $response->assertStatus(200);
+        $response->assertSee('Meninggal (Alm.)');
+        $response->assertSee('(Alm.)');
+        $response->assertSee('Terkunci');
+        $response->assertDontSee(route('warga.keluarga.edit', ['nik' => $this->istriWarga->nik]));
+    }
 }
 

@@ -15,16 +15,16 @@ use Illuminate\View\View;
 class KeluargaController extends Controller
 {
     private array $mapPendidikan = [
-        'tidak_belum_sekolah' => 'Tidak / Belum Sekolah (tidak_belum_sekolah)',
-        'belum_tamat_sd'      => 'Belum Tamat SD / Sederajat (belum_tamat_sd)',
-        'sd_sederajat'        => 'SD / Sederajat (sd_sederajat)',
-        'smp_sederajat'       => 'SMP / Sederajat (smp_sederajat)',
-        'sma_sederajat'       => 'SLTA / SMA / SMK / Sederajat (sma_sederajat)',
-        'd1_d2'               => 'Diploma I / II (d1_d2)',
-        'd3'                  => 'Diploma III (d3)',
-        'd4_s1'               => 'Diploma IV / Strata 1 (S1) (d4_s1)',
-        's2'                  => 'Strata 2 (S2) (s2)',
-        's3'                  => 'Strata 3 (S3) (s3)',
+        'tidak_belum_sekolah' => 'Tidak / Belum Sekolah',
+        'belum_tamat_sd'      => 'Belum Tamat SD / Sederajat',
+        'sd_sederajat'        => 'SD / Sederajat',
+        'smp_sederajat'       => 'SMP / Sederajat',
+        'sma_sederajat'       => 'SLTA / SMA / SMK / Sederajat',
+        'd1_d2'               => 'Diploma I / II',
+        'd3'                  => 'Diploma III',
+        'd4_s1'               => 'Diploma IV / Strata 1 (S1)',
+        's2'                  => 'Strata 2 (S2)',
+        's3'                  => 'Strata 3 (S3)',
     ];
 
     /**
@@ -64,11 +64,10 @@ class KeluargaController extends Controller
 
         if ($keluarga) {
             $anggotaKeluarga = $keluarga->wargas()
-                ->where('status_warga', 'hidup')
                 ->urutHierarkiKk()
                 ->get();
 
-            $totalJiwa = $anggotaKeluarga->count();
+            $totalJiwa = $anggotaKeluarga->where('status_warga', 'hidup')->count();
 
             $alamatKeluarga = $keluarga->alamat;
 
@@ -87,6 +86,14 @@ class KeluargaController extends Controller
                     default => '',
                 };
 
+                $statusDesc = match($w->status_warga) {
+                    'hidup' => 'Hidup (Aktif)',
+                    'meninggal' => 'Meninggal (Almarhum)',
+                    'pindah_rumah' => 'Pindah Rumah',
+                    'pindah_kk' => 'Pindah KK',
+                    default => ucfirst($w->status_warga)
+                };
+
                 $dataWargaMap[$w->nik] = [
                     'nama' => $salutation . $w->nama,
                     'namalengkap' => $w->nama,
@@ -99,6 +106,8 @@ class KeluargaController extends Controller
                     'pendidikan' => $this->mapPendidikan[$w->pendidikan_terakhir] ?? ucwords(str_replace('_', ' ', $w->pendidikan_terakhir ?? '-')),
                     'pekerjaan' => $w->pekerjaan ?? '-',
                     'alamat' => $w->alamat ?? $alamatKeluarga,
+                    'status' => $statusDesc,
+                    'isHidup' => $w->status_warga === 'hidup',
                 ];
             }
 

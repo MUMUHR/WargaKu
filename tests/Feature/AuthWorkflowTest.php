@@ -285,7 +285,7 @@ it('dropdown pendidikan terakhir di register dan form konsisten dengan 10 opsi s
         'status_hubungan'       => 'kepala_keluarga',
         'jenis_kelamin'         => 'L',
         'agama'                 => 'Islam',
-        'pendidikan'            => 'Diploma I / II (d1_d2)',
+        'pendidikan'            => 'Diploma I / II',
         'pekerjaan'             => 'Teknisi',
         'alamat'                => 'Jl. Anggrek Blok C No. 6, RT 04',
     ]);

@@ -104,11 +104,11 @@
             @endphp
             {{ $mapTinggal[$keluarga->status_tinggal] ?? ucfirst($keluarga->status_tinggal) }}
         </div>
-        <div class="warga-stat-box__sub" style="font-size:12px;font-weight:600;color:#007bff;margin-top:4px;">
+        <div class="warga-stat-box__sub" style="font-size:12px;font-weight:600;color:white;margin-top:4px;">
             Status Ekonomi: {{ $keluarga->status_ekonomi === 'kurang_mampu' ? 'Kurang Mampu' : 'Mampu' }}
         </div>
         <i class='bx bx-building-house warga-stat-box__icon'></i>
-    </div>
+    </div>                  
 </div>
 
 {{-- ========================================================
@@ -217,7 +217,7 @@
                     </tr>
                 </thead>
                 <tbody id="detail-anggota-tbody">
-                    @forelse($anggotaHidup as $index => $m)
+                    @forelse(($semuaAnggota ?? $anggotaHidup) as $index => $m)
                     @php
                         $badgeClass = match($m->status_hubungan) {
                             'kepala_keluarga' => 'badge-hub-kepala',
@@ -242,8 +242,16 @@
                             ?? ($m->pendidikan_terakhir ? strtoupper(str_replace('_', ' ', $m->pendidikan_terakhir)) : '-');
 
                         $tglLahirStr = $m->tanggal_lahir ? $m->tanggal_lahir->isoFormat('D MMMM Y') : '-';
+
+                        $statusDesc = match($m->status_warga) {
+                            'hidup' => '● Hidup (Aktif)',
+                            'meninggal' => '● Meninggal (Almarhum)',
+                            'pindah_rumah' => '● Pindah Rumah',
+                            'pindah_kk' => '● Pindah KK',
+                            default => '● ' . ucfirst($m->status_warga)
+                        };
                     @endphp
-                    <tr>
+                    <tr style="{{ $m->status_warga !== 'hidup' ? 'background: #fbfbfc; opacity: 0.92;' : '' }}">
                         <td style="text-align: center; color: #495057; font-weight: 500;">{{ $index + 1 }}</td>
                         <td>
                             <span style="font-weight: 700; color: #007bff; font-size: 13px; letter-spacing: 0.02em;">
@@ -251,7 +259,12 @@
                             </span>
                         </td>
                         <td>
-                            <div style="font-weight: 700; color: #212529; font-size: 13px;">{{ $m->nama }}</div>
+                            <div style="font-weight: 700; color: #212529; font-size: 13px;">
+                                {{ $m->nama }}
+                                @if($m->status_warga === 'meninggal')
+                                    <span style="font-size: 11px; font-weight: 600; color: #c5221f; margin-left: 4px;">(Alm.)</span>
+                                @endif
+                            </div>
                         </td>
                         <td>
                             <span class="{{ $badgeClass }}">{{ $hubunganLabel }}</span>
@@ -269,7 +282,17 @@
                             <div style="font-size: 11.5px; color: #6c757d; margin-top: 2px;">{{ $m->pekerjaan ?? '-' }}</div>
                         </td>
                         <td>
-                            <span class="badge-warga-hidup">{{ ucfirst($m->status_warga) }} (Aktif)</span>
+                            @if($m->status_warga === 'hidup')
+                                <span class="badge-warga-hidup">● Hidup (Aktif)</span>
+                            @elseif($m->status_warga === 'meninggal')
+                                <span style="background:#fce8e6; color:#c5221f; border:1px solid #fad2cf; padding:3px 9px; border-radius:12px; font-weight:700; font-size:11.5px; display:inline-flex; align-items:center; gap:4px;">● Meninggal</span>
+                            @elseif($m->status_warga === 'pindah_rumah')
+                                <span style="background:#f1f3f4; color:#5f6368; border:1px solid #dadce0; padding:3px 9px; border-radius:12px; font-weight:700; font-size:11.5px; display:inline-flex; align-items:center; gap:4px;">● Pindah Rumah</span>
+                            @elseif($m->status_warga === 'pindah_kk')
+                                <span style="background:#f1f3f4; color:#5f6368; border:1px solid #dadce0; padding:3px 9px; border-radius:12px; font-weight:700; font-size:11.5px; display:inline-flex; align-items:center; gap:4px;">● Pindah KK</span>
+                            @else
+                                <span style="background:#e9ecef; color:#495057; padding:3px 9px; border-radius:12px; font-weight:700; font-size:11.5px;">● {{ ucfirst($m->status_warga) }}</span>
+                            @endif
                         </td>
                         <td>
                             <div class="warga-row-actions">
@@ -285,7 +308,7 @@
                                             hubungan: '{{ $hubunganLabel }}',
                                             pendidikan: '{{ addslashes($pendidikanLabel) }}',
                                             pekerjaan: '{{ addslashes($m->pekerjaan ?? '-') }}',
-                                            status_warga: '{{ ucfirst($m->status_warga) }} (Aktif)',
+                                            status_warga: '{{ $statusDesc }}',
                                             alamat: '{{ addslashes($m->alamat ?? $alamatKeluarga) }}'
                                         })" title="Lihat Detail Profil Warga">
                                     <i class='bx bx-show'></i> Detail
@@ -560,7 +583,21 @@
         document.getElementById('modal-dw-hubungan').textContent = w.hubungan;
         document.getElementById('modal-dw-pendidikan').textContent = w.pendidikan;
         document.getElementById('modal-dw-pekerjaan').textContent = w.pekerjaan;
-        document.getElementById('modal-dw-status').innerHTML = '● ' + w.status_warga;
+        var stEl = document.getElementById('modal-dw-status');
+        stEl.textContent = w.status_warga;
+        if (w.status_warga.includes('Meninggal')) {
+            stEl.style.background = '#fce8e6';
+            stEl.style.color = '#c5221f';
+            stEl.style.borderColor = '#fad2cf';
+        } else if (w.status_warga.includes('Pindah')) {
+            stEl.style.background = '#f1f3f4';
+            stEl.style.color = '#5f6368';
+            stEl.style.borderColor = '#dadce0';
+        } else {
+            stEl.style.background = '';
+            stEl.style.color = '';
+            stEl.style.borderColor = '';
+        }
         document.getElementById('modal-dw-status-badge').textContent = w.status_warga;
         document.getElementById('modal-dw-alamat').textContent = w.alamat;
 

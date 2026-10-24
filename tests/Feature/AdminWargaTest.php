@@ -432,5 +432,17 @@ class AdminWargaTest extends TestCase
         ]);
         $response->assertSessionHasErrors('nik');
     }
+
+    public function test_admin_melihat_warga_meninggal_di_detail_keluarga_dengan_badge_khusus(): void
+    {
+        $this->anak->update(['status_warga' => 'meninggal']);
+
+        $response = $this->actingAs($this->admin)->get(route('admin.data-warga.detail', $this->keluarga->no_kk));
+
+        $response->assertStatus(200);
+        $response->assertSee('Meninggal');
+        $response->assertSee('(Alm.)');
+        $response->assertSee('2 Orang'); // Bambang dan Ratna aktif, anak meninggal
+    }
 }
 

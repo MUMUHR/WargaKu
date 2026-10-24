@@ -43,18 +43,17 @@ class WargaController extends Controller
             },
         ]);
 
-        // Filter Pencarian
+        // Filter Pencarian (mencakup seluruh anggota keluarga termasuk riwayat almarhum)
         if ($request->filled('search')) {
             $search = trim($request->input('search'));
             $keluargaQuery->where(function ($q) use ($search) {
                 $q->where('no_kk', 'like', "%{$search}%")
                     ->orWhereHas('wargas', function ($wq) use ($search) {
-                        $wq->where('status_warga', 'hidup')
-                            ->where(function ($sub) use ($search) {
-                                $sub->where('nama', 'like', "%{$search}%")
-                                    ->orWhere('alamat', 'like', "%{$search}%")
-                                    ->orWhere('nik', 'like', "%{$search}%");
-                            });
+                        $wq->where(function ($sub) use ($search) {
+                            $sub->where('nama', 'like', "%{$search}%")
+                                ->orWhere('alamat', 'like', "%{$search}%")
+                                ->orWhere('nik', 'like', "%{$search}%");
+                        });
                     });
             });
         }
@@ -104,28 +103,32 @@ class WargaController extends Controller
     {
         $keluarga = Keluarga::where('no_kk', $no_kk)->firstOrFail();
 
-        $anggotaHidup = $keluarga->wargas()
-            ->where('status_warga', 'hidup')
+        $semuaAnggota = $keluarga->wargas()
             ->with('user')
             ->urutHierarkiKk()
             ->get();
+
+        $anggotaHidup = $semuaAnggota->where('status_warga', 'hidup');
 
         $totalJiwaAktif = $anggotaHidup->count();
         $totalLakiKk = $anggotaHidup->where('jenis_kelamin', 'laki_laki')->count();
         $totalPerempuanKk = $anggotaHidup->where('jenis_kelamin', 'perempuan')->count();
 
-        $kepalaKeluarga = $anggotaHidup->firstWhere('status_hubungan', 'kepala_keluarga') ?? $keluarga->kepalaKeluarga;
+        $kepalaKeluarga = $anggotaHidup->firstWhere('status_hubungan', 'kepala_keluarga') 
+            ?? $semuaAnggota->firstWhere('status_hubungan', 'kepala_keluarga') 
+            ?? $keluarga->kepalaKeluarga;
         $alamatKeluarga = $keluarga->alamat;
 
         $akunKk = $keluarga->ambilAkunUser();
         $noTelpKeluarga = $akunKk?->no_telp ?? '-';
 
-        $terakhirDiupdate = collect([$keluarga->updated_at, $anggotaHidup->max('updated_at')])
+        $terakhirDiupdate = collect([$keluarga->updated_at, $semuaAnggota->max('updated_at')])
             ->filter()
             ->max();
 
         return view('admin.detail-keluarga', compact(
             'keluarga',
+            'semuaAnggota',
             'anggotaHidup',
             'totalJiwaAktif',
             'totalLakiKk',

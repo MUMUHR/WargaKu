@@ -176,16 +176,16 @@
                                     <span>Pendidikan Terakhir <span class="wf-req">*</span></span>
                                 </label>
                                 <select id="pendidikan_terakhir" name="pendidikan_terakhir" class="wf-select" required>
-                                    <option value="Tidak / Belum Sekolah (tidak_belum_sekolah)" selected>Tidak / Belum Sekolah (tidak_belum_sekolah)</option>
-                                    <option value="Belum Tamat SD / Sederajat (belum_tamat_sd)">Belum Tamat SD / Sederajat (belum_tamat_sd)</option>
-                                    <option value="SD / Sederajat (sd_sederajat)">SD / Sederajat (sd_sederajat)</option>
-                                    <option value="SMP / Sederajat (smp_sederajat)">SMP / Sederajat (smp_sederajat)</option>
-                                    <option value="SLTA / SMA / SMK / Sederajat (sma_sederajat)">SLTA / SMA / SMK / Sederajat (sma_sederajat)</option>
-                                    <option value="Diploma I / II (d1_d2)">Diploma I / II (d1_d2)</option>
-                                    <option value="Diploma III (d3)">Diploma III (d3)</option>
-                                    <option value="Diploma IV / Strata 1 (S1) (d4_s1)">Diploma IV / Strata 1 (S1) (d4_s1)</option>
-                                    <option value="Strata 2 (S2) (s2)">Strata 2 (S2) (s2)</option>
-                                    <option value="Strata 3 (S3) (s3)">Strata 3 (S3) (s3)</option>
+                                    <option value="Tidak / Belum Sekolah" selected>Tidak / Belum Sekolah</option>
+                                    <option value="Belum Tamat SD / Sederajat">Belum Tamat SD / Sederajat</option>
+                                    <option value="SD / Sederajat">SD / Sederajat</option>
+                                    <option value="SMP / Sederajat">SMP / Sederajat</option>
+                                    <option value="SLTA / SMA / SMK / Sederajat">SLTA / SMA / SMK / Sederajat</option>
+                                    <option value="Diploma I / II">Diploma I / II</option>
+                                    <option value="Diploma III">Diploma III</option>
+                                    <option value="Diploma IV / Strata 1 (S1)">Diploma IV / Strata 1 (S1)</option>
+                                    <option value="Strata 2 (S2)">Strata 2 (S2)</option>
+                                    <option value="Strata 3 (S3)">Strata 3 (S3)</option>
                                 </select>
                             </div>
                         </div>

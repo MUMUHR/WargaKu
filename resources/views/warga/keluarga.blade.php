@@ -151,10 +151,15 @@
                 </thead>
                 <tbody id="tbody-anggota">
                     @forelse($anggotaKeluarga as $idx => $warga)
-                    <tr class="anggota-row" data-hubungan="{{ $warga->status_hubungan }}" data-nama="{{ strtolower($warga->nama) }}" data-nik="{{ $warga->nik }}">
+                    <tr class="anggota-row" data-hubungan="{{ $warga->status_hubungan }}" data-nama="{{ strtolower($warga->nama) }}" data-nik="{{ $warga->nik }}" style="{{ $warga->status_warga !== 'hidup' ? 'background:#fafbfc; opacity:0.92;' : '' }}">
                         <td style="text-align:center; color:#495057; font-weight:600;">{{ $loop->iteration }}</td>
                         <td>
-                            <div class="kk-name" style="margin-bottom:0;">{{ $warga->nama }}</div>
+                            <div class="kk-name" style="margin-bottom:0;">
+                                {{ $warga->nama }}
+                                @if($warga->status_warga === 'meninggal')
+                                    <span style="font-size:11px; font-weight:600; color:#c5221f; margin-left:3px;">(Alm.)</span>
+                                @endif
+                            </div>
                         </td>
                         <td>
                             <a href="javascript:void(0)" class="kk-nik-link" onclick="bukaDetailWarga('{{ $warga->nik }}')" style="font-family:monospace; font-size:13px; font-weight:600; letter-spacing:0.3px;">{{ $warga->nik }}</a>
@@ -186,16 +191,30 @@
                             {{ $warga->pekerjaan ?? '-' }}
                         </td>
                         <td>
-                            <span class="kk-badge-status kk-badge-status--aktif">&#9679; {{ $warga->status_warga == 'hidup' ? 'Tetap / Aktif' : ucfirst($warga->status_warga) }}</span>
+                            @if($warga->status_warga === 'hidup')
+                                <span class="kk-badge-status kk-badge-status--aktif">&#9679; Tetap / Aktif</span>
+                            @elseif($warga->status_warga === 'meninggal')
+                                <span class="kk-badge-status" style="background:#fce8e6; color:#c5221f; border:1px solid #fad2cf; padding:3px 9px; border-radius:12px; font-weight:700; font-size:11px;">&#9679; Meninggal (Alm.)</span>
+                            @elseif($warga->status_warga === 'pindah_rumah' || $warga->status_warga === 'pindah_kk')
+                                <span class="kk-badge-status" style="background:#f1f3f4; color:#5f6368; border:1px solid #dadce0; padding:3px 9px; border-radius:12px; font-weight:700; font-size:11px;">&#9679; Pindah</span>
+                            @else
+                                <span class="kk-badge-status">&#9679; {{ ucfirst($warga->status_warga) }}</span>
+                            @endif
                         </td>
                         <td>
                             <div class="kk-aksi-wrap">
                                 <button type="button" class="kk-btn-detail" onclick="bukaDetailWarga('{{ $warga->nik }}')" id="btn-detail-{{ $warga->nik }}">
                                     <i class='bx bx-show'></i> Detail
                                 </button>
-                                <a href="{{ route('warga.keluarga.edit', ['nik' => $warga->nik]) }}" class="kk-btn-ubah" id="btn-ubah-{{ $warga->nik }}" style="display:inline-flex;align-items:center;gap:4px;text-decoration:none;">
-                                    <i class='bx bx-edit'></i> Ubah
-                                </a>
+                                @if($warga->status_warga === 'hidup')
+                                    <a href="{{ route('warga.keluarga.edit', ['nik' => $warga->nik]) }}" class="kk-btn-ubah" id="btn-ubah-{{ $warga->nik }}" style="display:inline-flex;align-items:center;gap:4px;text-decoration:none;">
+                                        <i class='bx bx-edit'></i> Ubah
+                                    </a>
+                                @else
+                                    <span class="kk-btn-ubah" style="opacity:0.5; cursor:not-allowed; background:#e9ecef; color:#6c757d; border-color:#ced4da;" title="Data warga non-aktif / almarhum tidak dapat diajukan ubah data">
+                                        <i class='bx bx-lock'></i> Terkunci
+                                    </span>
+                                @endif
                             </div>
                         </td>
                     </tr>
@@ -426,7 +445,7 @@
                             <td class="kk-modal-table__label">Status Warga</td>
                             <td class="kk-modal-table__sep">:</td>
                             <td class="kk-modal-table__val">
-                                <span class="kk-badge-status kk-badge-status--aktif" style="font-size:11px;">&#9679; Hidup (Aktif)</span>
+                                <span class="kk-badge-status kk-badge-status--aktif" id="modal-status" style="font-size:11px;">&#9679; Hidup (Aktif)</span>
                             </td>
                         </tr>
                         <tr>
@@ -647,6 +666,30 @@ function bukaDetailWarga(key) {
     document.getElementById('modal-pendidikan').textContent = d.pendidikan;
     document.getElementById('modal-pekerjaan').textContent = d.pekerjaan;
     document.getElementById('modal-alamat').textContent = d.alamat;
+
+    var statusEl = document.getElementById('modal-status');
+    if (statusEl) {
+        statusEl.innerHTML = '&#9679; ' + (d.status || 'Hidup (Aktif)');
+        if (d.status && d.status.includes('Meninggal')) {
+            statusEl.style.background = '#fce8e6';
+            statusEl.style.color = '#c5221f';
+            statusEl.style.borderColor = '#fad2cf';
+        } else if (d.status && d.status.includes('Pindah')) {
+            statusEl.style.background = '#f1f3f4';
+            statusEl.style.color = '#5f6368';
+            statusEl.style.borderColor = '#dadce0';
+        } else {
+            statusEl.style.background = '';
+            statusEl.style.color = '';
+            statusEl.style.borderColor = '';
+        }
+    }
+
+    var btnEdit = document.getElementById('btn-edit-modal');
+    if (btnEdit) {
+        btnEdit.style.display = (d.isHidup === false) ? 'none' : 'inline-flex';
+    }
+
     document.getElementById('modal-detail-overlay').classList.add('kk-modal-overlay--open');
     document.body.style.overflow = 'hidden';
 }

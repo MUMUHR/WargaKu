@@ -485,7 +485,7 @@
         {{-- Pagination Verifikasi --}}
         @if(isset($daftarPengajuan) && $daftarPengajuan->hasPages())
         <div class="warga-pagination-bar" style="margin-top:12px;">
-            <div>{{ $daftarPengajuan->withQueryString()->links() }}</div>
+            {{ $daftarPengajuan->fragment('tab-verifikasi')->links('partials.pagination') }}
         </div>
         @endif
     </div>
@@ -919,9 +919,9 @@
     document.addEventListener('DOMContentLoaded', renderKkPagination);
     renderKkPagination();
 
-    // Cek parameter URL untuk tab aktif
+    // Cek parameter URL untuk tab aktif (termasuk verifikasi_page dan hash tab-verifikasi)
     var urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('tab') === 'verifikasi' || window.location.hash === '#verifikasi') {
+    if (urlParams.get('tab') === 'verifikasi' || urlParams.has('verifikasi_page') || window.location.hash === '#verifikasi' || window.location.hash === '#tab-verifikasi') {
         switchWargaTab('verifikasi');
     }
 

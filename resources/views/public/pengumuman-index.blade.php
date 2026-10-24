@@ -118,13 +118,13 @@
                     </a>
                 @endfor
 
-                {{-- Selanjutnya --}}
+                {{-- Berikutnya --}}
                 @if($halaman < $totalHalaman)
                     <a href="{{ $isPaginated ? $pengumuman->nextPageUrl() : route('pengumuman.index', ['page' => $halaman + 1]) }}"
                        class="pagination__btn"
-                       aria-label="Halaman selanjutnya">Selanjutnya &raquo;</a>
+                       aria-label="Halaman berikutnya">Berikutnya &raquo;</a>
                 @else
-                    <span class="pagination__btn pagination__btn--disabled" aria-disabled="true">Selanjutnya &raquo;</span>
+                    <span class="pagination__btn pagination__btn--disabled" aria-disabled="true">Berikutnya &raquo;</span>
                 @endif
             </nav>
         </div>

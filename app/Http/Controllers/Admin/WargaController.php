@@ -68,7 +68,7 @@ class WargaController extends Controller
             $keluargaQuery->where('status_ekonomi', $request->input('status_ekonomi'));
         }
 
-        $keluargas = $keluargaQuery->latest()->paginate(10)->withQueryString();
+        $keluargas = $keluargaQuery->latest()->get();
 
         // 3. Query Pengajuan Verifikasi (Tab 2) - Tidak menampilkan pengajuan yang telah dibatalkan oleh warga
         $pengajuanQuery = Riwayat_Perubahan::where('status', '!=', 'dibatalkan')->with([

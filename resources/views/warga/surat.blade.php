@@ -288,15 +288,13 @@
                 <span id="footer-summary-text">Menampilkan {{ count($allSurats) }} data riwayat <code>pengajuan_surat</code></span>
                 <div class="ws-pagination" id="ws-pagination-container">
                     <button type="button" class="ws-page-btn" id="btn-prev-page" onclick="gantiHalamanSurat('prev')" disabled>
-                        <i class='bx bx-chevron-left' style="font-size: 18px; margin-right: 4px;"></i>
-                        <span>Sebelumnya</span>
+                        <span>« Sebelumnya</span>
                     </button>
                     <div id="pagination-numbers" style="display: flex; align-items: center; gap: 8px;">
                         <button type="button" class="ws-page-btn ws-page-btn--active" onclick="gantiHalamanSurat(1)">1</button>
                     </div>
                     <button type="button" class="ws-page-btn" id="btn-next-page" onclick="gantiHalamanSurat('next')" disabled>
-                        <span>Selanjutnya</span>
-                        <i class='bx bx-chevron-right' style="font-size: 18px; margin-left: 4px;"></i>
+                        <span>Berikutnya »</span>
                     </button>
                 </div>
             </div>

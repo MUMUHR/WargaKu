@@ -239,7 +239,10 @@
         <div class="kk-table-footer">
             <span><i class='bx bx-info-circle' style="font-size:13px; vertical-align:middle;"></i>
                 &nbsp;*) Perubahan data memerlukan verifikasi Ketua RT dengan melampirkan berkas KTP/Akta/Buku Nikah resmi.</span>
-            <span>Menampilkan {{ $anggotaKeluarga->count() }} dari {{ $anggotaKeluarga->count() }} anggota keluarga terdaftar &nbsp;<span class="kk-pagination"><span class="kk-page-btn kk-page-btn--active">1</span></span></span>
+            <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+                <span id="summary-anggota-count">Menampilkan {{ $anggotaKeluarga->count() }} dari {{ $anggotaKeluarga->count() }} anggota keluarga terdaftar</span>
+                <div class="kk-pagination" id="pagination-anggota"></div>
+            </div>
         </div>
     </div>
 
@@ -365,7 +368,10 @@
 
         <div class="kk-table-footer">
             <span></span>
-            <span>Menampilkan {{ $riwayatPengajuan->count() }} dari {{ $riwayatPengajuan->count() }} entri &nbsp;<span class="kk-pagination"><span class="kk-page-btn kk-page-btn--active">1</span></span></span>
+            <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+                <span id="summary-riwayat-count">Menampilkan {{ $riwayatPengajuan->count() }} dari {{ $riwayatPengajuan->count() }} entri</span>
+                <div class="kk-pagination" id="pagination-riwayat"></div>
+            </div>
         </div>
     </div>
 </div>
@@ -719,39 +725,183 @@ function switchTab(tab) {
     document.getElementById('tab-riwayat').classList.toggle('kk-tab-btn--active', tab === 'riwayat');
 }
 
-function filterAnggota(q) {
-    q = (q||'').toLowerCase().trim();
-    var hub = document.getElementById('filter-hubungan').value;
-    var rows = document.querySelectorAll('#tbody-anggota .anggota-row');
-    var count = 0;
-    rows.forEach(function(r){
-        var ok = (!q || r.dataset.nama.includes(q) || r.dataset.nik.includes(q)) && (!hub || r.dataset.hubungan === hub);
-        r.style.display = ok ? '' : 'none'; 
-        if (ok) count++;
-    });
-    var emptyRow = document.getElementById('row-empty-anggota');
-    if (emptyRow) {
-        emptyRow.style.display = (rows.length > 0 && count === 0) ? '' : 'none';
+// ── Pagination Helper & Functions ──
+let currentAnggotaPage = 1;
+const ANGGOTA_PAGE_SIZE = 5;
+
+let currentRiwayatPage = 1;
+const RIWAYAT_PAGE_SIZE = 5;
+
+function renderPaginationButtons(containerId, totalPages, currentPage, onPageClick) {
+    var container = document.getElementById(containerId);
+    if (!container) return;
+    container.innerHTML = '';
+
+    if (totalPages <= 1) {
+        var prevBtn = document.createElement('button');
+        prevBtn.type = 'button';
+        prevBtn.className = 'kk-page-btn kk-page-btn--disabled';
+        prevBtn.innerHTML = '« Sebelumnya';
+        prevBtn.disabled = true;
+        container.appendChild(prevBtn);
+
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'kk-page-btn kk-page-btn--active';
+        btn.textContent = '1';
+        container.appendChild(btn);
+
+        var nextBtn = document.createElement('button');
+        nextBtn.type = 'button';
+        nextBtn.className = 'kk-page-btn kk-page-btn--disabled';
+        nextBtn.innerHTML = 'Berikutnya »';
+        nextBtn.disabled = true;
+        container.appendChild(nextBtn);
+        return;
     }
+
+    // Prev Button
+    var prevBtn = document.createElement('button');
+    prevBtn.type = 'button';
+    prevBtn.className = 'kk-page-btn' + (currentPage <= 1 ? ' kk-page-btn--disabled' : '');
+    prevBtn.innerHTML = '« Sebelumnya';
+    prevBtn.title = 'Halaman Sebelumnya';
+    prevBtn.disabled = (currentPage <= 1);
+    if (currentPage > 1) {
+        prevBtn.onclick = function() { onPageClick(currentPage - 1); };
+    }
+    container.appendChild(prevBtn);
+
+    // Page Numbers
+    for (var p = 1; p <= totalPages; p++) {
+        (function(page) {
+            var btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'kk-page-btn' + (page === currentPage ? ' kk-page-btn--active' : '');
+            btn.textContent = page;
+            btn.onclick = function() { onPageClick(page); };
+            container.appendChild(btn);
+        })(p);
+    }
+
+    // Next Button
+    var nextBtn = document.createElement('button');
+    nextBtn.type = 'button';
+    nextBtn.className = 'kk-page-btn' + (currentPage >= totalPages ? ' kk-page-btn--disabled' : '');
+    nextBtn.innerHTML = 'Berikutnya »';
+    nextBtn.title = 'Halaman Berikutnya';
+    nextBtn.disabled = (currentPage >= totalPages);
+    if (currentPage < totalPages) {
+        nextBtn.onclick = function() { onPageClick(currentPage + 1); };
+    }
+    container.appendChild(nextBtn);
 }
 
-function filterRiwayat() {
+function renderAnggotaPagination() {
+    var q = (document.getElementById('search-anggota')?.value || '').toLowerCase().trim();
+    var hub = document.getElementById('filter-hubungan')?.value || '';
+    var allRows = Array.from(document.querySelectorAll('#tbody-anggota .anggota-row'));
+    if (allRows.length === 0) return;
+
+    var matchedRows = allRows.filter(function(r) {
+        return (!q || r.dataset.nama.includes(q) || r.dataset.nik.includes(q)) && (!hub || r.dataset.hubungan === hub);
+    });
+
+    var totalItems = matchedRows.length;
+    var totalPages = Math.max(1, Math.ceil(totalItems / ANGGOTA_PAGE_SIZE));
+
+    if (currentAnggotaPage > totalPages) currentAnggotaPage = totalPages;
+    if (currentAnggotaPage < 1) currentAnggotaPage = 1;
+
+    allRows.forEach(function(r) { r.style.display = 'none'; });
+
+    var startIndex = (currentAnggotaPage - 1) * ANGGOTA_PAGE_SIZE;
+    var endIndex = Math.min(startIndex + ANGGOTA_PAGE_SIZE, totalItems);
+
+    for (var i = startIndex; i < endIndex; i++) {
+        matchedRows[i].style.display = '';
+        var noCell = matchedRows[i].querySelector('td:first-child');
+        if (noCell) noCell.textContent = (i + 1);
+    }
+
+    var emptyRow = document.getElementById('row-empty-anggota');
+    if (emptyRow) {
+        emptyRow.style.display = (totalItems === 0) ? '' : 'none';
+    }
+
+    var summaryEl = document.getElementById('summary-anggota-count');
+    if (summaryEl) {
+        if (totalItems === 0) {
+            summaryEl.textContent = 'Tidak ada anggota keluarga yang sesuai kriteria';
+        } else {
+            summaryEl.innerHTML = 'Menampilkan <strong>' + (startIndex + 1) + ' sampai ' + endIndex + '</strong> dari <strong>' + totalItems + '</strong> anggota';
+        }
+    }
+
+    renderPaginationButtons('pagination-anggota', totalPages, currentAnggotaPage, function(p) {
+        currentAnggotaPage = p;
+        renderAnggotaPagination();
+    });
+}
+
+function filterAnggota(q) {
+    currentAnggotaPage = 1;
+    renderAnggotaPagination();
+}
+
+function renderRiwayatPagination() {
     var q = (document.getElementById('search-riwayat')?.value || '').toLowerCase().trim();
     var jenis = document.getElementById('filter-jenis-riwayat')?.value || '';
     var status = document.getElementById('filter-status-riwayat')?.value || '';
-    var rows = document.querySelectorAll('#tbody-riwayat .riwayat-row');
-    var count = 0;
-    rows.forEach(function(r){
-        var ok = (!q || r.dataset.nama.includes(q)) && 
-                 (!jenis || r.dataset.jenis === jenis) && 
-                 (!status || r.dataset.status === status);
-        r.style.display = ok ? '' : 'none'; 
-        if (ok) count++;
+    var allRows = Array.from(document.querySelectorAll('#tbody-riwayat .riwayat-row'));
+    if (allRows.length === 0) return;
+
+    var matchedRows = allRows.filter(function(r) {
+        return (!q || r.dataset.nama.includes(q)) && 
+               (!jenis || r.dataset.jenis === jenis) && 
+               (!status || r.dataset.status === status);
     });
+
+    var totalItems = matchedRows.length;
+    var totalPages = Math.max(1, Math.ceil(totalItems / RIWAYAT_PAGE_SIZE));
+
+    if (currentRiwayatPage > totalPages) currentRiwayatPage = totalPages;
+    if (currentRiwayatPage < 1) currentRiwayatPage = 1;
+
+    allRows.forEach(function(r) { r.style.display = 'none'; });
+
+    var startIndex = (currentRiwayatPage - 1) * RIWAYAT_PAGE_SIZE;
+    var endIndex = Math.min(startIndex + RIWAYAT_PAGE_SIZE, totalItems);
+
+    for (var i = startIndex; i < endIndex; i++) {
+        matchedRows[i].style.display = '';
+        var noCell = matchedRows[i].querySelector('td:first-child');
+        if (noCell) noCell.textContent = (i + 1);
+    }
+
     var emptyRow = document.getElementById('row-empty-riwayat');
     if (emptyRow) {
-        emptyRow.style.display = (rows.length > 0 && count === 0) ? '' : 'none';
+        emptyRow.style.display = (totalItems === 0) ? '' : 'none';
     }
+
+    var summaryEl = document.getElementById('summary-riwayat-count');
+    if (summaryEl) {
+        if (totalItems === 0) {
+            summaryEl.textContent = 'Tidak ada riwayat pengajuan yang sesuai kriteria';
+        } else {
+            summaryEl.innerHTML = 'Menampilkan <strong>' + (startIndex + 1) + ' sampai ' + endIndex + '</strong> dari <strong>' + totalItems + '</strong> riwayat';
+        }
+    }
+
+    renderPaginationButtons('pagination-riwayat', totalPages, currentRiwayatPage, function(p) {
+        currentRiwayatPage = p;
+        renderRiwayatPagination();
+    });
+}
+
+function filterRiwayat() {
+    currentRiwayatPage = 1;
+    renderRiwayatPagination();
 }
 
 function copyNoKK(noKk) {
@@ -970,6 +1120,12 @@ document.addEventListener('keydown', function(e){
         tutupModalLihatPengajuan();
         tutupModalBatalPengajuan();
     }
+});
+
+// Inisialisasi awal pagination saat halaman selesai dimuat
+document.addEventListener('DOMContentLoaded', function() {
+    renderAnggotaPagination();
+    renderRiwayatPagination();
 });
 </script>
 @endpush

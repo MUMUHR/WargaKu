@@ -453,9 +453,9 @@
         container.innerHTML = '';
 
         if (totalPages <= 1 && totalItems <= SURAT_PAGE_SIZE) {
-            var bPrev = createSuratPageBtn('Previous', true, false, function(){});
+            var bPrev = createSuratPageBtn('« Sebelumnya', true, false, function(){});
             var b1 = createSuratPageBtn('1', false, true, function(){});
-            var bNext = createSuratPageBtn('Next', true, false, function(){});
+            var bNext = createSuratPageBtn('Berikutnya »', true, false, function(){});
             container.appendChild(bPrev);
             container.appendChild(b1);
             container.appendChild(bNext);
@@ -464,7 +464,7 @@
 
         // Previous
         var prevDisabled = (currentSuratPage <= 1);
-        var btnPrev = createSuratPageBtn('Previous', prevDisabled, false, function() {
+        var btnPrev = createSuratPageBtn('« Sebelumnya', prevDisabled, false, function() {
             if (currentSuratPage > 1) {
                 currentSuratPage--;
                 renderSuratPagination();
@@ -486,7 +486,7 @@
 
         // Next
         var nextDisabled = (currentSuratPage >= totalPages);
-        var btnNext = createSuratPageBtn('Next', nextDisabled, false, function() {
+        var btnNext = createSuratPageBtn('Berikutnya »', nextDisabled, false, function() {
             if (currentSuratPage < totalPages) {
                 currentSuratPage++;
                 renderSuratPagination();

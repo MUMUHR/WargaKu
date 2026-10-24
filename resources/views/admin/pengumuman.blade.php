@@ -202,9 +202,9 @@
     <div class="kelola-pagination-bar">
         <div id="pagination-info">Menampilkan <strong>1</strong> sampai <strong>6</strong> dari <strong>12</strong> pengumuman</div>
         <div class="kelola-page-buttons">
-            <button type="button" class="kelola-page-btn kelola-page-btn--disabled" id="btn-prev" disabled>Previous</button>
+            <button type="button" class="kelola-page-btn kelola-page-btn--disabled" id="btn-prev" disabled>« Sebelumnya</button>
             <div id="pagination-numbers" style="display:flex;align-items:center;gap:5px;"></div>
-            <button type="button" class="kelola-page-btn" id="btn-next">Next</button>
+            <button type="button" class="kelola-page-btn" id="btn-next">Berikutnya »</button>
         </div>
     </div>
 </div>

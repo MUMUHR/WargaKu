@@ -333,6 +333,13 @@
             </table>
         </div>
 
+        <div class="warga-pagination-bar" id="pagination-bar-anggota" style="display: flex; justify-content: space-between; align-items: center;">
+            <div id="info-anggota-count" style="font-size: 12.5px; color: #6c757d;">
+                Showing <strong>1 to {{ count($semuaAnggota ?? $anggotaHidup) }}</strong> of <strong>{{ count($semuaAnggota ?? $anggotaHidup) }}</strong> entries
+            </div>
+            <div class="warga-page-buttons" id="pagination-anggota"></div>
+        </div>
+
         <div class="detail-footer-sync">
             <div class="detail-footer-sync__left">
                 <i class='bx bx-info-circle'></i>
@@ -646,6 +653,108 @@
     function tutupModalHapus() {
         document.getElementById('modal-hapus-warga').style.display = 'none';
     }
+
+    // ── Pagination Anggota Keluarga ──
+    var currentAnggotaPage = 1;
+    var ANGGOTA_PAGE_SIZE = 5;
+
+    function renderAnggotaPagination() {
+        var tbody = document.getElementById('detail-anggota-tbody');
+        if (!tbody) return;
+        var allRows = Array.from(tbody.querySelectorAll('tr'));
+        if (allRows.length === 0) return;
+
+        if (allRows.length === 1 && allRows[0].querySelector('td[colspan]')) {
+            var bar = document.getElementById('pagination-bar-anggota');
+            if (bar) bar.style.display = 'none';
+            return;
+        }
+
+        var totalItems = allRows.length;
+        var totalPages = Math.max(1, Math.ceil(totalItems / ANGGOTA_PAGE_SIZE));
+
+        if (currentAnggotaPage > totalPages) currentAnggotaPage = totalPages;
+        if (currentAnggotaPage < 1) currentAnggotaPage = 1;
+
+        allRows.forEach(function(r) { r.style.display = 'none'; });
+
+        var startIndex = (currentAnggotaPage - 1) * ANGGOTA_PAGE_SIZE;
+        var endIndex = Math.min(startIndex + ANGGOTA_PAGE_SIZE, totalItems);
+
+        for (var i = startIndex; i < endIndex; i++) {
+            allRows[i].style.display = '';
+            var noCell = allRows[i].querySelector('td:first-child');
+            if (noCell) noCell.textContent = (i + 1);
+        }
+
+        var infoEl = document.getElementById('info-anggota-count');
+        if (infoEl) {
+            infoEl.innerHTML = 'Menampilkan <strong>' + (startIndex + 1) + ' - ' + endIndex + '</strong> dari <strong>' + totalItems + '</strong> data anggota keluarga';
+        }
+
+        var container = document.getElementById('pagination-anggota');
+        if (!container) return;
+        container.innerHTML = '';
+
+        if (totalPages <= 1) {
+            var bPrev = document.createElement('button');
+            bPrev.type = 'button';
+            bPrev.className = 'warga-page-btn warga-page-btn--disabled';
+            bPrev.textContent = '« Sebelumnya';
+            bPrev.disabled = true;
+
+            var b1 = document.createElement('button');
+            b1.type = 'button';
+            b1.className = 'warga-page-btn warga-page-btn--active';
+            b1.textContent = '1';
+
+            var bNext = document.createElement('button');
+            bNext.type = 'button';
+            bNext.className = 'warga-page-btn warga-page-btn--disabled';
+            bNext.textContent = 'Berikutnya »';
+            bNext.disabled = true;
+
+            container.appendChild(bPrev);
+            container.appendChild(b1);
+            container.appendChild(bNext);
+            return;
+        }
+
+        var bPrev = document.createElement('button');
+        bPrev.type = 'button';
+        bPrev.className = 'warga-page-btn' + (currentAnggotaPage <= 1 ? ' warga-page-btn--disabled' : '');
+        bPrev.textContent = '« Sebelumnya';
+        bPrev.disabled = (currentAnggotaPage <= 1);
+        if (currentAnggotaPage > 1) {
+            bPrev.onclick = function() { currentAnggotaPage--; renderAnggotaPagination(); };
+        }
+        container.appendChild(bPrev);
+
+        for (var p = 1; p <= totalPages; p++) {
+            (function(page) {
+                var btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'warga-page-btn' + (page === currentAnggotaPage ? ' warga-page-btn--active' : '');
+                btn.textContent = page;
+                btn.onclick = function() { currentAnggotaPage = page; renderAnggotaPagination(); };
+                container.appendChild(btn);
+            })(p);
+        }
+
+        var bNext = document.createElement('button');
+        bNext.type = 'button';
+        bNext.className = 'warga-page-btn' + (currentAnggotaPage >= totalPages ? ' warga-page-btn--disabled' : '');
+        bNext.textContent = 'Berikutnya »';
+        bNext.disabled = (currentAnggotaPage >= totalPages);
+        if (currentAnggotaPage < totalPages) {
+            bNext.onclick = function() { currentAnggotaPage++; renderAnggotaPagination(); };
+        }
+        container.appendChild(bNext);
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        renderAnggotaPagination();
+    });
 
     // Keyboard ESC listener
     document.addEventListener('keydown', function(e) {

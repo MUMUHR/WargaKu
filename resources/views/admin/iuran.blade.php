@@ -590,12 +590,18 @@
         container.innerHTML = '';
 
         if (totalPages <= 1) {
+            var bPrev = createPageBtn('« Sebelumnya', true, false, function(){});
+            var b1 = createPageBtn('1', false, true, function(){});
+            var bNext = createPageBtn('Berikutnya »', true, false, function(){});
+            container.appendChild(bPrev);
+            container.appendChild(b1);
+            container.appendChild(bNext);
             return;
         }
 
         // Tombol Prev
         var prevDisabled = (currentTunggakanPage <= 1);
-        var btnPrev = createPageBtn('&lt;', prevDisabled, false, function() {
+        var btnPrev = createPageBtn('« Sebelumnya', prevDisabled, false, function() {
             if (currentTunggakanPage > 1) {
                 currentTunggakanPage--;
                 renderTunggakanPagination();
@@ -617,7 +623,7 @@
 
         // Tombol Next
         var nextDisabled = (currentTunggakanPage >= totalPages);
-        var btnNext = createPageBtn('&gt;', nextDisabled, false, function() {
+        var btnNext = createPageBtn('Berikutnya »', nextDisabled, false, function() {
             if (currentTunggakanPage < totalPages) {
                 currentTunggakanPage++;
                 renderTunggakanPagination();
@@ -749,12 +755,18 @@
         container.innerHTML = '';
 
         if (totalPages <= 1) {
+            var bPrev = createPageBtn('« Sebelumnya', true, false, function(){});
+            var b1 = createPageBtn('1', false, true, function(){});
+            var bNext = createPageBtn('Berikutnya »', true, false, function(){});
+            container.appendChild(bPrev);
+            container.appendChild(b1);
+            container.appendChild(bNext);
             return;
         }
 
         // Tombol Prev
         var prevDisabled = (currentRiwayatPage <= 1);
-        var btnPrev = createPageBtn('&lt;', prevDisabled, false, function() {
+        var btnPrev = createPageBtn('« Sebelumnya', prevDisabled, false, function() {
             if (currentRiwayatPage > 1) {
                 currentRiwayatPage--;
                 renderRiwayatPagination();
@@ -776,7 +788,7 @@
 
         // Tombol Next
         var nextDisabled = (currentRiwayatPage >= totalPages);
-        var btnNext = createPageBtn('&gt;', nextDisabled, false, function() {
+        var btnNext = createPageBtn('Berikutnya »', nextDisabled, false, function() {
             if (currentRiwayatPage < totalPages) {
                 currentRiwayatPage++;
                 renderRiwayatPagination();

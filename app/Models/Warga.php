@@ -239,6 +239,22 @@ class Warga extends Model
     }
 
     /**
+     * Daftar Standar Opsi Pendidikan Terakhir
+     */
+    public const DAFTAR_PENDIDIKAN = [
+        'tidak_belum_sekolah' => 'Tidak / Belum Sekolah (tidak_belum_sekolah)',
+        'belum_tamat_sd'      => 'Belum Tamat SD / Sederajat (belum_tamat_sd)',
+        'sd_sederajat'        => 'SD / Sederajat (sd_sederajat)',
+        'smp_sederajat'       => 'SMP / Sederajat (smp_sederajat)',
+        'sma_sederajat'       => 'SLTA / SMA / SMK / Sederajat (sma_sederajat)',
+        'd1_d2'               => 'Diploma I / II (d1_d2)',
+        'd3'                  => 'Diploma III (d3)',
+        'd4_s1'               => 'Diploma IV / Strata 1 (S1) (d4_s1)',
+        's2'                  => 'Strata 2 (S2) (s2)',
+        's3'                  => 'Strata 3 (S3) (s3)',
+    ];
+
+    /**
      * Helper normalisasi Pendidikan Terakhir
      */
     public static function normalisasiPendidikan(?string $value): ?string
@@ -247,7 +263,7 @@ class Warga extends Model
             return null;
         }
 
-        $v = strtolower(trim(str_replace(['/', '-', ' '], '_', $value)));
+        $v = strtolower(trim(str_replace(['/', '-', ' ', '(', ')'], '_', $value)));
         $allowed = [
             'tidak_belum_sekolah', 'belum_tamat_sd', 'sd_sederajat',
             'smp_sederajat', 'sma_sederajat', 'd1_d2', 'd3', 'd4_s1', 's2', 's3',
@@ -263,13 +279,13 @@ class Warga extends Model
         if (str_contains($v, 's2') || str_contains($v, 'magister')) {
             return 's2';
         }
-        if (str_contains($v, 's1') || str_contains($v, 'sarjana') || str_contains($v, 'd4')) {
+        if (str_contains($v, 'd4_s1') || str_contains($v, 's1') || str_contains($v, 'sarjana') || str_contains($v, 'd4')) {
             return 'd4_s1';
         }
-        if (str_contains($v, 'd3') || str_contains($v, 'diploma_3')) {
+        if (str_contains($v, 'd3') || str_contains($v, 'diploma_3') || str_contains($v, 'diploma_iii')) {
             return 'd3';
         }
-        if (str_contains($v, 'd1') || str_contains($v, 'd2')) {
+        if (str_contains($v, 'd1_d2') || str_contains($v, 'd1') || str_contains($v, 'd2') || str_contains($v, 'diploma_i') || str_contains($v, 'diploma_ii')) {
             return 'd1_d2';
         }
         if (str_contains($v, 'sma') || str_contains($v, 'smk') || str_contains($v, 'slta')) {
@@ -277,6 +293,12 @@ class Warga extends Model
         }
         if (str_contains($v, 'smp') || str_contains($v, 'sltp')) {
             return 'smp_sederajat';
+        }
+        if (str_contains($v, 'belum_tamat') || str_contains($v, 'belum_sd')) {
+            return 'belum_tamat_sd';
+        }
+        if (str_contains($v, 'tidak') || str_contains($v, 'belum_sekolah')) {
+            return 'tidak_belum_sekolah';
         }
         if (str_contains($v, 'sd')) {
             return 'sd_sederajat';

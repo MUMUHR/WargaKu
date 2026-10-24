@@ -237,3 +237,64 @@ it('warga berstatus selain hidup ditolak saat login', function () {
     $this->assertGuest();
 });
 
+it('warga dapat memilih status hubungan dalam keluarga saat mendaftar akun', function () {
+    $response = $this->get(route('register'));
+    $response->assertStatus(200);
+    $response->assertSee('status_hubungan');
+    $response->assertSee('Status dalam Keluarga (SHDK)');
+
+    $postRes = $this->post(route('register.post'), [
+        'no_kk'                 => '3271047777770001',
+        'status_tempat_tinggal' => 'tetap',
+        'no_hp'                 => '081233334444',
+        'nik'                   => '3271045555550002',
+        'nama'                  => 'Dewi Lestari',
+        'status_hubungan'       => 'istri',
+        'jenis_kelamin'         => 'P',
+        'agama'                 => 'Islam',
+        'pendidikan'            => 'S1',
+        'pekerjaan'             => 'Guru',
+        'alamat'                => 'Jl. Anggrek Blok C No. 5, RT 04',
+    ]);
+
+    $postRes->assertRedirect(route('warga.beranda'));
+
+    $warga = \App\Models\Warga::where('nik', '3271045555550002')->first();
+    expect($warga)->not->toBeNull();
+    expect($warga->status_hubungan)->toBe('istri');
+    expect($warga->keluarga->no_kk)->toBe('3271047777770001');
+
+    $this->assertAuthenticated();
+    expect(auth()->user()->username)->toBe('3271045555550002');
+});
+
+it('dropdown pendidikan terakhir di register dan form konsisten dengan 10 opsi standar', function () {
+    $response = $this->get(route('register'));
+    $response->assertStatus(200);
+
+    foreach (\App\Models\Warga::DAFTAR_PENDIDIKAN as $enumKey => $label) {
+        $response->assertSee($label);
+    }
+
+    $postRes = $this->post(route('register.post'), [
+        'no_kk'                 => '3271047777770003',
+        'status_tempat_tinggal' => 'tetap',
+        'no_hp'                 => '081233334499',
+        'nik'                   => '3271045555550003',
+        'nama'                  => 'Budi Santoso',
+        'status_hubungan'       => 'kepala_keluarga',
+        'jenis_kelamin'         => 'L',
+        'agama'                 => 'Islam',
+        'pendidikan'            => 'Diploma I / II (d1_d2)',
+        'pekerjaan'             => 'Teknisi',
+        'alamat'                => 'Jl. Anggrek Blok C No. 6, RT 04',
+    ]);
+
+    $postRes->assertRedirect(route('warga.beranda'));
+
+    $warga = \App\Models\Warga::where('nik', '3271045555550003')->first();
+    expect($warga)->not->toBeNull();
+    expect($warga->pendidikan_terakhir)->toBe('d1_d2');
+});
+
+

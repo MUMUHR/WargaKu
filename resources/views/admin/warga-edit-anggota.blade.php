@@ -27,17 +27,17 @@
         'jk' => (($warga->jenis_kelamin ?? 'laki_laki') === 'perempuan') ? 'Perempuan' : 'Laki-laki',
         'agama' => ucfirst($warga->agama ?? 'Islam'),
         'pendidikan' => match($warga->pendidikan_terakhir ?? '') {
-            'tidak_belum_sekolah' => 'Tidak/Belum Sekolah',
-            'belum_tamat_sd' => 'Belum Tamat SD',
-            'sd_sederajat' => 'SD/Sederajat',
-            'smp_sederajat' => 'SMP/Sederajat',
-            'sma_sederajat' => 'SMA/SMK/Sederajat',
-            'd1_d2' => 'Diploma I/II (D1/D2)',
-            'd3' => 'Diploma (D3)',
-            'd4_s1' => 'Sarjana (S1/D4)',
-            's2' => 'Magister (S2)',
-            's3' => 'Doktor (S3)',
-            default => 'Sarjana (S1/D4)'
+            'tidak_belum_sekolah' => 'Tidak / Belum Sekolah (tidak_belum_sekolah)',
+            'belum_tamat_sd' => 'Belum Tamat SD / Sederajat (belum_tamat_sd)',
+            'sd_sederajat' => 'SD / Sederajat (sd_sederajat)',
+            'smp_sederajat' => 'SMP / Sederajat (smp_sederajat)',
+            'sma_sederajat' => 'SLTA / SMA / SMK / Sederajat (sma_sederajat)',
+            'd1_d2' => 'Diploma I / II (d1_d2)',
+            'd3' => 'Diploma III (d3)',
+            'd4_s1' => 'Diploma IV / Strata 1 (S1) (d4_s1)',
+            's2' => 'Strata 2 (S2) (s2)',
+            's3' => 'Strata 3 (S3) (s3)',
+            default => 'Diploma IV / Strata 1 (S1) (d4_s1)'
         },
         'pekerjaan' => $warga->pekerjaan ?? '',
         'alamat' => $warga->alamat ?? ($alamatKeluarga ?? ''),
@@ -220,16 +220,16 @@
                         <label class="form-field-label" for="input-pendidikan">Pendidikan Terakhir <span class="req">*</span></label>
                         <select name="pendidikan" class="form-select-warga" id="input-pendidikan" required>
                             <option value="">-- Pilih Pendidikan --</option>
-                            <option value="Tidak/Belum Sekolah" {{ $w['pendidikan'] === 'Tidak/Belum Sekolah' ? 'selected' : '' }}>Tidak/Belum Sekolah</option>
-                            <option value="Belum Tamat SD" {{ $w['pendidikan'] === 'Belum Tamat SD' ? 'selected' : '' }}>Belum Tamat SD</option>
-                            <option value="SD/Sederajat" {{ $w['pendidikan'] === 'SD/Sederajat' ? 'selected' : '' }}>SD / Sederajat</option>
-                            <option value="SMP/Sederajat" {{ $w['pendidikan'] === 'SMP/Sederajat' ? 'selected' : '' }}>SMP / Sederajat</option>
-                            <option value="SMA/SMK/Sederajat" {{ $w['pendidikan'] === 'SMA/SMK/Sederajat' ? 'selected' : '' }}>SMA / SMK / Sederajat</option>
-                            <option value="Diploma I/II (D1/D2)" {{ $w['pendidikan'] === 'Diploma I/II (D1/D2)' ? 'selected' : '' }}>Diploma I / II (D1/D2)</option>
-                            <option value="Diploma (D3)" {{ $w['pendidikan'] === 'Diploma (D3)' ? 'selected' : '' }}>Diploma (D3)</option>
-                            <option value="Sarjana (S1/D4)" {{ $w['pendidikan'] === 'Sarjana (S1/D4)' ? 'selected' : '' }}>Sarjana / Diploma IV (S1/D4)</option>
-                            <option value="Magister (S2)" {{ $w['pendidikan'] === 'Magister (S2)' ? 'selected' : '' }}>Magister (S2)</option>
-                            <option value="Doktor (S3)" {{ $w['pendidikan'] === 'Doktor (S3)' ? 'selected' : '' }}>Doktor (S3)</option>
+                            <option value="Tidak / Belum Sekolah (tidak_belum_sekolah)" {{ $w['pendidikan'] === 'Tidak / Belum Sekolah (tidak_belum_sekolah)' ? 'selected' : '' }}>Tidak / Belum Sekolah (tidak_belum_sekolah)</option>
+                            <option value="Belum Tamat SD / Sederajat (belum_tamat_sd)" {{ $w['pendidikan'] === 'Belum Tamat SD / Sederajat (belum_tamat_sd)' ? 'selected' : '' }}>Belum Tamat SD / Sederajat (belum_tamat_sd)</option>
+                            <option value="SD / Sederajat (sd_sederajat)" {{ $w['pendidikan'] === 'SD / Sederajat (sd_sederajat)' ? 'selected' : '' }}>SD / Sederajat (sd_sederajat)</option>
+                            <option value="SMP / Sederajat (smp_sederajat)" {{ $w['pendidikan'] === 'SMP / Sederajat (smp_sederajat)' ? 'selected' : '' }}>SMP / Sederajat (smp_sederajat)</option>
+                            <option value="SLTA / SMA / SMK / Sederajat (sma_sederajat)" {{ $w['pendidikan'] === 'SLTA / SMA / SMK / Sederajat (sma_sederajat)' ? 'selected' : '' }}>SLTA / SMA / SMK / Sederajat (sma_sederajat)</option>
+                            <option value="Diploma I / II (d1_d2)" {{ $w['pendidikan'] === 'Diploma I / II (d1_d2)' ? 'selected' : '' }}>Diploma I / II (d1_d2)</option>
+                            <option value="Diploma III (d3)" {{ $w['pendidikan'] === 'Diploma III (d3)' ? 'selected' : '' }}>Diploma III (d3)</option>
+                            <option value="Diploma IV / Strata 1 (S1) (d4_s1)" {{ $w['pendidikan'] === 'Diploma IV / Strata 1 (S1) (d4_s1)' ? 'selected' : '' }}>Diploma IV / Strata 1 (S1) (d4_s1)</option>
+                            <option value="Strata 2 (S2) (s2)" {{ $w['pendidikan'] === 'Strata 2 (S2) (s2)' ? 'selected' : '' }}>Strata 2 (S2) (s2)</option>
+                            <option value="Strata 3 (S3) (s3)" {{ $w['pendidikan'] === 'Strata 3 (S3) (s3)' ? 'selected' : '' }}>Strata 3 (S3) (s3)</option>
                         </select>
                     </div>
                     <div class="form-field">

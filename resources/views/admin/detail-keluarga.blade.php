@@ -238,19 +238,8 @@
                             default => ucfirst(str_replace('_', ' ', $m->status_hubungan))
                         };
 
-                        $pendidikanLabel = match($m->pendidikan_terakhir) {
-                            'tidak_belum_sekolah' => 'Tidak/Belum Sekolah',
-                            'belum_tamat_sd' => 'Belum Tamat SD',
-                            'sd_sederajat' => 'SD / Sederajat',
-                            'smp_sederajat' => 'SMP / Sederajat',
-                            'sma_sederajat' => 'SMA / SMK Sederajat',
-                            'd1_d2' => 'Diploma 1/2',
-                            'd3' => 'Diploma 3',
-                            'd4_s1' => 'Sarjana (S1/D4)',
-                            's2' => 'Magister (S2)',
-                            's3' => 'Doktor (S3)',
-                            default => $m->pendidikan_terakhir ? strtoupper(str_replace('_', ' ', $m->pendidikan_terakhir)) : '-'
-                        };
+                        $pendidikanLabel = \App\Models\Warga::DAFTAR_PENDIDIKAN[$m->pendidikan_terakhir]
+                            ?? ($m->pendidikan_terakhir ? strtoupper(str_replace('_', ' ', $m->pendidikan_terakhir)) : '-');
 
                         $tglLahirStr = $m->tanggal_lahir ? $m->tanggal_lahir->isoFormat('D MMMM Y') : '-';
                     @endphp

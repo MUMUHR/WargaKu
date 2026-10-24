@@ -172,16 +172,16 @@
                         <label class="form-field-label" for="input-pendidikan">Pendidikan Terakhir <span class="req">*</span></label>
                         <select name="pendidikan" class="form-select-warga" id="input-pendidikan" required>
                             <option value="">-- Pilih Pendidikan --</option>
-                            <option value="Tidak/Belum Sekolah" {{ old('pendidikan') === 'Tidak/Belum Sekolah' ? 'selected' : '' }}>Tidak/Belum Sekolah</option>
-                            <option value="Belum Tamat SD" {{ old('pendidikan') === 'Belum Tamat SD' ? 'selected' : '' }}>Belum Tamat SD</option>
-                            <option value="SD/Sederajat" {{ old('pendidikan') === 'SD/Sederajat' ? 'selected' : '' }}>SD / Sederajat</option>
-                            <option value="SMP/Sederajat" {{ old('pendidikan') === 'SMP/Sederajat' ? 'selected' : '' }}>SMP / Sederajat</option>
-                            <option value="SMA/SMK/Sederajat" {{ old('pendidikan') === 'SMA/SMK/Sederajat' ? 'selected' : '' }}>SMA / SMK / Sederajat</option>
-                            <option value="Diploma I/II (D1/D2)" {{ old('pendidikan') === 'Diploma I/II (D1/D2)' ? 'selected' : '' }}>Diploma I / II (D1/D2)</option>
-                            <option value="Diploma (D3)" {{ old('pendidikan') === 'Diploma (D3)' ? 'selected' : '' }}>Diploma (D3)</option>
-                            <option value="Sarjana (S1/D4)" {{ old('pendidikan') === 'Sarjana (S1/D4)' ? 'selected' : '' }}>Sarjana / Diploma IV (S1/D4)</option>
-                            <option value="Magister (S2)" {{ old('pendidikan') === 'Magister (S2)' ? 'selected' : '' }}>Magister (S2)</option>
-                            <option value="Doktor (S3)" {{ old('pendidikan') === 'Doktor (S3)' ? 'selected' : '' }}>Doktor (S3)</option>
+                            <option value="Tidak / Belum Sekolah (tidak_belum_sekolah)" {{ old('pendidikan') === 'Tidak / Belum Sekolah (tidak_belum_sekolah)' ? 'selected' : '' }}>Tidak / Belum Sekolah (tidak_belum_sekolah)</option>
+                            <option value="Belum Tamat SD / Sederajat (belum_tamat_sd)" {{ old('pendidikan') === 'Belum Tamat SD / Sederajat (belum_tamat_sd)' ? 'selected' : '' }}>Belum Tamat SD / Sederajat (belum_tamat_sd)</option>
+                            <option value="SD / Sederajat (sd_sederajat)" {{ old('pendidikan') === 'SD / Sederajat (sd_sederajat)' ? 'selected' : '' }}>SD / Sederajat (sd_sederajat)</option>
+                            <option value="SMP / Sederajat (smp_sederajat)" {{ old('pendidikan') === 'SMP / Sederajat (smp_sederajat)' ? 'selected' : '' }}>SMP / Sederajat (smp_sederajat)</option>
+                            <option value="SLTA / SMA / SMK / Sederajat (sma_sederajat)" {{ old('pendidikan') === 'SLTA / SMA / SMK / Sederajat (sma_sederajat)' ? 'selected' : '' }}>SLTA / SMA / SMK / Sederajat (sma_sederajat)</option>
+                            <option value="Diploma I / II (d1_d2)" {{ old('pendidikan') === 'Diploma I / II (d1_d2)' ? 'selected' : '' }}>Diploma I / II (d1_d2)</option>
+                            <option value="Diploma III (d3)" {{ old('pendidikan') === 'Diploma III (d3)' ? 'selected' : '' }}>Diploma III (d3)</option>
+                            <option value="Diploma IV / Strata 1 (S1) (d4_s1)" {{ old('pendidikan') === 'Diploma IV / Strata 1 (S1) (d4_s1)' ? 'selected' : '' }}>Diploma IV / Strata 1 (S1) (d4_s1)</option>
+                            <option value="Strata 2 (S2) (s2)" {{ old('pendidikan') === 'Strata 2 (S2) (s2)' ? 'selected' : '' }}>Strata 2 (S2) (s2)</option>
+                            <option value="Strata 3 (S3) (s3)" {{ old('pendidikan') === 'Strata 3 (S3) (s3)' ? 'selected' : '' }}>Strata 3 (S3) (s3)</option>
                         </select>
                     </div>
                     <div class="form-field">

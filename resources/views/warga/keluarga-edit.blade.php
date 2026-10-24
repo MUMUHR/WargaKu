@@ -310,9 +310,16 @@
                                             <select id="new-pendidikan" name="new_pendidikan" class="wf-select">
                                                 @php
                                                     $opsiPendidikan = [
-                                                        'Tidak / Belum Sekolah', 'Belum Tamat SD / Sederajat', 'SD / Sederajat',
-                                                        'SMP / Sederajat', 'SLTA / Sederajat', 'Diploma I / II', 'Diploma III',
-                                                        'Diploma IV / Strata 1 (S1)', 'Strata 2 (S2)', 'Strata 3 (S3)'
+                                                        'Tidak / Belum Sekolah (tidak_belum_sekolah)',
+                                                        'Belum Tamat SD / Sederajat (belum_tamat_sd)',
+                                                        'SD / Sederajat (sd_sederajat)',
+                                                        'SMP / Sederajat (smp_sederajat)',
+                                                        'SLTA / SMA / SMK / Sederajat (sma_sederajat)',
+                                                        'Diploma I / II (d1_d2)',
+                                                        'Diploma III (d3)',
+                                                        'Diploma IV / Strata 1 (S1) (d4_s1)',
+                                                        'Strata 2 (S2) (s2)',
+                                                        'Strata 3 (S3) (s3)'
                                                     ];
                                                 @endphp
                                                 @foreach($opsiPendidikan as $pdd)

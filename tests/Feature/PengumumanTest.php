@@ -129,3 +129,22 @@ it('admin dapat menghapus pengumuman', function () {
         'id' => $toDelete->id,
     ]);
 });
+
+it('dashboard admin tidak menampilkan thumbnail jika pengumuman dibuat tanpa thumbnail', function () {
+    Pengumuman::truncate();
+
+    $tanpaFoto = Pengumuman::create([
+        'judul'            => 'Pengumuman Tanpa Gambar ' . uniqid(),
+        'isi'              => 'Konten tanpa berkas gambar thumbnail.',
+        'gambar'           => null,
+        'status_publikasi' => StatusPublikasi::PUBLISH,
+        'admin_id'         => $this->admin->id,
+    ]);
+
+    $response = $this->actingAs($this->admin)->get(route('admin.beranda'));
+    $response->assertStatus(200);
+    $response->assertSee($tanpaFoto->judul);
+    $response->assertDontSee('dash-pengumuman-thumb');
+    $response->assertDontSee('bg_hero.png');
+});
+

@@ -46,9 +46,10 @@ class RegisteredUserController extends Controller
             'no_kk'                 => ['required', 'string', 'size:16'],
             'status_tempat_tinggal' => ['required', 'in:tetap,kontrak,kost,menumpang'],
 
-            // Identitas Pendaftar Utama
+            // Identitas Pendaftar
             'nik'                   => ['required', 'string', 'size:16'],
             'nama'                  => ['required', 'string', 'max:100'],
+            'status_hubungan'       => ['nullable', 'string'],
             'jenis_kelamin'         => ['required', 'in:L,P'],
 
             // Alamat
@@ -118,6 +119,8 @@ class RegisteredUserController extends Controller
 
         // Gunakan DB Transaction agar pembuatan KK, Akun User, dan data Warga atomik
         DB::transaction(function () use ($request, $existingWarga, $noKk, $nik) {
+            $statusHubungan = Warga::normalisasiStatusHubungan($request->input('status_hubungan')) ?? 'kepala_keluarga';
+
             // 1. Buat record Keluarga Baru
             $keluarga = Keluarga::create([
                 'no_kk'          => $noKk,
@@ -156,7 +159,7 @@ class RegisteredUserController extends Controller
                     'pendidikan_terakhir' => $this->mapPendidikan($request->pendidikan ?? null) ?? $existingWarga->pendidikan_terakhir,
                     'pekerjaan'           => $request->pekerjaan ?? $existingWarga->pekerjaan,
                     'alamat'              => $request->alamat,
-                    'status_hubungan'     => 'kepala_keluarga',
+                    'status_hubungan'     => $statusHubungan,
                     'status_warga'        => 'hidup',
                 ]);
             } else {
@@ -172,7 +175,7 @@ class RegisteredUserController extends Controller
                     'pendidikan_terakhir' => $this->mapPendidikan($request->pendidikan ?? null),
                     'pekerjaan'           => $request->pekerjaan ?? null,
                     'alamat'              => $request->alamat,
-                    'status_hubungan'     => 'kepala_keluarga',
+                    'status_hubungan'     => $statusHubungan,
                     'status_warga'        => 'hidup',
                 ]);
             }
@@ -191,16 +194,6 @@ class RegisteredUserController extends Controller
      */
     private function mapPendidikan(?string $value): ?string
     {
-        $map = [
-            'SD'              => 'sd_sederajat',
-            'SMP'             => 'smp_sederajat',
-            'SMA/SMK'         => 'sma_sederajat',
-            'D3'              => 'd3',
-            'S1'              => 'd4_s1',
-            'S2/S3'           => 's2',
-            'Tidak/Belum Sekolah' => 'tidak_belum_sekolah',
-        ];
-
-        return $map[$value] ?? null;
+        return Warga::normalisasiPendidikan($value);
     }
 }

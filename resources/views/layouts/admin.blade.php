@@ -120,7 +120,7 @@
     </div>
 
     <footer class="admin-footer" role="contentinfo">
-        <span>Copyright &copy; {{ date('Y') }} <a href="{{ route('home') }}" class="admin-footer__link">WargaKu RT 04</a>. All rights reserved.</span>
+        <span>Copyright &copy; 2026 <a href="{{ route('home') }}" class="admin-footer__link">WargaKu RT 04</a>. All rights reserved.</span>
     </footer>
 </div>
 

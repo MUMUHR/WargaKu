@@ -57,7 +57,7 @@
             {{-- Header Judul & Deskripsi --}}
             <header class="register-header">
                 <h1 class="register-title">Daftar Akun Warga Baru</h1>
-                <p class="register-subtitle">Lengkapi data Kartu Keluarga & identitas Kepala Keluarga / Pendaftar Utama</p>
+                <p class="register-subtitle">Lengkapi data Kartu Keluarga &amp; identitas warga / pendaftar akun</p>
             </header>
 
             {{-- Pesan Error Validasi --}}
@@ -155,19 +155,19 @@
                     </div>
                 </div>
 
-                {{-- ═══ SECTION 2: BIODATA PENDAFTAR UTAMA ═══ --}}
+                {{-- ═══ SECTION 2: BIODATA PENDAFTAR AKUN ═══ --}}
                 <div class="form-section-title">
                     <svg viewBox="0 0 24 24" aria-hidden="true">
                         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
                         <circle cx="12" cy="7" r="4"/>
                     </svg>
-                    <span>Biodata Pendaftar Utama</span>
+                    <span>Biodata Pendaftar Akun</span>
                 </div>
 
                 {{-- Baris 3: NIK & Nama Lengkap Sesuai KTP --}}
                 <div class="form-row-2">
                     <div class="form-group">
-                        <label for="nik" class="form-label">NIK Pendaftar Utama<span class="req">*</span></label>
+                        <label for="nik" class="form-label">NIK Pendaftar<span class="req">*</span></label>
                         <div class="input-icon-wrap">
                             <span class="input-icon-left" aria-hidden="true">
                                 <svg viewBox="0 0 24 24">
@@ -211,7 +211,36 @@
                     </div>
                 </div>
 
-                {{-- Baris 4: Tempat Lahir & Tanggal Lahir --}}
+                {{-- Baris 4: Status dalam Keluarga (SHDK) & Jenis Kelamin --}}
+                <div class="form-row-2">
+                    <div class="form-group">
+                        <label for="status_hubungan" class="form-label">Status dalam Keluarga (SHDK)<span class="req">*</span></label>
+                        <select name="status_hubungan" id="status_hubungan" class="form-control form-control--no-icon" required>
+                            <option value="" disabled {{ old('status_hubungan') ? '' : 'selected' }}>-- Pilih Status dalam Keluarga --</option>
+                            <option value="kepala_keluarga" {{ old('status_hubungan', 'kepala_keluarga') === 'kepala_keluarga' ? 'selected' : '' }}>Kepala Keluarga</option>
+                            <option value="suami" {{ old('status_hubungan') === 'suami' ? 'selected' : '' }}>Suami</option>
+                            <option value="istri" {{ old('status_hubungan') === 'istri' ? 'selected' : '' }}>Istri</option>
+                            <option value="anak" {{ old('status_hubungan') === 'anak' ? 'selected' : '' }}>Anak</option>
+                            <option value="menantu" {{ old('status_hubungan') === 'menantu' ? 'selected' : '' }}>Menantu</option>
+                            <option value="cucu" {{ old('status_hubungan') === 'cucu' ? 'selected' : '' }}>Cucu</option>
+                            <option value="orang_tua" {{ old('status_hubungan') === 'orang_tua' ? 'selected' : '' }}>Orang Tua</option>
+                            <option value="mertua" {{ old('status_hubungan') === 'mertua' ? 'selected' : '' }}>Mertua</option>
+                            <option value="famili_lain" {{ old('status_hubungan') === 'famili_lain' ? 'selected' : '' }}>Famili Lain</option>
+                            <option value="lainnya" {{ old('status_hubungan') === 'lainnya' ? 'selected' : '' }}>Lainnya</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="jenis_kelamin" class="form-label">Jenis Kelamin<span class="req">*</span></label>
+                        <select name="jenis_kelamin" id="jenis_kelamin" class="form-control form-control--no-icon" required>
+                            <option value="" disabled {{ old('jenis_kelamin') ? '' : 'selected' }}>-- Pilih Jenis Kelamin --</option>
+                            <option value="L" {{ old('jenis_kelamin') === 'L' ? 'selected' : '' }}>Laki-laki</option>
+                            <option value="P" {{ old('jenis_kelamin') === 'P' ? 'selected' : '' }}>Perempuan</option>
+                        </select>
+                    </div>
+                </div>
+
+                {{-- Baris 5: Tempat Lahir & Tanggal Lahir --}}
                 <div class="form-row-2">
                     <div class="form-group">
                         <label for="tempat_lahir" class="form-label">Tempat Lahir</label>
@@ -247,17 +276,8 @@
                     </div>
                 </div>
 
-                {{-- Baris 5: Jenis Kelamin & Agama --}}
+                {{-- Baris 6: Agama & Pendidikan Terakhir --}}
                 <div class="form-row-2">
-                    <div class="form-group">
-                        <label for="jenis_kelamin" class="form-label">Jenis Kelamin<span class="req">*</span></label>
-                        <select name="jenis_kelamin" id="jenis_kelamin" class="form-control form-control--no-icon" required>
-                            <option value="" disabled {{ old('jenis_kelamin') ? '' : 'selected' }}>-- Pilih Jenis Kelamin --</option>
-                            <option value="L" {{ old('jenis_kelamin') === 'L' ? 'selected' : '' }}>Laki-laki</option>
-                            <option value="P" {{ old('jenis_kelamin') === 'P' ? 'selected' : '' }}>Perempuan</option>
-                        </select>
-                    </div>
-
                     <div class="form-group">
                         <label for="agama" class="form-label">Agama</label>
                         <select name="agama" id="agama" class="form-control form-control--no-icon">
@@ -269,23 +289,26 @@
                             <option value="Konghucu" {{ old('agama') === 'Konghucu' ? 'selected' : '' }}>Konghucu</option>
                         </select>
                     </div>
-                </div>
 
-                {{-- Baris 6: Pendidikan Terakhir & Pekerjaan --}}
-                <div class="form-row-2">
                     <div class="form-group">
                         <label for="pendidikan" class="form-label">Pendidikan Terakhir</label>
                         <select name="pendidikan" id="pendidikan" class="form-control form-control--no-icon">
-                            <option value="SMA/SMK" {{ old('pendidikan', 'SMA/SMK') === 'SMA/SMK' ? 'selected' : '' }}>SMA/SMK/Sederajat</option>
-                            <option value="SD" {{ old('pendidikan') === 'SD' ? 'selected' : '' }}>SD/Sederajat</option>
-                            <option value="SMP" {{ old('pendidikan') === 'SMP' ? 'selected' : '' }}>SMP/Sederajat</option>
-                            <option value="D3" {{ old('pendidikan') === 'D3' ? 'selected' : '' }}>Diploma (D3)</option>
-                            <option value="S1" {{ old('pendidikan') === 'S1' ? 'selected' : '' }}>Sarjana (D4/S1)</option>
-                            <option value="S2/S3" {{ old('pendidikan') === 'S2/S3' ? 'selected' : '' }}>Magister/Doktor (S2/S3)</option>
-                            <option value="Tidak/Belum Sekolah" {{ old('pendidikan') === 'Tidak/Belum Sekolah' ? 'selected' : '' }}>Tidak/Belum Sekolah</option>
+                            <option value="Tidak / Belum Sekolah (tidak_belum_sekolah)" {{ old('pendidikan') === 'Tidak / Belum Sekolah (tidak_belum_sekolah)' ? 'selected' : '' }}>Tidak / Belum Sekolah (tidak_belum_sekolah)</option>
+                            <option value="Belum Tamat SD / Sederajat (belum_tamat_sd)" {{ old('pendidikan') === 'Belum Tamat SD / Sederajat (belum_tamat_sd)' ? 'selected' : '' }}>Belum Tamat SD / Sederajat (belum_tamat_sd)</option>
+                            <option value="SD / Sederajat (sd_sederajat)" {{ old('pendidikan') === 'SD / Sederajat (sd_sederajat)' ? 'selected' : '' }}>SD / Sederajat (sd_sederajat)</option>
+                            <option value="SMP / Sederajat (smp_sederajat)" {{ old('pendidikan') === 'SMP / Sederajat (smp_sederajat)' ? 'selected' : '' }}>SMP / Sederajat (smp_sederajat)</option>
+                            <option value="SLTA / SMA / SMK / Sederajat (sma_sederajat)" {{ old('pendidikan', 'SLTA / SMA / SMK / Sederajat (sma_sederajat)') === 'SLTA / SMA / SMK / Sederajat (sma_sederajat)' ? 'selected' : '' }}>SLTA / SMA / SMK / Sederajat (sma_sederajat)</option>
+                            <option value="Diploma I / II (d1_d2)" {{ old('pendidikan') === 'Diploma I / II (d1_d2)' ? 'selected' : '' }}>Diploma I / II (d1_d2)</option>
+                            <option value="Diploma III (d3)" {{ old('pendidikan') === 'Diploma III (d3)' ? 'selected' : '' }}>Diploma III (d3)</option>
+                            <option value="Diploma IV / Strata 1 (S1) (d4_s1)" {{ old('pendidikan') === 'Diploma IV / Strata 1 (S1) (d4_s1)' ? 'selected' : '' }}>Diploma IV / Strata 1 (S1) (d4_s1)</option>
+                            <option value="Strata 2 (S2) (s2)" {{ old('pendidikan') === 'Strata 2 (S2) (s2)' ? 'selected' : '' }}>Strata 2 (S2) (s2)</option>
+                            <option value="Strata 3 (S3) (s3)" {{ old('pendidikan') === 'Strata 3 (S3) (s3)' ? 'selected' : '' }}>Strata 3 (S3) (s3)</option>
                         </select>
                     </div>
+                </div>
 
+                {{-- Baris 7: Pekerjaan --}}
+                <div class="form-row-1">
                     <div class="form-group">
                         <label for="pekerjaan" class="form-label">Pekerjaan</label>
                         <div class="input-icon-wrap">
@@ -299,7 +322,7 @@
                                    name="pekerjaan"
                                    id="pekerjaan"
                                    class="form-control"
-                                   placeholder="Karyawan Swasta, Wiraswasta, PNS"
+                                   placeholder="Karyawan Swasta, Wiraswasta, PNS, Pelajar/Mahasiswa"
                                    value="{{ old('pekerjaan') }}">
                         </div>
                     </div>

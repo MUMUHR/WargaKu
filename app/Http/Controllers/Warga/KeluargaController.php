@@ -15,14 +15,16 @@ use Illuminate\View\View;
 class KeluargaController extends Controller
 {
     private array $mapPendidikan = [
-        'tidak_belum_sekolah' => 'Tidak / Belum Sekolah',
-        'sd_sederajat' => 'SD / Sederajat',
-        'smp_sederajat' => 'SMP / Sederajat',
-        'sma_sederajat' => 'SMA / Sederajat',
-        'd1_d3' => 'D1 - D3',
-        'd4_s1' => 'Diploma IV / Strata 1 (S1)',
-        's2' => 'Strata 2 (S2)',
-        's3' => 'Strata 3 (S3)',
+        'tidak_belum_sekolah' => 'Tidak / Belum Sekolah (tidak_belum_sekolah)',
+        'belum_tamat_sd'      => 'Belum Tamat SD / Sederajat (belum_tamat_sd)',
+        'sd_sederajat'        => 'SD / Sederajat (sd_sederajat)',
+        'smp_sederajat'       => 'SMP / Sederajat (smp_sederajat)',
+        'sma_sederajat'       => 'SLTA / SMA / SMK / Sederajat (sma_sederajat)',
+        'd1_d2'               => 'Diploma I / II (d1_d2)',
+        'd3'                  => 'Diploma III (d3)',
+        'd4_s1'               => 'Diploma IV / Strata 1 (S1) (d4_s1)',
+        's2'                  => 'Strata 2 (S2) (s2)',
+        's3'                  => 'Strata 3 (S3) (s3)',
     ];
 
     /**
@@ -349,8 +351,8 @@ class KeluargaController extends Controller
                 'new' => strtolower(trim((string)$request->input('new_agama', $warga->agama ?? 'islam'))),
             ],
             'pendidikan_terakhir' => [
-                'old' => strtolower(trim((string)$warga->pendidikan_terakhir)),
-                'new' => strtolower(trim((string)$request->input('new_pendidikan', $warga->pendidikan_terakhir))),
+                'old' => (string)($this->mapPendidikan[$warga->pendidikan_terakhir] ?? $warga->pendidikan_terakhir),
+                'new' => (string)($this->mapPendidikan[Warga::normalisasiPendidikan($request->input('new_pendidikan', $warga->pendidikan_terakhir))] ?? $request->input('new_pendidikan', $warga->pendidikan_terakhir)),
             ],
             'pekerjaan' => [
                 'old' => trim((string)($warga->pekerjaan ?? '-')),

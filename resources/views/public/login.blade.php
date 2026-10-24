@@ -82,7 +82,7 @@
 
                 {{-- Field NIK atau Username --}}
                 <div class="form-group">
-                    <label for="username" class="form-label">NIK atau Username</label>
+                    <label for="username" class="form-label">NIK (16 Digit) atau Username</label>
                     <div class="input-wrapper">
                         <input type="text"
                                name="username"

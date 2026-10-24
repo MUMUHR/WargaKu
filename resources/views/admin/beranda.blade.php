@@ -113,12 +113,15 @@
                     $statusVal = is_object($p->status_publikasi) ? $p->status_publikasi->value : $p->status_publikasi;
                     $penulis = $p->admin ? ($p->admin->nama ?? $p->admin->name ?? 'Admin RT') : 'Admin RT';
                     $tanggal = $p->created_at ? $p->created_at->format('d M Y') : '-';
-                    $pImg = $p->gambar
+                    $hasImg = !empty($p->gambar);
+                    $pImg = $hasImg
                         ? (Str::startsWith($p->gambar, ['http', 'images/', 'storage/']) ? asset($p->gambar) : asset('storage/' . $p->gambar))
-                        : asset('bg_hero.png');
+                        : null;
                 @endphp
                 <div class="dash-pengumuman-item">
-                    <img src="{{ $pImg }}" alt="{{ $p->judul }}" class="dash-pengumuman-thumb" onerror="this.src='{{ asset('bg_hero.png') }}'">
+                    @if($hasImg)
+                        <img src="{{ $pImg }}" alt="{{ $p->judul }}" class="dash-pengumuman-thumb" onerror="this.style.display='none'">
+                    @endif
                     <div class="dash-pengumuman-content">
                         <div class="dash-pengumuman-meta">
                             @if($statusVal === 'publish')

@@ -1376,3 +1376,10 @@
     line-height: 1.6;
 }
 
+/* Indikator Input yang Telah Dimodifikasi */
+.wf-input-modified {
+    border-color: #16a34a !important;
+    background-color: #f0fdf4 !important;
+    box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.15) !important;
+}
+

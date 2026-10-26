@@ -242,8 +242,9 @@ class KeluargaController extends Controller
         ));
     }
 
+    
     /**
-     * Menampilkan Formulir Pengajuan Perubahan Data Warga
+     * Menampilkan Edit Data Keluarga
      */
     public function tampilkanFormEdit(Request $request, ?string $nik = null): View
     {

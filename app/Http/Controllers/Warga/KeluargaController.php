@@ -6,26 +6,26 @@ use App\Http\Controllers\Controller;
 use App\Models\Keluarga;
 use App\Models\Riwayat_Perubahan;
 use App\Models\Warga;
+use App\Services\KependudukanService;
+use App\Services\PengajuanPerubahanService;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
+use InvalidArgumentException;
 
+/**
+ * Controller untuk Mengelola Informasi Keluarga & Pengajuan Perubahan Data di Area Warga
+ */
 class KeluargaController extends Controller
 {
-    private array $mapPendidikan = [
-        'tidak_belum_sekolah' => 'Tidak / Belum Sekolah',
-        'belum_tamat_sd' => 'Belum Tamat SD / Sederajat',
-        'sd_sederajat' => 'SD / Sederajat',
-        'smp_sederajat' => 'SMP / Sederajat',
-        'sma_sederajat' => 'SLTA / SMA / SMK / Sederajat',
-        'd1_d2' => 'Diploma I / II',
-        'd3' => 'Diploma III',
-        'd4_s1' => 'Diploma IV / Strata 1 (S1)',
-        's2' => 'Strata 2 (S2)',
-        's3' => 'Strata 3 (S3)',
-    ];
+    private array $mapPendidikan = PengajuanPerubahanService::MAP_PENDIDIKAN;
+
+    public function __construct(
+        protected PengajuanPerubahanService $pengajuanService,
+        protected KependudukanService $kependudukanService
+    ) {}
 
     /**
      * Menampilkan Halaman Data Keluarga & Anggota (Layar 2.3.2)
@@ -128,7 +128,7 @@ class KeluargaController extends Controller
     }
 
     /**
-     * Memproses Pengajuan Perubahan Data Warga ke Tabel Riwayat_Perubahan
+     * Memproses Pengajuan Perubahan Data Warga ke Tabel Riwayat_Perubahan (F006)
      */
     public function simpanPengajuanEdit(Request $request): RedirectResponse
     {
@@ -159,20 +159,14 @@ class KeluargaController extends Controller
             return redirect()->route('warga.keluarga')->with('error', 'Warga yang dipilih tidak valid.');
         }
 
-        // 3. Deteksi hanya field yang benar-benar mengalami perubahan
-        [$dataLama, $dataBaru] = $this->deteksiPerubahanData($warga, $request, $keluarga);
-
-        // 4. Catat riwayat pengajuan dengan status menunggu verifikasi RT
-        Riwayat_Perubahan::create([
-            'keluarga_id' => $keluarga->id,
-            'warga_id' => $warga->id,
-            'jenis_pengajuan' => 'ubah_data',
-            'data_lama' => $dataLama,
-            'data_baru' => $dataBaru,
-            'bukti_path' => $this->uploadBerkasBukti($request),
-            'status' => 'menunggu',
-            'alasan' => $request->input('alasan_perubahan', 'Pembaruan data kependudukan'),
-        ]);
+        // 3. Delegasikan pembuatan pengajuan ke PengajuanPerubahanService
+        $this->pengajuanService->buatPengajuanUbahData(
+            $keluarga,
+            $warga,
+            $request->all(),
+            $request,
+            $request->input('alasan_perubahan')
+        );
 
         return redirect()->route('warga.keluarga')
             ->with('success', 'Pengajuan perubahan data kependudukan berhasil dikirim dan masuk antrean verifikasi RT 04.');
@@ -184,12 +178,8 @@ class KeluargaController extends Controller
     public function tampilkanFormTambah(Request $request): View
     {
         $user = auth()->user();
-        $kepala = $user->wargaPemilik
-            ?? $user->wargas()->where('status_warga', 'hidup')->where('status_hubungan', 'kepala_keluarga')->first()
-            ?? $user->wargas()->where('status_warga', 'hidup')->first()
-            ?? $user->wargas()->first();
-        $keluarga = $kepala?->keluarga ?? $user->wargas()->first()?->keluarga;
-
+        $keluarga = $this->getKeluargaUser();
+        $kepala = $keluarga?->kepalaKeluarga ?? $user->wargas()->first();
         $alamatKeluarga = $keluarga ? $keluarga->alamat : 'RT 04';
 
         return view('warga.keluarga-tambah', compact(
@@ -201,7 +191,7 @@ class KeluargaController extends Controller
     }
 
     /**
-     * Memproses Pendaftaran Anggota Keluarga Baru ke Tabel Riwayat_Perubahan
+     * Memproses Pendaftaran Anggota Keluarga Baru ke Tabel Riwayat_Perubahan (F007)
      */
     public function simpanPengajuanTambah(Request $request): RedirectResponse
     {
@@ -217,43 +207,17 @@ class KeluargaController extends Controller
             'bukti' => 'nullable',
         ]);
 
-        $user = auth()->user();
-        $kepala = $user->wargaPemilik
-            ?? $user->wargas()->where('status_warga', 'hidup')->where('status_hubungan', 'kepala_keluarga')->first()
-            ?? $user->wargas()->where('status_warga', 'hidup')->first()
-            ?? $user->wargas()->first();
-        $keluarga = $kepala?->keluarga ?? $user->wargas()->first()?->keluarga;
-
+        $keluarga = $this->getKeluargaUser();
         if (! $keluarga) {
             return redirect()->route('warga.keluarga')->with('error', 'Data Kartu Keluarga tidak ditemukan.');
         }
 
-        $dataBaru = [
-            'nik' => $request->input('nik') ?: null,
-            'nama' => $request->input('nama_lengkap'),
-            'tempat_lahir' => $request->input('tempat_lahir'),
-            'tanggal_lahir' => $request->input('tanggal_lahir'),
-            'jenis_kelamin' => $request->input('jenis_kelamin'),
-            'agama' => $request->input('agama'),
-            'pendidikan_terakhir' => $request->input('pendidikan_terakhir'),
-            'pekerjaan' => $request->input('pekerjaan'),
-            'alamat' => $request->input('alamat_domisili') ?? $request->input('alamat') ?? $keluarga->alamat,
-            'status_hubungan' => $request->input('hubungan_keluarga'),
-            'status_warga' => 'hidup',
-        ];
-
-        $buktiPath = $this->uploadBerkasBukti($request);
-
-        Riwayat_Perubahan::create([
-            'keluarga_id' => $keluarga->id,
-            'warga_id' => null,
-            'jenis_pengajuan' => 'tambah_anggota',
-            'data_lama' => null,
-            'data_baru' => $dataBaru,
-            'bukti_path' => $buktiPath,
-            'status' => 'menunggu',
-            'alasan' => 'Pendaftaran anggota keluarga baru ('.$request->input('nama_lengkap').')',
-        ]);
+        // Delegasikan ke PengajuanPerubahanService
+        $this->pengajuanService->buatPengajuanTambahAnggota(
+            $keluarga,
+            $request->all(),
+            $request
+        );
 
         return redirect()->route('warga.keluarga')
             ->with('success', 'Pendaftaran anggota keluarga baru berhasil diajukan dan menunggu verifikasi Pengurus RT 04.');
@@ -264,58 +228,21 @@ class KeluargaController extends Controller
      */
     public function batalkanPengajuan(Request $request, int $id): RedirectResponse
     {
-        $user = Auth::user();
-        $kepala = $user->wargaPemilik
-            ?? $user->wargas()->where('status_hubungan', 'kepala_keluarga')->first()
-            ?? $user->wargas()->first();
-        $keluarga = $kepala?->keluarga ?? $user->keluarga;
-
+        $keluarga = $this->getKeluargaUser();
         if (! $keluarga) {
             return redirect()->route('warga.keluarga')->with('error', 'Data keluarga tidak ditemukan.');
         }
 
         $pengajuan = Riwayat_Perubahan::where('keluarga_id', $keluarga->id)->findOrFail($id);
 
-        if ($pengajuan->status !== 'menunggu') {
-            return redirect()->route('warga.keluarga')->with('error', 'Hanya pengajuan dengan status Menunggu Verifikasi yang dapat dibatalkan.');
+        try {
+            $this->pengajuanService->batalkanPengajuan($pengajuan);
+
+            return redirect()->route('warga.keluarga')
+                ->with('success', 'Pengajuan perubahan data berhasil dibatalkan dan telah ditarik dari antrean verifikasi RT.');
+        } catch (InvalidArgumentException $e) {
+            return redirect()->route('warga.keluarga')->with('error', $e->getMessage());
         }
-
-        $pengajuan->status = 'dibatalkan';
-        $pengajuan->alasan = ($pengajuan->alasan ? $pengajuan->alasan.' ' : '').'(Dibatalkan oleh pemohon)';
-        $pengajuan->save();
-
-        return redirect()->route('warga.keluarga')
-            ->with('success', 'Pengajuan perubahan data berhasil dibatalkan dan telah ditarik dari antrean verifikasi RT.');
-    }
-
-    /**
-     * Mengunggah berkas bukti pendukung (mendukung 1 berkas maupun banyak berkas)
-     */
-    private function uploadBerkasBukti(Request $request): string
-    {
-        if (! $request->hasFile('bukti')) {
-            return '';
-        }
-
-        $files = is_array($request->file('bukti')) ? $request->file('bukti') : [$request->file('bukti')];
-        $buktiPaths = [];
-
-        foreach ($files as $file) {
-            if (! $file || ! $file->isValid()) {
-                continue;
-            }
-
-            $namaBerkas = 'bukti_'.time().'_'.uniqid().'.'.$file->getClientOriginalExtension();
-            $file->move(public_path('uploads/bukti'), $namaBerkas);
-
-            $buktiPaths[] = 'uploads/bukti/'.$namaBerkas;
-        }
-
-        return match (count($buktiPaths)) {
-            0 => '',
-            1 => $buktiPaths[0],
-            default => json_encode($buktiPaths),
-        };
     }
 
     /**
@@ -334,66 +261,6 @@ class KeluargaController extends Controller
             ?? $user->wargas()->first();
 
         return $kepala?->keluarga ?? $user->wargas()->first()?->keluarga ?? $user->keluarga;
-    }
-
-    /**
-     * Membandingkan data database dengan input form untuk menemukan perbedaannya
-     */
-    private function deteksiPerubahanData(Warga $warga, Request $request, Keluarga $keluarga): array
-    {
-        // Kamus pemetaan: nama input form => nama kolom database
-        $fieldMap = [
-            'new_nama' => 'nama',
-            'new_tempat_lahir' => 'tempat_lahir',
-            'new_tgl_lahir' => 'tanggal_lahir',
-            'new_jk' => 'jenis_kelamin',
-            'new_agama' => 'agama',
-            'new_pendidikan' => 'pendidikan_terakhir',
-            'new_pekerjaan' => 'pekerjaan',
-            'new_alamat' => 'alamat',
-            'new_shdk' => 'status_hubungan',
-            'new_status_warga' => 'status_warga',
-        ];
-
-        $dataLama = [];
-        $dataBaru = [];
-
-        foreach ($fieldMap as $inputKey => $kolom) {
-            $old = $this->formatNilaiPerubahan($kolom, $warga->$kolom ?? ($kolom === 'alamat' ? $keluarga->alamat : ''));
-            $new = $this->formatNilaiPerubahan($kolom, $request->input($inputKey, $warga->$kolom));
-
-            if ($old !== $new && $new !== '') {
-                $dataLama[$kolom] = $old;
-                $dataBaru[$kolom] = $new;
-            }
-        }
-
-        // Fallback jika tidak ada perubahan sama sekali yang diedit
-        if (empty($dataBaru)) {
-            $dataLama['pekerjaan'] = $warga->pekerjaan ?? '-';
-            $dataBaru['pekerjaan'] = $request->input('new_pekerjaan', $warga->pekerjaan ?? '-');
-        }
-
-        return [$dataLama, $dataBaru];
-    }
-
-    /**
-     * Normalisasi format nilai (tanggal, enum, label) agar komparasi akurat
-     */
-    private function formatNilaiPerubahan(string $kolom, mixed $nilai): string
-    {
-        $val = trim((string) $nilai);
-
-        return match ($kolom) {
-            'tanggal_lahir' => $val ? Carbon::parse($val)->format('Y-m-d') : '',
-            'jenis_kelamin' => (string) Warga::normalisasiJenisKelamin($val),
-            'agama' => (string) Warga::normalisasiAgama($val),
-            'status_hubungan' => (string) Warga::normalisasiStatusHubungan($val),
-            'status_warga' => (string) Warga::normalisasiStatusWarga($val),
-            'pendidikan_terakhir' => (string) ($this->mapPendidikan[Warga::normalisasiPendidikan($val)] ?? $this->mapPendidikan[$val] ?? $val),
-            'pekerjaan', 'alamat' => $val === '' ? '-' : $val,
-            default => $val,
-        };
     }
 
     /**

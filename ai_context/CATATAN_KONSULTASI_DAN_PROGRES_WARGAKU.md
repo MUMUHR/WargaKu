@@ -155,3 +155,24 @@ Dokumen ini memetakan seluruh perjalanan, keputusan, perbaikan bug, refaktorisas
 5. **Jawaban Jujur Kompleksitas Modul:**
    * Pengguna bertanya jujur: *"Berarti yang sangat rumit dan panjang itu hanya pengajuan perubahan data keluarga ya?"*
    * *Jawaban:* **Ya, 100% benar.** Modul Pengajuan Perubahan Data Keluarga adalah modul paling rumit di WargaKu karena merupakan sistem approval 2-fase dengan diff snapshot JSON dan efek domino kependudukan. Modul lainnya (Pengumuman, Profil, Surat Pengantar, Iuran) jauh lebih sederhana dan lurus.
+
+---
+
+## Fase 7: Wacana & Analisis Penyederhanaan Fitur (Bahan Diskusi Internal Kelompok)
+
+1. **Wacana Penyederhanaan Modul Perubahan Data:**
+   * *Gagasan Pengguna:* Menghapus fitur warga mengajukan "Ubah Biodata Warga". Warga hanya bisa mengajukan "Pendaftaran Anggota Baru" (+ berkas bukti).
+   * *Alur Alternatif:* Jika ada typo nama atau perubahan data warga lama, warga cukup menghubungi Admin RT (misal via WhatsApp atau tatap muka), lalu Admin RT yang melakukan koreksi langsung via menu *Edit Data Warga* (koreksi langsung oleh Admin sudah ada dan rapi).
+   * *Manfaat Teknis:*
+     * Menghapus seluruh logika *Diff Engine* komparasi 10 kolom JSON (`data_lama` vs `data_baru`).
+     * Menghilangkan kerumitan modal UI perbandingan atribut hijau/merah.
+     * Logika verifikasi Admin menjadi 1 jalur tunggal: insert anggota baru saat disetujui.
+   * *Status:* Masih berupa wacana/perencanaan untuk didiskusikan bersama tim kelompok PBL.
+
+2. **Analisis Logika "Transfer Akun Otomatis" & "Status Pindah KK":**
+   * *Pertanyaan Pengguna:* Apakah logika transfer akun otomatis (saat meninggal/pindah) dan status pindah KK juga tergolong rumit?
+   * *Kesimpulan Analisis:*
+     * **Transfer Akun Otomatis:** **Sangat Ringan & Santai.** Hanya berjalan di background (~30 baris kode), tidak punya beban UI sama sekali, hanya mengubah 1 kolom (`users.username`), dan kata sandi tidak diubah. Menjadi nilai jual (selling point) A+ saat presentasi.
+     * **Status Pindah KK:** **Sangat Sederhana.** Hanya mengubah status ke `pindah_kk` di KK lama, dan memperbarui `keluarga_id` ke KK baru saat didaftarkan ulang (hanya 1 baris update database). Sangat bersih dan mencegah duplikasi NIK.
+   * *Rekomendasi:* Kedua fitur ini **sangat layak dipertahankan** karena kodenya ringkas, sudah lulus uji, dan tidak membebani pemahaman kelompok.
+

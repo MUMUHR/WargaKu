@@ -31,8 +31,11 @@ File ini dibaca secara otomatis oleh AI Assistant / Agent pada setiap sesi dan a
 
 ## 3. Dokumen Referensi Wajib
 Sebelum melakukan modifikasi kode atau fitur baru, Agent **wajib merujuk pada file-file berikut**:
-* **Kronologi Lengkap & Keputusan:** `CATATAN_KONSULTASI_DAN_PROGRES_WARGAKU.md`
+* **Folder Konteks AI (Wajib Dibaca):** `ai_context/00_PANDUAN_AI.md`
+* **Kronologi Lengkap & Keputusan:** `ai_context/CATATAN_KONSULTASI_DAN_PROGRES_WARGAKU.md`
 * **Spesifikasi & Dokumen Induk:** `PRD_WargaKu.md`
 * **Diagram Arsitektur & Alur:** `Diagram_Arsitektur_Workflow_WargaKu.md` & `Alur_Bisnis_Proses_WargaKu.md`
 * **Skema Database:** `DB_WAR.dbml`
 * **Buku Panduan PDF Resmi:** `Panduan_Lengkap_WargaKu.pdf`
+
+

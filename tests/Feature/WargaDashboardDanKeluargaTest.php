@@ -206,6 +206,95 @@ class WargaDashboardDanKeluargaTest extends TestCase
         $this->assertEquals(['pekerjaan' => 'Karyawan Swasta'], $riwayat->data_lama);
     }
 
+    public function test_pengajuan_perubahan_menggunakan_label_dropdown_ui_tidak_memicu_false_diff(): void
+    {
+        // Mengirimkan nilai label UI persis seperti yang dikirim oleh form browser
+        $response = $this->actingAs($this->userWarga)->post(route('warga.keluarga.edit.store'), [
+            'target_anggota'   => $this->kepalaWarga->nik,
+            'new_nama'         => $this->kepalaWarga->nama,
+            'new_tempat_lahir' => $this->kepalaWarga->tempat_lahir,
+            'new_tgl_lahir'    => \Carbon\Carbon::parse($this->kepalaWarga->tanggal_lahir)->format('Y-m-d'),
+            'new_jk'           => 'Laki-Laki', // Label UI
+            'new_agama'        => 'Islam', // Label UI
+            'new_pendidikan'   => 'Diploma IV / Strata 1 (S1)', // Label UI
+            'new_pekerjaan'    => 'Pengusaha Sukses', // <--- HANYA INI YANG DIUBAH
+            'new_alamat'       => $this->kepalaWarga->alamat,
+            'new_shdk'         => 'Kepala Keluarga', // Label UI
+            'new_status_warga' => 'Hidup (Aktif)', // Label UI (Persis seperti di UI browser)
+            'alasan_perubahan' => 'Ubah pekerjaan saja',
+        ]);
+
+        $response->assertRedirect(route('warga.keluarga'));
+
+        $riwayat = \App\Models\Riwayat_Perubahan::where('warga_id', $this->kepalaWarga->id)
+            ->where('alasan', 'Ubah pekerjaan saja')
+            ->latest('id')
+            ->first();
+
+        $this->assertNotNull($riwayat);
+        // Pastikan HANYA pekerjaan yang tercatat, status_warga / jk / shdk TIDAK ikut berubah
+        $this->assertEquals(['pekerjaan' => 'Pengusaha Sukses'], $riwayat->data_baru);
+        $this->assertEquals(['pekerjaan' => 'Karyawan Swasta'], $riwayat->data_lama);
+    }
+
+    public function test_form_edit_anggota_anak_menampilkan_status_hubungan_anak_dan_dapat_diperbarui(): void
+    {
+        $anak = Warga::create([
+            'keluarga_id'         => $this->keluarga->id,
+            'nik'                 => '3271041203200003',
+            'nama'                => 'Rizky Santoso',
+            'tempat_lahir'        => 'Bandung',
+            'tanggal_lahir'       => '2020-03-12',
+            'jenis_kelamin'       => 'laki_laki',
+            'agama'               => 'islam',
+            'pendidikan_terakhir' => 'tidak_belum_sekolah',
+            'pekerjaan'           => 'Belum Bekerja',
+            'status_perkawinan'   => 'belum_kawin',
+            'status_hubungan'     => 'anak',
+            'status_warga'        => 'hidup',
+            'alamat'              => 'Jl. Melati Blok A No. 1, RT 04',
+        ]);
+
+        // 1. Pastikan view form edit memuat data anak dengan status_hubungan 'Anak' terpilih
+        $viewResponse = $this->actingAs($this->userWarga)->get(route('warga.keluarga.edit', ['nik' => $anak->nik]));
+        $viewResponse->assertOk();
+        $viewResponse->assertSee('<option value="Anak" selected>Anak</option>', false);
+
+        // 2. Ajukan perubahan hubungan keluarga menjadi 'Famili Lain'
+        $postResponse = $this->actingAs($this->userWarga)->post(route('warga.keluarga.edit.store'), [
+            'target_anggota'   => $anak->nik,
+            'new_nama'         => $anak->nama,
+            'new_tempat_lahir' => $anak->tempat_lahir,
+            'new_tgl_lahir'    => \Carbon\Carbon::parse($anak->tanggal_lahir)->format('Y-m-d'),
+            'new_jk'           => 'Laki-Laki',
+            'new_agama'        => 'Islam',
+            'new_pendidikan'   => 'Tidak / Belum Sekolah',
+            'new_pekerjaan'    => 'Pelajar',
+            'new_alamat'       => $anak->alamat,
+            'new_shdk'         => 'Famili Lain', // <--- Status hubungan diubah
+            'new_status_warga' => 'Hidup (Aktif)',
+            'alasan_perubahan' => 'Koreksi status hubungan keluarga',
+        ]);
+
+        $postResponse->assertRedirect(route('warga.keluarga'));
+
+        $riwayat = \App\Models\Riwayat_Perubahan::where('warga_id', $anak->id)
+            ->where('alasan', 'Koreksi status hubungan keluarga')
+            ->latest('id')
+            ->first();
+
+        $this->assertNotNull($riwayat);
+        $this->assertEquals('famili_lain', $riwayat->data_baru['status_hubungan']);
+        $this->assertEquals('anak', $riwayat->data_lama['status_hubungan']);
+
+        // 3. Pastikan modal komparasi pengajuan menampilkan field Hubungan Keluarga
+        $indexResponse = $this->actingAs($this->userWarga)->get(route('warga.keluarga'));
+        $dataPengajuanMap = $indexResponse->viewData('dataPengajuanMap');
+        $this->assertArrayHasKey($riwayat->id, $dataPengajuanMap);
+        $komparasiFields = array_column($dataPengajuanMap[$riwayat->id]['komparasi'], 'field');
+        $this->assertContains('Hubungan Keluarga', $komparasiFields);
+    }
+
     public function test_warga_dapat_mengunggah_multiple_dokumen_bukti(): void
     {
         \Illuminate\Support\Facades\Storage::fake('public');

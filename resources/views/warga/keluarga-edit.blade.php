@@ -266,7 +266,7 @@
                                     <span>Hubungan Keluarga (SHDK) <span class="wf-req">*</span></span>
                                 </label>
                                 <select id="new-shdk" name="new_shdk" class="wf-select" required>
-                                    @foreach(['Kepala Keluarga', 'Suami', 'Istri', 'Anak Kandung', 'Menantu', 'Cucu', 'Orang Tua', 'Mertua', 'Famili Lain', 'Lainnya'] as $sh)
+                                    @foreach(['Kepala Keluarga', 'Suami', 'Istri', 'Anak', 'Menantu', 'Cucu', 'Orang Tua', 'Mertua', 'Famili Lain', 'Lainnya'] as $sh)
                                         <option value="{{ $sh }}" {{ ($selectedData['shdk'] ?? '') === $sh ? 'selected' : '' }}>{{ $sh }}</option>
                                     @endforeach
                                 </select>
@@ -650,7 +650,6 @@ function gantiAnggota(key) {
     setFieldValue('new-agama', data.agama);
     setFieldValue('new-pendidikan', data.pendidikanNew);
     setFieldValue('new-pekerjaan', data.pekerjaanNew);
-    setFieldValue('new-alamat', data.alamat);
     setFieldValue('new-shdk', data.shdk);
     setFieldValue('new-status-warga', data.statusWarga);
 

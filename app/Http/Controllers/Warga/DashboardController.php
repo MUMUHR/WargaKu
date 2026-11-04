@@ -16,14 +16,13 @@ class DashboardController extends Controller
     public function index(IuranService $iuranService): View
     {
         $user = auth()->user();
-
+        
         // 1. Ambil data Keluarga & Kepala Keluarga secara efisien (BR-01 & BR-13)
         $wargaAkun = $user->wargas()->with('keluarga')->first();
         $keluarga  = $wargaAkun?->keluarga;
 
-        $anggotaKeluarga = $keluarga
-            ? $keluarga->wargas()->get()
-            : collect($wargaAkun ? [$wargaAkun] : []);
+        // Ambil seluruh anggota keluarga (jika tidak ada keluarga, fallback ke collection kosong)
+        $anggotaKeluarga = $keluarga ? $keluarga->wargas : collect();
 
         $anggotaHidup = $anggotaKeluarga->where('status_warga', 'hidup');
 

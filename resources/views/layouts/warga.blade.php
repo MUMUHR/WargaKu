@@ -33,10 +33,7 @@
 
     @php
         $userAktif = auth()->user();
-        $namaWargaAktif = $userAktif?->wargaPemilik?->nama 
-            ?? $userAktif?->wargas?->first()?->nama 
-            ?? $userAktif?->username 
-            ?? 'Warga';
+        $namaWargaAktif = $userAktif?->wargaPemilik?->nama ?? $userAktif?->username ?? 'Warga';
     @endphp
 
     <a href="{{ route('warga.profil') }}" class="admin-sidebar__profile" style="text-decoration:none;" title="Buka Profil & Keamanan">
@@ -50,20 +47,17 @@
     </a>
 
     @php
-        $badgeSuratMenunggu = 0;
-        $badgeDataMenunggu = 0;
-        if ($userAktif) {
-            $keluargaUser = $userAktif->wargaPemilik?->keluarga ?? $userAktif->wargas?->first()?->keluarga;
-            if ($keluargaUser) {
-                $wargaIds = $keluargaUser->wargas()->pluck('id')->toArray();
-                $badgeSuratMenunggu = \App\Models\Surat::where(function($q) use ($wargaIds) {
-                    $q->whereIn('pemohon_id', $wargaIds)->orWhereIn('warga_tujuan_id', $wargaIds);
-                })->where('status', 'menunggu')->count();
-                $badgeDataMenunggu = \App\Models\Riwayat_Perubahan::where('keluarga_id', $keluargaUser->id)
-                    ->where('status', 'menunggu')
-                    ->count();
-            }
-        }
+        $wargaAktif = $userAktif?->wargas()->first();
+        $keluargaId = $wargaAktif?->keluarga_id;
+        $wargaIds   = $userAktif ? $userAktif->wargas()->pluck('id')->all() : [];
+
+        $badgeSuratMenunggu = !empty($wargaIds)
+            ? \App\Models\Surat::whereIn('warga_tujuan_id', $wargaIds)->where('status', 'menunggu')->count()
+            : 0;
+
+        $badgeDataMenunggu = $keluargaId
+            ? \App\Models\Riwayat_Perubahan::where('keluarga_id', $keluargaId)->where('status', 'menunggu')->count()
+            : 0;
     @endphp
 
     <nav class="admin-sidebar__nav" aria-label="Menu warga">

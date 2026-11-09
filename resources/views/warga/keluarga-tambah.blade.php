@@ -133,8 +133,8 @@
                                     <span>Jenis Kelamin <span class="wf-req">*</span></span>
                                 </label>
                                 <select id="jenis_kelamin" name="jenis_kelamin" class="wf-select" required>
-                                    <option value="Laki-Laki">Laki-Laki (laki_laki)</option>
-                                    <option value="Perempuan">Perempuan (perempuan)</option>
+                                    <option value="laki_laki" {{ old('jenis_kelamin', 'laki_laki') === 'laki_laki' ? 'selected' : '' }}>Laki-laki</option>
+                                    <option value="perempuan" {{ old('jenis_kelamin') === 'perempuan' ? 'selected' : '' }}>Perempuan</option>
                                 </select>
                             </div>
                             <div>
@@ -176,16 +176,9 @@
                                     <span>Pendidikan Terakhir <span class="wf-req">*</span></span>
                                 </label>
                                 <select id="pendidikan_terakhir" name="pendidikan_terakhir" class="wf-select" required>
-                                    <option value="Tidak / Belum Sekolah" selected>Tidak / Belum Sekolah</option>
-                                    <option value="Belum Tamat SD / Sederajat">Belum Tamat SD / Sederajat</option>
-                                    <option value="SD / Sederajat">SD / Sederajat</option>
-                                    <option value="SMP / Sederajat">SMP / Sederajat</option>
-                                    <option value="SLTA / SMA / SMK / Sederajat">SLTA / SMA / SMK / Sederajat</option>
-                                    <option value="Diploma I / II">Diploma I / II</option>
-                                    <option value="Diploma III">Diploma III</option>
-                                    <option value="Diploma IV / Strata 1 (S1)">Diploma IV / Strata 1 (S1)</option>
-                                    <option value="Strata 2 (S2)">Strata 2 (S2)</option>
-                                    <option value="Strata 3 (S3)">Strata 3 (S3)</option>
+                                    @foreach(\App\Models\Warga::DAFTAR_PENDIDIKAN as $key => $label)
+                                        <option value="{{ $key }}" {{ old('pendidikan_terakhir') === $key ? 'selected' : '' }}>{{ $label }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>

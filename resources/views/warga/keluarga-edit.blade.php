@@ -213,22 +213,8 @@
                                     <span>Pendidikan Terakhir <span class="wf-req">*</span></span>
                                 </label>
                                 <select id="new-pendidikan" name="new_pendidikan" class="wf-select" required>
-                                    @php
-                                        $opsiPendidikan = [
-                                            'Tidak / Belum Sekolah',
-                                            'Belum Tamat SD / Sederajat',
-                                            'SD / Sederajat',
-                                            'SMP / Sederajat',
-                                            'SLTA / SMA / SMK / Sederajat',
-                                            'Diploma I / II',
-                                            'Diploma III',
-                                            'Diploma IV / Strata 1 (S1)',
-                                            'Strata 2 (S2)',
-                                            'Strata 3 (S3)'
-                                        ];
-                                    @endphp
-                                    @foreach($opsiPendidikan as $pdd)
-                                        <option value="{{ $pdd }}" {{ ($selectedData['pendidikanNew'] ?? '') === $pdd ? 'selected' : '' }}>{{ $pdd }}</option>
+                                    @foreach(\App\Models\Warga::DAFTAR_PENDIDIKAN as $key => $label)
+                                        <option value="{{ $key }}" {{ (($selectedData['pendidikanNew'] ?? '') === $key || ($selectedData['pendidikanNew'] ?? '') === $label) ? 'selected' : '' }}>{{ $label }}</option>
                                     @endforeach
                                 </select>
                             </div>

@@ -82,7 +82,6 @@ class KependudukanService
      * 2. NIK ada dengan status 'pindah_kk' -> alihkan ke KK tujuan dan hidupkan kembali
      * 3. NIK sudah ada dan aktif di KK sama atau KK lain -> lempar exception
      *
-     * @throws InvalidArgumentException
      */
     public function tambahAnggotaOlehAdmin(Keluarga $keluarga, array $data): Warga
     {
@@ -94,11 +93,6 @@ class KependudukanService
         $existingWarga = Warga::where('nik', $nik)->first();
         $akunKk = $this->ambilAkunKeluarga($keluarga);
         $userId = $akunKk?->id;
-
-        $jenisKelamin = Warga::normalisasiJenisKelamin($data['jenis_kelamin'] ?? $data['jk'] ?? null);
-        $statusHubungan = Warga::normalisasiStatusHubungan($data['status_hubungan'] ?? $data['shdk'] ?? null);
-        $agama = Warga::normalisasiAgama($data['agama'] ?? null);
-        $pendidikan = Warga::normalisasiPendidikan($data['pendidikan_terakhir'] ?? $data['pendidikan'] ?? null);
         $alamat = $data['alamat'] ?? $keluarga->alamat;
 
         if ($existingWarga) {
@@ -109,20 +103,16 @@ class KependudukanService
 
             // Skenario: NIK terdaftar dengan status pindah_kk -> pindahkan ke KK baru (BR-14)
             if ($existingWarga->status_warga === 'pindah_kk') {
-                $existingWarga->update([
-                    'keluarga_id' => $keluarga->id,
-                    'user_id' => $userId,
-                    'nama' => $data['nama'],
-                    'tempat_lahir' => $data['tempat_lahir'] ?? $existingWarga->tempat_lahir,
+                $existingWarga->update(array_merge([
+                    'keluarga_id'   => $keluarga->id,
+                    'user_id'       => $userId,
+                    'nama'          => $data['nama'],
+                    'tempat_lahir'  => $data['tempat_lahir'] ?? $existingWarga->tempat_lahir,
                     'tanggal_lahir' => $data['tanggal_lahir'] ?? $existingWarga->tanggal_lahir,
-                    'jenis_kelamin' => $jenisKelamin ?? $existingWarga->jenis_kelamin,
-                    'agama' => $agama ?? $existingWarga->agama,
-                    'pendidikan_terakhir' => $pendidikan ?? $existingWarga->pendidikan_terakhir,
-                    'pekerjaan' => $data['pekerjaan'] ?? $existingWarga->pekerjaan,
-                    'alamat' => $alamat,
-                    'status_hubungan' => $statusHubungan ?? $existingWarga->status_hubungan,
-                    'status_warga' => 'hidup',
-                ]);
+                    'pekerjaan'     => $data['pekerjaan'] ?? $existingWarga->pekerjaan,
+                    'alamat'        => $alamat,
+                    'status_warga'  => 'hidup',
+                ], $this->normalisasiAtributWarga($data, $existingWarga)));
 
                 return $existingWarga;
             }
@@ -132,21 +122,17 @@ class KependudukanService
         }
 
         // Skenario: NIK belum ada di sistem -> buat baru
-        return Warga::create([
-            'keluarga_id' => $keluarga->id,
-            'user_id' => $userId,
-            'nik' => $nik,
-            'nama' => $data['nama'],
-            'tempat_lahir' => $data['tempat_lahir'] ?? null,
+        return Warga::create(array_merge([
+            'keluarga_id'   => $keluarga->id,
+            'user_id'       => $userId,
+            'nik'           => $nik,
+            'nama'          => $data['nama'],
+            'tempat_lahir'  => $data['tempat_lahir'] ?? null,
             'tanggal_lahir' => $data['tanggal_lahir'] ?? null,
-            'jenis_kelamin' => $jenisKelamin ?? 'laki_laki',
-            'agama' => $agama,
-            'pendidikan_terakhir' => $pendidikan,
-            'pekerjaan' => $data['pekerjaan'] ?? null,
-            'alamat' => $alamat,
-            'status_hubungan' => $statusHubungan ?? 'anak',
-            'status_warga' => 'hidup',
-        ]);
+            'pekerjaan'     => $data['pekerjaan'] ?? null,
+            'alamat'        => $alamat,
+            'status_warga'  => 'hidup',
+        ], $this->normalisasiAtributWarga($data)));
     }
 
     /**
@@ -159,18 +145,14 @@ class KependudukanService
         $statusLama = $warga->status_warga;
         $statusBaru = Warga::normalisasiStatusWarga($data['status_warga'] ?? $data['status_keberadaan'] ?? null) ?? $statusLama;
 
-        $updateData = [
-            'nama' => $data['nama'] ?? $warga->nama,
-            'tempat_lahir' => $data['tempat_lahir'] ?? $warga->tempat_lahir,
+        $updateData = array_merge([
+            'nama'          => $data['nama'] ?? $warga->nama,
+            'tempat_lahir'  => $data['tempat_lahir'] ?? $warga->tempat_lahir,
             'tanggal_lahir' => $data['tanggal_lahir'] ?? $warga->tanggal_lahir,
-            'jenis_kelamin' => Warga::normalisasiJenisKelamin($data['jenis_kelamin'] ?? $data['jk'] ?? null) ?? $warga->jenis_kelamin,
-            'agama' => Warga::normalisasiAgama($data['agama'] ?? null) ?? $warga->agama,
-            'pendidikan_terakhir' => Warga::normalisasiPendidikan($data['pendidikan_terakhir'] ?? $data['pendidikan'] ?? null) ?? $warga->pendidikan_terakhir,
-            'pekerjaan' => $data['pekerjaan'] ?? $warga->pekerjaan,
-            'alamat' => $data['alamat'] ?? $warga->alamat,
-            'status_hubungan' => Warga::normalisasiStatusHubungan($data['status_hubungan'] ?? $data['shdk'] ?? null) ?? $warga->status_hubungan,
-            'status_warga' => $statusBaru,
-        ];
+            'pekerjaan'     => $data['pekerjaan'] ?? $warga->pekerjaan,
+            'alamat'        => $data['alamat'] ?? $warga->alamat,
+            'status_warga'  => $statusBaru,
+        ], $this->normalisasiAtributWarga($data, $warga));
 
         // Validasi dan pembaruan NIK jika diedit oleh admin
         $newNik = ! empty($data['nik']) ? trim($data['nik']) : null;
@@ -272,6 +254,23 @@ class KependudukanService
             // Hapus keluarga (cascade delete akan menghapus warga, iuran, dan riwayat terkait)
             $keluarga->delete();
         });
+    }
+
+    /**
+     * Normalisasi atribut kependudukan warga agar seragam dengan schema database.
+     */
+    private function normalisasiAtributWarga(array $data, ?Warga $warga = null): array
+    {
+        return [
+            'jenis_kelamin' => Warga::normalisasiJenisKelamin($data['jenis_kelamin'] ?? $data['jk'] ?? null)
+                ?? $warga?->jenis_kelamin ?? 'laki_laki',
+            'status_hubungan' => Warga::normalisasiStatusHubungan($data['status_hubungan'] ?? $data['shdk'] ?? null)
+                ?? $warga?->status_hubungan ?? 'anak',
+            'agama' => Warga::normalisasiAgama($data['agama'] ?? null)
+                ?? $warga?->agama ?? 'islam',
+            'pendidikan_terakhir' => Warga::normalisasiPendidikan($data['pendidikan_terakhir'] ?? $data['pendidikan'] ?? null)
+                ?? $warga?->pendidikan_terakhir ?? 'tidak_belum_sekolah',
+        ];
     }
 
     /**

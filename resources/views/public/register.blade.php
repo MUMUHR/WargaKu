@@ -234,8 +234,8 @@
                         <label for="jenis_kelamin" class="form-label">Jenis Kelamin<span class="req">*</span></label>
                         <select name="jenis_kelamin" id="jenis_kelamin" class="form-control form-control--no-icon" required>
                             <option value="" disabled {{ old('jenis_kelamin') ? '' : 'selected' }}>-- Pilih Jenis Kelamin --</option>
-                            <option value="L" {{ old('jenis_kelamin') === 'L' ? 'selected' : '' }}>Laki-laki</option>
-                            <option value="P" {{ old('jenis_kelamin') === 'P' ? 'selected' : '' }}>Perempuan</option>
+                            <option value="laki_laki" {{ old('jenis_kelamin') === 'laki_laki' ? 'selected' : '' }}>Laki-laki</option>
+                            <option value="perempuan" {{ old('jenis_kelamin') === 'perempuan' ? 'selected' : '' }}>Perempuan</option>
                         </select>
                     </div>
                 </div>
@@ -293,16 +293,9 @@
                     <div class="form-group">
                         <label for="pendidikan" class="form-label">Pendidikan Terakhir</label>
                         <select name="pendidikan" id="pendidikan" class="form-control form-control--no-icon">
-                            <option value="Tidak / Belum Sekolah" {{ old('pendidikan') === 'Tidak / Belum Sekolah' ? 'selected' : '' }}>Tidak / Belum Sekolah</option>
-                            <option value="Belum Tamat SD / Sederajat" {{ old('pendidikan') === 'Belum Tamat SD / Sederajat' ? 'selected' : '' }}>Belum Tamat SD / Sederajat</option>
-                            <option value="SD / Sederajat" {{ old('pendidikan') === 'SD / Sederajat' ? 'selected' : '' }}>SD / Sederajat</option>
-                            <option value="SMP / Sederajat" {{ old('pendidikan') === 'SMP / Sederajat' ? 'selected' : '' }}>SMP / Sederajat</option>
-                            <option value="SLTA / SMA / SMK / Sederajat" {{ old('pendidikan', 'SLTA / SMA / SMK / Sederajat') === 'SLTA / SMA / SMK / Sederajat' ? 'selected' : '' }}>SLTA / SMA / SMK / Sederajat</option>
-                            <option value="Diploma I / II" {{ old('pendidikan') === 'Diploma I / II' ? 'selected' : '' }}>Diploma I / II</option>
-                            <option value="Diploma III" {{ old('pendidikan') === 'Diploma III' ? 'selected' : '' }}>Diploma III</option>
-                            <option value="Diploma IV / Strata 1 (S1)" {{ old('pendidikan') === 'Diploma IV / Strata 1 (S1)' ? 'selected' : '' }}>Diploma IV / Strata 1 (S1)</option>
-                            <option value="Strata 2 (S2)" {{ old('pendidikan') === 'Strata 2 (S2)' ? 'selected' : '' }}>Strata 2 (S2)</option>
-                            <option value="Strata 3 (S3)" {{ old('pendidikan') === 'Strata 3 (S3)' ? 'selected' : '' }}>Strata 3 (S3)</option>
+                            @foreach(\App\Models\Warga::DAFTAR_PENDIDIKAN as $key => $label)
+                                <option value="{{ $key }}" {{ old('pendidikan', 'sma_sederajat') === $key ? 'selected' : '' }}>{{ $label }}</option>
+                            @endforeach
                         </select>
                     </div>
                 </div>

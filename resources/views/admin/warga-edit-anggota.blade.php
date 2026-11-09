@@ -24,21 +24,9 @@
         'nama' => $warga->nama ?? 'Nama Warga',
         'tempat_lahir' => $warga->tempat_lahir ?? '',
         'tanggal_lahir' => $warga?->tanggal_lahir ? $warga->tanggal_lahir->format('Y-m-d') : '',
-        'jk' => (($warga->jenis_kelamin ?? 'laki_laki') === 'perempuan') ? 'Perempuan' : 'Laki-laki',
+        'jenis_kelamin' => $warga->jenis_kelamin ?? 'laki_laki',
         'agama' => ucfirst($warga->agama ?? 'Islam'),
-        'pendidikan' => match($warga->pendidikan_terakhir ?? '') {
-            'tidak_belum_sekolah' => 'Tidak / Belum Sekolah',
-            'belum_tamat_sd' => 'Belum Tamat SD / Sederajat',
-            'sd_sederajat' => 'SD / Sederajat',
-            'smp_sederajat' => 'SMP / Sederajat',
-            'sma_sederajat' => 'SLTA / SMA / SMK / Sederajat',
-            'd1_d2' => 'Diploma I / II',
-            'd3' => 'Diploma III',
-            'd4_s1' => 'Diploma IV / Strata 1 (S1)',
-            's2' => 'Strata 2 (S2)',
-            's3' => 'Strata 3 (S3)',
-            default => 'Diploma IV / Strata 1 (S1)'
-        },
+        'pendidikan' => $warga->pendidikan_terakhir ?? 'tidak_belum_sekolah',
         'pekerjaan' => $warga->pekerjaan ?? '',
         'alamat' => $warga->alamat ?? ($alamatKeluarga ?? ''),
         'shdk' => match($warga->status_hubungan ?? '') {
@@ -195,10 +183,10 @@
                 <div class="form-grid-2col">
                     <div class="form-field">
                         <label class="form-field-label" for="input-jk">Jenis Kelamin <span class="req">*</span></label>
-                        <select name="jk" class="form-select-warga" id="input-jk" required>
+                        <select name="jenis_kelamin" class="form-select-warga" id="input-jk" required>
                             <option value="">-- Pilih Jenis Kelamin --</option>
-                            <option value="Laki-laki" {{ $w['jk'] === 'Laki-laki' ? 'selected' : '' }}>Laki-laki</option>
-                            <option value="Perempuan" {{ $w['jk'] === 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
+                            <option value="laki_laki" {{ old('jenis_kelamin', $w['jenis_kelamin'] ?? ($w['jk'] ?? '')) === 'laki_laki' ? 'selected' : '' }}>Laki-laki</option>
+                            <option value="perempuan" {{ old('jenis_kelamin', $w['jenis_kelamin'] ?? ($w['jk'] ?? '')) === 'perempuan' ? 'selected' : '' }}>Perempuan</option>
                         </select>
                     </div>
                     <div class="form-field">
@@ -220,16 +208,9 @@
                         <label class="form-field-label" for="input-pendidikan">Pendidikan Terakhir <span class="req">*</span></label>
                         <select name="pendidikan" class="form-select-warga" id="input-pendidikan" required>
                             <option value="">-- Pilih Pendidikan --</option>
-                            <option value="Tidak / Belum Sekolah" {{ $w['pendidikan'] === 'Tidak / Belum Sekolah' ? 'selected' : '' }}>Tidak / Belum Sekolah</option>
-                            <option value="Belum Tamat SD / Sederajat" {{ $w['pendidikan'] === 'Belum Tamat SD / Sederajat' ? 'selected' : '' }}>Belum Tamat SD / Sederajat</option>
-                            <option value="SD / Sederajat" {{ $w['pendidikan'] === 'SD / Sederajat' ? 'selected' : '' }}>SD / Sederajat</option>
-                            <option value="SMP / Sederajat" {{ $w['pendidikan'] === 'SMP / Sederajat' ? 'selected' : '' }}>SMP / Sederajat</option>
-                            <option value="SLTA / SMA / SMK / Sederajat" {{ $w['pendidikan'] === 'SLTA / SMA / SMK / Sederajat' ? 'selected' : '' }}>SLTA / SMA / SMK / Sederajat</option>
-                            <option value="Diploma I / II" {{ $w['pendidikan'] === 'Diploma I / II' ? 'selected' : '' }}>Diploma I / II</option>
-                            <option value="Diploma III" {{ $w['pendidikan'] === 'Diploma III' ? 'selected' : '' }}>Diploma III</option>
-                            <option value="Diploma IV / Strata 1 (S1)" {{ $w['pendidikan'] === 'Diploma IV / Strata 1 (S1)' ? 'selected' : '' }}>Diploma IV / Strata 1 (S1)</option>
-                            <option value="Strata 2 (S2)" {{ $w['pendidikan'] === 'Strata 2 (S2)' ? 'selected' : '' }}>Strata 2 (S2)</option>
-                            <option value="Strata 3 (S3)" {{ $w['pendidikan'] === 'Strata 3 (S3)' ? 'selected' : '' }}>Strata 3 (S3)</option>
+                            @foreach(\App\Models\Warga::DAFTAR_PENDIDIKAN as $key => $label)
+                                <option value="{{ $key }}" {{ ($w['pendidikan'] === $key || $w['pendidikan'] === $label) ? 'selected' : '' }}>{{ $label }}</option>
+                            @endforeach
                         </select>
                     </div>
                     <div class="form-field">

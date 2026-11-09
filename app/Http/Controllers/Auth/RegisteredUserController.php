@@ -48,7 +48,7 @@ class RegisteredUserController extends Controller
             'nik'                   => ['required', 'string', 'size:16'],
             'nama'                  => ['required', 'string', 'max:100'],
             'status_hubungan'       => ['nullable', 'string'],
-            'jenis_kelamin'         => ['required', 'in:L,P'],
+            'jenis_kelamin'         => ['required', 'in:laki_laki,perempuan'],
 
             // Alamat
             'alamat'                => ['required', 'string'],
@@ -152,9 +152,9 @@ class RegisteredUserController extends Controller
                     'nama'                => $request->nama,
                     'tempat_lahir'        => $request->tempat_lahir ?? $existingWarga->tempat_lahir,
                     'tanggal_lahir'       => $request->tanggal_lahir ?? $existingWarga->tanggal_lahir,
-                    'jenis_kelamin'       => $request->jenis_kelamin === 'L' ? 'laki_laki' : 'perempuan',
+                    'jenis_kelamin'       => $request->jenis_kelamin,
                     'agama'               => Warga::normalisasiAgama($request->agama) ?? $existingWarga->agama,
-                    'pendidikan_terakhir' => $this->mapPendidikan($request->pendidikan ?? null) ?? $existingWarga->pendidikan_terakhir,
+                    'pendidikan_terakhir' => Warga::normalisasiPendidikan($request->pendidikan ?? null) ?? $existingWarga->pendidikan_terakhir,
                     'pekerjaan'           => $request->pekerjaan ?? $existingWarga->pekerjaan,
                     'alamat'              => $request->alamat,
                     'status_hubungan'     => $statusHubungan,
@@ -168,9 +168,9 @@ class RegisteredUserController extends Controller
                     'nama'                => $request->nama,
                     'tempat_lahir'        => $request->tempat_lahir ?? null,
                     'tanggal_lahir'       => $request->tanggal_lahir ?? null,
-                    'jenis_kelamin'       => $request->jenis_kelamin === 'L' ? 'laki_laki' : 'perempuan',
+                    'jenis_kelamin'       => $request->jenis_kelamin,
                     'agama'               => Warga::normalisasiAgama($request->agama),
-                    'pendidikan_terakhir' => $this->mapPendidikan($request->pendidikan ?? null),
+                    'pendidikan_terakhir' => Warga::normalisasiPendidikan($request->pendidikan ?? null),
                     'pekerjaan'           => $request->pekerjaan ?? null,
                     'alamat'              => $request->alamat,
                     'status_hubungan'     => $statusHubungan,
@@ -185,13 +185,5 @@ class RegisteredUserController extends Controller
 
         return redirect()->route('warga.beranda')
             ->with('success', 'Pendaftaran akun berhasil! Kartu Keluarga baru telah terdaftar dan akun Anda kini aktif.');
-    }
-
-    /**
-     * Mapping nilai pendidikan dari form ke enum DB.
-     */
-    private function mapPendidikan(?string $value): ?string
-    {
-        return Warga::normalisasiPendidikan($value);
     }
 }

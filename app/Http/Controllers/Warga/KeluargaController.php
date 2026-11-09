@@ -18,7 +18,7 @@ use InvalidArgumentException;
  */
 class KeluargaController extends Controller
 {
-    private array $mapPendidikan = PengajuanPerubahanService::MAP_PENDIDIKAN;
+    private array $mapPendidikan = Warga::DAFTAR_PENDIDIKAN;
 
     public function __construct(
         protected PengajuanPerubahanService $pengajuanService,

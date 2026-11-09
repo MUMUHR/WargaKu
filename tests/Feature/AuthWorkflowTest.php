@@ -122,9 +122,9 @@ it('warga berstatus pindah_kk berhasil mendaftar KK baru dan datanya terupdate s
         'nama'                  => 'Raka Santoso',
         'tempat_lahir'          => 'Bogor',
         'tanggal_lahir'         => '2000-07-18',
-        'jenis_kelamin'         => 'L',
+        'jenis_kelamin'         => 'laki_laki',
         'agama'                 => 'Islam',
-        'pendidikan'            => 'SMA/SMK',
+        'pendidikan'            => 'sma_sederajat',
         'pekerjaan'             => 'Wiraswasta',
         'alamat'                => 'Jl. Melati Baru No. 10, RT 04',
     ]);
@@ -166,7 +166,7 @@ it('warga berstatus hidup ditolak mendaftar ulang sesuai BR-09', function () {
         'no_hp'                 => '081299998888',
         'nik'                   => '3271048809920088',
         'nama'                  => 'Warga Aktif',
-        'jenis_kelamin'         => 'L',
+        'jenis_kelamin'         => 'laki_laki',
         'alamat'                => 'Jl. Melati No. 8',
     ]);
 
@@ -196,7 +196,7 @@ it('warga berstatus meninggal ditolak mendaftar akun', function () {
         'no_hp'                 => '081299998888',
         'nik'                   => '3271048809920077',
         'nama'                  => 'Almarhum',
-        'jenis_kelamin'         => 'L',
+        'jenis_kelamin'         => 'laki_laki',
         'alamat'                => 'Jl. Melati No. 7',
     ]);
 
@@ -250,9 +250,9 @@ it('warga dapat memilih status hubungan dalam keluarga saat mendaftar akun', fun
         'nik'                   => '3271045555550002',
         'nama'                  => 'Dewi Lestari',
         'status_hubungan'       => 'istri',
-        'jenis_kelamin'         => 'P',
+        'jenis_kelamin'         => 'perempuan',
         'agama'                 => 'Islam',
-        'pendidikan'            => 'S1',
+        'pendidikan'            => 'd4_s1',
         'pekerjaan'             => 'Guru',
         'alamat'                => 'Jl. Anggrek Blok C No. 5, RT 04',
     ]);
@@ -283,7 +283,7 @@ it('dropdown pendidikan terakhir di register dan form konsisten dengan 10 opsi s
         'nik'                   => '3271045555550003',
         'nama'                  => 'Budi Santoso',
         'status_hubungan'       => 'kepala_keluarga',
-        'jenis_kelamin'         => 'L',
+        'jenis_kelamin'         => 'laki_laki',
         'agama'                 => 'Islam',
         'pendidikan'            => 'Diploma I / II',
         'pekerjaan'             => 'Teknisi',

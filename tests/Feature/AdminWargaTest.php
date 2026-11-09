@@ -216,7 +216,7 @@ class AdminWargaTest extends TestCase
             'tanggal_lahir' => '2010-01-01',
             'jk' => 'Laki-laki',
             'agama' => 'Islam',
-            'pendidikan' => 'SD/Sederajat',
+            'pendidikan' => 'sd_sederajat',
             'pekerjaan' => 'Pelajar',
             'shdk' => 'Anak',
         ]);
@@ -324,7 +324,7 @@ class AdminWargaTest extends TestCase
             'pekerjaan' => 'Dosen Informatika',
             'jk' => 'Perempuan',
             'agama' => 'Islam',
-            'pendidikan' => 'Magister (S2)',
+            'pendidikan' => 's2',
             'shdk' => 'Anak',
             'status_keberadaan' => 'Hidup (Aktif)',
         ]);

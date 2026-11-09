@@ -25,18 +25,7 @@ class PengajuanPerubahanService
     /**
      * Peta label jenjang pendidikan untuk pemformatan data komparasi
      */
-    public const MAP_PENDIDIKAN = [
-        'tidak_belum_sekolah' => 'Tidak / Belum Sekolah',
-        'belum_tamat_sd' => 'Belum Tamat SD / Sederajat',
-        'sd_sederajat' => 'SD / Sederajat',
-        'smp_sederajat' => 'SMP / Sederajat',
-        'sma_sederajat' => 'SLTA / SMA / SMK / Sederajat',
-        'd1_d2' => 'Diploma I / II',
-        'd3' => 'Diploma III',
-        'd4_s1' => 'Diploma IV / Strata 1 (S1)',
-        's2' => 'Strata 2 (S2)',
-        's3' => 'Strata 3 (S3)',
-    ];
+    public const MAP_PENDIDIKAN = Warga::DAFTAR_PENDIDIKAN;
 
     /**
      * Membuat pengajuan ubah data kependudukan anggota keluarga (F006)

@@ -245,17 +245,7 @@ class KeluargaController extends Controller
      */
     private function getKeluargaUser()
     {
-        $user = auth()->user();
-        if (! $user) {
-            return null;
-        }
-
-        $kepala = $user->wargaPemilik
-            ?? $user->wargas()->where('status_warga', 'hidup')->where('status_hubungan', 'kepala_keluarga')->first()
-            ?? $user->wargas()->where('status_warga', 'hidup')->first()
-            ?? $user->wargas()->first();
-
-        return $kepala?->keluarga ?? $user->wargas()->first()?->keluarga ?? $user->keluarga;
+        return auth()->user()?->ambilKeluarga();
     }
 
     /**

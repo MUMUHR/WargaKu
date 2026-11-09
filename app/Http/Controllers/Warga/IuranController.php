@@ -18,14 +18,8 @@ class IuranController extends Controller
         $user = auth()->user();
 
         // 1. Ambil data keluarga & kepala keluarga secara efisien
-        $wargaAkun    = $user->wargas()->with('keluarga.wargas')->first();
-        $keluarga     = $wargaAkun?->keluarga;
-        $anggotaHidup = $keluarga ? $keluarga->wargas->where('status_warga', 'hidup') : collect();
-
-        $kepala = $anggotaHidup->firstWhere('status_hubungan', 'kepala_keluarga')
-            ?? $anggotaHidup->firstWhere('nik', $user->username)
-            ?? $anggotaHidup->first()
-            ?? $wargaAkun;
+        $keluarga = $user->ambilKeluarga();
+        $kepala   = $user->ambilKepalaKeluarga();
 
         // Waktu acuan periode berjalan (Asia/Jakarta sesuai BR-06)
         $now = Carbon::now('Asia/Jakarta');

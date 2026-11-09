@@ -18,9 +18,6 @@ class IuranController extends Controller
      * Method ini untuk memuat statistik keuangan RT, daftar tunggakan kartu keluarga (Tab 1),
      * serta riwayat penerimaan kas yang telah terverifikasi lunas (Tab 2).
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Services\IuranService  $iuranService
-     * @return \Illuminate\View\View
      */
     public function index(Request $request, IuranService $iuranService)
     {
@@ -142,10 +139,6 @@ class IuranController extends Controller
     /**
      * Mencatat pelunasan tagihan iuran keluarga oleh Admin RT (Layar 2.2.18 / BR-06).
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @param  \App\Services\IuranService  $iuranService
-     * @return \Illuminate\Http\RedirectResponse
      */
     public function tandaiLunas(Request $request, int $id, IuranService $iuranService)
     {
@@ -186,9 +179,6 @@ class IuranController extends Controller
      * Sesuai aturan bisnis BR-06: Perubahan tarif hanya berlaku untuk tagihan yang 'belum_lunas'
      * mulai bulan berjalan hingga akhir tahun. Tagihan yang sudah lunas atau bulan lampau tidak diubah.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Services\IuranService  $iuranService
-     * @return \Illuminate\Http\RedirectResponse
      */
     public function aturStandarIuran(Request $request, IuranService $iuranService)
     {
@@ -221,9 +211,6 @@ class IuranController extends Controller
      *
      * Memastikan pencarian nama hanya mencocokkan anggota keluarga yang masih hidup (BR-13).
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @param  string  $keyword
-     * @return void
      */
     private function terapkanFilterPencarian(Builder $query, string $keyword): void
     {

@@ -18,11 +18,8 @@ class SuratController extends Controller
         $user = auth()->user();
 
         // Ambil data kepala keluarga / warga yang terikat pada akun KK
-        $kepala = $user->wargaPemilik 
-            ?? $user->wargas()->where('status_warga', 'hidup')->where('status_hubungan', 'kepala_keluarga')->first() 
-            ?? $user->wargas()->where('status_warga', 'hidup')->first()
-            ?? $user->wargas()->first();
-        $keluarga = $kepala?->keluarga ?? $user->wargas()->first()?->keluarga;
+        $kepala = $user->ambilKepalaKeluarga();
+        $keluarga = $user->ambilKeluarga();
 
         // Ambil seluruh anggota keluarga yang masih hidup dalam satu KK (terurut hierarki KK) untuk opsi pengajuan baru
         $anggotaKeluarga = $keluarga
@@ -110,11 +107,8 @@ class SuratController extends Controller
         ]);
 
         $user = auth()->user();
-        $kepala = $user->wargaPemilik 
-            ?? $user->wargas()->where('status_warga', 'hidup')->where('status_hubungan', 'kepala_keluarga')->first() 
-            ?? $user->wargas()->where('status_warga', 'hidup')->first()
-            ?? $user->wargas()->first();
-        $keluarga = $kepala?->keluarga ?? $user->wargas()->first()?->keluarga;
+        $kepala = $user->ambilKepalaKeluarga();
+        $keluarga = $user->ambilKeluarga();
 
         $targetWarga = Warga::findOrFail($request->input('warga_tujuan_id'));
 

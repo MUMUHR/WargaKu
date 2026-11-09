@@ -92,4 +92,25 @@ class User extends Authenticatable
     {
         return $this->role === 'warga';
     }
+
+    /**
+     * Mengambil data warga pemilik akun / kepala keluarga aktif
+     */
+    public function ambilKepalaKeluarga()
+    {
+        return $this->wargaPemilik
+            ?? $this->wargas()->where('status_warga', 'hidup')->where('status_hubungan', 'kepala_keluarga')->first()
+            ?? $this->wargas()->where('status_warga', 'hidup')->first()
+            ?? $this->wargas()->first();
+    }
+
+    /**
+     * Mengambil entitas keluarga yang terikat pada akun
+     */
+    public function ambilKeluarga()
+    {
+        return $this->ambilKepalaKeluarga()?->keluarga
+            ?? $this->wargas()->first()?->keluarga
+            ?? $this->keluarga;
+    }
 }

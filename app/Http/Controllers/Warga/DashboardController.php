@@ -17,19 +17,12 @@ class DashboardController extends Controller
         $user = auth()->user();
         
         // 1. Ambil data Keluarga & Kepala Keluarga secara efisien (BR-01 & BR-13)
-        $wargaAkun = $user->wargas()->with('keluarga')->first();
-        $keluarga  = $wargaAkun?->keluarga;
+        $keluarga = $user->ambilKeluarga();
+        $kepala   = $user->ambilKepalaKeluarga();
 
         // Ambil seluruh anggota keluarga (jika tidak ada keluarga, fallback ke collection kosong)
         $anggotaKeluarga = $keluarga ? $keluarga->wargas : collect();
-
         $anggotaHidup = $anggotaKeluarga->where('status_warga', 'hidup');
-
-        // Prioritaskan Kepala Keluarga yang hidup, fallback ke pemilik akun (nik == username), lalu anggota pertama
-        $kepala = $anggotaHidup->firstWhere('status_hubungan', 'kepala_keluarga')
-            ?? $anggotaHidup->firstWhere('nik', $user->username)
-            ?? $anggotaHidup->first()
-            ?? $wargaAkun;
 
         // 2. Periode Berjalan (Zona Waktu Asia/Jakarta - BR-06)
         $now           = Carbon::now('Asia/Jakarta')->locale('id');

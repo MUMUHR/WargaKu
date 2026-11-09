@@ -14,10 +14,8 @@ class ProfilController extends Controller
     public function index()
     {
         $user = auth()->user();
-        $kepala = $user->wargaPemilik 
-            ?? $user->wargas()->where('status_hubungan', 'kepala_keluarga')->first() 
-            ?? $user->wargas()->first();
-        $keluarga = $kepala?->keluarga;
+        $kepala = $user->ambilKepalaKeluarga();
+        $keluarga = $user->ambilKeluarga();
 
         return view('warga.profil', compact('user', 'kepala', 'keluarga'));
     }

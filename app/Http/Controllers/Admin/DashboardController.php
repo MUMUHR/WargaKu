@@ -9,7 +9,6 @@ use App\Models\Pengumuman;
 use App\Models\Riwayat_Perubahan;
 use App\Models\Surat;
 use App\Models\Warga;
-use Illuminate\View\View;
 
 class DashboardController extends Controller
 {

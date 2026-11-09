@@ -302,7 +302,7 @@ flowchart TD
 
     subgraph Controllers ["Controllers"]
         C_Public["app/Http/Controllers/PublicController.php\n• home(): 3 Berita terbaru di landing page\n• pengumumanIndex(): Arsip semua pengumuman\n• pengumumanShow(): Detail baca artikel"]
-        C_A_Peng["app/Http/Controllers/Admin/PengumumanController.php\n• TampilkanPengumuman()\n• CreatePengumuman() & simpanPengumuman()\n• editPengumuman() & updatePengumuman()\n• hapusPengumuman()"]
+        C_A_Peng["app/Http/Controllers/Admin/PengumumanController.php\n• tampilkanPengumuman()\n• createPengumuman() & simpanPengumuman()\n• editPengumuman() & updatePengumuman()\n• hapusPengumuman()"]
     end
 
     subgraph Models ["Model & Tabel Database"]

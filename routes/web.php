@@ -78,8 +78,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::post('/pengaturan/password', [AdminProfilController::class, 'updatePassword'])->name('pengaturan.password');
 
     // Kelola Pengumuman
-    Route::get('/pengumuman', [PengumumanController::class, 'TampilkanPengumuman'])->name('pengumuman');
-    Route::get('/pengumuman/tambah', [PengumumanController::class, 'CreatePengumuman'])->name('pengumuman.create');
+    Route::get('/pengumuman', [PengumumanController::class, 'tampilkanPengumuman'])->name('pengumuman');
+    Route::get('/pengumuman/tambah', [PengumumanController::class, 'createPengumuman'])->name('pengumuman.create');
     Route::post('/pengumuman/tambah', [PengumumanController::class, 'simpanPengumuman'])->name('pengumuman.store');
     Route::get('/pengumuman/edit/{id}', [PengumumanController::class, 'editPengumuman'])->name('pengumuman.edit');
     Route::post('/pengumuman/edit/{id}', [PengumumanController::class, 'updatePengumuman'])->name('pengumuman.update');

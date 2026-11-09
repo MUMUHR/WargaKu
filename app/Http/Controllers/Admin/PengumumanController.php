@@ -15,7 +15,7 @@ class PengumumanController extends Controller
     /**
      * Menampilkan daftar seluruh pengumuman RT.
      */
-    public function TampilkanPengumuman()
+    public function tampilkanPengumuman()
     {
         $pengumuman = Pengumuman::with('admin')->latest()->get();
         $totalPengumuman = $pengumuman->count();
@@ -28,7 +28,7 @@ class PengumumanController extends Controller
     /**
      * Menampilkan form tambah pengumuman baru.
      */
-    public function CreatePengumuman()
+    public function createPengumuman()
     {
         return view('admin.pengumuman-form', [
             'isEdit' => false,
@@ -101,7 +101,7 @@ class PengumumanController extends Controller
         $validated = $request->validate([
             'judul'            => ['required', 'string', 'max:150'],
             'isi'              => ['required', 'string'],
-            'gambar'           => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:255'],
+            'gambar'           => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
             'status_publikasi' => ['nullable', Rule::enum(StatusPublikasi::class)],
         ], [
             'judul.required' => 'Judul pengumuman wajib diisi.',

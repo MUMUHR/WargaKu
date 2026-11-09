@@ -22,7 +22,7 @@ class DashboardController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function index(): View
+    public function index()
     {
         // 1. Mengambil total jumlah Kartu Keluarga (KK) yang terdaftar di RT 04
         $totalKk = Keluarga::count();

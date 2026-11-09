@@ -6,14 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Models\Surat;
 use App\Services\IuranService;
 use Carbon\Carbon;
-use Illuminate\View\View;
 
 class DashboardController extends Controller
 {
     /**
      * Menampilkan Dashboard Beranda Mandiri Warga (Layar 2.2.19)
      */
-    public function index(IuranService $iuranService): View
+    public function index(IuranService $iuranService)
     {
         $user = auth()->user();
         

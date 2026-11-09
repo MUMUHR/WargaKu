@@ -5,19 +5,17 @@ namespace App\Http\Controllers\Admin;
 use App\Enums\StatusPublikasi;
 use App\Http\Controllers\Controller;
 use App\Models\Pengumuman;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
-use Illuminate\View\View;
 
 class PengumumanController extends Controller
 {
     /**
      * Menampilkan daftar seluruh pengumuman RT.
      */
-    public function TampilkanPengumuman(): View
+    public function TampilkanPengumuman()
     {
         $pengumuman = Pengumuman::with('admin')->latest()->get();
         $totalPengumuman = $pengumuman->count();
@@ -30,7 +28,7 @@ class PengumumanController extends Controller
     /**
      * Menampilkan form tambah pengumuman baru.
      */
-    public function CreatePengumuman(): View
+    public function CreatePengumuman()
     {
         return view('admin.pengumuman-form', [
             'isEdit' => false,
@@ -41,7 +39,7 @@ class PengumumanController extends Controller
     /**
      * Menyimpan pengumuman baru ke database.
      */
-    public function simpanPengumuman(Request $request): RedirectResponse
+    public function simpanPengumuman(Request $request)
     {
         $validated = $request->validate([
             'judul'            => ['required', 'string', 'max:150'],
@@ -82,7 +80,7 @@ class PengumumanController extends Controller
     /**
      * Menampilkan form edit pengumuman.
      */
-    public function editPengumuman(int|string $id): View
+    public function editPengumuman(int|string $id)
     {
         $pengumuman = Pengumuman::findOrFail($id);
 
@@ -96,7 +94,7 @@ class PengumumanController extends Controller
     /**
      * Memperbarui pengumuman yang ada.
      */
-    public function updatePengumuman(Request $request, int|string $id): RedirectResponse
+    public function updatePengumuman(Request $request, int|string $id)
     {
         $pengumuman = Pengumuman::findOrFail($id);
 
@@ -140,7 +138,7 @@ class PengumumanController extends Controller
     }
 
     /*** Menghapus pengumuman.*/
-    public function hapusPengumuman(int|string $id): RedirectResponse
+    public function hapusPengumuman(int|string $id)
     {
         $pengumuman = Pengumuman::findOrFail($id);
 

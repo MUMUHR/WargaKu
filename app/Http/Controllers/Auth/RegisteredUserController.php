@@ -7,20 +7,18 @@ use App\Models\Keluarga;
 use App\Models\User;
 use App\Models\Warga;
 use Illuminate\Auth\Events\Registered;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
-use Illuminate\View\View;
 
 class RegisteredUserController extends Controller
 {
     /**
      * Display the registration view (menggunakan view kustom WargaKu).
      */
-    public function create(): View
+    public function create()
     {
         return view('public.register');
     }
@@ -39,7 +37,7 @@ class RegisteredUserController extends Controller
      *
      * @throws ValidationException
      */
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request)
     {
         $request->validate([
             // Data Kartu Keluarga

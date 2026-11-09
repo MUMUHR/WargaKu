@@ -3,17 +3,15 @@
 namespace App\Http\Controllers\Warga;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\View\View;
 
 class ProfilController extends Controller
 {
     /**
      * Menampilkan halaman Profil & Keamanan Akun Warga
      */
-    public function index(): View
+    public function index()
     {
         $user = auth()->user();
         $kepala = $user->wargaPemilik 
@@ -27,7 +25,7 @@ class ProfilController extends Controller
     /**
      * Memperbarui nomor telepon / WhatsApp akun warga
      */
-    public function updateKontak(Request $request): RedirectResponse
+    public function updateKontak(Request $request)
     {
         $request->validate([
             'no_telp' => ['required', 'string', 'max:20', 'regex:/^[0-9+\-\s]+$/'],
@@ -48,7 +46,7 @@ class ProfilController extends Controller
     /**
      * Memperbarui kata sandi akun warga
      */
-    public function updatePassword(Request $request): RedirectResponse
+    public function updatePassword(Request $request)
     {
         $request->validate([
             'password_saat_ini'   => ['required', 'string'],

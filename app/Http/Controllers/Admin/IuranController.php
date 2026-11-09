@@ -22,7 +22,7 @@ class IuranController extends Controller
      * @param  \App\Services\IuranService  $iuranService
      * @return \Illuminate\View\View
      */
-    public function index(Request $request, IuranService $iuranService): View
+    public function index(Request $request, IuranService $iuranService)
     {
         // 1. Mengambil waktu real-time dengan zona waktu WIB (Asia/Jakarta)
         $now           = Carbon::now('Asia/Jakarta');

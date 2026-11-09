@@ -5,16 +5,14 @@ namespace App\Http\Controllers\Admin;
 use App\Enums\StatusSurat;
 use App\Http\Controllers\Controller;
 use App\Models\Surat;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\View\View;
 
 class SuratController extends Controller
 {
     /**
      * Menampilkan daftar seluruh pengajuan surat pengantar warga (Layar 2.2.13).
      */
-    public function index(Request $request): View
+    public function index(Request $request)
     {
         $statMenunggu = Surat::where('status', StatusSurat::MENUNGGU->value)->count();
         $statDisetujui = Surat::where('status', StatusSurat::DISETUJUI->value)->count();
@@ -64,7 +62,7 @@ class SuratController extends Controller
     /**
      * Pratinjau draf atau surat pengantar resmi A4 (Layar X5).
      */
-    public function preview(int $id): View
+    public function preview(int $id)
     {
         $surat = Surat::with(['pemohon', 'wargaTujuan'])->findOrFail($id);
         $rekomendasiNomorSurat = $surat->nomor_surat ?? Surat::generateNomorSurat();
@@ -75,7 +73,7 @@ class SuratController extends Controller
     /**
      * Menyetujui permohonan surat dan menerbitkan nomor registrasi resmi (BR-05 / Layar 2.2.14).
      */
-    public function setujui(Request $request, int $id): RedirectResponse
+    public function setujui(Request $request, int $id)
     {
         $surat = Surat::findOrFail($id);
 
@@ -109,7 +107,7 @@ class SuratController extends Controller
     /**
      * Menolak permohonan surat disertai catatan alasan penolakan (Layar 2.2.15).
      */
-    public function tolak(Request $request, int $id): RedirectResponse
+    public function tolak(Request $request, int $id)
     {
         $surat = Surat::findOrFail($id);
 

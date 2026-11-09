@@ -7,14 +7,13 @@ use App\Models\Iuran;
 use App\Services\IuranService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\View\View;
 
 class IuranController extends Controller
 {
     /**
      * Menampilkan halaman monitoring 12 card iuran bulanan warga (Layar 2.2.26 / UC-05 / BR-06)
      */
-    public function index(Request $request, IuranService $iuranService): View
+    public function index(Request $request, IuranService $iuranService)
     {
         $user = auth()->user();
 

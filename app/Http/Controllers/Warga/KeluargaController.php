@@ -125,7 +125,7 @@ class KeluargaController extends Controller
     /**
      * Memproses Pengajuan Perubahan Data Warga ke Tabel Riwayat_Perubahan (F006)
      */
-    public function simpanPengajuanEdit(Request $request): RedirectResponse
+    public function simpanPengajuanEdit(Request $request)
     {
         // 1. Validasi input form
         $request->validate([
@@ -170,7 +170,7 @@ class KeluargaController extends Controller
     /**
      * Menampilkan Formulir Pendaftaran Anggota Keluarga Baru
      */
-    public function tampilkanFormTambah(Request $request): View
+    public function tampilkanFormTambah(Request $request)
     {
         $user = auth()->user();
         $keluarga = $this->getKeluargaUser();
@@ -188,7 +188,7 @@ class KeluargaController extends Controller
     /**
      * Memproses Pendaftaran Anggota Keluarga Baru ke Tabel Riwayat_Perubahan (F007)
      */
-    public function simpanPengajuanTambah(Request $request): RedirectResponse
+    public function simpanPengajuanTambah(Request $request)
     {
         $request->validate([
             'nama_lengkap' => 'required|string|max:100',
@@ -221,7 +221,7 @@ class KeluargaController extends Controller
     /**
      * Membatalkan pengajuan perubahan data keluarga yang masih berstatus menunggu verifikasi
      */
-    public function batalkanPengajuan(Request $request, int $id): RedirectResponse
+    public function batalkanPengajuan(Request $request, int $id)
     {
         $keluarga = $this->getKeluargaUser();
         if (! $keluarga) {
@@ -243,7 +243,7 @@ class KeluargaController extends Controller
     /**
      * Mengambil entitas keluarga yang terafiliasi dengan user saat ini
      */
-    private function getKeluargaUser(): ?Keluarga
+    private function getKeluargaUser()
     {
         $user = auth()->user();
         if (! $user) {
@@ -261,7 +261,7 @@ class KeluargaController extends Controller
     /**
      * Memetakan data anggota keluarga untuk Modal Detail Kependudukan
      */
-    private function mapDataWargaModal($anggotaKeluarga, Keluarga $keluarga, string $alamatKeluarga): array
+    private function mapDataWargaModal($anggotaKeluarga, $keluarga, $alamatKeluarga)
     {
         return $anggotaKeluarga->keyBy('nik')->map(function ($w) use ($keluarga, $alamatKeluarga) {
             $ttl = ($w->tempat_lahir ? $w->tempat_lahir.', ' : '').($w->tanggal_lahir ? Carbon::parse($w->tanggal_lahir)->translatedFormat('d F Y') : '-');
@@ -293,7 +293,7 @@ class KeluargaController extends Controller
     /**
      * Memetakan riwayat pengajuan perubahan data untuk Modal Komparasi & Dokumen
      */
-    private function mapDataPengajuanModal($riwayatPengajuan): array
+    private function mapDataPengajuanModal($riwayatPengajuan)
     {
         $fieldLabels = [
             'nama'                => 'Nama Lengkap',
@@ -405,7 +405,7 @@ class KeluargaController extends Controller
     /**
      * Memformat nilai data warga menjadi teks tampilan yang rapi dan mudah dibaca
      */
-    private function formatNilaiTampilan(string $kolom, mixed $nilai): string
+    private function formatNilaiTampilan($kolom, $nilai)
     {
         $val = trim((string) $nilai);
         if ($val === '' || $val === '-') {

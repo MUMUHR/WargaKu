@@ -3,17 +3,15 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\View\View;
 
 class ProfilController extends Controller
 {
     /**
      * Menampilkan halaman Profil & Keamanan Akun Admin RT
      */
-    public function index(): View
+    public function index()
     {
         $admin = auth()->user();
 
@@ -23,7 +21,7 @@ class ProfilController extends Controller
     /**
      * Memperbarui nomor kontak / telepon WhatsApp Admin RT
      */
-    public function updateKontak(Request $request): RedirectResponse
+    public function updateKontak(Request $request)
     {
         $request->validate([
             'no_telp' => ['required', 'string', 'max:20', 'regex:/^[0-9+\-\s]+$/'],
@@ -44,7 +42,7 @@ class ProfilController extends Controller
     /**
      * Memperbarui kata sandi akun Admin RT
      */
-    public function updatePassword(Request $request): RedirectResponse
+    public function updatePassword(Request $request)
     {
         $request->validate([
             'password_saat_ini'   => ['required', 'string'],

@@ -7,14 +7,13 @@ use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\View\View;
 
 class AuthenticatedSessionController extends Controller
 {
     /**
      * Display the login view (menggunakan view kustom WargaKu).
      */
-    public function create(): View|RedirectResponse
+    public function create()
     {
         if (Auth::check()) {
             return Auth::user()->isAdmin()
@@ -29,7 +28,7 @@ class AuthenticatedSessionController extends Controller
      * Handle an incoming authentication request.
      * Redirect berdasarkan role: admin → /admin, warga → /warga
      */
-    public function store(LoginRequest $request): RedirectResponse
+    public function store(LoginRequest $request)
     {
         $request->authenticate();
 
@@ -53,7 +52,7 @@ class AuthenticatedSessionController extends Controller
     /**
      * Destroy an authenticated session (Logout).
      */
-    public function destroy(Request $request): RedirectResponse
+    public function destroy(Request $request)
     {
         Auth::guard('web')->logout();
 

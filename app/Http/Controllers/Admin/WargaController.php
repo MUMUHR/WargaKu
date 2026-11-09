@@ -12,7 +12,6 @@ use DomainException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
-use Illuminate\View\View;
 use InvalidArgumentException;
 
 /**
@@ -31,7 +30,7 @@ class WargaController extends Controller
     /**
      * Menampilkan daftar Kartu Keluarga & tab verifikasi perubahan data kependudukan (Layar 2.2.7)
      */
-    public function tampilkanDaftarWargaDanVerifikasi(Request $request): View
+    public function tampilkanDaftarWargaDanVerifikasi(Request $request)
     {
         // 1. Statistik Kependudukan via Service
         $statistik = $this->kependudukanService->hitungStatistikKependudukan();
@@ -61,7 +60,7 @@ class WargaController extends Controller
     /**
      * Menampilkan halaman detail satu Kartu Keluarga (Layar 2.2.8)
      */
-    public function tampilkanDetailKeluarga(string $no_kk): View
+    public function tampilkanDetailKeluarga(string $no_kk)
     {
         $keluarga = Keluarga::where('no_kk', $no_kk)->firstOrFail();
 
@@ -106,7 +105,7 @@ class WargaController extends Controller
     /**
      * Menampilkan form tambah anggota keluarga baru oleh Admin RT (Layar 2.2.12)
      */
-    public function tampilkanFormTambahAnggota(Request $request, ?string $no_kk = null): View|RedirectResponse
+    public function tampilkanFormTambahAnggota(Request $request, ?string $no_kk = null)
     {
         $targetKk = $no_kk ?? $request->query('no_kk');
 
@@ -135,7 +134,7 @@ class WargaController extends Controller
     /**
      * Menyimpan data anggota keluarga baru oleh Admin RT (BR-14 & BR-08)
      */
-    public function simpanTambahAnggota(Request $request, ?string $no_kk = null): RedirectResponse
+    public function simpanTambahAnggota(Request $request, ?string $no_kk = null)
     {
         $targetNoKk = $no_kk ?? $request->input('no_kk');
         $keluarga = Keluarga::where('no_kk', $targetNoKk)->firstOrFail();
@@ -181,7 +180,7 @@ class WargaController extends Controller
     /**
      * Menampilkan form edit data warga oleh Admin RT (Layar 2.2.10)
      */
-    public function tampilkanFormEditAnggota(Request $request, string $nik): View
+    public function tampilkanFormEditAnggota(Request $request, string $nik)
     {
         $warga = Warga::with('keluarga')->where('nik', $nik)->firstOrFail();
         $keluarga = $warga->keluarga;
@@ -202,7 +201,7 @@ class WargaController extends Controller
     /**
      * Memperbarui data master warga oleh Admin RT (Layar 2.2.10, BR-02 & BR-03)
      */
-    public function updateDataAnggota(Request $request, ?string $nik = null): RedirectResponse
+    public function updateDataAnggota(Request $request, ?string $nik = null)
     {
         $targetNik = $nik ?? $request->input('nik');
         $warga = Warga::where('nik', $targetNik)->firstOrFail();
@@ -257,7 +256,7 @@ class WargaController extends Controller
     /**
      * Memperbarui status ekonomi dan status tinggal satu Kartu Keluarga
      */
-    public function ubahStatusKeluarga(Request $request, string $no_kk): RedirectResponse
+    public function ubahStatusKeluarga(Request $request, string $no_kk)
     {
         $keluarga = Keluarga::where('no_kk', $no_kk)->firstOrFail();
 
@@ -278,7 +277,7 @@ class WargaController extends Controller
     /**
      * Me-reset password akun keluarga menjadi NIK Kepala Keluarga / Username Akun (BR-04)
      */
-    public function resetPasswordKeluarga(Request $request, string $no_kk): RedirectResponse
+    public function resetPasswordKeluarga(Request $request, string $no_kk)
     {
         $keluarga = Keluarga::where('no_kk', $no_kk)->firstOrFail();
 
@@ -294,7 +293,7 @@ class WargaController extends Controller
     /**
      * Menghapus anggota keluarga (Layar 2.2.8 & BR-02/BR-03)
      */
-    public function hapusAnggota(Request $request, string $nik): RedirectResponse
+    public function hapusAnggota(Request $request, string $nik)
     {
         $warga = Warga::where('nik', $nik)->firstOrFail();
         $nama = $warga->nama;
@@ -311,7 +310,7 @@ class WargaController extends Controller
     /**
      * Menghapus seluruh data Kartu Keluarga beserta anggota
      */
-    public function hapusKeluarga(Request $request, string $no_kk): RedirectResponse
+    public function hapusKeluarga(Request $request, string $no_kk)
     {
         $keluarga = Keluarga::where('no_kk', $no_kk)->firstOrFail();
 
@@ -323,7 +322,7 @@ class WargaController extends Controller
     /**
      * Menyetujui atau menolak permohonan perubahan data kependudukan (Layar 2.2.7 & X6, UC-11, BR-08)
      */
-    public function verifikasiPengajuan(Request $request, int $id): RedirectResponse
+    public function verifikasiPengajuan(Request $request, int $id)
     {
         $pengajuan = Riwayat_Perubahan::with('keluarga')->findOrFail($id);
 

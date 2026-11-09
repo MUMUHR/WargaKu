@@ -4,14 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Enums\StatusPublikasi;
 use App\Models\Pengumuman;
-use Illuminate\View\View;
 
 class PublicController extends Controller
 {
     /**
      * Landing Page
      */
-    public function home(): View
+    public function home()
     {
         $pengumuman = Pengumuman::where('status_publikasi', StatusPublikasi::PUBLISH)
             ->latest()
@@ -24,7 +23,7 @@ class PublicController extends Controller
     /**
      * Daftar Pengumuman Publik
      */
-    public function pengumumanIndex(): View
+    public function pengumumanIndex()
     {
         $pengumuman = Pengumuman::where('status_publikasi', StatusPublikasi::PUBLISH)
             ->latest()
@@ -36,7 +35,7 @@ class PublicController extends Controller
     /**
      * Detail Pengumuman
      */
-    public function pengumumanShow(int $id): View
+    public function pengumumanShow(int $id)
     {
         $item = Pengumuman::where('status_publikasi', StatusPublikasi::PUBLISH)
             ->findOrFail($id);

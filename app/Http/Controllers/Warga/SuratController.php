@@ -6,16 +6,14 @@ use App\Enums\StatusSurat;
 use App\Http\Controllers\Controller;
 use App\Models\Surat;
 use App\Models\Warga;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\View\View;
 
 class SuratController extends Controller
 {
     /**
      * Menampilkan daftar riwayat dan formulir pengajuan surat warga (Layar 2.3.4)
      */
-    public function index(Request $request): View
+    public function index(Request $request)
     {
         $user = auth()->user();
 
@@ -99,7 +97,7 @@ class SuratController extends Controller
     /**
      * Menyimpan pengajuan surat pengantar baru dari warga (Layar 2.3.4 Tab Buat Pengajuan)
      */
-    public function simpan(Request $request): RedirectResponse
+    public function simpan(Request $request)
     {
         $request->validate([
             'warga_tujuan_id' => 'required|exists:wargas,id',
@@ -147,7 +145,7 @@ class SuratController extends Controller
     /**
      * Membatalkan pengajuan surat yang masih berstatus menunggu verifikasi
      */
-    public function batalkan(Request $request, int $id): RedirectResponse
+    public function batalkan(Request $request, int $id)
     {
         $surat = Surat::findOrFail($id);
 

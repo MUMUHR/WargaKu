@@ -39,7 +39,7 @@ class KeluargaController extends Controller
         $alamatKeluarga = $keluarga?->alamat ?? '-';
 
         $riwayatPengajuan = $keluarga
-            ? Riwayat_Perubahan::with(['warga', 'admin'])
+            ? Riwayat_Perubahan::with(['warga'])
                 ->where('keluarga_id', $keluarga->id)
                 ->orderBy('created_at', 'desc')
                 ->get()
@@ -89,8 +89,8 @@ class KeluargaController extends Controller
         $anggotaDataEdit = $anggotaKeluarga->keyBy('nik')->map(function ($ang) use ($alamatKeluarga) {
             $words = explode(' ', trim($ang->nama));
             $avatar = strtoupper(substr($words[0] ?? 'W', 0, 1) . substr($words[1] ?? ($words[0] ?? 'G'), 0, 1));
-            $pendidikan = $this->mapPendidikan[$ang->pendidikan_terakhir] ?? ucwords(str_replace('_', ' ', $ang->pendidikan_terakhir ?? '-'));
-
+            // $pendidikan = $this->mapPendidikan[$ang->pendidikan_terakhir] ?? ucwords(str_replace('_', ' ', $ang->pendidikan_terakhir ?? '-'));
+            $pendidikanFormatted = $this->mapPendidikan[$ang->pendidikan_terakhir] ?? ucwords(str_replace('_', ' ', $ang->pendidikan_terakhir ?? '-'));
             return [
                 'avatar'        => $avatar,
                 'nik'           => $ang->nik,
@@ -100,8 +100,13 @@ class KeluargaController extends Controller
                 'tglLahirNew'   => $ang->tanggal_lahir?->format('Y-m-d') ?? '',
                 'jk'            => $ang->jenis_kelamin === 'laki_laki' ? 'Laki-Laki' : 'Perempuan',
                 'agama'         => ucfirst($ang->agama ?? 'Islam'),
-                'pendidikanOld' => $pendidikan,
-                'pendidikanNew' => $pendidikan,
+
+                'pendidikanOld' => $pendidikanFormatted,
+                // 'pendidikanOld' => $pendidikan,
+
+                'pendidikanNew' => $ang->pendidikan_terakhir,
+                // 'pendidikanNew' => $pendidikan,
+
                 'pekerjaanOld'  => $ang->pekerjaan ?? '-',
                 'pekerjaanNew'  => $ang->pekerjaan ?? '',
                 'alamat'        => $ang->alamat ?? $alamatKeluarga,
